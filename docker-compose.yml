@@ -36,8 +36,8 @@ services:
     volumes:
       - solarrealms-db-data:/var/lib/mysql
       - ./sql:/docker-entrypoint-initdb.d:ro
-    ports:
-      - "3306:3306"
+    # Note: Port 3306 not exposed externally for security
+    # Use 'docker compose exec db mysql' to access the database
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "solarrealms", "-p${DB_PASSWORD:-solarrealms_secret}"]
       interval: 10s

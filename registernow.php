@@ -5,6 +5,7 @@
 define("LANGUAGE_DOMAIN","system");
 
 require_once("include/init.php");
+require_once("include/security/PasswordHandler.php");
 
 // ******************************************************************************
 //  Signup callback (AJAX)
@@ -45,7 +46,11 @@ if (isset($_GET["SIGNUP"])) {
     $rs = $DB->Execute("SELECT COUNT(*) FROM system_tb_players");
     $admin = 0;
     if ($rs->fields[0] == 0) $admin = 1;
-    $query = "INSERT INTO system_tb_players (admin,creation_date,email,nickname,real_name,country,password,active) VALUES($admin,$creation_date,'".addslashes($_POST["email"])."','".utf8_encode(addslashes($_POST["nickname"]))."','".utf8_encode(addslashes($_POST["real_name"]))."','".utf8_encode(addslashes($_POST["country"]))."','".md5($_POST["password1"])."',1);";
+
+    // Hash password securely with Argon2id
+    $hashedPassword = PasswordHandler::hash($_POST["password1"]);
+
+    $query = "INSERT INTO system_tb_players (admin,creation_date,email,nickname,real_name,country,password,active) VALUES($admin,$creation_date,'".addslashes($_POST["email"])."','".utf8_encode(addslashes($_POST["nickname"]))."','".utf8_encode(addslashes($_POST["real_name"]))."','".utf8_encode(addslashes($_POST["country"]))."','".addslashes($hashedPassword)."',1);";
     $DB->Execute($query);
     if (!$DB) trigger_error($DB->ErrorMsg());
     // already activated, no need to send email
