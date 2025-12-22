@@ -38,7 +38,8 @@ if (isset($_GET["sell"]))
 {
 	$types = array("food","ore","petroleum");
 
-	$type = addslashes($_GET["type"]);
+	// Type is validated against whitelist, addslashes not needed
+	$type = $_GET["type"];
 	$sell = intval($_GET["sell"]);
 
 	if (!in_array($type,$types)) $GAME["system"]->redirect("globalmarket.php");
@@ -74,7 +75,8 @@ if (isset($_GET["buy"]))
 {
 	$types = array("food","ore","petroleum");
 
-	$type = addslashes($_GET["type"]);
+	// Type is validated against whitelist, addslashes not needed
+	$type = $_GET["type"];
 	$buy = intval($_GET["buy"]);
 
 	if (!in_array($type,$types)) $GAME["system"]->redirect("globalmarket.php");

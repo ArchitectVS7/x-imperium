@@ -12,14 +12,17 @@ require_once("include/security/PasswordHandler.php");
 if (isset($_GET["LOGOFF"])) {
 
 	if (isset($_SESSION["player"])) {
-		$rs = $DB->Execute("SELECT * FROM system_tb_chat_sessions WHERE nickname='".addslashes($_SESSION["player"]["nickname"])."'");
+		// SQL Injection fix: Use prepared statements
+		$stmt = $DB->Prepare("SELECT * FROM system_tb_chat_sessions WHERE nickname=?");
+		$rs = $DB->Execute($stmt, array($_SESSION["player"]["nickname"]));
 		if (!$rs->EOF) {
 
 			$elapsed = time(NULL) - $_SESSION["player"]["last_login_date"];
 			$elapsed = round($elapsed / 60,2);
 
 //			$DB->Execute("INSERT INTO system_tb_chat_log (timestamp,message) VALUES(".time(NULL).",'<b style=\"color:yellow\">[".date("H:i:s")."] ".$rs->fields["nickname"]." ".T_("has left the chatroom. [logoff] (Stayed for")." ".$elapsed .T_("minutes").")</b>')");
-			$DB->Execute("DELETE FROM system_tb_chat_sessions WHERE id=".$rs->fields["id"]);
+			$stmtDel = $DB->Prepare("DELETE FROM system_tb_chat_sessions WHERE id=?");
+			$DB->Execute($stmtDel, array($rs->fields["id"]));
 		}
 	}
 
@@ -70,7 +73,9 @@ if (isset($_GET["LOGIN"])) {
 	}
 
 	// Fetch user by nickname only (don't include password in query)
-	$stmt = $DB->Execute("SELECT * FROM system_tb_players WHERE nickname='" . addslashes($nickname) . "' AND active = 1");
+	// SQL Injection fix: Use prepared statements
+	$stmtLogin = $DB->Prepare("SELECT * FROM system_tb_players WHERE nickname=? AND active = 1");
+	$stmt = $DB->Execute($stmtLogin, array($nickname));
 
 	if ($stmt->EOF) {
 		$DB->CompleteTrans();
@@ -98,7 +103,9 @@ if (isset($_GET["LOGIN"])) {
 		// Auto-upgrade MD5 passwords to Argon2id on successful login
 		if (PasswordHandler::needsRehash($rs->fields["password"])) {
 			$newHash = PasswordHandler::hash($plainPassword);
-			$DB->Execute("UPDATE system_tb_players SET password='" . addslashes($newHash) . "' WHERE id=" . $rs->fields["id"]);
+			// SQL Injection fix: Use prepared statements
+			$stmtPwdUpd = $DB->Prepare("UPDATE system_tb_players SET password=? WHERE id=?");
+			$DB->Execute($stmtPwdUpd, array($newHash, $rs->fields["id"]));
 		}
 	}
 	
@@ -106,8 +113,9 @@ if (isset($_GET["LOGIN"])) {
 	if (isset($_SERVER["X_FORWARDED_FOR"])) $hostname = $_SERVER["X_FORWARDED_FOR"];
 	$last_login_date = time(NULL);
 
-	$query = "SELECT COUNT(*) FROM system_tb_players WHERE (last_login_hostname='".addslashes($hostname)."' AND NOT (nickname = '$nickname'))";
-	$rs2 = $DB->Execute($query);
+	// SQL Injection fix: Use prepared statements
+	$stmtIpCheck = $DB->Prepare("SELECT COUNT(*) FROM system_tb_players WHERE (last_login_hostname=? AND NOT (nickname = ?))");
+	$rs2 = $DB->Execute($stmtIpCheck, array($hostname, $nickname));
 
 	$is_premium = $rs->fields["premium"];
 
@@ -124,11 +132,15 @@ if (isset($_GET["LOGIN"])) {
 
 	// inserting the message
 	if (CONF_DAILY_BULLETIN != "") {
-		if ($rs->fields["daily_bulletin"] < ($last_login_date - (60*60*24))) 
-			$DB->Execute("INSERT INTO system_tb_messages (player_id,date,message) VALUES(".$rs->fields["id"].",".time(NULL).",'".CONF_DAILY_BULLETIN."')");
-
+		if ($rs->fields["daily_bulletin"] < ($last_login_date - (60*60*24))) {
+			// SQL Injection fix: Use prepared statements
+			$stmtBulletin = $DB->Prepare("INSERT INTO system_tb_messages (player_id,date,message) VALUES(?,?,?)");
+			$DB->Execute($stmtBulletin, array($rs->fields["id"], time(NULL), CONF_DAILY_BULLETIN));
+		}
 	}
-	$DB->Execute("UPDATE system_tb_players SET last_login_hostname='".addslashes($hostname)."',last_login_date=".$last_login_date.",daily_bulletin=".$last_login_date." WHERE id=".$rs->fields["id"]);
+	// SQL Injection fix: Use prepared statements
+	$stmtLoginUpd = $DB->Prepare("UPDATE system_tb_players SET last_login_hostname=?,last_login_date=?,daily_bulletin=? WHERE id=?");
+	$DB->Execute($stmtLoginUpd, array($hostname, $last_login_date, $last_login_date, $rs->fields["id"]));
 	
 	$_SESSION["player"] = $rs->fields;
 

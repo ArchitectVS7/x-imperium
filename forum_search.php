@@ -15,11 +15,16 @@ if (strlen($_GET["KEYWORDS"]) < 3) {
     die(header("Location: forum.php?WARNING=$warning"));
 }
 
-$keywords = addslashes($_GET["KEYWORDS"]);
+// SQL Injection fix: Use prepared statements with proper LIKE escaping
+$keywords = $_GET["KEYWORDS"];
+// Escape LIKE wildcards in the search term
+$keywordsEscaped = str_replace(['%', '_'], ['\%', '\_'], $keywords);
+$searchPattern = '%' . $keywordsEscaped . '%';
 
 $items = array();
-$rs = $DB->Execute("SELECT * FROM system_tb_forum WHERE title LIKE '%".$keywords."%' OR content LIKE '%".$keywords."%'");
-if (!$DB) trigger_error($DB->ErrorMsg());
+$stmt = $DB->Prepare("SELECT * FROM system_tb_forum WHERE title LIKE ? OR content LIKE ?");
+$rs = $DB->Execute($stmt, array($searchPattern, $searchPattern));
+if (!$rs) trigger_error($DB->ErrorMsg());
 
 $count = 0;
 

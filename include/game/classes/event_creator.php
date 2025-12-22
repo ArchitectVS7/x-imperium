@@ -32,32 +32,34 @@ class EventCreator
 	//////////////////////////////////////////////////////////////////////////////
 	function broadcast()
 	{
-	
+
 		$query = "SELECT * FROM game".$this->game_id."_tb_empire WHERE active='1'";
-				
+
 		$recipients = $this->DB->Execute($query);
 
 		// verify if duplicate are found , if yes skip them
-		$query = "SELECT COUNT(*) FROM game".$this->game_id."_tb_event WHERE event_type='".$this->type."' AND event_from='".$this->from."' AND params='".$this->params."'";
-		$rs = $this->DB->Execute($query);
+		// SQL Injection fix: Use prepared statement
+		$serializedParams = serialize($this->params);
+		$stmtCheck = $this->DB->Prepare("SELECT COUNT(*) FROM game".$this->game_id."_tb_event WHERE event_type=? AND event_from=? AND params=?");
+		$rs = $this->DB->Execute($stmtCheck, array($this->type, $this->from, $serializedParams));
 		if (!$rs) trigger_error($this->DB->ErrorMsg());
 		if ($rs->fields[0] != 0) return;
 
+		// SQL Injection fix: Use prepared statement for INSERT
+		$stmtInsert = $this->DB->Prepare("INSERT INTO game".$this->game_id."_tb_event (event_type,event_from,event_to,params,seen,sticky,date,height) VALUES(?,?,?,?,?,?,?,?)");
 		while(!$recipients->EOF)
 		{
-			$query = "INSERT INTO game".$this->game_id."_tb_event (event_type,event_from,event_to,params,seen,sticky,date,height) ".
-			"VALUES('".$this->type."','".$this->from."','".$recipients->fields["id"]."','".addslashes(serialize($this->params))."',".$this->seen.",".$this->sticky.",".time(NULL).",".$this->height.")";	
-			if (!$this->DB->Execute($query)) trigger_error($this->DB->ErrorMsg());
+			if (!$this->DB->Execute($stmtInsert, array($this->type, $this->from, $recipients->fields["id"], $serializedParams, $this->seen, $this->sticky, time(NULL), $this->height))) trigger_error($this->DB->ErrorMsg());
 			$recipients->MoveNext();
 		}
-		
+
 		// garbage collection
 		$timeout_unseen = time(NULL) - CONF_UNSEEN_EVENT_TIMEOUT;
 		$timeout_seen = time(NULL) - CONF_SEEN_EVENT_TIMEOUT;
 
 		if (!$this->DB->Execute("DELETE FROM game".$this->game_id."_tb_event WHERE date < $timeout_unseen AND seen='0'")) trigger_error($this->DB->ErrorMsg());
 		if (!$this->DB->Execute("DELETE FROM game".$this->game_id."_tb_event WHERE date < $timeout_seen AND seen='1'")) trigger_error($this->DB->ErrorMsg());
-		
+
 	}
 
 
@@ -69,8 +71,10 @@ class EventCreator
 		global $GAME;
 
 		// verify if duplicate are found , if yes skip them
-		$query = "SELECT COUNT(*) FROM game".$this->game_id."_tb_event WHERE event_type='".$this->type."' AND event_from='".$this->from."' AND params='".$this->params."'";
-		$rs = $this->DB->Execute($query);
+		// SQL Injection fix: Use prepared statement
+		$serializedParams = serialize($this->params);
+		$stmtCheck = $this->DB->Prepare("SELECT COUNT(*) FROM game".$this->game_id."_tb_event WHERE event_type=? AND event_from=? AND params=?");
+		$rs = $this->DB->Execute($stmtCheck, array($this->type, $this->from, $serializedParams));
 		if (!$rs) trigger_error($this->DB->ErrorMsg());
 
 		if ($rs->fields[0] != 0) return;
@@ -78,11 +82,11 @@ class EventCreator
 
 
 		if ((isset($GAME["ai_turn"])) && ($GAME["ai_turn"]==true)) return;
-		$query = "INSERT INTO game".$this->game_id."_tb_event (event_type,event_from,event_to,params,seen,sticky,date,height) ".
-		"VALUES('".$this->type."','".$this->from."','".$this->to."','".addslashes(serialize($this->params))."',".$this->seen.",".$this->sticky.",".time(NULL).",".$this->height.")";	
-		if (!$this->DB->Execute($query)) trigger_error($this->DB->ErrorMsg());
-			
-		
+		// SQL Injection fix: Use prepared statement for INSERT
+		$stmtInsert = $this->DB->Prepare("INSERT INTO game".$this->game_id."_tb_event (event_type,event_from,event_to,params,seen,sticky,date,height) VALUES(?,?,?,?,?,?,?,?)");
+		if (!$this->DB->Execute($stmtInsert, array($this->type, $this->from, $this->to, $serializedParams, $this->seen, $this->sticky, time(NULL), $this->height))) trigger_error($this->DB->ErrorMsg());
+
+
 		// garbage collection
 		$timeout_unseen = time(NULL) - CONF_UNSEEN_EVENT_TIMEOUT;
 		$timeout_seen = time(NULL) - CONF_SEEN_EVENT_TIMEOUT;

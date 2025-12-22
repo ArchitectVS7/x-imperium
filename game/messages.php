@@ -59,7 +59,8 @@ if ((isset($_POST["subject"])) && (isset($_POST["content"])))
 				$evt->type = CONF_EVENT_MESSAGE;
 				$evt->from = $_SESSION["empire_id"];
 				$evt->to = $rs->fields["id"];
-				$evt->params = array("subject"=>addslashes($subject),"content"=>addslashes($content));
+				// No addslashes needed - event_creator handles escaping
+				$evt->params = array("subject"=>$subject,"content"=>$content);
 				$evt->send();
 								
 			}
@@ -73,7 +74,8 @@ if ((isset($_POST["subject"])) && (isset($_POST["content"])))
 							$evt->type = CONF_EVENT_MESSAGE;
 							$evt->from = $_SESSION["empire_id"];
 							$evt->to = $rs->fields["id"];
-							$evt->params = array("subject"=>addslashes($subject),"content"=>addslashes($content));
+							// No addslashes needed - event_creator handles escaping
+							$evt->params = array("subject"=>$subject,"content"=>$content);
 							$evt->send();
 					}
 					

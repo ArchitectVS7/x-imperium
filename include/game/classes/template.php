@@ -118,8 +118,10 @@ class Template
 		if ($this->notices_data != "") {
 			//$this->TPL->assign("events_data",$this->notices_data);
 
+			// XSS fix: Use json_encode to safely escape data for JavaScript
+			$safeNoticesData = json_encode($this->notices_data, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP);
                         $script = "<script>
-                            CustomAlert('$this->notices_data');
+                            CustomAlert(" . $safeNoticesData . ");
                         </script>
                         ";
                         $this->TPL->assign("events_script",$script);

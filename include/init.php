@@ -14,12 +14,11 @@ require_once($path_prefix."include/xss_block.php");
 require_once($path_prefix."include/config.php");
 require_once($path_prefix."include/thirdparty/smarty/Smarty.class.php");
 require_once($path_prefix."include/thirdparty/adodb/adodb.inc.php");
+require_once($path_prefix."include/security/SessionManager.php");
 
-if (isset($_POST["magickey"])) {
-    if (!session_start($_POST["magickey"])) die("Unable to create session object!");
-} else {
-    if (!session_start()) die("Unable to create session object!");
-}
+// Session fixation vulnerability fix: magickey parameter removed
+// Never accept session IDs from user input - this enables session hijacking attacks
+if (!session_start()) die("Unable to create session object!");
 
 require_once($path_prefix."include/languages.php");
 

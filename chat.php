@@ -8,9 +8,9 @@ require_once("include/init.php");
 
 
 if (isset($_GET["info"])) {
-    $info = addslashes($_GET["info"]);
-
-    $rs = $DB->Execute("SELECT * FROM system_tb_players WHERE id='$info'");
+    // SQL Injection fix: Use prepared statements
+    $stmtInfo = $DB->Prepare("SELECT * FROM system_tb_players WHERE id=?");
+    $rs = $DB->Execute($stmtInfo, array(intval($_GET["info"])));
     if ($rs->EOF) die(T_("Invalid player ID!"));
     $rs2 = $DB->Execute("SELECT * FROM system_tb_games");
 
@@ -69,21 +69,24 @@ if (isset($_GET["AJAX"])) {
     if (!isset($_SESSION["player"])) die("session_failed");
 
     // verify if its in the database.
-    $rs = $DB->Execute("SELECT * FROM system_tb_chat_sessions WHERE nickname='".addslashes($_SESSION["player"]["nickname"])."'");
+    // SQL Injection fix: Use prepared statements
+    $stmtChatSess = $DB->Prepare("SELECT * FROM system_tb_chat_sessions WHERE nickname=?");
+    $rs = $DB->Execute($stmtChatSess, array($_SESSION["player"]["nickname"]));
     if ($rs->EOF) {
-
 
         $hostname = $_SERVER["REMOTE_ADDR"];
         if (isset($_SERVER["X_FORWARDED_FOR"])) $hostname = $_SERVER["X_FORWARDED_FOR"];
         $hostname = str_replace("<","&lt;",$hostname);
         $hostname = str_replace(">","&gt;",$hostname);
 
-        $DB->Execute("INSERT INTO system_tb_chat_sessions (timestamp,nickname,hostname) VALUES(".time(NULL).",'".addslashes($_SESSION["player"]["nickname"])."','$hostname')");
-    //$DB->Execute("INSERT INTO system_tb_chat_log (timestamp,message) VALUES(".time(NULL).",'<b style=\"color:#FFFF99\">[".date("H:i:s")."] ".$_SESSION["player"]["nickname"]." ".T_("has joined the chatroom.")."</b>')");
-
+        // SQL Injection fix: Use prepared statements
+        $stmtInsertSess = $DB->Prepare("INSERT INTO system_tb_chat_sessions (timestamp,nickname,hostname) VALUES(?,?,?)");
+        $DB->Execute($stmtInsertSess, array(time(NULL), $_SESSION["player"]["nickname"], $hostname));
     }
 
-    $DB->Execute("UPDATE system_tb_chat_sessions SET timestamp=".time(NULL)." WHERE nickname='".addslashes($_SESSION["player"]["nickname"])."'");
+    // SQL Injection fix: Use prepared statements
+    $stmtUpdSess = $DB->Prepare("UPDATE system_tb_chat_sessions SET timestamp=? WHERE nickname=?");
+    $DB->Execute($stmtUpdSess, array(time(NULL), $_SESSION["player"]["nickname"]));
 
     if (isset($_GET["action"]) && ($_GET["action"]=="list_messages")) {
 
@@ -181,14 +184,16 @@ if (isset($_GET["AJAX"])) {
 
                 if ($target_player == $_SESSION["player"]["nickname"]) die(T_("You can't kick youself!"));
                 // verify player existence
-                $query = "SELECT COUNT(*) FROM system_tb_players WHERE nickname='".addslashes($target_player)."'";
-                $rs = $DB->Execute($query);
+                // SQL Injection fix: Use prepared statements
+                $stmtCheck = $DB->Prepare("SELECT COUNT(*) FROM system_tb_players WHERE nickname=?");
+                $rs = $DB->Execute($stmtCheck, array($target_player));
                 if ($rs->fields[0] == 0) die(T_("Invalid player name submitted!"));
 
                 $output = "<b style=\"color:yellow\">*** ".T_("Administrator kicked player ")." '".$target_player."' ".T_("from the game")." ($description) ***</b>";
 
-                $query = "INSERT INTO system_tb_warrant (kind,player,description) VALUES('kick','".addslashes($target_player)."','".addslashes($description)."')";
-                $DB->Execute($query);
+                // SQL Injection fix: Use prepared statements
+                $stmtWarrant = $DB->Prepare("INSERT INTO system_tb_warrant (kind,player,description) VALUES('kick',?,?)");
+                $DB->Execute($stmtWarrant, array($target_player, $description));
 
             }
 
@@ -200,20 +205,23 @@ if (isset($_GET["AJAX"])) {
 
                 if ($target_player == $_SESSION["player"]["nickname"]) die(T_("You can't ban youself!"));
                 // verify player existence
-                $query = "SELECT COUNT(*) FROM system_tb_players WHERE nickname='".addslashes($target_player)."'";
-                $rs = $DB->Execute($query);
+                // SQL Injection fix: Use prepared statements
+                $stmtCheck = $DB->Prepare("SELECT COUNT(*) FROM system_tb_players WHERE nickname=?");
+                $rs = $DB->Execute($stmtCheck, array($target_player));
                 if ($rs->fields[0] == 0) die(T_("Invalid player name submitted!"));
 
                 $output = "<b style=\"color:yellow\">*** ".T_("Administrator banned player ")." '".$target_player."' ".T_("from the game (forever)")." ($description) ***</b>";
 
-                $query = "INSERT INTO system_tb_warrant (kind,player,description) VALUES('ban','".addslashes($target_player)."','".addslashes($description)."')";
-                $DB->Execute($query);
+                // SQL Injection fix: Use prepared statements
+                $stmtWarrant = $DB->Prepare("INSERT INTO system_tb_warrant (kind,player,description) VALUES('ban',?,?)");
+                $DB->Execute($stmtWarrant, array($target_player, $description));
             }
 
         }
 
-        $query = "INSERT INTO system_tb_chat_log (timestamp,message) VALUES(".time(NULL).",'".(addslashes($output))."')";
-        $DB->Execute($query);
+        // SQL Injection fix: Use prepared statements
+        $stmtChatLog = $DB->Prepare("INSERT INTO system_tb_chat_log (timestamp,message) VALUES(?,?)");
+        $DB->Execute($stmtChatLog, array(time(NULL), $output));
         $DB->CompleteTrans();
 
         die("message_sent");
@@ -230,7 +238,9 @@ if (isset($_GET["AJAX"])) {
         $rs = $DB->Execute("SELECT * FROM system_tb_chat_sessions ORDER BY nickname ASC");
         while(!$rs->EOF) {
 
-            $rs2 = $DB->Execute("SELECT admin,premium,id FROM system_tb_players WHERE nickname='".addslashes($rs->fields["nickname"])."'");
+            // SQL Injection fix: Use prepared statements
+            $stmtPlayer = $DB->Prepare("SELECT admin,premium,id FROM system_tb_players WHERE nickname=?");
+            $rs2 = $DB->Execute($stmtPlayer, array($rs->fields["nickname"]));
             if ($rs2->fields["premium"] == 1)
                 $o = "<tr><td style=\"color:yellow\" align=\"right\"".$rs->fields["nickname"]." *P*</td></tr>\r\n";
             else

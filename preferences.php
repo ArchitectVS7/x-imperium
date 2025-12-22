@@ -26,23 +26,29 @@ if (isset($_GET["SHOW_AVATAR"])) {
 // ************************************************************************
 if (isset($_GET["UPDATE"])) {
 
+	// CSRF protection
+	if (!isset($_POST["csrf_token"]) || !SessionManager::validateCsrfToken($_POST["csrf_token"])) {
+		$DB->CompleteTrans();
+		die(T_("Invalid security token. Please refresh the page and try again."));
+	}
+
 	if ($_POST["password1"] != "") {
 
 		if ($_POST["password1"] != $_POST["password2"]) die(T_("Passwords does not matches!"));
 		// Hash password securely with Argon2id
 		$hashedPassword = PasswordHandler::hash($_POST["password1"]);
-		$DB->Execute("UPDATE system_tb_players SET password='".addslashes($hashedPassword)."' WHERE id=".$_SESSION["player"]["id"]);
+		// SQL Injection fix: Use prepared statements
+		$stmtPwd = $DB->Prepare("UPDATE system_tb_players SET password=? WHERE id=?");
+		$DB->Execute($stmtPwd, array($hashedPassword, $_SESSION["player"]["id"]));
 	}
 
 	if ($_POST["email"] == "") { $DB->CompleteTrans(); die (T_("Empty email field!")); }
 	if ($_POST["real_name"] == "") { $DB->CompleteTrans(); die (T_("Empty real_name field!")); }
 	if ($_POST["country"] == "") { $DB->CompleteTrans(); die (T_("Empty country field!")); }
-	
-	$DB->Execute("UPDATE system_tb_players SET ".
-			"email='".addslashes($_POST["email"])."'," .
-			"real_name='".(addslashes($_POST["real_name"]))."'," .
-			"country='".(addslashes($_POST["country"]))."'" .
-			" WHERE id=".$_SESSION["player"]["id"]);
+
+	// SQL Injection fix: Use prepared statements
+	$stmtProfile = $DB->Prepare("UPDATE system_tb_players SET email=?, real_name=?, country=? WHERE id=?");
+	$DB->Execute($stmtProfile, array($_POST["email"], $_POST["real_name"], $_POST["country"], $_SESSION["player"]["id"]));
 
 	if (isset($_FILES["avatar_img"])) {
 		
@@ -147,7 +153,8 @@ while(!$rs->EOF) {
 
 $TPL->assign("last_logins",$last_logins);
 
-
+// Pass CSRF token to template
+$TPL->assign("csrf_token", SessionManager::getCsrfToken());
 
 $DB->CompleteTrans();
 $TPL->display("page_preferences.html");

@@ -47,6 +47,7 @@
 <td  valign="top" width="100%">
 
 <form enctype="multipart/form-data" method="post" name="signup_form" action="preferences.php?UPDATE">
+<input type="hidden" name="csrf_token" value="{$csrf_token}">
 <input type="hidden" name="MAX_FILE_SIZE" value="10000000" />
 
 <table cellspacing="0" cellpadding="2" border="0" style="margin:20px" width="100%">

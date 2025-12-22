@@ -15,11 +15,13 @@ $game_id = round($_SESSION["game"]);
 
 if (isset($_GET["empire"]))
 {
-	$id = addslashes($_GET["empire"]);
-	$id = explode("?",$id);
+	// Parse and validate empire ID (intval handles sanitization)
+	$id = explode("?", $_GET["empire"]);
 	$id = intval($id[0]);
 
-	$rs = $DB->Execute("SELECT logo FROM game".$game_id."_tb_empire WHERE id='$id'");
+	// SQL Injection fix: Use prepared statement
+	$stmtLogo = $DB->Prepare("SELECT logo FROM game".$game_id."_tb_empire WHERE id=?");
+	$rs = $DB->Execute($stmtLogo, array($id));
 	if ($rs->EOF) {
 		$gd = imagecreatetruecolor(32,32);
 		imagejpeg($gd,"",100);
@@ -69,16 +71,15 @@ for ($x=0;$x<16;$x++)
 
 if (isset($_GET["empire"]))
 {
-		$id = addslashes($_GET["empire"]);
-		$id = explode("?",$id);
-		$id = $id[0];
-		$id = str_replace(".","",stripslashes($id));
-		
+		// Path traversal fix: Use intval to ensure numeric ID
+		$id = explode("?", $_GET["empire"]);
+		$id = intval($id[0]);
+
 		if ((!file_exists("../images/game/empires/$game_id/$id.jpg")) || (isset($_GET["OVERWRITE"]))) {
-			
+
 			imagejpeg($gd,"../images/game/empires/$game_id/$id.jpg",90);
 		}
-	
+
 }
 
 header("Content-type: image/jpeg");

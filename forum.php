@@ -93,9 +93,11 @@ if (isset($_POST["forum_newtopic"]))
 	}
 	
 		
-	$query = "INSERT INTO system_tb_forum (player,date_creation,date_update,title,content,forum_name) VALUES(".$_SESSION["player"]["id"].",".time(NULL).",".time(NULL).",'".addslashes($subject)."','".addslashes($content)."','".$_SESSION["current_forum"]."');";
-	$DB->Execute($query);
-	if (!$DB) trigger_error($DB->ErrorMsg());
+	// SQL Injection fix: Use prepared statements
+	$stmtInsert = $DB->Prepare("INSERT INTO system_tb_forum (player,date_creation,date_update,title,content,forum_name) VALUES(?,?,?,?,?,?)");
+	$currentTime = time(NULL);
+	$rs = $DB->Execute($stmtInsert, array($_SESSION["player"]["id"], $currentTime, $currentTime, $subject, $content, $_SESSION["current_forum"]));
+	if (!$rs) trigger_error($DB->ErrorMsg());
 	
 	$DB->CompleteTrans();
 			
@@ -145,31 +147,36 @@ if (!isset($_SESSION["current_forum"])) {
 		$item["fgcolor"] =  ($count % 2 == 0?"#000000":"#333333");
 		$item["url"] = "forum.php?forum=".$key;
 		$item["description"] = $value["description"];
-		$rs = $DB->Execute("SELECT COUNT(*) FROM system_tb_forum WHERE parent=-1 AND forum_name='".addslashes($key)."'");
+		// SQL Injection fix: Use prepared statements
+		$stmtPosts = $DB->Prepare("SELECT COUNT(*) FROM system_tb_forum WHERE parent=-1 AND forum_name=?");
+		$rs = $DB->Execute($stmtPosts, array($key));
 		$item["posts"] = $rs->fields[0];
-		$rs = $DB->Execute("SELECT COUNT(*) FROM system_tb_forum WHERE parent > -1 AND forum_name='".addslashes($key)."'");
+		$stmtReplies = $DB->Prepare("SELECT COUNT(*) FROM system_tb_forum WHERE parent > -1 AND forum_name=?");
+		$rs = $DB->Execute($stmtReplies, array($key));
 
 		$item["replies"] = $rs->fields[0];
-		
+
 		if ($item["posts"] == 0) $item["lastpost"] = "---"; else {
-			$rs = $DB->Execute("SELECT date_creation FROM system_tb_forum WHERE parent=-1 AND forum_name='".addslashes($key)."' ORDER BY date_creation DESC");
+			$stmtLastPost = $DB->Prepare("SELECT date_creation FROM system_tb_forum WHERE parent=-1 AND forum_name=? ORDER BY date_creation DESC");
+			$rs = $DB->Execute($stmtLastPost, array($key));
 			if (!$rs) trigger_error($DB->ErrorMsg());
-			
+
 			$days = floor((time() - $rs->fields["date_creation"]) / (60*60*24));
-			
-			if ($days == 0) 
+
+			if ($days == 0)
 				$item["lastpost"] = T_("Today");
 			else
 				$item["lastpost"] = $days . T_(" days");
 		}
-		
+
 		if ($item["replies"] == 0) $item["lastreply"] = "---"; else {
-			$rs = $DB->Execute("SELECT date_creation FROM system_tb_forum WHERE parent > -1 AND forum_name='".addslashes($key)."' ORDER BY date_creation DESC");
+			$stmtLastReply = $DB->Prepare("SELECT date_creation FROM system_tb_forum WHERE parent > -1 AND forum_name=? ORDER BY date_creation DESC");
+			$rs = $DB->Execute($stmtLastReply, array($key));
 			if (!$rs) trigger_error($DB->ErrorMsg());
-			
+
 			$days = floor((time() - $rs->fields["date_creation"]) / (60*60*24));
-			
-			if ($days == 0) 
+
+			if ($days == 0)
 				$item["lastreply"] = T_("Today");
 			else
 				$item["lastreply"] = $days . T_(" days");
@@ -193,11 +200,14 @@ if (!isset($_SESSION["current_forum"])) {
 
 if (!isset($_SESSION["forum_page"])) $_SESSION["forum_page"] = 0;
 if (isset($_GET["forum_page"])) $_SESSION["forum_page"] = intval($_GET["forum_page"]);
-$total_posts = $DB->Execute("SELECT COUNT(*) FROM system_tb_forum WHERE parent=-1 AND forum_name='".addslashes($_SESSION["current_forum"])."'");
+// SQL Injection fix: Use prepared statements
+$stmtTotal = $DB->Prepare("SELECT COUNT(*) FROM system_tb_forum WHERE parent=-1 AND forum_name=?");
+$total_posts = $DB->Execute($stmtTotal, array($_SESSION["current_forum"]));
 $total_posts = $total_posts->fields[0];
 
-$query = "SELECT * FROM system_tb_forum WHERE parent=-1 AND forum_name='".addslashes($_SESSION["current_forum"])."' ORDER BY date_update DESC";
-$rs = $DB->Execute($query);
+// SQL Injection fix: Use prepared statements
+$stmtTopics = $DB->Prepare("SELECT * FROM system_tb_forum WHERE parent=-1 AND forum_name=? ORDER BY date_update DESC");
+$rs = $DB->Execute($stmtTopics, array($_SESSION["current_forum"]));
 if (!$rs) trigger_error($DB->ErrorMsg());
 
 $forum_items = array();

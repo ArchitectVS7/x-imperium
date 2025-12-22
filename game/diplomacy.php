@@ -100,9 +100,9 @@ if (isset($_GET["coalition_yes"]))
 	$evt = new EventCreator($DB);
 	$evt->type = CONF_EVENT_COALITION_JOINED;
 	$evt->from = $GAME["empire"]->data["id"];
-	$evt->to = addslashes($id);
+	$evt->to = $id; // $id is already intval'd
 	$evt->params  = array("empire_id"=>$GAME["empire"]->data["id"],"empire_name"=>$GAME["empire"]->data["name"],"empire_emperor"=>$GAME["empire"]->data["emperor"],"gender"=>$GAME["empire"]->data["gender"]);
-	$evt->send();	
+	$evt->send();
 
 	$GAME["system"]->redirect("diplomacy.php",array("NOTICE"=>T_("Coalition invitation accepted")));
 	
@@ -125,7 +125,7 @@ if (isset($_GET["coalition_no"]))
 	$evt = new EventCreator($DB);
 	$evt->type = CONF_EVENT_COALITION_REFUSED;
 	$evt->from = $GAME["empire"]->data["id"];
-	$evt->to = addslashes($id);
+	$evt->to = $id; // $id is already intval'd
 	$evt->params  = array("empire_id"=>$GAME["empire"]->data["id"],"empire_name"=>$GAME["empire"]->data["name"],"empire_emperor"=>$GAME["empire"]->data["emperor"],"gender"=>$GAME["empire"]->data["gender"]);
 	$evt->send();	
 	
@@ -200,8 +200,10 @@ if (isset($_POST["coalition_name"]))
 	if ($coalition_name == "") {
 		$GAME["system"]->redirect("diplomacy.php",array("WARNING"=>T_("Invalid coalition name!")));
 	}
-	
-	$rs = $DB->Execute("SELECT * FROM game".$game_id."_tb_coalition WHERE name='".addslashes($coalition_name)."'");
+
+	// SQL Injection fix: Use prepared statements
+	$stmtCheck = $DB->Prepare("SELECT * FROM game".$game_id."_tb_coalition WHERE name=?");
+	$rs = $DB->Execute($stmtCheck, array($coalition_name));
 	if (!$rs->EOF) {
 		$GAME["system"]->redirect("diplomacy.php",array("WARNING"=>T_("Coalition name already in use!")));
 	}
@@ -279,17 +281,18 @@ if (isset($_GET["yes"]))
 /* Refuse a treaty */
 if (isset($_GET["no"]))
 {
-	$id = addslashes($_GET["no"]);
+	$id = intval($_GET["no"]);
 
-	$query = "DELETE FROM game".$game_id."_tb_treaty WHERE empire_from='".$_SESSION["empire_id"]."' AND empire_to='$id'";
-	$DB->Execute($query);
-	$query = "DELETE FROM game".$game_id."_tb_treaty WHERE empire_from='$id' AND empire_to='".$_SESSION["empire_id"]."'";
-	$DB->Execute($query);
+	// SQL Injection fix: Use prepared statements
+	$stmtDel1 = $DB->Prepare("DELETE FROM game".$game_id."_tb_treaty WHERE empire_from=? AND empire_to=?");
+	$DB->Execute($stmtDel1, array($_SESSION["empire_id"], $id));
+	$stmtDel2 = $DB->Prepare("DELETE FROM game".$game_id."_tb_treaty WHERE empire_from=? AND empire_to=?");
+	$DB->Execute($stmtDel2, array($id, $_SESSION["empire_id"]));
 
-	$query = "DELETE FROM game".$game_id."_tb_event WHERE event_to='".$_SESSION["empire_id"]."' AND event_from='$id' AND event_type='".CONF_EVENT_PENDINGTREATY."'";	
-	$DB->Execute($query);
-	$query = "DELETE FROM game".$game_id."_tb_event WHERE event_to='$id' AND event_from='".$_SESSION["empire_id"]."' AND event_type='".CONF_EVENT_PENDINGTREATY."'";	
-	$DB->Execute($query);
+	$stmtEvt1 = $DB->Prepare("DELETE FROM game".$game_id."_tb_event WHERE event_to=? AND event_from=? AND event_type=?");
+	$DB->Execute($stmtEvt1, array($_SESSION["empire_id"], $id, CONF_EVENT_PENDINGTREATY));
+	$stmtEvt2 = $DB->Prepare("DELETE FROM game".$game_id."_tb_event WHERE event_to=? AND event_from=? AND event_type=?");
+	$DB->Execute($stmtEvt2, array($id, $_SESSION["empire_id"], CONF_EVENT_PENDINGTREATY));
 
 
 	$evt = new EventCreator($DB);

@@ -15,10 +15,11 @@ if (isset($_POST["chatbox"])) {
 	$message = $GAME["system"]->filterText($message);
 	
 	if ($message != "") {
-		
-		$query = "INSERT INTO game".$game_id."_tb_shoutbox (coalition,date,empire_name,empire_id,message) VALUES(".$GAME["empire"]->coalition->data["id"].",".time(NULL).",'".$GAME["empire"]->data["emperor"]."',".$GAME["empire"]->data["id"].",'".addslashes($message)."')";
-		$DB->Execute($query);	
-		
+
+		// SQL Injection fix: Use prepared statement
+		$stmtShout = $DB->Prepare("INSERT INTO game".$game_id."_tb_shoutbox (coalition,date,empire_name,empire_id,message) VALUES(?,?,?,?,?)");
+		$DB->Execute($stmtShout, array($GAME["empire"]->coalition->data["id"], time(NULL), $GAME["empire"]->data["emperor"], $GAME["empire"]->data["id"], $message));
+
 	}
 	
 	$GAME["system"]->redirect("shoutbox.php");

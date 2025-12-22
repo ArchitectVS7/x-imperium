@@ -12,6 +12,11 @@ require_once("include/security/PasswordHandler.php");
 // ******************************************************************************
 if (isset($_GET["SIGNUP"])) {
 
+    // CSRF protection
+    if (!isset($_POST["csrf_token"]) || !SessionManager::validateCsrfToken($_POST["csrf_token"])) {
+        $DB->CompleteTrans();
+        dieError(T_("Invalid security token. Please refresh the page and try again."));
+    }
 
     if ((!isset($_POST["agree_checkbox"])) || ($_POST["agree_checkbox"]=="false")) {
         $DB->CompleteTrans();
@@ -26,10 +31,14 @@ if (isset($_GET["SIGNUP"])) {
     if ($_POST["password2"] == "") { $DB->CompleteTrans(); dieError(T_("Empty password(second) field!")); }
     if ($_POST["password1"] != $_POST["password2"]) { $DB->CompleteTrans(); dieError(T_("Passwords entered does not matches!")); }
 
-    $rs = $DB->Execute("SELECT * FROM system_tb_players WHERE email='".addslashes($_POST["email"])."'");
+    // SQL Injection fix: Use prepared statements
+    $stmtEmail = $DB->Prepare("SELECT * FROM system_tb_players WHERE email=?");
+    $rs = $DB->Execute($stmtEmail, array($_POST["email"]));
     if (!$rs->EOF) { $DB->CompleteTrans(); dieError(T_("This email address is already used by someone else!")); }
 
-    $rs = $DB->Execute("SELECT * FROM system_tb_players WHERE nickname='".utf8_encode(addslashes($_POST["nickname"]))."'");
+    // SQL Injection fix: Use prepared statements
+    $stmtNick = $DB->Prepare("SELECT * FROM system_tb_players WHERE nickname=?");
+    $rs = $DB->Execute($stmtNick, array(utf8_encode($_POST["nickname"])));
     if (!$rs->EOF) { $DB->CompleteTrans(); dieError(T_("This nickname is already used by someone else!")); }
 
     $_POST["nickname"] = str_replace("<","&lt;",$_POST["nickname"]);
@@ -50,9 +59,18 @@ if (isset($_GET["SIGNUP"])) {
     // Hash password securely with Argon2id
     $hashedPassword = PasswordHandler::hash($_POST["password1"]);
 
-    $query = "INSERT INTO system_tb_players (admin,creation_date,email,nickname,real_name,country,password,active) VALUES($admin,$creation_date,'".addslashes($_POST["email"])."','".utf8_encode(addslashes($_POST["nickname"]))."','".utf8_encode(addslashes($_POST["real_name"]))."','".utf8_encode(addslashes($_POST["country"]))."','".addslashes($hashedPassword)."',1);";
-    $DB->Execute($query);
-    if (!$DB) trigger_error($DB->ErrorMsg());
+    // SQL Injection fix: Use prepared statements
+    $stmtInsert = $DB->Prepare("INSERT INTO system_tb_players (admin,creation_date,email,nickname,real_name,country,password,active) VALUES(?,?,?,?,?,?,?,1)");
+    $rs = $DB->Execute($stmtInsert, array(
+        $admin,
+        $creation_date,
+        $_POST["email"],
+        utf8_encode($_POST["nickname"]),
+        utf8_encode($_POST["real_name"]),
+        utf8_encode($_POST["country"]),
+        $hashedPassword
+    ));
+    if (!$rs) trigger_error($DB->ErrorMsg());
     // already activated, no need to send email
 
     // Update stats
@@ -83,7 +101,10 @@ if (isset($_GET["SIGNUP"])) {
 
 
 
-$DB->CompleteTrans(); 
+// Pass CSRF token to template
+$TPL->assign("csrf_token", SessionManager::getCsrfToken());
+
+$DB->CompleteTrans();
 $TPL->display("page_registernow.html");
 
 ?>

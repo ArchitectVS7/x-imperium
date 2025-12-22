@@ -42,11 +42,14 @@ if ((isset($_GET["JOINNOW"])) && isset($_POST["empire_name"])) {
 	$rs = $DB->Execute("SELECT * FROM game".$game_id."_tb_coordinator");
 	if ($rs->EOF) { $DB->CompleteTrans(); die(header("Location: joingame.php?GAME=".intval($_GET["GAME"])."&WARNING=".T_("Game not resetted yet!"))); }
 
-	$rs = $DB->Execute("SELECT * FROM game".$game_id."_tb_empire WHERE emperor='$emperor_name'");
+	// SQL Injection fix: Use prepared statements
+	$stmtEmperor = $DB->Prepare("SELECT * FROM game".$game_id."_tb_empire WHERE emperor=?");
+	$rs = $DB->Execute($stmtEmperor, array($_POST["emperor_name"]));
 	if (!$rs->EOF) { $DB->CompleteTrans(); die(header("Location: joingame.php?GAME=".intval($_GET["GAME"])."&WARNING=".T_("Emperor/emperess name already in use!"))); }
 
-
-	$rs = $DB->Execute("SELECT * FROM game".$game_id."_tb_empire WHERE name='$empire_name'");
+	// SQL Injection fix: Use prepared statements
+	$stmtEmpire = $DB->Prepare("SELECT * FROM game".$game_id."_tb_empire WHERE name=?");
+	$rs = $DB->Execute($stmtEmpire, array($_POST["empire_name"]));
 	if (!$rs->EOF) { $DB->CompleteTrans(); die(header("Location: joingame.php?GAME=".intval($_GET["GAME"])."&WARNING=".T_("Empire name already in use!"))); }
 	
 	
@@ -81,42 +84,36 @@ if ((isset($_GET["JOINNOW"])) && isset($_POST["empire_name"])) {
 	$premium = $_SESSION["player"]["premium"];
 
 	
-	// 4 insert data in dabase
-	$query = "INSERT INTO game".$game_id."_tb_empire (player_id,
-	emperor,
-	name,
-	gender,
-	logo,
-	biography,
-	active,
-	date,
-	last_turn_date,
-	turns_left,
-	protection_turns_left,
-	credits,
-	last_credits,
-	population,
-	food,
-	x,y,premium,food_rate,ore_rate,petroleum_rate) 
-	VALUES(".$_SESSION["player"]["id"].",
-	'".$emperor_name."',
-	'".$empire_name."',
-	'".$gender."',
-	'$default_logo',
-	'".$autobio."',
-	1,
-	".time(NULL).",
-	".time(NULL).",
-	".$game_data["turns_per_day"].",
-	".$game_data["protection_turns"].",
-	".CONF_START_CREDITS.",
-	".CONF_START_CREDITS.",
-	".CONF_START_POPULATION.",
-	".CONF_START_FOOD.",$x,$y,$premium,".CONF_DEFAULT_AUTOSELL_RATE.",".CONF_DEFAULT_AUTOSELL_RATE.",".CONF_DEFAULT_AUTOSELL_RATE."
-	);";
-	
-	$DB->Execute($query);
-	if (!$DB) trigger_error($DB->ErrorMsg());
+	// 4 insert data in database
+	// SQL Injection fix: Use prepared statements
+	$stmtInsertEmpire = $DB->Prepare("INSERT INTO game".$game_id."_tb_empire (player_id,
+	emperor, name, gender, logo, biography, active, date, last_turn_date,
+	turns_left, protection_turns_left, credits, last_credits, population, food,
+	x, y, premium, food_rate, ore_rate, petroleum_rate)
+	VALUES(?, ?, ?, ?, ?, ?, 1, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+
+	$currentTime = time(NULL);
+	$rs = $DB->Execute($stmtInsertEmpire, array(
+		$_SESSION["player"]["id"],
+		$_POST["emperor_name"],
+		$_POST["empire_name"],
+		$_POST["gender"],
+		$default_logo,
+		$_POST["autobiography"] != "" ? $_POST["autobiography"] : T_("--- No biography defined ---"),
+		$currentTime,
+		$currentTime,
+		$game_data["turns_per_day"],
+		$game_data["protection_turns"],
+		CONF_START_CREDITS,
+		CONF_START_CREDITS,
+		CONF_START_POPULATION,
+		CONF_START_FOOD,
+		$x, $y, $premium,
+		CONF_DEFAULT_AUTOSELL_RATE,
+		CONF_DEFAULT_AUTOSELL_RATE,
+		CONF_DEFAULT_AUTOSELL_RATE
+	));
+	if (!$rs) trigger_error($DB->ErrorMsg());
 
 	
 	$id = $DB->Insert_ID();

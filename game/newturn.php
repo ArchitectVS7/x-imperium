@@ -154,7 +154,9 @@ CheckVictoryCondition($rs->fields["id"],$rs->fields["victory_condition"],$rs->fi
 
 $_SESSION["player"]["score"] += 1;
 
-$DB->Execute("UPDATE system_tb_players SET score='" . addslashes($_SESSION["player"]["score"]) . "' WHERE id='".$_SESSION["player"]["id"]."'");
+// SQL Injection fix: Use prepared statement
+$stmtScore = $DB->Prepare("UPDATE system_tb_players SET score=? WHERE id=?");
+$DB->Execute($stmtScore, array($_SESSION["player"]["score"], $_SESSION["player"]["id"]));
 
 
 $msg= "----- TURN COMPLETED: (pop=".number_format($GAME["empire"]->data["population"]).

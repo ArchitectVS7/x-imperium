@@ -25,7 +25,8 @@ $buy_max_carriers = $GAME["gameplay_costs"]->getMaxQty($GAME["empire"]->data["cr
 /* buy something */
 if (isset($_GET["buy"]))
 {
-	$name = addslashes($_GET["buy"]);	
+	// Name is validated against whitelist arrays, addslashes not needed
+	$name = $_GET["buy"];
 	$qty = intval($_GET["quantity"]);
 			
 	if (!strpos($name,"_planets")) {
@@ -132,7 +133,8 @@ if (isset($_GET["buy"]))
 /* sell something */
 if (isset($_GET["sell"]))
 {
-	$name = addslashes($_GET["sell"]);	
+	// Name is validated against whitelist arrays, addslashes not needed
+	$name = $_GET["sell"];
 	$qty = intval($_GET["quantity"]);
 		if (!strpos($name,"_planets")) {
 		// this is not planets

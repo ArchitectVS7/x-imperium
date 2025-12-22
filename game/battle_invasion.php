@@ -50,7 +50,9 @@ if (isset($_POST["invasion_empire"])) {
 
 
 	// verify if target is correct
-	$rs = $DB->Execute("SELECT * FROM game".$game_id."_tb_empire WHERE protection_turns_left='0' AND id='$empire'");
+	// SQL Injection fix: Use prepared statement
+	$stmtTarget = $DB->Prepare("SELECT * FROM game".$game_id."_tb_empire WHERE protection_turns_left='0' AND id=?");
+	$rs = $DB->Execute($stmtTarget, array($empire));
 	if ($rs->EOF) {
 		$GAME["system"]->redirect("battle.php",array("WARNING"=>T_("Invalid empire ID !")));
 	}
@@ -58,11 +60,12 @@ if (isset($_POST["invasion_empire"])) {
 	$attacked_by = explode(",",$rs->fields["attacked_by"]);
 
 
-	if ($GAME["empire"]->diplomacy->treatyFrom(addslashes($empire)) != null) {
+	// $empire is already intval'd, no need for addslashes
+	if ($GAME["empire"]->diplomacy->treatyFrom($empire) != null) {
 		$GAME["system"]->redirect("battle.php",array("WARNING"=>T_("You can't attack a ally!")));
-	} 
+	}
 
-	if ($GAME["empire"]->coalition->isMemberFromId(addslashes($empire))) {		
+	if ($GAME["empire"]->coalition->isMemberFromId($empire)) {		
 		$GAME["system"]->redirect("battle.php",array("WARNING"=>T_("You can't attack a ally!")));
 	}
 	
@@ -132,7 +135,7 @@ if (isset($_POST["invasion_empire"])) {
 	$time_required -= ($time_required % 60);
 
 	$target_empire = new Empire($DB,$GAME["template"],$GAME["gameplay_costs"]);
-	$target_empire->Load(addslashes($empire));
+	$target_empire->Load($empire);
 
 
 	// compare networths
@@ -152,44 +155,21 @@ if (isset($_POST["invasion_empire"])) {
 
 
 	// creating convoy
-	$query = "
-	INSERT INTO game".$game_id."_tb_armyconvoy
-	(
-	convoy_type,
-	convoy_target,
-	empire_from,
-	empire_to,
-	convoy_soldiers,
-	convoy_soldiers_level,
-	convoy_fighters,
-	convoy_fighters_level,
-	convoy_lightcruisers,
-	convoy_lightcruisers_level,
-	convoy_heavycruisers,
-	convoy_heavycruisers_level,
-	carriers,
-	carriers_level,
-	time_start,
-	time_end)
-	VALUES(
-	".CONF_CONVOY_INVASION.",
-	-1,
-	".$GAME["empire"]->data["id"].",
-	".addslashes($empire).",
-	$soldiers,
-	".$GAME["empire"]->army->data["soldiers_level"].",
-	$fighters,
-	".$GAME["empire"]->army->data["fighters_level"].",
-	$lightcruisers,
-	".$GAME["empire"]->army->data["lightcruisers_level"].",
-	$heavycruisers,
-	".$GAME["empire"]->army->data["heavycruisers_level"].",
-	$carriers_needed,
-	".$GAME["empire"]->army->data["carriers_level"].",
-	".time(NULL).",
-	".(time(NULL) + $time_required)."
-	)";
-	$DB->Execute($query);
+	// SQL Injection fix: Use prepared statement
+	$stmtConvoy = $DB->Prepare("INSERT INTO game".$game_id."_tb_armyconvoy
+	(convoy_type, convoy_target, empire_from, empire_to, convoy_soldiers, convoy_soldiers_level,
+	convoy_fighters, convoy_fighters_level, convoy_lightcruisers, convoy_lightcruisers_level,
+	convoy_heavycruisers, convoy_heavycruisers_level, carriers, carriers_level, time_start, time_end)
+	VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+	$DB->Execute($stmtConvoy, array(
+		CONF_CONVOY_INVASION, -1, $GAME["empire"]->data["id"], $empire,
+		$soldiers, $GAME["empire"]->army->data["soldiers_level"],
+		$fighters, $GAME["empire"]->army->data["fighters_level"],
+		$lightcruisers, $GAME["empire"]->army->data["lightcruisers_level"],
+		$heavycruisers, $GAME["empire"]->army->data["heavycruisers_level"],
+		$carriers_needed, $GAME["empire"]->army->data["carriers_level"],
+		time(NULL), (time(NULL) + $time_required)
+	));
 	$convoy_id = $DB->Execute("SELECT id FROM game".$game_id."_tb_armyconvoy ORDER BY id DESC LIMIT 1");
 	$convoy_id = $convoy_id->fields["id"];
 
@@ -197,7 +177,7 @@ if (isset($_POST["invasion_empire"])) {
 	$evt = new EventCreator($DB);
 	$evt->from = $GAME["empire"]->data["id"];
 	$evt->type = CONF_EVENT_INCOMING_INVASION;
-	$evt->to = addslashes($empire);
+	$evt->to = $empire;
 	$evt->params = array("soldiers"=>$soldiers,"fighters"=>$fighters,"lightcruisers"=>$lightcruisers,"heavycruisers"=>$heavycruisers);
 	$evt->send();
 	

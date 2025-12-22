@@ -61,7 +61,9 @@ class Session {
 		}
 
 		// Fetch empire by email only (don't include password in query for security)
-		$empire = $this->DB->Execute("SELECT id, password FROM game".$this->game_id."_tb_empire WHERE email='" . addslashes($username) . "' AND active > 0");
+		// SQL Injection fix: Use prepared statements
+		$stmt = $this->DB->Prepare("SELECT id, password FROM game".$this->game_id."_tb_empire WHERE email=? AND active > 0");
+		$empire = $this->DB->Execute($stmt, array($username));
 
 		if (!$empire) trigger_error($this->DB->ErrorMsg());
 		if ($empire->EOF)
@@ -75,7 +77,9 @@ class Session {
 		// Auto-upgrade MD5 passwords to Argon2id on successful login
 		if (PasswordHandler::needsRehash($empire->fields["password"])) {
 			$newHash = PasswordHandler::hash($password);
-			$this->DB->Execute("UPDATE game".$this->game_id."_tb_empire SET password='" . addslashes($newHash) . "' WHERE id=" . $empire->fields["id"]);
+			// SQL Injection fix: Use prepared statements
+			$stmtPwd = $this->DB->Prepare("UPDATE game".$this->game_id."_tb_empire SET password=? WHERE id=?");
+			$this->DB->Execute($stmtPwd, array($newHash, $empire->fields["id"]));
 		}
 
 		$_SESSION["empire_id"] = $empire->fields["id"];

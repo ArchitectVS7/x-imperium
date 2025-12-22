@@ -72,58 +72,25 @@ if (isset ($_GET["RESETRULES"])) {
 }
 
 // *********************************************************************************
-// Update rules callback
+// Update rules callback - REMOVED FOR SECURITY
 // *********************************************************************************
+// The UPDATERULES feature has been removed as it allows arbitrary PHP code execution.
+// Game rules should be edited directly on the server by administrators with file access.
+// This was a Remote Code Execution (RCE) vulnerability.
 if (isset ($_GET["UPDATERULES"])) {
-
-
-	$fd = fopen("include/game/games_rules/".intval($_GET["UPDATERULES"]).".php","w");
-	$filedata = stripslashes($_POST["filedata"]);
-	$filedata = str_replace("_?php","<?php",$filedata);
-    
-	if (strpos($filedata,"<?php") === false) {
-		die(T_("Invalid rules sent."));
-	} else {
-		$filedata = substr($filedata,strpos($filedata,"<?php"));
-
-		if (strpos($filedata,"?>") === false) {
-			die(T_("Invalid rules sent."));
-		} else {
-			$filedata = substr($filedata,0,strpos($filedata,"?>")+2);
-		}
-	}
-
-
-	fwrite($fd,stripslashes($filedata));
-	fclose($fd);
-	$DB->CompleteTrans(); 
-	die(header("Location: admin.php"));
-
+	$DB->CompleteTrans();
+	die(T_("This feature has been disabled for security reasons. Please edit rules files directly on the server."));
 }
 
 
 // *********************************************************************************
-// Edit rules callback
+// Edit rules callback - REMOVED FOR SECURITY
 // *********************************************************************************
+// The EDITRULES feature has been removed alongside UPDATERULES.
+// Game rules should be edited directly on the server by administrators with file access.
 if (isset ($_GET["EDITRULES"])) {
-
-	$game_id = intval($_GET["EDITRULES"]);
-	
-	$filename = "include/game/games_rules/".$game_id.".php";
-	$fd = fopen($filename,"r");
-    $fsize = filesize($filename);
-    $filedata = "";
-    if ($fsize != 0)
-    	$filedata = fread($fd,$fsize);
-	fclose($fd);
-
-	$TPL->assign("game_id",$game_id);
-	$TPL->assign("file_content",$filedata);
-
-	$TPL->display("page_admin_editrules.html");
-	$DB->CompleteTrans(); 
-	die();
-
+	$DB->CompleteTrans();
+	die(T_("This feature has been disabled for security reasons. Please edit rules files directly on the server."));
 }
 
 // *********************************************************************************

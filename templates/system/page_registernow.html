@@ -25,7 +25,8 @@
 <br/>
 
 				<form method="post" name="signup_form" action="registernow.php?SIGNUP">
-				
+				<input type="hidden" name="csrf_token" value="{$csrf_token}">
+
 				<table cellspacing="0" cellpadding="2" border="0" style="margin:20px;color:#eaeaea" width="100%">
 				<tr>
 					<td nowrap class="text_normal">{t}Email address{/t}:</td>

@@ -27,8 +27,9 @@ class Coalition
 	///////////////////////////////////////////////////////////////////////
 	function load($empire_id)
 	{
-	
-		$this->member = $this->DB->Execute("SELECT * FROM game".$this->game_id."_tb_member WHERE empire='".addslashes($empire_id)."'");
+		// SQL Injection fix: Use prepared statements
+		$stmt = $this->DB->Prepare("SELECT * FROM game".$this->game_id."_tb_member WHERE empire=?");
+		$this->member = $this->DB->Execute($stmt, array(intval($empire_id)));
 		if (!$this->member) trigger_error($this->DB->ErrorMsg());
 
 		if ($this->member->EOF) {
@@ -311,19 +312,13 @@ class Coalition
 	///////////////////////////////////////////////////////////////////////
 	function create($coalition_name,$empire_id)
 	{
-		
-	
-		$query = "INSERT INTO game".$this->game_id."_tb_coalition (date,name,planets,networth,logo)".
-		"VALUES(".time(NULL).",".
-		"'".addslashes($coalition_name)."',".
-		"0,".
-		"0,".
-		"'5488888888888845554888881888845545549991199945548459222112229548889222211222298888922221122229888892222112222988888922211222988888892221122298888889233333329888888922244222988888459224422954888455492002945548455488922988455455488889988884555488888888888845'".
-		")";
+		// SQL Injection fix: Use prepared statements
+		$defaultLogo = '5488888888888845554888881888845545549991199945548459222112229548889222211222298888922221122229888892222112222988888922211222988888892221122298888889233333329888888922244222988888459224422954888455492002945548455488922988455455488889988884555488888888888845';
+		$stmtInsert = $this->DB->Prepare("INSERT INTO game".$this->game_id."_tb_coalition (date,name,planets,networth,logo) VALUES(?,?,0,0,?)");
+		if (!$this->DB->Execute($stmtInsert, array(time(NULL), $coalition_name, $defaultLogo))) trigger_error($this->DB->ErrorMsg());
 
-		if (!$this->DB->Execute($query)) trigger_error($this->DB->ErrorMsg());
-				
-		$rs = $this->DB->Execute("SELECT * FROM game".$this->game_id."_tb_coalition WHERE name='".addslashes($coalition_name)."'");
+		$stmtSelect = $this->DB->Prepare("SELECT * FROM game".$this->game_id."_tb_coalition WHERE name=?");
+		$rs = $this->DB->Execute($stmtSelect, array($coalition_name));
 		if (!$rs) trigger_error($this->DB->ErrorMsg());
 		$id = $rs->fields["id"];
 	
