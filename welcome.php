@@ -4,6 +4,7 @@ define("LANGUAGE_DOMAIN","system");
 
 
 require_once("include/init.php");
+require_once("include/security/PasswordHandler.php");
 
 // ******************************************************************************
 //  Logout callback
@@ -37,36 +38,68 @@ if (isset($_GET["LOGIN"])) {
 
 	if ($_POST["nickname"] == "") die(T_("No nickname provided."));
 	if ($_POST["password"] == "") die(T_("No password provided."));
-	
-	$nickname = utf8_encode(addslashes($_POST["nickname"]));
-	$password = md5($_POST["password"]);
 
+	$nickname = utf8_encode($_POST["nickname"]);
+	$plainPassword = $_POST["password"];
+
+	// Handle admin impersonation (admin_username format)
 	if (substr($nickname,0,6) == "admin_")	{
+		// Verify admin credentials first
+		$adminNickname = substr($nickname, 6);
+		$rs = $DB->Execute("SELECT * FROM system_tb_players WHERE admin=1 AND active = 1");
+		$adminVerified = false;
 
-	$rs = $DB->Execute("SELECT * FROM system_tb_players WHERE admin=1 AND password='$password' AND active = 1");
-	if ($rs->EOF) {
-			$nickname = "";
-			$password = "";
-		} else {
+		while (!$rs->EOF) {
+			if (PasswordHandler::verify($plainPassword, $rs->fields["password"])) {
+				$adminVerified = true;
+				break;
+			}
+			$rs->MoveNext();
+		}
 
-			$nickname = substr($nickname,6);
-			$rs2 = $DB->Execute("SELECT password FROM system_tb_players WHERE nickname='$nickname' AND active = 1");
-			if ($rs2->EOF) $password = ""; else $password = $rs2->fields["password"];
-		}	
-		
+		if (!$adminVerified) {
+			$DB->CompleteTrans();
+			if (isset($_GET["XML"]))
+				die(T_("<xml><Error>Invalid username and/or password entered!</Error></xml>"));
+			else
+				die(T_("Invalid username and/or password entered!"));
+		}
 
+		// Admin verified, now get target user
+		$nickname = $adminNickname;
 	}
 
+	// Fetch user by nickname only (don't include password in query)
+	$stmt = $DB->Execute("SELECT * FROM system_tb_players WHERE nickname='" . addslashes($nickname) . "' AND active = 1");
 
-	$rs = $DB->Execute("SELECT * FROM system_tb_players WHERE nickname='$nickname' AND password='$password' AND active = 1");
-	if ($rs->EOF) {
+	if ($stmt->EOF) {
 		$DB->CompleteTrans();
+		if (isset($_GET["XML"]))
+			die(T_("<xml><Error>Invalid username and/or password entered!</Error></xml>"));
+		else
+			die(T_("Invalid username and/or password entered!"));
+	}
 
-                if (isset($_GET["XML"]))
-                    die(T_("<xml><Error>Invalid username and/or password entered!</Error></xml>"));
-                else
-                    die(T_("Invalid username and/or password entered!"));
+	$rs = $stmt;
 
+	// For admin impersonation, skip password check (already verified above)
+	$isAdminImpersonation = (substr(utf8_encode($_POST["nickname"]), 0, 6) == "admin_");
+
+	if (!$isAdminImpersonation) {
+		// Verify password using secure handler (supports both MD5 and Argon2id)
+		if (!PasswordHandler::verify($plainPassword, $rs->fields["password"])) {
+			$DB->CompleteTrans();
+			if (isset($_GET["XML"]))
+				die(T_("<xml><Error>Invalid username and/or password entered!</Error></xml>"));
+			else
+				die(T_("Invalid username and/or password entered!"));
+		}
+
+		// Auto-upgrade MD5 passwords to Argon2id on successful login
+		if (PasswordHandler::needsRehash($rs->fields["password"])) {
+			$newHash = PasswordHandler::hash($plainPassword);
+			$DB->Execute("UPDATE system_tb_players SET password='" . addslashes($newHash) . "' WHERE id=" . $rs->fields["id"]);
+		}
 	}
 	
 	$hostname = $_SERVER["REMOTE_ADDR"];

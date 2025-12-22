@@ -2,6 +2,8 @@
 
 // Solar Imperium is licensed under GPL2, Check LICENSE.TXT for mode details //
 
+require_once(__DIR__ . "/../../security/PasswordHandler.php");
+
 class Session {
 	var $DB;
 	var $game_id;
@@ -57,13 +59,24 @@ class Session {
 			if (!in_array($username,$CONF_PREMIUM_MEMBERS))
 				die(T_("Too much players connected, cannot login!"));
 		}
-		
-		$empire = $this->DB->Execute("SELECT id FROM game".$this->game_id."_tb_empire WHERE email='" . addslashes($username) . "' AND " .
-		"password='" . md5($password) . "' AND active > 0");
+
+		// Fetch empire by email only (don't include password in query for security)
+		$empire = $this->DB->Execute("SELECT id, password FROM game".$this->game_id."_tb_empire WHERE email='" . addslashes($username) . "' AND active > 0");
 
 		if (!$empire) trigger_error($this->DB->ErrorMsg());
 		if ($empire->EOF)
 			return false;
+
+		// Verify password using secure handler (supports both MD5 and Argon2id)
+		if (!PasswordHandler::verify($password, $empire->fields["password"])) {
+			return false;
+		}
+
+		// Auto-upgrade MD5 passwords to Argon2id on successful login
+		if (PasswordHandler::needsRehash($empire->fields["password"])) {
+			$newHash = PasswordHandler::hash($password);
+			$this->DB->Execute("UPDATE game".$this->game_id."_tb_empire SET password='" . addslashes($newHash) . "' WHERE id=" . $empire->fields["id"]);
+		}
 
 		$_SESSION["empire_id"] = $empire->fields["id"];
 		$_SESSION["email"] = $username;
@@ -72,7 +85,7 @@ class Session {
 		"VALUES('" . $_SESSION["empire_id"] . "'," .
 		time(NULL) . ")")) trigger_error($this->DB->ErrorMsg());
 
-	
+
 		return true;
 	}
 

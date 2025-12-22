@@ -4,6 +4,7 @@
 define("LANGUAGE_DOMAIN","system");
 
 require_once("include/init.php");
+require_once("include/security/PasswordHandler.php");
 
 
 if (!isset($_SESSION["player"])) die(header("Location: welcome.php"));
@@ -24,11 +25,13 @@ if (isset($_GET["SHOW_AVATAR"])) {
 // Update preferences Callback
 // ************************************************************************
 if (isset($_GET["UPDATE"])) {
-	
+
 	if ($_POST["password1"] != "") {
-		
+
 		if ($_POST["password1"] != $_POST["password2"]) die(T_("Passwords does not matches!"));
-		$DB->Execute("UPDATE	system_tb_players SET password='".md5($_POST["password1"])."' WHERE id=".$_SESSION["player"]["id"]);
+		// Hash password securely with Argon2id
+		$hashedPassword = PasswordHandler::hash($_POST["password1"]);
+		$DB->Execute("UPDATE system_tb_players SET password='".addslashes($hashedPassword)."' WHERE id=".$_SESSION["player"]["id"]);
 	}
 
 	if ($_POST["email"] == "") { $DB->CompleteTrans(); die (T_("Empty email field!")); }
