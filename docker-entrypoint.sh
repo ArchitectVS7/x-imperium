@@ -7,9 +7,9 @@ set -e
 
 # Determine which env vars to use (Railway vs Docker Compose)
 DB_HOST="${MYSQL_HOST:-${CONF_DATABASE_HOSTNAME:-localhost}}"
-DB_NAME="${MYSQL_DATABASE:-${CONF_DATABASE_NAME:-solarrealms}}"
-DB_USER="${MYSQL_USER:-${CONF_DATABASE_USERNAME:-solarrealms}}"
-DB_PASS="${MYSQL_PASSWORD:-${CONF_DATABASE_PASSWORD:-solarrealms_secret}}"
+DB_NAME="${MYSQL_DATABASE:-${CONF_DATABASE_NAME:-ximperium}}"
+DB_USER="${MYSQL_USER:-${CONF_DATABASE_USERNAME:-ximperium}}"
+DB_PASS="${MYSQL_PASSWORD:-${CONF_DATABASE_PASSWORD:-ximperium_secret}}"
 DB_DRIVER="${CONF_DATABASE_DRIVER:-mysqli}"
 TIMEZONE="${CONF_TIMEZONE:-UTC}"
 

@@ -18,7 +18,7 @@ if (!defined('CONF_DB_HOST')) {
     define('CONF_DB_HOST', getenv('DB_HOST') ?: 'localhost');
 }
 if (!defined('CONF_DB_NAME')) {
-    define('CONF_DB_NAME', getenv('DB_NAME') ?: 'solarrealms_test');
+    define('CONF_DB_NAME', getenv('DB_NAME') ?: 'ximperium_test');
 }
 if (!defined('CONF_DB_USER')) {
     define('CONF_DB_USER', getenv('DB_USER') ?: 'root');

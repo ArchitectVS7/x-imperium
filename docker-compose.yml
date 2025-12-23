@@ -1,4 +1,4 @@
-# Solar Realms Elite - Docker Compose Configuration
+# X Imperium - Docker Compose Configuration
 # Usage: docker-compose up -d
 
 version: '3.8'
@@ -6,15 +6,15 @@ version: '3.8'
 services:
   web:
     build: .
-    container_name: solarrealms-web
+    container_name: ximperium-web
     ports:
       - "8080:80"
     environment:
       - CONF_DATABASE_DRIVER=mysqli
       - CONF_DATABASE_HOSTNAME=db
-      - CONF_DATABASE_USERNAME=solarrealms
-      - CONF_DATABASE_PASSWORD=${DB_PASSWORD:-solarrealms_secret}
-      - CONF_DATABASE_NAME=solarrealms
+      - CONF_DATABASE_USERNAME=ximperium
+      - CONF_DATABASE_PASSWORD=${DB_PASSWORD:-ximperium_secret}
+      - CONF_DATABASE_NAME=ximperium
       - CONF_TIMEZONE=UTC
     volumes:
       - ./templates_c:/var/www/html/templates_c
@@ -22,53 +22,53 @@ services:
       db:
         condition: service_healthy
     networks:
-      - solarrealms-network
+      - ximperium-network
     restart: unless-stopped
 
   db:
     image: mysql:8.0
-    container_name: solarrealms-db
+    container_name: ximperium-db
     environment:
       MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-root_secret}
-      MYSQL_DATABASE: solarrealms
-      MYSQL_USER: solarrealms
-      MYSQL_PASSWORD: ${DB_PASSWORD:-solarrealms_secret}
+      MYSQL_DATABASE: ximperium
+      MYSQL_USER: ximperium
+      MYSQL_PASSWORD: ${DB_PASSWORD:-ximperium_secret}
     volumes:
-      - solarrealms-db-data:/var/lib/mysql
+      - ximperium-db-data:/var/lib/mysql
       - ./sql:/docker-entrypoint-initdb.d:ro
     # Note: Port 3306 not exposed externally for security
     # Use 'docker compose exec db mysql' to access the database
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "solarrealms", "-p${DB_PASSWORD:-solarrealms_secret}"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "ximperium", "-p${DB_PASSWORD:-ximperium_secret}"]
       interval: 10s
       timeout: 5s
       retries: 5
       start_period: 30s
     networks:
-      - solarrealms-network
+      - ximperium-network
     restart: unless-stopped
 
   phpmyadmin:
     image: phpmyadmin:latest
-    container_name: solarrealms-phpmyadmin
+    container_name: ximperium-phpmyadmin
     environment:
       PMA_HOST: db
-      PMA_USER: solarrealms
-      PMA_PASSWORD: ${DB_PASSWORD:-solarrealms_secret}
+      PMA_USER: ximperium
+      PMA_PASSWORD: ${DB_PASSWORD:-ximperium_secret}
     ports:
       - "8081:80"
     depends_on:
       - db
     networks:
-      - solarrealms-network
+      - ximperium-network
     restart: unless-stopped
     profiles:
       - dev
 
 volumes:
-  solarrealms-db-data:
+  ximperium-db-data:
     driver: local
 
 networks:
-  solarrealms-network:
+  ximperium-network:
     driver: bridge

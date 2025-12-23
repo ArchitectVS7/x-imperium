@@ -1,4 +1,4 @@
-# Solar Realms Elite - Docker Configuration
+# X Imperium - Docker Configuration
 # PHP 8.2 with Apache
 
 FROM php:8.2-apache
@@ -61,8 +61,8 @@ RUN echo '<Directory /var/www/html>\n\
     Options -Indexes +FollowSymLinks\n\
     AllowOverride All\n\
     Require all granted\n\
-</Directory>' > /etc/apache2/conf-available/solar-realms.conf \
-    && a2enconf solar-realms
+</Directory>' > /etc/apache2/conf-available/ximperium.conf \
+    && a2enconf ximperium
 
 # Copy entrypoint script
 COPY docker-entrypoint.sh /usr/local/bin/

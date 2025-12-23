@@ -32,7 +32,7 @@ docker-compose exec web php database/migrate.php
 docker-compose exec web php database/migrate.php --status
 
 # Database access
-docker-compose exec db mysql -u solarrealms -p solarrealms
+docker-compose exec db mysql -u ximperium -p ximperium
 ```
 
 ## Architecture
@@ -97,6 +97,34 @@ Secure cookies, session regeneration every 30 minutes, CSRF token generation/val
 - `docs/BOT_ARCHITECTURE.md` - Single-player AI opponent system design
 - `docs/DEPLOYMENT_GUIDE.md` - Docker deployment instructions
 - `docs/USER_MANUAL.md` - Game rules and mechanics
+
+## Branding & Historical References
+
+### Current Branding: X Imperium
+The project has been rebranded from "Solar Realms Elite" → "Solar Imperium" → "X Imperium".
+
+### What to Change
+- **System branding**: Update "Solar Realms", "SolarRealms", "solarrealms" to "X Imperium", "XImperium", "ximperium" in:
+  - Docker/infrastructure files (container names, network names, volume names)
+  - Database credentials and connection strings (database names, usernames)
+  - Package metadata (composer.json, package.json)
+  - Code comments and documentation
+  - User-facing UI text (error messages, page titles)
+
+### What NOT to Change
+- **Historical references & attribution**: Keep original references to "Solar Realms Elite" in:
+  - README.md (project lineage and history)
+  - Documentation explaining the game's origins
+  - Attribution to original creator Amit Patel
+  - Wikipedia links and educational context
+  - Any "About" or "Tour" pages explaining game history
+
+- **Game mechanics & features**: Keep original names for in-game features:
+  - "Solar Bank" (game feature with `CONF_SOLARBANK_*` constants)
+  - Any gameplay features that players recognize by their original names
+  - Localization files referencing historical game features
+
+**Rationale**: Preserving attribution honors the original work and provides valuable context for contributors and players about the game's evolution.
 
 ## Key Notes
 
