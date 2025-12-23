@@ -24,7 +24,7 @@ services:
     expose:
       - "80"
     environment:
-      - CONF_DATABASE_DRIVER=mysql
+      - CONF_DATABASE_DRIVER=mysqli
       - CONF_DATABASE_HOSTNAME=db
       - CONF_DATABASE_USERNAME=solarrealms
       - CONF_DATABASE_PASSWORD=${DB_PASSWORD:-solarrealms_secret}
