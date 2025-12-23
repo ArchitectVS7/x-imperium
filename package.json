@@ -1,0 +1,31 @@
+{
+  "name": "x-imperium",
+  "version": "1.0.0",
+  "description": "A modernized browser-based 4X space empire strategy game. Originally released in 2009, now updated for PHP 8.2+ with modern security practices.",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs",
+    "test": "tests"
+  },
+  "scripts": {
+    "test:e2e": "npx playwright test",
+    "test:e2e:headed": "npx playwright test --headed",
+    "test:e2e:debug": "npx playwright test --headed --debug",
+    "test:e2e:ui": "npx playwright test --ui"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ArchitectVS7/x-imperium.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/ArchitectVS7/x-imperium/issues"
+  },
+  "homepage": "https://github.com/ArchitectVS7/x-imperium#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.57.0"
+  }
+}

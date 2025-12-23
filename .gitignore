@@ -44,3 +44,11 @@ composer.lock
 
 # Docker volumes data
 docker-data/
+
+# Node.js
+node_modules/
+
+# Playwright
+playwright-report/
+test-results/
+.playwright/
