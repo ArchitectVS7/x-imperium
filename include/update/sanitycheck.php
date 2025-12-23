@@ -16,7 +16,7 @@ function CheckGameSanity_NegativeValues($items,$table)
 
     while(!$rs->EOF) {
         
-        while(list($key,$value) = each($rs->fields)) {
+        foreach ($rs->fields as $key => $value) {
             if (is_numeric($key)) continue;
             if ($key == "id") continue;
             

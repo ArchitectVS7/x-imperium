@@ -518,8 +518,10 @@ class ADODB_DataDict {
 			list($lines,$pkey,$idxs) = $this->_GenFields($flds);
 			// genfields can return FALSE at times
 			if ($lines == null) $lines = array();
-			list(,$first) = each($lines);
-			list(,$column_def) = split("[\t ]+",$first,2);
+			// PHP 8 fix: replaced deprecated each() with reset()
+			$first = reset($lines);
+			// PHP 8 fix: split() is deprecated, use preg_split()
+			list(,$column_def) = preg_split("/[\t ]+/", $first, 2);
 		}
 		return array(sprintf($this->renameColumn,$tabname,$this->NameQuote($oldcolumn),$this->NameQuote($newcolumn),$column_def));
 	}

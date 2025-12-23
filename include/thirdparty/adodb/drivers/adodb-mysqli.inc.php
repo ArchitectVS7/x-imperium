@@ -675,24 +675,13 @@ class ADODB_mysqli extends ADOConnection {
 			return $ret;
 		}
 		
-		/*
-		if (!$mysql_res =  mysqli_query($this->_connectionID, $sql, ($ADODB_COUNTRECS) ? MYSQLI_STORE_RESULT : MYSQLI_USE_RESULT)) {
+		// PHP 8 fix: Use mysqli_query instead of mysqli_multi_query for better compatibility
+		if (!$mysql_res = mysqli_query($this->_connectionID, $sql, ($ADODB_COUNTRECS) ? MYSQLI_STORE_RESULT : MYSQLI_USE_RESULT)) {
 		    if ($this->debug) ADOConnection::outp("Query: " . $sql . " failed. " . $this->ErrorMsg());
 		    return false;
 		}
-		
+
 		return $mysql_res;
-		*/
-		
-		if( $rs = mysqli_multi_query($this->_connectionID, $sql.';') )//Contributed by "Geisel Sierote" <geisel#4up.com.br>
-		{
-			$rs = ($ADODB_COUNTRECS) ? @mysqli_store_result( $this->_connectionID ) : @mysqli_use_result( $this->_connectionID );
-			return $rs ? $rs : true; // mysqli_more_results( $this->_connectionID )
-		} else {
-			if($this->debug)
-			ADOConnection::outp("Query: " . $sql . " failed. " . $this->ErrorMsg());
-			return false;
-		}
 	}
 
 	/*	Returns: the last error message from previous database operation	*/	
@@ -896,11 +885,16 @@ class ADORecordSet_mysqli extends ADORecordSet{
 	
 	function _seek($row)
 	{
-	  if ($this->_numOfRows == 0) 
+	  if ($this->_numOfRows == 0)
 	    return false;
 
 	  if ($row < 0)
 	    return false;
+
+	  // PHP 8 fix: check for valid mysqli_result
+	  if (!($this->_queryID instanceof mysqli_result)) {
+	    return false;
+	  }
 
 	  mysqli_data_seek($this->_queryID, $row);
 	  $this->EOF = false;
@@ -911,8 +905,11 @@ class ADORecordSet_mysqli extends ADORecordSet{
 	function NextRecordSet()
 	{
 	global $ADODB_COUNTRECS;
-	
-		mysqli_free_result($this->_queryID);
+
+		// PHP 8 fix: check for valid mysqli_result before freeing
+		if ($this->_queryID instanceof mysqli_result) {
+			mysqli_free_result($this->_queryID);
+		}
 		$this->_queryID = -1;
 		// Move to the next recordset, or return false if there is none. In a stored proc
 		// call, mysqli_next_result returns true for the last "recordset", but mysqli_store_result

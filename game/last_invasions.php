@@ -195,22 +195,19 @@ if (isset($_GET["invasion"])) {
 			$round["round"] = $j+1;
 
 			$max_value = 0;
-			while(list($key,$value) = each($data["attack"])) {
+			foreach ($data["attack"] as $key => $value) {
 				if ($value > $max_value) $max_value = $value;
 			}
 
-			while(list($key,$value) = each($data["defense"])) {
+			foreach ($data["defense"] as $key => $value) {
 				if ($value > $max_value) $max_value = $value;
 			}
-
-			reset($data["attack"]);
-			reset($data["defense"]);
 
 			$round["img_attack"] = "";
 			$count = 0;
 			if ($max_value == 0) $max_value = 1;
-			
-			while(list($key,$value) = each($data["attack"])) {
+
+			foreach ($data["attack"] as $key => $value) {
 				$max =floor((($value/$max_value)*20));
 				for ($k=0;$k<$max;$k++) {
 					$round["img_attack"] .= "<img style=\"border:1px solid darkred;margin:2px\" width=24 height=24 src=\"../images/game/icons/army/".$key."_0.gif\">";
@@ -225,7 +222,7 @@ if (isset($_GET["invasion"])) {
 
 			$round["img_defense"] = "";
 			$count = 0;
-			while(list($key,$value) = each($data["defense"])) {
+			foreach ($data["defense"] as $key => $value) {
 				if ($max_value == 0) $max_value = 1;
 
 				$max =floor((($value/$max_value)*20));

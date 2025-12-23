@@ -177,42 +177,47 @@ if (isset($_GET["LOGIN"])) {
 // Display statistics
 
 $rs = $DB->Execute("SELECT COUNT(*) FROM system_tb_games");
-$available_games = $rs->fields[0];
+$available_games = ($rs && !$rs->EOF) ? $rs->fields[0] : 0;
 $TPL->assign("available_games",$available_games);
 
 $timeNow = mktime(0,0,1, date("n"), date("j"), date("Y"));
 
 // Check if a stats entry exists for the current day
 $stats = $DB->Execute("SELECT * FROM system_tb_stats WHERE timestamp='".intval($timeNow)."'");
-if ($stats->EOF) {
+if (!$stats || $stats->EOF) {
     // Create a new entry
     $query = "INSERT INTO system_tb_stats (timestamp, signup_count, login_count) VALUES('".intval($timeNow)."', '0','0')";
     $DB->Execute($query);
     $stats = $DB->Execute("SELECT * FROM system_tb_stats WHERE timestamp='".intval($timeNow)."'");
 }
 
-$stats = $stats->fields;
+$stats = ($stats && !$stats->EOF) ? $stats->fields : array('signup_count' => 0, 'login_count' => 0);
 
 $total_population = 0;
 $empires_count = 0;
 $new_empires_today = 0;
 
 $rs = $DB->Execute("SELECT id FROM system_tb_games");
-while(!$rs->EOF)
+while($rs && !$rs->EOF)
 {
 
 	$rs2 = $DB->Execute("SELECT SUM(population) FROM game".$rs->fields["id"]."_tb_empire WHERE active=1");
-	if (!$rs2) trigger_error($DB->ErrorMsg());
-	$total_population += $rs2->fields[0];
+	if ($rs2 && !$rs2->EOF) {
+		$total_population += $rs2->fields[0] ?? 0;
+	}
 
 
 	$rs2 = $DB->Execute("SELECT COUNT(*) FROM game".$rs->fields["id"]."_tb_empire WHERE active=1");
-	$empires_count += $rs2->fields[0];
-	
+	if ($rs2 && !$rs2->EOF) {
+		$empires_count += $rs2->fields[0] ?? 0;
+	}
+
 	$date = mktime(0,0,1,date("m"),date("d"),date("y"));
-	
+
 	$rs2 = $DB->Execute("SELECT COUNT(*) FROM game".$rs->fields["id"]."_tb_empire WHERE active=1 AND date >= $date");
-	$new_empires_today += $rs2->fields[0];
+	if ($rs2 && !$rs2->EOF) {
+		$new_empires_today += $rs2->fields[0] ?? 0;
+	}
 
 	$rs->MoveNext();
 }
@@ -222,18 +227,18 @@ $TPL->assign("empires_count",$empires_count);
 $TPL->assign("new_empires_today",$new_empires_today);
 
 $rs = $DB->Execute("SELECT COUNT(*) FROM system_tb_players");
-$players_registered = $rs->fields[0];
+$players_registered = ($rs && !$rs->EOF) ? $rs->fields[0] : 0;
 $TPL->assign("players_registered",$players_registered);
 
 
 $date_today = mktime(0,0,1,date("m"),date("d"),date("y"));
 $rs = $DB->Execute("SELECT COUNT(*) FROM system_tb_players WHERE creation_date >= ".$date_today);
-$new_accounts_today = $rs->fields[0];
+$new_accounts_today = ($rs && !$rs->EOF) ? $rs->fields[0] : 0;
 
 $TPL->assign("new_accounts_today",$new_accounts_today);
 
 $rs = $DB->Execute("SELECT COUNT(*) FROM system_tb_players WHERE last_login_date >= ".$date_today);
-$accounts_logged_today = $rs->fields[0];
+$accounts_logged_today = ($rs && !$rs->EOF) ? $rs->fields[0] : 0;
 
 $TPL->assign("accounts_logged_today",$accounts_logged_today);
 $TPL->assign("connected_players",$online_players);
@@ -245,7 +250,7 @@ $TPL->assign("connected_players",$online_players);
 
 $fames = array();
 $rs = $DB->Execute("SELECT * FROM system_tb_hall_of_fame ORDER BY id DESC LIMIT 0,10");
-while(!$rs->EOF) {
+while($rs && !$rs->EOF) {
 
 	$fames[] = $rs->fields;
 	$rs->MoveNext();

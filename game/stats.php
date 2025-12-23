@@ -214,7 +214,7 @@ $GAME["template"]->setVar("block_graphs",true);
 	krsort($empires);
 
 	$new_empires = array();
-	while(list($key,$value) = each($empires)) {
+	foreach ($empires as $key => $value) {
 		if (count($new_empires) == 9) break;		
 		$total_might += $key;
 		$new_empires[] = array("name"=>$value,"might"=>$key);

@@ -266,11 +266,11 @@ $DB->StartTrans();
 // do basic cleanup //
 $expiration = time() - CONF_SESSION_CHAT_TIMEOUT;
 $rs = $DB->Execute("SELECT * FROM system_tb_chat_sessions WHERE timestamp < $expiration");
-while(!$rs->EOF)
+while($rs && !$rs->EOF)
 {
     $rs2 = $DB->Execute("SELECT last_login_date FROM system_tb_players WHERE nickname=?", array($rs->fields["nickname"]));
     $elapsed = 0;
-    if(!$rs2->EOF) {
+    if($rs2 && !$rs2->EOF) {
         $elapsed = time() - $rs2->fields["last_login_date"];
         $elapsed = round($elapsed / 60,2);
     }
@@ -327,9 +327,9 @@ if ((isset($_SESSION["player"])) && (isset($_SESSION["player"]["id"]))) {
 }
 
 $rs = $DB->Execute("SELECT COUNT(*) FROM system_tb_sessions");
-$online_players = $rs->fields[0];
+$online_players = ($rs && !$rs->EOF) ? $rs->fields[0] : 0;
 $rs = $DB->Execute("SELECT COUNT(*) FROM system_tb_chat_sessions");
-$online_chatters = $rs->fields[0];
+$online_chatters = ($rs && !$rs->EOF) ? $rs->fields[0] : 0;
 
 
 // cleanup timed out games sessions

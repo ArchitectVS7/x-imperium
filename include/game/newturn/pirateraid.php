@@ -215,7 +215,7 @@ function NewTurn_handlePirateRaid($game_id, $empire)
 		
 		/* Update pirate data */
 		$query = "UPDATE game".$game_id."_tb_pirate SET ";
-		while(list($key,$value) = each($pirate)) {
+		foreach ($pirate as $key => $value) {
 				if ($key == "id") continue;
 			if (is_numeric($key)) continue;
 			if ((is_numeric($value)) && ($key != "logo"))

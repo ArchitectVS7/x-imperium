@@ -82,10 +82,13 @@ function MRG_error_handler_list_HTML($title,$listing)
 
 	reset($listing);
 	$count = 0;
-	while(list($key,$value) = each($listing))
+	foreach ($listing as $key => $value)
 	{
 		$bgcolor = ($count++%2==1?"#dedede":"#efefef");
-
+		// PHP 8 fix: Convert arrays to string representation
+		if (is_array($value)) {
+			$value = 'Array';
+		}
 		$html .= "<tr><td bgcolor=\"".$bgcolor."\"><b>$key</b></td><td width=\"100%\" bgcolor=\"".$bgcolor."\">$value</td></tr>\r\n";
 	}
 
@@ -147,7 +150,7 @@ function MRG_error_handler($errno, $errstr, $errfile, $errline)
 	$count = 0;
 
 
-	while (list($key,$value) = each($bt))
+	foreach ($bt as $key => $value)
 	{
 		if ($count == 0) { $count++; continue; }
 		$bgcolor = ($count++%2==0?"#dedede":"#efefef");
