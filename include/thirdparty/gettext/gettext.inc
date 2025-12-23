@@ -151,6 +151,10 @@ function _bindtextdomain($domain, $path) {
 	// ensure $path ends with a slash
 	if ($path[strlen($path) - 1] != '/') $path .= '/';
 	elseif ($path[strlen($path) - 1] != '\\') $path .= '\\';
+	// PHP 8 fix: initialize domain object if it doesn't exist
+	if (!isset($text_domains[$domain])) {
+		$text_domains[$domain] = new stdClass();
+	}
 	$text_domains[$domain]->path = $path;
 }
 
@@ -159,6 +163,10 @@ function _bindtextdomain($domain, $path) {
  */
 function _bind_textdomain_codeset($domain, $codeset) {
 	global $text_domains;
+	// PHP 8 fix: initialize domain object if it doesn't exist
+	if (!isset($text_domains[$domain])) {
+		$text_domains[$domain] = new stdClass();
+	}
 	$text_domains[$domain]->codeset = $codeset;
 }
 
