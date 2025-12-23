@@ -14,7 +14,7 @@
 // configuration
 //define("MRGERR_DEBUG_VERBOSE",true); // Display verbose debug to web user
 //define("MRGERR_DEBUG_SENDMAIL",false); // Send a email containing debug information
-define("MRGERR_DEBUG_VERBOSE",true); // Display verbose debug to web user
+define("MRGERR_DEBUG_VERBOSE",false); // Display verbose debug to web user (disabled for production)
 define("MRGERR_DEBUG_SENDMAIL",false); // Send a email containing debug information
 define("MRGERR_SMTP_SERVER","127.0.0.1");
 define("MRGERR_SMTP_MAILFROM","ybourbeau@mrgtech.ca");
