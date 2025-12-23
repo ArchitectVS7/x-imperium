@@ -1,10 +1,10 @@
 {
-    "name": "solarrealms/elite",
-    "description": "Solar Realms Elite - A classic text-based space empire management game",
+    "name": "ximperium/elite",
+    "description": "X Imperium - A classic text-based space empire management game",
     "type": "project",
     "license": "GPL-2.0-only",
     "keywords": ["game", "space", "empire", "strategy", "browser-game"],
-    "homepage": "https://github.com/solarrealms/elite",
+    "homepage": "https://github.com/ArchitectVS7/x-imperium",
     "require": {
         "php": ">=8.2",
         "ext-pdo": "*",
