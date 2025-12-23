@@ -1,5 +1,5 @@
 <?php
-// Solar Imperium is licensed under GPL2, Check LICENSE.TXT for mode details //
+// X Imperium is licensed under GPL2, Check LICENSE.TXT for mode details //
 
 class EventCreator
 {

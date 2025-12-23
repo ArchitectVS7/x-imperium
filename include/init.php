@@ -1,5 +1,5 @@
 <?php
-// Solar Imperium is licensed under GPL2, Check LICENSE.TXT for mode details //
+// X Imperium is licensed under GPL2, Check LICENSE.TXT for mode details //
 
 $path_prefix = "";
 if (defined("CALLED_FROM_GAME_INIT")) $path_prefix = "../";

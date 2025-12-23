@@ -1,6 +1,6 @@
-# Solar Imperium HUN installer_full_hun.po
+# X Imperium HUN installer_full_hun.po
 # Copyright (C) 2007 Nabba
-# This file is distributed under the same license as the Solar Imperium HUN package.
+# This file is distributed under the same license as the X Imperium HUN package.
 # Nabba <gombos3@gmail.com>, 2007.
 #
 msgid ""
@@ -461,8 +461,8 @@ msgid "*** No game available for now, the administrator have to create at least 
 msgstr "*** Még nincs játék. Az adminisztrátornak létre kell hoznia legalább egy játékot."
 
 #: system.c:365
-msgid "To play Solar Imperium you need a web browser like IE, Firefox, Konqueror or Opera. You also need to create a account first (<a style=\"color:darkblue\" href=\"registernow.php\">Register</a>), Once created and logged in you can browse for available games and join them. When you join a game you have to provide a emperor/emperess name and an empire name, it will be your identity in the game."
-msgstr "Hogy játszhass a Solar Imperiummal, szükséges egy böngésző, mint az IE, Firefox, Konqueror vagy Opera.  Továbbá szükséges a (<a style=\"color:darkblue\" href=\"registernow.php\">regisztráció</a>), ha ezek megvannak, már csak játszanod kell. Ha csatlakozol egy játékhoz meg kell adnod egy uralkodó/uralkodónő nevet. A játékban az lesz a te neved."
+msgid "To play X Imperium you need a web browser like IE, Firefox, Konqueror or Opera. You also need to create a account first (<a style=\"color:darkblue\" href=\"registernow.php\">Register</a>), Once created and logged in you can browse for available games and join them. When you join a game you have to provide a emperor/emperess name and an empire name, it will be your identity in the game."
+msgstr "Hogy játszhass a X Imperiummal, szükséges egy böngésző, mint az IE, Firefox, Konqueror vagy Opera.  Továbbá szükséges a (<a style=\"color:darkblue\" href=\"registernow.php\">regisztráció</a>), ha ezek megvannak, már csak játszanod kell. Ha csatlakozol egy játékhoz meg kell adnod egy uralkodó/uralkodónő nevet. A játékban az lesz a te neved."
 
 #: system.c:368
 msgid "You can join all the games if you want and play a different empire on each one. The goals of each game may slighly differ but its usually 3 kind of goals, you have research race (the first empire that complete all the fundamental research tree), classic goal (The biggest empire after 30 days of playing won) and fast game (The biggest empire after 7 days of playing won). We plan to introduce new goals like 'last man standing' eventually."
@@ -489,8 +489,8 @@ msgid "When you start a new game you have several turns of protection where you 
 msgstr "Ha új játékot kezdessz, kapsz egy csomó védelmi kört, amikor nem tudnak megtámadni, ne halmozd fel már ilyenkor az egségeidet, ha nem tervezed a kalózok megtámadását."
 
 #: system.c:386
-msgid "Solar Imperium is the kind of game that contains too many way to succeed, too many different strategies (good or bad) to describe them all theres, it why at this point I recommend you to actually play a game and learn how to play the good way. The game itself contains integrated help system when you hover your mouse over items. You can also refer to \"Galaxypedia\" at any moments for extra help."
-msgstr "A Solar Imperiumban sok út vezet a győzelem felé. Vannak jó és rossz startégiák, kegyetlen és kíméletes módszerek, de a győzelem felé vezető út nehéz és kiszámíthatatlan. A játékban találhatsz néhány segítséget mint például a \"Galaxypedia\" de mindent nem tud leírni még az sem."
+msgid "X Imperium is the kind of game that contains too many way to succeed, too many different strategies (good or bad) to describe them all theres, it why at this point I recommend you to actually play a game and learn how to play the good way. The game itself contains integrated help system when you hover your mouse over items. You can also refer to \"Galaxypedia\" at any moments for extra help."
+msgstr "A X Imperiumban sok út vezet a győzelem felé. Vannak jó és rossz startégiák, kegyetlen és kíméletes módszerek, de a győzelem felé vezető út nehéz és kiszámíthatatlan. A játékban találhatsz néhány segítséget mint például a \"Galaxypedia\" de mindent nem tud leírni még az sem."
 
 #: system.c:389
 msgid "Have a good game and don't forget the best hint of all: TRUST NOBODY! ;)"
@@ -703,8 +703,8 @@ msgid "Registration completed"
 msgstr "Sikeres regisztráció"
 
 #: system.c:554
-msgid "Congralutation, you are now a Solar Imperium registered player!"
-msgstr "Gratulálunk, mostantól a Solar Imperium regisztrált tagja vagy!"
+msgid "Congralutation, you are now a X Imperium registered player!"
+msgstr "Gratulálunk, mostantól a X Imperium regisztrált tagja vagy!"
 
 #: system.c:557
 msgid "To start playing go to "
@@ -851,8 +851,8 @@ msgid "Max players in one day:"
 msgstr "Legtöbb egy nap:"
 
 #: system.c:698
-msgid "In Solar Imperium, you rule a solar empire. The goal is to become and remain the most powerful empire. You can gain strength by buying forces, and you can gain size by colonizing planets. The game is totally FREE !"
-msgstr "A Solar Imperiumban egy galaktikus birodalmat irányítassz. A cél, hogy te légy a legerősebb és ezt meg is tartsd. Erőt az egységekkel, még területet a hódításokkal szerezhetsz. A játék teljesen INGYENES!"
+msgid "In X Imperium, you rule a solar empire. The goal is to become and remain the most powerful empire. You can gain strength by buying forces, and you can gain size by colonizing planets. The game is totally FREE !"
+msgstr "A X Imperiumban egy galaktikus birodalmat irányítassz. A cél, hogy te légy a legerősebb és ezt meg is tartsd. Erőt az egységekkel, még területet a hódításokkal szerezhetsz. A játék teljesen INGYENES!"
 
 #: system.c:701
 msgid "This game was a port from the original <b><a style=\"color:darkblue\" href=\"http://en.wikipedia.org/wiki/Solar_Realms_Elite\">SOLAR REALMS ELITE</a></b> made by <b><a style=\"color:darkblue\" href=\"http://amitp.blogspot.com/\">Amit Patel</a></b>, a pretty popular game back in BBS era (circa 1993). Since then, the game system evolved alot in specific fields like research map and real-time/invasion convoys. "

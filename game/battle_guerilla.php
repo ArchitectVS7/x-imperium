@@ -1,6 +1,6 @@
 <?php
 
-// Solar Imperium is licensed under GPL2, Check LICENSE.TXT for mode details //
+// X Imperium is licensed under GPL2, Check LICENSE.TXT for mode details //
 // #NEW ybo 14sept08 : Protecte players can now be attacked if they break the truce :)
 
 define("LANGUAGE_DOMAIN","game");

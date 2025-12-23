@@ -1,6 +1,6 @@
 <?php
 
-// Solar Imperium is licensed under GPL2, Check LICENSE.TXT for mode details //
+// X Imperium is licensed under GPL2, Check LICENSE.TXT for mode details //
 
 
 $pos = strpos($_SERVER["SCRIPT_NAME"],"install.php_old");

@@ -2,7 +2,7 @@
 /**
  * PHPUnit Bootstrap File
  *
- * Sets up the testing environment for Solar Imperium
+ * Sets up the testing environment for X Imperium
  */
 
 declare(strict_types=1);

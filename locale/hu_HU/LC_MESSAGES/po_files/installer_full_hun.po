@@ -1,6 +1,6 @@
-# Solar Imperium HUN installer_full_hun.po
+# X Imperium HUN installer_full_hun.po
 # Copyright (C) 2007 Nabba
-# This file is distributed under the same license as the Solar Imperium HUN package.
+# This file is distributed under the same license as the X Imperium HUN package.
 # Nabba <gombos3@gmail.com>, 2007.
 #
 msgid ""
@@ -53,11 +53,11 @@ msgstr "Telepítő (1/4 oldal) :: Bevezetés"
 
 #: installer.c:8
 msgid ""
-"First thing first, thank you installing Solar Imperium, I hope the process will be painless as possible but you\n"
+"First thing first, thank you installing X Imperium, I hope the process will be painless as possible but you\n"
 "\t\thave to meet basic requirements: A web server <i>(APACHE recommended)</i>, PHP 4 or 5 <i>(5 recommended)</i> and an access to\n"
 "\t\ta database <i>(MySQL recommended)</i>.<br/><br/>If its fine with you, click on the continue button below."
 msgstr ""
-"Előszőr is, köszönjük, hogy telepíted a Solar Imperium-ot, remélem a telepítés zökkenőmentesen fog működni, de ehhez szükséges,\n"
+"Előszőr is, köszönjük, hogy telepíted a X Imperium-ot, remélem a telepítés zökkenőmentesen fog működni, de ehhez szükséges,\n"
 "\t\thogy meg legyenek a következők: Egy webszerver <i>(APACHE ajánlott)</i>, PHP 4 vagy 5 <i>(5 ajánlott)</i> és egy adatbázis <i>(MySQL ajánlott)</i>.<br/><br/>Ha ezek meg vannak,kattints a folytatás gombra."
 
 #: installer.c:11

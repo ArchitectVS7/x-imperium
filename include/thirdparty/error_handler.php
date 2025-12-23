@@ -2,7 +2,7 @@
 
 	/********************************************************************************************
 	 *
-	 * SOLAR IMPERIUM project, released under GPL 2 (see LICENSE.TXT)
+	 * X IMPERIUM project, released under GPL 2 (see LICENSE.TXT)
 	 * ------------------------------------------------------------------------------------------
 	 * By Yanick Bourbeau @ MRG Technologies '2006 (ybourbeau@mrgtech.ca)
 	 * ------------------------------------------------------------------------------------------

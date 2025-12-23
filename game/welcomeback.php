@@ -1,6 +1,6 @@
 <?php
 
-// Solar Imperium is licensed under GPL2, Check LICENSE.TXT for mode details //
+// X Imperium is licensed under GPL2, Check LICENSE.TXT for mode details //
 
 require_once("../include/game/init.php");
 require_once("../include/game/init_ingame.php");

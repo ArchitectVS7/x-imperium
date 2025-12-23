@@ -1,5 +1,5 @@
 <?php
-// Solar Imperium is licensed under GPL2, Check LICENSE.TXT for mode details //
+// X Imperium is licensed under GPL2, Check LICENSE.TXT for mode details //
 
 if (!isset($_SESSION["game"])) die(T_("No game selected!"));
 $game_id = $_SESSION["game"];

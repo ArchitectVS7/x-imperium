@@ -1,6 +1,6 @@
 <?php
 
-// Solar Imperium is licensed under GPL2, Check LICENSE.TXT for mode details //
+// X Imperium is licensed under GPL2, Check LICENSE.TXT for mode details //
 
 // #NEW ybo 14sept08: fixed a potential security issue allowing players to snoop invasion details of others
 

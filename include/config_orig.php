@@ -1,5 +1,5 @@
 <?php
-// Solar Imperium is licensed under GPL2, Check LICENSE.TXT for mode details //
+// X Imperium is licensed under GPL2, Check LICENSE.TXT for mode details //
 
 define("CONF_DEFAULT_AUTOSELL_RATE",33);
 
@@ -10,7 +10,7 @@ define("CONF_DATABASE_NAME","{db_name}");
 define("CONF_DATABASE_USERNAME","{db_username}");
 define("CONF_DATABASE_PASSWORD","{db_password}");
 define("CONF_GAMEVERSION","2.7.1");
-define("CONF_SERVERNAME","Official Solar Imperium Server");
+define("CONF_SERVERNAME","Official X Imperium Server");
 
 define("CONF_SESSION_TIMEOUT",60*4); // 4 minutes timeout
 define("CONF_SESSION_CHAT_TIMEOUT",CONF_SESSION_TIMEOUT);
