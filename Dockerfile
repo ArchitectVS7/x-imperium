@@ -33,7 +33,7 @@ RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 
 # Custom PHP settings
 RUN echo "session.cookie_httponly = On" >> "$PHP_INI_DIR/conf.d/security.ini" \
-    && echo "session.cookie_secure = On" >> "$PHP_INI_DIR/conf.d/security.ini" \
+    && echo "session.cookie_secure = Off" >> "$PHP_INI_DIR/conf.d/security.ini" \
     && echo "session.use_strict_mode = On" >> "$PHP_INI_DIR/conf.d/security.ini" \
     && echo "expose_php = Off" >> "$PHP_INI_DIR/conf.d/security.ini" \
     && echo "display_errors = Off" >> "$PHP_INI_DIR/conf.d/security.ini" \
