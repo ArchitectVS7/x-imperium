@@ -1,5 +1,5 @@
 #!/bin/bash
-# Pre-push hook for Solar Realms Elite
+# Pre-push hook for X Imperium
 # Runs PHPUnit tests before allowing push
 
 echo "Running pre-push tests..."
@@ -7,7 +7,7 @@ echo "Running pre-push tests..."
 # Check if Docker is available
 if command -v docker &> /dev/null; then
     # Check if containers are running
-    if docker compose ps 2>/dev/null | grep -q "solarrealms-web"; then
+    if docker compose ps 2>/dev/null | grep -q "ximperium-web"; then
         echo "Running PHPUnit tests in Docker..."
         docker compose exec -T web composer test 2>/dev/null
         if [ $? -ne 0 ]; then

@@ -1,5 +1,5 @@
 #!/bin/bash
-# Install git hooks for Solar Realms Elite
+# Install git hooks for X Imperium
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 GIT_DIR="$(git rev-parse --git-dir 2>/dev/null)"

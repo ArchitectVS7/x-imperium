@@ -1,5 +1,5 @@
 #!/bin/bash
-# Pre-commit hook for Solar Realms Elite
+# Pre-commit hook for X Imperium
 # Runs PHP syntax check on staged files
 
 echo "Running PHP syntax check on staged files..."
