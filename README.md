@@ -1,6 +1,29 @@
-# X-Imperium (Solar Realms Elite)
+# X-Imperium 
+Forked from:
+ **Solar Imperium** (Yanick Bourbeau) which was a modernization of...
+   **Solar Realms Elite** (1990 by Amit Patel) which was inspired by...
+     **Space Empires Elite** (1986 by Jon Radoff) inspired by the games Kingdom/Hammurabi, dating back to mainframe days! 
 
-A modernized browser-based 4X space empire strategy game. Originally released in 2009, now updated for PHP 8.2+ with modern security practices.
+This is a direct modernization of Yanick's Solar Imperium, itself a clone of Amit Patel's Solar Realms Elite. ". Amit Patel, who wrote the massively popular Solar Realms Elite game for bulleting board systems (BBS) in the 1990's, not only directly links to Yanick's clone, but offers links to his own source. Yanick's clone uses a number of terms in his code suach as "Solar-Realms", giving clear evidence that his project was at least started as a port. Amit, in turn, based his game largely upon the work of Space Empire Elite. Even the genesis seed of this, the games known either as "Kingdom" or "Hammurabi", were widely published as text entry games for home computers, and dates as far back as 1964 with "The Sumerian Game" by Mabel Addis. This is notable for a number of key firsts:
+
+ - First educational/edutainment computer game
+ - First video game with narrative storytelling
+ - First video game with cutscenes (audio lectures + slide projector)
+ - First resource management game
+ - First female video game designer
+ - First video game writer
+
+There is a lot coming to bring this game up to modern standards. Even in his developer notes in 2010, Yanick points out some rough patches in the game flow:
+ - At this point, 2.7 release of Solar Imperium is really hard to play with if you are a fresh newcomer who don't have played the oldest releases first
+ - I am not much of a social networks fan but it may be the way to go to attract casual gamers
+ - 2.7 codebase is too complex for the result it produce
+
+Before I get into gameplay, balance, social features, etc, I opted to get the game launchable. In the process, we have nearly 20 years of software advances meaning we had a major update just in hardening vulnerabilities. We are in a "near playable" state right now. The CHANGELOG and commit history is your best best to see the migration status, and my intention is to leave this in a docker state so that anyone can load this and play it. The fiorst play test will be to get through a game or three on my own. Moving forward I am looking at:
+
+ - Upgrade graphics maintaining the moder/retro look
+ - Smooth over the user onboarding, tutorial, and overall game experience
+ - Full end to end testing with Playwright
+ - Single player MMO mode with multiple bot NPC players with varied levels of skill and strategy
 
 ## Quick Start
 
@@ -57,4 +80,4 @@ GPL-2.0 - See [LICENSE.TXT](LICENSE.TXT)
 
 ## Legacy
 
-Originally **Solar Realms Elite** - a classic BBS-style strategy game. See [CHANGELOG_LEGACY.TXT](CHANGELOG_LEGACY.TXT) for historical version notes (2007-2009).
+
