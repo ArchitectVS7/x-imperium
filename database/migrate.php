@@ -1,7 +1,7 @@
 #!/usr/bin/env php
 <?php
 /**
- * Solar Realms Elite - Database Migration Runner
+ * X Imperium - Database Migration Runner
  *
  * This script handles database migrations for both:
  * - System tables (system_tb_*)
@@ -32,7 +32,7 @@ $showHelp = in_array('--help', $argv) || in_array('-h', $argv);
 
 if ($showHelp) {
     echo <<<HELP
-Solar Realms Elite - Database Migration Tool
+X Imperium - Database Migration Tool
 
 Usage:
   php database/migrate.php              Run all pending migrations
@@ -45,7 +45,7 @@ HELP;
     exit(0);
 }
 
-echo "Solar Realms Elite - Database Migration Tool\n";
+echo "X Imperium - Database Migration Tool\n";
 echo "=============================================\n\n";
 
 // Connect to database using PDO

@@ -82,7 +82,7 @@ ob_start();	// output buffering
 
 // PHP version check - requires PHP 7.4+
 if (phpnum() < 7) {
-    die("Solar Realms Elite requires PHP 7.4 or higher. You are running PHP " . phpversion());
+    die("X Imperium requires PHP 7.4 or higher. You are running PHP " . phpversion());
 }
 
 // Note: register_globals was removed in PHP 5.4, no longer need to check

@@ -6,8 +6,8 @@
  * This creates the initial database schema and data.
  */
 
-echo "Solar Realms Elite - Database Initialization\n";
-echo "=============================================\n\n";
+echo "X Imperium - Database Initialization\n";
+echo "====================================\n\n";
 
 // Load config
 if (!file_exists(__DIR__ . '/../include/config.php')) {
