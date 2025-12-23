@@ -50,6 +50,9 @@ RUN mkdir -p templates_c/system templates_c/game templates_c/installer templates
     && chown -R www-data:www-data templates_c \
     && chmod -R 775 templates_c
 
+# Remove install.php - not needed in Docker deployment
+RUN rm -f /var/www/html/install.php
+
 # Apache configuration
 RUN echo '<Directory /var/www/html>\n\
     Options -Indexes +FollowSymLinks\n\
