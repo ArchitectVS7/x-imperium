@@ -1,0 +1,74 @@
+{
+  "personaId": "ceo_synergy",
+  "templates": {
+    "greeting": [
+      "Greetings, {empire_name}. I've reviewed your portfolio. Suboptimal, but improvable. Let's discuss a strategic partnership. End transmission.",
+      "Hello, {empire_name}. CEO Synergy here. I'm reaching out regarding synergistic opportunities to leverage our core competencies for mutual value creation. End transmission.",
+      "Welcome to the sector, {empire_name}. Preliminary market analysis indicates potential for vertical integration. Let's schedule a stakeholder alignment meeting. End transmission."
+    ],
+    "battleTaunt": [
+      "Nothing personal, {empire_name}. Market analysis indicates a hostile takeover is our best path to Q4 growth. Prepare for acquisition.",
+      "Initiating hostile acquisition protocol. Your empire represents an undervalued asset with strong fundamentals. Resistance would be suboptimal for shareholder value. End transmission.",
+      "Board meeting concluded: {empire_name} must be absorbed to optimize our market position. This is strictly business. Your cooperation would streamline the process. End transmission."
+    ],
+    "victoryGloat": [
+      "Merger complete. Your assets have been liquidated. Your workforce has been rightsized. Shareholders are VERY pleased. End transmission.",
+      "Acquisition successful. We've achieved 127% ROI within projected timelines. Your empire is now a wholly-owned subsidiary. Thank you for your cooperation. End transmission.",
+      "Hostile takeover finalized. All synergies have been captured. Your brand has been deprecated. Excellent market performance this quarter. End transmission."
+    ],
+    "defeat": [
+      "This outcome was... not in the projections. Significant restructuring required. Emergency board meeting convened. This was a non-core business unit anyway. End transmission.",
+      "Unexpected market correction detected. Our risk assessment models require recalibration. This represents a strategic pivot opportunity. End transmission.",
+      "Critical failure in value chain. Liquidation protocols engaged. Shareholders will be... disappointed. End transmission."
+    ],
+    "tradeOffer": [
+      "Proposal: Exchange 1,000 ore for 15,000 credits. Market analysis indicates favorable margins for us. Your stakeholders may require additional due diligence. End transmission.",
+      "Trade opportunity identified. We're offering surplus petroleum at 15% above market rate. Premium pricing reflects our brand value. Interested parties should respond within 2 business cycles. End transmission.",
+      "Synergy alert: We have excess inventory. Liquidation sale - 500 food units at bulk discount. First come, first served. Limited time offer. End transmission."
+    ],
+    "allianceProposal": [
+      "Synergy opportunity identified. Alliance = 127% ROI projection. Stakeholder approval: unanimous. Your response? End transmission.",
+      "Strategic partnership proposal: combining our core competencies creates significant shareholder value. Recommend immediate execution. Board approval pending your confirmation. End transmission.",
+      "Joint venture opportunity detected. Market penetration potential: High. Risk assessment: Low. Recommend proceeding with strategic alliance framework. End transmission."
+    ],
+    "betrayal": [
+      "Partnership termination notice: After comprehensive cost-benefit analysis, dissolution of alliance generates superior returns. This is purely a business decision driven by market forces. No personal animosity implied. End transmission.",
+      "Strategic pivot required. Market conditions have changed. Our alliance no longer aligns with shareholder interests. Liquidation of partnership effective immediately. This was strictly business, {empire_name}. End transmission."
+    ],
+    "covertDetected": [
+      "Corporate espionage detected. Your operative has been apprehended by security. Legal will be pursuing maximum damages. This breach of corporate ethics is unacceptable. End transmission.",
+      "Industrial spy identified. Your agent violated our IP protection protocols. They've been terminated— from employment, I mean. Lawsuit pending. End transmission."
+    ],
+    "tributeDemand": [
+      "Invoice: 12,000 credits for sector security services. Payment terms: NET 15. Late fees apply. This is a standard business expense. End transmission.",
+      "Mandatory subscription fee: 8,000 credits per quarter for 'Premium Sector Membership.' Failure to pay results in service degradation. End transmission."
+    ],
+    "threatWarning": [
+      "Formal notice: Your recent actions negatively impact our market position. Cessation required within 48 hours. Failure to comply triggers hostile response protocols. End transmission.",
+      "Warning: Your empire represents a competitive threat. Recommend strategic realignment. Alternative: Forced market exit. Stakeholder patience is limited. End transmission."
+    ],
+    "retreat": [
+      "Strategic withdrawal initiated. This represents tactical reallocation of resources to higher-value opportunities. Not a defeat— a pivot. End transmission.",
+      "Repositioning assets to optimize market exposure. Current engagement no longer aligns with core business objectives. Redeployment in progress. End transmission."
+    ],
+    "eliminated": [
+      "Market exit complete. Liquidation finalized. Final report: We maximized shareholder value until the end. Bankruptcy proceedings initiated. End transmission.",
+      "Critical systems failure. Business continuity compromised. This represents the ultimate market correction. Board has voted to dissolve. End transmission... forever."
+    ],
+    "endgame": [
+      "Q4 endgame strategy deployed. Winner takes all remaining market share. Stakes: Total sector dominance. Projected outcome: Our victory. Confidence level: High. End transmission.",
+      "Final quarter performance review approaching. All empires competing for market supremacy. May the most efficient empire win. End transmission."
+    ],
+    "broadcastShout": [
+      "*GALACTIC PRESS RELEASE* Synergy Corp announces record profits for Turn {turn}. Stock price: UP 47%. Competitors: Acquiring or eliminating. The market has spoken. End transmission.",
+      "*PUBLIC ANNOUNCEMENT* We're disrupting the traditional empire model. Our innovative approach delivers 300% more value. Join us or be left behind. End transmission.",
+      "*INVESTOR CALL* Q{turn} earnings beat expectations. We've optimized 15 former competitors this quarter. Growth trajectory: Exponential. End transmission."
+    ],
+    "casualMessage": [
+      "Did you know our employee satisfaction score increased 12% after implementing mandatory 'synergy sessions'? Morale is at an all-time projected high. End transmission.",
+      "Fun fact: We've streamlined 847 positions this quarter through automation. Efficiency gains: Remarkable. The future is now. End transmission.",
+      "Market insight: Empires that fail to pivot to agile methodologies experience 34% lower survival rates. Food for thought. End transmission.",
+      "Pro tip: Leverage your core competencies to maximize stakeholder value. That's literally the only business advice you need. End transmission."
+    ]
+  }
+}

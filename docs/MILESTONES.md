@@ -164,7 +164,9 @@ Each milestone delivers a **playable vertical slice** that can be tested end-to-
 8. Victory check
 
 ### Database Tables
-- `civil_status_history`
+- `civil_status_history` ✅ **Pre-created (2024-12-24)**
+
+**Note:** Schema defined ahead of schedule as parallel work during M1.
 
 ---
 
@@ -211,9 +213,11 @@ Each milestone delivers a **playable vertical slice** that can be tested end-to-
 
 ### Database Tables
 - `military_units`
-- `build_queue`
-- `research_progress`
-- `unit_upgrades`
+- `build_queue` ✅ **Pre-created (2024-12-24)**
+- `research_progress` ✅ **Pre-created (2024-12-24)**
+- `unit_upgrades` ✅ **Pre-created (2024-12-24)**
+
+**Note:** Build queue, research, and upgrade schemas defined ahead of schedule as parallel work during M1.
 
 ---
 
@@ -264,8 +268,10 @@ Each milestone delivers a **playable vertical slice** that can be tested end-to-
 ```
 
 ### Database Tables
-- `attacks`
-- `combat_logs` (includes phase-by-phase data)
+- `attacks` ✅ **Pre-created (2024-12-24)**
+- `combat_logs` ✅ **Pre-created (2024-12-24)** (includes phase-by-phase data)
+
+**Note:** Combat system schemas defined ahead of schedule as parallel work during M1.
 
 ---
 

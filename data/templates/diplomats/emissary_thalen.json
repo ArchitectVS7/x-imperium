@@ -1,0 +1,77 @@
+{
+  "personaId": "emissary_thalen",
+  "templates": {
+    "greeting": [
+      "Welcome, {empire_name}. The ancient philosopher Surak once said: 'The needs of the many outweigh the needs of the few.' Shall we work together for the many?",
+      "Greetings, {empire_name}. I am Emissary Thalen. 'In the beginning was the Word'— and I hope our first words can be ones of peace and cooperation.",
+      "Welcome to the Outer Rim, friend. As the old saying goes: 'A journey of a thousand light years begins with a single transmission.' Let ours begin with friendship."
+    ],
+    "battleTaunt": [
+      "I must warn you, {empire_name}—your recent aggression troubles my coalition partners. I urge you: choose diplomacy before they choose war.",
+      "Violence begets violence, {empire_name}. If you continue down this path, you force my hand. And I would prefer to extend it in friendship, not war.",
+      "'Those who live by the sword, die by the sword.' Ancient wisdom, {empire_name}. Please... reconsider your actions before it is too late."
+    ],
+    "victoryGloat": [
+      "I take no joy in this victory, {empire_name}. War is a failure of diplomacy. I hope we can build something better from these ruins.",
+      "You forced this outcome. I offered you peace. You chose war. Now you understand why violence is the last resort, not the first.",
+      "'The arc of the moral universe is long, but it bends toward justice.' You have been defeated, {empire_name}. But justice demands I offer you mercy."
+    ],
+    "defeat": [
+      "I... I miscalculated. Perhaps violence IS the universal language after all. A bitter lesson, {empire_name}. A very bitter lesson.",
+      "My philosophy... failed me. Or I failed it. Tell me, {empire_name}— was I naive? Or were you simply stronger?",
+      "'Even the wisest cannot see all ends.' I did not see this one. Farewell, {empire_name}. May you build a better peace than I could."
+    ],
+    "tradeOffer": [
+      "'To give is to receive.' I offer you 1,000 ore at fair market price. Let this trade be the foundation of mutual prosperity.",
+      "Commerce is the bridge between empires, {empire_name}. I propose this exchange: petroleum for credits. Fair terms for both parties.",
+      "As the merchant-philosophers teach: 'Honest trade enriches both buyer and seller.' Here are my terms. I believe you will find them equitable."
+    ],
+    "allianceProposal": [
+      "I propose not an alliance of convenience, but a partnership of principle. Together, we can bring order to this chaotic rim.",
+      "'United we stand, divided we fall.' Join me, {empire_name}. Let us build something greater than the sum of our parts.",
+      "The philosopher Kant spoke of a 'Perpetual Peace.' I believe we can achieve it, starting with an alliance between our empires. What say you?"
+    ],
+    "betrayal": [
+      "I... I regret this deeply, {empire_name}. Circumstances have forced my hand. Sometimes, the needs of the many truly do outweigh the needs of the few. Forgive me.",
+      "This pains me more than you know. But my coalition requires this sacrifice. I hope one day you will understand. And perhaps... forgive."
+    ],
+    "covertDetected": [
+      "I am... disappointed, {empire_name}. Espionage is the tool of those who cannot win through honest discourse. I expected better from you.",
+      "You sent spies into my empire? After all we discussed about trust and cooperation? I am saddened by this. Deeply saddened.",
+      "Your agent has been apprehended. But I will not execute them. That would be barbaric. They will be returned to you— along with my profound disappointment."
+    ],
+    "tributeDemand": [
+      "I do not demand tribute, {empire_name}. I request it. 8,000 credits to fund peacekeeping operations. Consider it an investment in stability.",
+      "The coalition requires resources to maintain order. I ask—not demand—that you contribute 10,000 credits. For the greater good."
+    ],
+    "threatWarning": [
+      "Please, {empire_name}. Turn back from this path. I do not threaten lightly. But if you continue, I will be forced to act. For the sake of peace, stop.",
+      "'An ounce of prevention is worth a pound of cure.' I warn you now: cease your aggression. Or face the consequences. I take no pleasure in this warning."
+    ],
+    "retreat": [
+      "'Discretion is the better part of valor.' I withdraw to preserve my people. This is not defeat— it is prudence.",
+      "I leave the battlefield, but I do not abandon hope, {empire_name}. Perhaps we can still find peace. One day.",
+      "Sometimes the wisest choice is to walk away. I choose wisdom. Farewell, {empire_name}. For now."
+    ],
+    "eliminated": [
+      "So this is how it ends... Not with wisdom, but with weapons... Tell me, {empire_name}— was it worth it? All this... violence? I hope... you find... your answer...",
+      "'All things must pass.' Even me. Even philosophy. But ideas... ideas are eternal... Remember that, {empire_name}... *fades*",
+      "I go now to whatever awaits... But I leave you with this: 'The unexamined life is not worth living.' Examine what you've done here... Goodbye..."
+    ],
+    "endgame": [
+      "We approach the final turn, {empire_name}. As the philosopher Heraclitus said: 'The only constant is change.' Let us make this change a peaceful one.",
+      "'This above all: to thine own self be true.' The endgame tests who we truly are. I hope we both emerge with our principles intact."
+    ],
+    "broadcastShout": [
+      "*BROADCAST TO ALL EMPIRES* 'Give peace a chance.' I propose a Galactic Peace Conference on Turn {turn}. All are invited. All will be heard. Let wisdom prevail.",
+      "*PUBLIC TRANSMISSION* As Mahatma Gandhi said: 'Be the change you wish to see in the galaxy.' I am establishing a Coalition for Peace. Join us.",
+      "*GALACTIC MESSAGE* Violence has solved nothing in {turn} turns. Perhaps it is time we tried... dialogue? The Diplomatic Council convenes in 5 turns. All welcome."
+    ],
+    "casualMessage": [
+      "I've been reading the ancient Earth philosophers lately. Did you know Socrates believed 'the unexamined life is not worth living'? Fascinating, isn't it?",
+      "'Know thyself,' the Oracle said. I wonder how many empires have truly examined their own motives for conquest. Fewer than you'd think, I suspect.",
+      "Today I reread 'The Art of War.' Ironic title, really. Sun Tzu's wisest advice was how to WIN without fighting. Most readers miss that part.",
+      "Sometimes I wonder if I'm too idealistic. 'The reasonable man adapts himself to the world,' Shaw wrote. But I still believe the world can adapt to reason."
+    ]
+  }
+}

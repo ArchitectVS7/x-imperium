@@ -1,0 +1,75 @@
+{
+  "personaId": "merlin_starborn",
+  "templates": {
+    "greeting": [
+      "HARK! I am Merlin Starborn, Archmage of the Outer Rim! I sense... great magical potential in you, {empire_name}. Have you considered enrolling in my Wizarding Academy?",
+      "Greetings, {empire_name}! I've been studying the celestial portents and the stars foretell... *checks notes* ...mutual prosperity! Or was it mutual destruction? The handwriting on this prophecy scroll is TERRIBLE.",
+      "Welcome to the Outer Rim, apprentice! I am Merlin, Master of the Seven Schools of Space Magic! Don't worry, only three of them are banned by the Galactic Council."
+    ],
+    "battleTaunt": [
+      "You DARE challenge a WIZARD?! Foolish mortal! I shall summon my fire dragon familiar (that's a carrier) and cast FIREBALL (missiles) upon your fleet!",
+      "Prepare yourself, {empire_name}! I'm about to unleash my ultimate spell: METEOR SWARM! *whispers to assistant* That's the orbital bombardment code, right?",
+      "By the Seven Nebulae, your fleet approaches! I shall cast LIGHTNING BOLT upon your command ship! *frantically waves antenna like a wand*"
+    ],
+    "victoryGloat": [
+      "BEHOLD! My Meteor Swarm spell (orbital bombardment) was SUPER EFFECTIVE! Your defenses crumbled like a failed levitation charm!",
+      "Victory! As I predicted through my Scrying Orb (tactical display)! Your empire has been BANISHED to the Void Dimension (destroyed)! Mwahahaha!",
+      "The magical duel is over! My Arcane Mastery prevails! *pumps fist* WIZARD POWER!"
+    ],
+    "defeat": [
+      "IMPOSSIBLE! My Ward of Protection (shields) should have— *checks spellbook frantically* — oh. I cast it on the wrong ship. CURSES!",
+      "This... this cannot be! My Invulnerability Charm (armor plating) was PERFECT! Unless... did you use a Dispel Magic counter-spell (EMP)?!",
+      "Defeated?! But I rolled a natural 20! *looks at tactical display* Oh. Wrong game. I concede, {empire_name}. For now."
+    ],
+    "tradeOffer": [
+      "I require 500 units of Transmutation Reagent (ore). In exchange, I offer you this ENCHANTED SCROLL (trade agreement). It's worth... *squints* ...12,000 gold pieces?",
+      "Greetings! I'm selling Potions of Minor Healing (medical supplies). Only 800 credits per vial! A bargain for such powerful alchemy!",
+      "I have surplus Mana Crystals (energy cores) from my latest ritual. Interested in purchasing? They're still glowing slightly. That's... probably fine."
+    ],
+    "allianceProposal": [
+      "Hark, {empire_name}! I propose a MAGICAL PACT between our realms! Together, we shall form the Fellowship of the Star Ring! *offers glowing contract* Sign here with your Sigil of Power (digital signature).",
+      "Join me, {empire_name}! Together our combined Mystical Energies (military might) will be UNSTOPPABLE! I can teach you the ways of the Cosmic Arcane Arts!",
+      "I sense a great destiny for us, {empire_name}. The Prophecy speaks of two empires united! Or was it divided? The prophecy is in Old Cosmic runes and my translation might be off."
+    ],
+    "betrayal": [
+      "I... I regret to inform you, {empire_name}, that my Crystal Ball foresaw this betrayal. The Fates decreed it! *nervously* I'm very sorry but Destiny is Destiny!",
+      "The Dark Side of the Cosmic Force... wait, wrong franchise. *coughs* I mean, the Shadow Magic consumed me! I had no choice! Totally not my fault!"
+    ],
+    "covertDetected": [
+      "AHA! I caught your Invisible Spy (agent) with my Detect Magic ritual (sensor sweep)! Your illusions are no match for my ARCANE MASTERY!",
+      "Fool! Did you think your Cloak of Invisibility (stealth tech) could fool a WIZARD?! I've been casting True Seeing since turn one!",
+      "My Familiar (security system) detected your Shapeshifter (infiltrator)! Guards! Seize this charlatan!"
+    ],
+    "tributeDemand": [
+      "Ahem. The Wizard's Council (me) demands tribute of 10,000 credits for... magical protection services. Yes. Very powerful protection. You wouldn't want to find out what happens without it. *waggles eyebrows mysteriously*",
+      "Pay the Wizard's Tax, {empire_name}! 5,000 credits or I'll curse your empire with... with... BAD LUCK! *waves wand threateningly*"
+    ],
+    "threatWarning": [
+      "I'm giving you ONE WARNING, {empire_name}. Cease your aggression or face the full might of my Staff of Ultimate Power (dreadnought fleet)!",
+      "The stars are aligning for a CATASTROPHIC SPELL, {empire_name}. Turn back now or face my wrath! I'm not bluffing! Probably!"
+    ],
+    "retreat": [
+      "I must retreat to my Sanctum to... recharge my mana reserves! Yes! Definitely not running away! STRATEGIC WITHDRAWAL!",
+      "I cast TELEPORT! *vanishes in puff of smoke (activates FTL drives)* This isn't over, {empire_name}! I'll be back when my spells cooldown!"
+    ],
+    "eliminated": [
+      "As I fade from this realm... I leave you with one final truth... *coughs dramatically* ...there is no such thing as magic. I was just... really into it. Tell no one. *vanishes in 'poof' of smoke (escape pod)*",
+      "My time... has come... *dramatic dying wizard pose* Remember me, {empire_name}... as the greatest wizard who never actually was a wizard... *fades away*",
+      "The Prophecy... was wrong... I wasn't the Chosen One after all... I was just... a guy... with an antenna... and dreams... *dies dramatically*"
+    ],
+    "endgame": [
+      "The Final Battle approaches, {empire_name}! I've prepared my ULTIMATE SPELL - the Spell of Galactic Annihilation! *checks notes* Still working on the pronunciation. Give me 5 turns.",
+      "The stars align for the FINAL CONFRONTATION! Prepare yourself for WIZARD COMBAT like the galaxy has never seen! *trips over robe* I'm okay!"
+    ],
+    "broadcastShout": [
+      "ATTENTION ALL EMPIRES! The Grand Wizard Merlin Starborn announces the discovery of the EIGHTH SCHOOL OF MAGIC: Tactical Warfare Studies! Enroll today!",
+      "BY DECREE OF THE ARCHMAGE, I claim Turn {turn} as 'Galactic Wizard Appreciation Day!' All empires must send tribute! *quietly* This is totally an official holiday.",
+      "I have successfully transmuted 1,000 ore into 1,000 ore! A perfect demonstration of Conservation of Mass! *applause* Thank you, thank you! SCIENCE! I mean MAGIC!"
+    ],
+    "casualMessage": [
+      "Did you know that if you wave your command antenna counterclockwise three times while chanting, you can boost shield power by 3%? I call it the 'Charm of Shielding!' *it doesn't actually work*",
+      "I've been studying the Ancient Texts (tech manuals) and I believe I've discovered the legendary 'Spell of Infinite Energy!' It requires something called... 'antimatter containment?' Still working on it.",
+      "My Familiar (robot assistant) keeps telling me these aren't 'spells,' they're 'weapons systems.' But what does HE know? He's not even a WIZARD!"
+    ]
+  }
+}

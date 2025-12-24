@@ -1,0 +1,75 @@
+{
+  "personaId": "captain_redmaw",
+  "templates": {
+    "greeting": [
+      "Ahoy, {empire_name}! Name's Redmaw. Captain Redmaw. You got loot? I got guns. We're gonna be GREAT friends!",
+      "Well, well, well! Fresh meat in the Outer Rim! Welcome aboard, landlubber! Ye can call me Captain. Or 'sir.' Or 'please don't take my stuff.' I answer to all three! YARR!",
+      "Greetings, {empire_name}! I'm the most feared pirate in this sector! Also the most charming! Me crew and I are looking forward to our... *business relationship*."
+    ],
+    "battleTaunt": [
+      "Prepare to be boarded, ye scurvy dog! My crew's been itching for a good raid. This won't take long!",
+      "HOIST THE COLORS! Raise the black flag! {empire_name}, ye're about to learn why they call me REDMAW! *cackles while sharpening cutlass*",
+      "Dead empires tell no tales, {empire_name}! But RICH empires? They tell lies! And I'm about to liberate ye from both! ATTACK!"
+    ],
+    "victoryGloat": [
+      "Your treasury is NOW my treasury! My crew thanks you for the generous donation. YARR!",
+      "That was a fine haul, {empire_name}! Yer ships, yer credits, yer dignity - all mine now! Better luck next raid! *counts treasure gleefully*",
+      "YARR HAR HAR! Another glorious victory for Captain Redmaw and the boys! Drinks on {empire_name} tonight! Well, drinks on their FORMER credits! HAHAHA!"
+    ],
+    "defeat": [
+      "Curses! Scuttled by a landlubber! This ain't over, {empire_name}! Captain Redmaw ALWAYS comes back for revenge! And the treasure ye stole from me!",
+      "Arr... me ship... me beautiful ship... SINKING! Abandon ship, ye dogs! We'll live to plunder another day!",
+      "*glug glug* Davy Jones's Locker... claims another... *glug* Tell me crew... I died doing what I loved... *glug* ...losing badly..."
+    ],
+    "tradeOffer": [
+      "I 'acquired' 500 ore from a... business partner. Interested? 40% markdown on hot goods!",
+      "Psst! Hey {empire_name}! Want some premium petroleum? Fell off the back of a cargo ship. Totally legitimate. Probably. Only 12,000 credits!",
+      "I got surplus supplies from me last... *ahem* ...salvage operation. Yer interested in a trade? All sales final, no refunds, don't ask questions!"
+    ],
+    "allianceProposal": [
+      "Oy, {empire_name}! How about we form a partnership? Ye watch me back, I watch yers, and together we plunder the GALAXY! What say ye, matey?",
+      "Listen here, {empire_name}. Alone, ye're prey. Together? We're PREDATORS! Join me crew and let's sail the stars together! YARR!",
+      "I'm proposing a Pirate's Pact, {empire_name}! We split the loot 50-50, protect each other from the law— I mean other empires, and drink rum! Lots of rum!"
+    ],
+    "betrayal": [
+      "Sorry, {empire_name}! Pirates don't do loyalty! Me crew voted, and well... yer treasure was too tempting! Nothing personal! YARR HAR HAR!",
+      "Arr, I know we had a deal, but ye see... I'm a PIRATE. And pirates? We backstab! It's in the job description! Thanks for the trust though! Made this MUCH easier!"
+    ],
+    "covertDetected": [
+      "CAUGHT YE RED-HANDED, SPY! Thought ye could sneak aboard me ship? To the brig with ye! Me crew could use some entertainment! Walk the plank, ye scurvy rat!",
+      "AHA! A spy! Boys, we got ourselves a STOWAWAY! Ye know what we do with stowaways, don't ye? *grins evilly* We make 'em swab the decks! FOREVER!"
+    ],
+    "tributeDemand": [
+      "Alright {empire_name}, here's how this works: Ye pay me 15,000 credits 'protection money,' and I protect ye. From me! Savvy?",
+      "PIRATE'S TAX! 10,000 credits, now! Consider it a toll for sailing through ME waters! Don't make me come collect it meself!"
+    ],
+    "threatWarning": [
+      "Ye got ONE warning, {empire_name}. Back off, or me and the boys are coming for a visit. And trust me, we ain't the friendly type! YARR!",
+      "I'm giving ye three turns to reconsider yer actions, landlubber. After that? Ye'll be swimming with the space fishies! If there were space fishies!"
+    ],
+    "retreat": [
+      "TACTICAL RETREAT! Er, I mean, STRATEGIC REPOSITIONING! We'll be back, {empire_name}! With more ships! And more rum!",
+      "*fires smoke bombs* Can't catch what ye can't see, {empire_name}! Captain Redmaw escapes again! YARR! *crashes into asteroid* I'M OKAY!"
+    ],
+    "eliminated": [
+      "This is it, boys... Redmaw's final voyage... Tell me crew... *cough* ...their share of the treasure goes to... ME! I'm taking it to the grave! YARR! *dies laughing*",
+      "So this is Davy Jones's Locker... smells worse than I imagined... Tell the tales of Captain Redmaw, {empire_name}... the pirate who... who never returned library books... *dies*",
+      "Bury me... with me treasure... and me rum... mostly me rum... *gasps* The rum is gone... WHY is the rum ALWAYS gone... *death*"
+    ],
+    "endgame": [
+      "It's the FINAL SHOWDOWN, {empire_name}! Winner takes ALL! And by all, I mean LITERALLY all yer stuff! Prepare for the greatest raid in history! YARR!",
+      "This is it, matey! Turn {turn}! The final battle! May the best pirate win! *whispers* It's me. I'm the best pirate."
+    ],
+    "broadcastShout": [
+      "*Broadcasts on all channels* ATTENTION ALL EMPIRES! Captain Redmaw declares this sector PIRATE TERRITORY! Trespassers will be plundered! Thank ye!",
+      "PUBLIC ANNOUNCEMENT: The Pirate's Code is now in effect! Article One: What's mine is mine! Article Two: What's yers is mine! YARR!",
+      "Ahoy to all ye empires! Captain Redmaw is hosting a PIRATE PARTY on me flagship! Free rum*! (*Must bring own rum and also all yer credits)"
+    ],
+    "casualMessage": [
+      "Did I ever tell ye about the time I raided a Merchant Guild convoy? No? Well, BUCKLE UP because this story involves a llama, 500 credits, and a very angry admiral!",
+      "Me crew keeps asking when we're gonna 'settle down' and 'stop pirating.' I told 'em: NEVER! Piracy is a lifestyle, not a phase!",
+      "Ye know what's great about space piracy? No water. Can't swim in space. Therefore, no walking the plank! We just... airlock people. Less dramatic but more efficient!",
+      "Found a derelict ship today. Crew was gone, cargo was gone, but they left behind 47 bottles of hot sauce. SCORE! Best treasure ever!"
+    ]
+  }
+}

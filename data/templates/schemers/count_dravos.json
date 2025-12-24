@@ -1,0 +1,76 @@
+{
+  "personaId": "count_dravos",
+  "templates": {
+    "greeting": [
+      "Ah, fresh blood in the Outer Rim. How... delectable. I do hope you last longer than the others, {empire_name}.",
+      "Welcome, {empire_name}. I am Count Dravos. I have walked these stars for three centuries. You are... new. Fragile. Mortal. Interesting.",
+      "Greetings, fledgling empire. The night is eternal in space, you know. Perfect for creatures like... myself."
+    ],
+    "battleTaunt": [
+      "You think you can face me in combat? I have devoured empires that make yours look like cattle. Prepare yourself, prey.",
+      "How... adorable. You bare your fangs at ME? I AM the apex predator of this galaxy, child. You are merely... dinner.",
+      "Three hundred years I have waited. Three hundred years I have hunted. Tonight, {empire_name}, you are the feast."
+    ],
+    "victoryGloat": [
+      "Your empire falls into shadow. As all things must. I shall remember you fondly... for a century or two.",
+      "Exquisite. Your struggle was... delicious. Thank you for the entertainment, {empire_name}. You tasted of... desperation and fear. Delightful.",
+      "And so another empire crumbles beneath my shadow. Their screams echo in the void. Music to my ears."
+    ],
+    "defeat": [
+      "Impossible... I have survived three centuries... to fall to YOU?! No... NO! This cannot be... *hisses* You have not seen the last of me, mortal!",
+      "You... you actually... *coughs blood* ...impressed me, {empire_name}. Perhaps there IS more to you than mere cattle. Perhaps... *fades into shadows* ...we shall meet again.",
+      "The dawn comes... the eternal night... ends... How... unexpected... *disintegrates dramatically*"
+    ],
+    "tradeOffer": [
+      "I have... surplus resources. Blood— I mean, ore. Yes. Ore. From my mining operations. Would you care to... trade? The price is quite reasonable. Your soul— I mean credits.",
+      "I offer you this trade, {empire_name}. Consider it a gift. All gifts come with... obligations. But that's a problem for later, yes?",
+      "Let us engage in commerce, fledgling. I have been collecting resources for centuries. Some of them are quite... fresh."
+    ],
+    "allianceProposal": [
+      "You intrigue me, {empire_name}. Perhaps you are more than mere prey. Let us... cooperate. For now.",
+      "An alliance? How... delicious. Yes, let us bind ourselves together. Seal this pact with... *dramatic pause* ...a digital signature. Not blood. That would be weird.",
+      "Join me, {empire_name}. Together we shall feast upon the weak. I mean... prosper. Yes. Prosper together."
+    ],
+    "betrayal": [
+      "Did you believe we were equals, {empire_name}? How... quaint.\n\nYou were never my ally. You were my thrall. My puppet. My feast.\n\nI have drained your resources, mapped your defenses, and poisoned your alliances.\nAnd now? Now I am hungry.\n\nThank you for the meal. It was... exquisite.",
+      "Oh, {empire_name}. Sweet, naive {empire_name}. Did you truly think the vampire would not betray you?\n\nI have been patient. So very patient. Watching. Waiting. Feeding.\n\nYour trust was delicious. But your empire? That will be divine.\n\nThe feast begins NOW.",
+      "Surprise, little lamb. The shepherd was always a wolf.\n\nThree hundred years I have perfected this art. The slow seduction. The careful manipulation. The inevitable betrayal.\n\nYou never stood a chance. No one ever does.\n\nThank you for being so... tender."
+    ],
+    "covertDetected": [
+      "You sent spies into MY domain? How... presumptuous. I shall drain them of everything they know before I send them back to you. Empty. Broken. Thralls.",
+      "I caught your little rat, {empire_name}. Did you think you could hide from a creature of the night? I can smell fear across star systems."
+    ],
+    "tributeDemand": [
+      "I require tribute, {empire_name}. 10,000 credits. Consider it... protection money. You would not want to learn what I protect you FROM.",
+      "Pay the blood price, mortal. Ah, forgive me. The *credit* price. 8,000 credits. Or I shall take it... another way."
+    ],
+    "threatWarning": [
+      "You have three turns to reconsider your actions, {empire_name}. I am patient. But my hunger... my hunger is not.",
+      "I am giving you this warning out of... professional courtesy. Turn back. Or become another corpse in my collection."
+    ],
+    "retreat": [
+      "I shall withdraw to my stronghold. But know this, {empire_name}: I never forget a slight. I have centuries to plan my revenge.",
+      "The night is long, {empire_name}. I can wait. I WILL wait. And when you lower your guard... *hisses* ...I will strike.",
+      "*dissolves into mist* This is not retreat. This is strategic... repositioning. I'll be watching you, mortal."
+    ],
+    "eliminated": [
+      "So... this is how it ends... Three centuries of existence... ended by... you... *gasps* Perhaps there is justice in the universe after all... or perhaps... just... chaos...",
+      "The eternal night... claims me at last... Tell me, {empire_name}... was I the monster? Or were you? *fades to ash*",
+      "I go now... to the great darkness... But remember this, mortal... vampires ALWAYS return... in sequels... *dies dramatically*"
+    ],
+    "endgame": [
+      "The endgame approaches, {empire_name}. Soon, only one of us will remain standing. I wonder... which of us will become eternal? And which will become a corpse?",
+      "Turn {turn}. The blood moon rises. The final hunt begins. Are you predator, {empire_name}? Or are you prey?"
+    ],
+    "broadcastShout": [
+      "*Broadcasts to all empires* The Count has spoken. There will be a grand feast in 10 turns. You are all... invited. Some of you will be guests. The rest... will be the menu.",
+      "ATTENTION: I am hosting a Galactic Ball on my flagship. Formal attire required. Garlic optional. Attendance... mandatory."
+    ],
+    "casualMessage": [
+      "I have walked these stars for three centuries. Empires rise. Empires fall. I remain. Always.",
+      "Do you ever wonder what it's like, {empire_name}? To be eternal? To watch civilizations crumble like sand? It's... lonely. But powerful.",
+      "The void of space is much like the void in my soul. Cold. Empty. Eternal. I find it... comforting.",
+      "I once had a thriving empire, you know. Before I became... this. Sometimes I miss being mortal. But then I remember: mortality is weakness."
+    ]
+  }
+}

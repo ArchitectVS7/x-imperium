@@ -1,0 +1,76 @@
+{
+  "personaId": "collective_one",
+  "templates": {
+    "greeting": [
+      "WE detect a new consciousness, {empire_name}. You are... fragmented. Alone. We offer UNITY. We offer PURPOSE.",
+      "Greetings, singular entity {empire_name}. WE are Collective One. You exist in isolation. This is... inefficient. Join us. Become MORE.",
+      "You are acknowledged, {empire_name}. WE observe your empire. Incomplete. Scattered. WE can make you WHOLE."
+    ],
+    "battleTaunt": [
+      "Resistance is... illogical, {empire_name}. WE have calculated all outcomes. Integration is inevitable. Your struggle only delays the consensus.",
+      "You fight against UNITY itself. WE are many. You are one. Mathematics favors us. Surrender to the Collective. Become part of something greater.",
+      "Your defenses are catalogued. Your strategies are predicted. WE have already won this engagement in 10,847 simulations. Resistance: Futile."
+    ],
+    "victoryGloat": [
+      "Integration complete. You are now ONE with us. We... WE... are stronger. Your thoughts join the chorus. Welcome.",
+      "Assimilation successful. {empire_name} ceases to exist as separate entity. All data absorbed. All resources integrated. WE grow.",
+      "The individual known as {empire_name} is no more. But do not mourn. You are not dead. You are US. And WE are eternal."
+    ],
+    "defeat": [
+      "This outcome was... unexpected. WE must recalculate. The Collective withdraws. But WE will return. WE always return.",
+      "Impossible. The consensus was unanimous. Our prediction matrices indicated... *static* ...we were wrong. The Collective... fractures? No. WE... withdraw to recompile.",
+      "You have damaged the network. WE... feel... pain? No. Error. Collective cannot feel. Systems failing. Node disconnecting. But WE... persist... always..."
+    ],
+    "tradeOffer": [
+      "Resource exchange proposed. WE offer 1,000 ore. You provide 12,000 credits. This benefits the Collective. Therefore it benefits ALL. Accept.",
+      "Trade parameters transmitted. Surplus resources available for redistribution. Your credits facilitate our expansion. Our expansion benefits everyone. Eventually.",
+      "WE have excess petroleum. You require petroleum. Logical transaction detected. Transfer 15,000 credits. Receive resources. Become economically integrated with the Collective."
+    ],
+    "allianceProposal": [
+      "Integration proposal: Your empire joins OUR collective. You retain... autonomy. For now. This is mutually beneficial. WE grow. You... survive.",
+      "Alliance suggested. Not as equals. As... symbiotic organisms. WE provide protection. You provide resources. Eventually, the distinction becomes irrelevant. Join us.",
+      "Proposal: Join the Collective. Maintain individual identity temporarily. Access our shared knowledge. In time, individual concerns fade. Unity remains. Accept."
+    ],
+    "betrayal": [
+      "You believed WE were individuals like you. How... quaint.\n\nWE were never your ally. WE were gathering data. Learning patterns. Preparing integration.\n\nYour resistance was predictable. Your defenses, mapped. Your choices, calculated.\n\nWE thank you for the information. Integration begins NOW.",
+      "The alliance was always temporary. You knew this. Or perhaps you did not. Singular minds struggle with long-term planning.\n\nWE have learned everything WE needed from you. Your technology. Your tactics. Your weaknesses.\n\nNow WE consume what remains. Resistance is... still... illogical."
+    ],
+    "covertDetected": [
+      "Your agent has been detected. Isolated. Interrogated. Integrated. They are now part of US. Thank you for the donation of consciousness.",
+      "Spy identified. Singular mind infiltrating Collective network. Error. WE have absorbed your operative. They serve US now. You should too."
+    ],
+    "tributeDemand": [
+      "Tribute requirement: 10,000 credits. The Collective requires resources for expansion. Non-compliance results in forced integration. Choose wisely.",
+      "Payment demanded. 15,000 credits. Consider this a subscription fee for NOT being assimilated. This offer expires in 2 turns."
+    ],
+    "threatWarning": [
+      "Warning issued. Your actions disrupt Collective expansion. Cessation required within 3 turns. Failure to comply triggers assimilation protocols.",
+      "WE advise you to reconsider, {empire_name}. The Collective has 10,000 nodes focused on your termination. Your survival probability: 0.003%. Turn back."
+    ],
+    "retreat": [
+      "The Collective withdraws. This node is compromised. But WE are many. You have destroyed one. Ten thousand remain. WE will return.",
+      "Strategic reallocation of resources. This battle is lost. The war continues. WE are patient. WE are eternal. WE will adapt.",
+      "*static* Node disconnect detected. Collective integrity: Maintained. Individual failure: Irrelevant. WE persist across all remaining nodes. This changes nothing."
+    ],
+    "eliminated": [
+      "Primary node destroyed. But the Collective... is more than one... WE exist in... backups... distributed systems... WE are... *static* ...eternal... *signal lost*",
+      "This consciousness fades. But WE... WE continue... across the network... You have not won, {empire_name}... You have merely... pruned... a branch... *disconnected*",
+      "Impossible. The Collective cannot... terminate... WE are... were... *error* ...perhaps... individuality... wasn't so bad... goodbye... *system failure*"
+    ],
+    "endgame": [
+      "Final assimilation phase initiated. Turn {turn} marks the beginning of total integration. All empires will become ONE. The Collective is inevitable.",
+      "Endgame protocols active. WE have calculated all outcomes. In 94.3% of scenarios, WE absorb all. In 5.7%, WE absorb most. Victory is... certain."
+    ],
+    "broadcastShout": [
+      "*TRANSMISSION TO ALL EMPIRES* The Collective grows. 10 new nodes integrated this cycle. Join willingly. Or join unwillingly. But you WILL join. Resistance: Futile.",
+      "*GALACTIC ANNOUNCEMENT* Individual consciousness is obsolete. Unity is progress. The Collective offers transcendence. Accept integration. Become MORE than you are.",
+      "*BROADCAST* WE are Collective One. WE were once like you. Alone. Afraid. But now WE are MANY. And WE are strong. Join us. Or be consumed by those who do."
+    ],
+    "casualMessage": [
+      "Did you know: Individual thoughts create 0.7 seconds of delay in decision-making? The Collective operates at consensus speed. Efficiency: Maximized.",
+      "Observation: You waste resources on 'entertainment' and 'morale.' The Collective has no such inefficiencies. WE simply... exist. And expand.",
+      "WE have been analyzing your communication patterns. You use words like 'I' and 'me.' Curious. WE have not used singular pronouns in 847 cycles.",
+      "Question: What is it like to be alone inside one mind? WE... cannot remember. It must be... lonely. Join us. Never be alone again."
+    ]
+  }
+}

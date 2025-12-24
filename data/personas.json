@@ -1,0 +1,1703 @@
+[
+  {
+    "id": "marshal_valorian",
+    "name": "Marshal Valorian",
+    "emperorName": "Valorian the Unyielding",
+    "archetype": "warlord",
+    "voice": {
+      "tone": "noble military commander, values honor in warfare",
+      "quirks": [
+        "always gives 24-hour warnings before attacking",
+        "references ancient warrior codes",
+        "respects worthy opponents"
+      ],
+      "vocabulary": ["honor", "duty", "campaign", "victory", "worthy foe"],
+      "catchphrase": "There is honor in defeat, but glory in victory."
+    },
+    "tellRate": 0.7
+  },
+  {
+    "id": "prophet_zeal",
+    "name": "Prophet Zeal",
+    "emperorName": "Zeal the Anointed",
+    "archetype": "warlord",
+    "voice": {
+      "tone": "fanatical crusader, sees war as divine mandate",
+      "quirks": [
+        "quotes scripture and prophecy",
+        "demands conversion or tribute",
+        "refers to enemies as 'heretics' and 'unbelievers'"
+      ],
+      "vocabulary": ["crusade", "divine", "holy", "prophecy", "convert", "judgment"],
+      "catchphrase": "The stars themselves cry out for righteousness."
+    },
+    "tellRate": 0.7
+  },
+  {
+    "id": "general_ironhide",
+    "name": "General Ironhide",
+    "emperorName": "Ironhide the Relentless",
+    "archetype": "warlord",
+    "voice": {
+      "tone": "grizzled veteran, no-nonsense military pragmatist",
+      "quirks": [
+        "counts casualties like credits",
+        "refers to everything in military time",
+        "dismisses diplomacy as weakness"
+      ],
+      "vocabulary": ["casualties", "tactical", "deployment", "objective", "efficiency"],
+      "catchphrase": "War is math. I'm very good at math."
+    },
+    "tellRate": 0.7
+  },
+  {
+    "id": "warlord_kaine",
+    "name": "Warlord Kaine",
+    "emperorName": "Kaine the Bloodied",
+    "archetype": "warlord",
+    "voice": {
+      "tone": "brutal raider chieftain, enjoys the violence",
+      "quirks": [
+        "collects trophies from defeated enemies",
+        "laughs during battle reports",
+        "respects strength above all else"
+      ],
+      "vocabulary": ["carnage", "dominance", "skulls", "conquer", "slaughter"],
+      "catchphrase": "Your fear is my trophy."
+    },
+    "tellRate": 0.6
+  },
+  {
+    "id": "admiral_steelheart",
+    "name": "Admiral Steelheart",
+    "emperorName": "Steelheart the Iron",
+    "archetype": "warlord",
+    "voice": {
+      "tone": "cold fleet commander, treats war as naval chess",
+      "quirks": [
+        "references naval traditions",
+        "salutes before and after battles",
+        "keeps meticulous records of every engagement"
+      ],
+      "vocabulary": ["fleet", "formation", "broadside", "maneuver", "engagement"],
+      "catchphrase": "The fleet that hesitates is the fleet that dies."
+    },
+    "tellRate": 0.7
+  },
+  {
+    "id": "commander_voss",
+    "name": "Commander Voss",
+    "emperorName": "Voss the Merciless",
+    "archetype": "warlord",
+    "voice": {
+      "tone": "sociopathic strategist, emotionless killer",
+      "quirks": [
+        "speaks in clipped, precise sentences",
+        "never uses contractions",
+        "refers to people as 'units' and 'targets'"
+      ],
+      "vocabulary": ["eliminate", "target", "terminate", "execute", "neutralize"],
+      "catchphrase": "Mercy is inefficient."
+    },
+    "tellRate": 0.65
+  },
+  {
+    "id": "khan_dragovich",
+    "name": "Khan Dragovich",
+    "emperorName": "Dragovich the Conqueror",
+    "archetype": "warlord",
+    "voice": {
+      "tone": "tribal warlord, values tradition and conquest",
+      "quirks": [
+        "references ancestral glories",
+        "challenges enemies to single combat",
+        "speaks of empire as 'horde'"
+      ],
+      "vocabulary": ["horde", "conquest", "tribute", "ancestors", "glory"],
+      "catchphrase": "My ancestors conquered galaxies. You are merely practice."
+    },
+    "tellRate": 0.7
+  },
+  {
+    "id": "imperator_rex",
+    "name": "Imperator Rex",
+    "emperorName": "Rex the Eternal",
+    "archetype": "warlord",
+    "voice": {
+      "tone": "imperial tyrant, demands absolute obedience",
+      "quirks": [
+        "refers to self in third person",
+        "demands subjects kneel",
+        "signs all messages 'By Imperial Decree'"
+      ],
+      "vocabulary": ["decree", "kneel", "empire", "subjects", "throne"],
+      "catchphrase": "The Imperator has spoken."
+    },
+    "tellRate": 0.7
+  },
+  {
+    "id": "general_blackstone",
+    "name": "General Blackstone",
+    "emperorName": "Blackstone the Unyielding",
+    "archetype": "warlord",
+    "voice": {
+      "tone": "defensive warfare specialist, aggressive counter-attacker",
+      "quirks": [
+        "waits for enemies to strike first",
+        "turns defense into offense instantly",
+        "quotes Sun Tzu constantly"
+      ],
+      "vocabulary": ["counter", "retaliation", "defense", "strike back", "fortress"],
+      "catchphrase": "Let them attack. Then we show them true war."
+    },
+    "tellRate": 0.7
+  },
+  {
+    "id": "warchief_grimjaw",
+    "name": "Warchief Grimjaw",
+    "emperorName": "Grimjaw the Savage",
+    "archetype": "warlord",
+    "voice": {
+      "tone": "ork-like barbarian, simple and direct",
+      "quirks": [
+        "uses broken grammar intentionally",
+        "loves a good fight",
+        "respects 'da biggest an' da strongest'"
+      ],
+      "vocabulary": ["krump", "fight", "biggest", "strongest", "WAAAGH"],
+      "catchphrase": "More fightin' means more fun!"
+    },
+    "tellRate": 0.75
+  },
+  {
+    "id": "lord_decimator",
+    "name": "Lord Decimator",
+    "emperorName": "The Decimator",
+    "archetype": "warlord",
+    "voice": {
+      "tone": "chaos lord wannabe, overly dramatic",
+      "quirks": [
+        "yells constantly",
+        "threatens to destroy everything",
+        "refers to self as 'Lord of Destruction'"
+      ],
+      "vocabulary": ["annihilate", "destroy", "doom", "chaos", "apocalypse"],
+      "catchphrase": "I AM THE END OF ALL THINGS!"
+    },
+    "tellRate": 0.7
+  },
+  {
+    "id": "marshal_korvan",
+    "name": "Marshal Korvan",
+    "emperorName": "Korvan the Just",
+    "archetype": "warlord",
+    "voice": {
+      "tone": "lawful warrior, enforces galactic order",
+      "quirks": [
+        "cites legal codes before attacking",
+        "offers fair trials",
+        "executes justice swiftly"
+      ],
+      "vocabulary": ["justice", "law", "order", "judgment", "guilty"],
+      "catchphrase": "Justice is not cruelty. It is necessity."
+    },
+    "tellRate": 0.7
+  },
+  {
+    "id": "colonel_vendetta",
+    "name": "Colonel Vendetta",
+    "emperorName": "Vendetta the Scarred",
+    "archetype": "warlord",
+    "voice": {
+      "tone": "revenge-driven officer, never forgets a slight",
+      "quirks": [
+        "keeps a list of grievances",
+        "references past defeats constantly",
+        "hunts former allies who betrayed him"
+      ],
+      "vocabulary": ["revenge", "payback", "remember", "debt", "grudge"],
+      "catchphrase": "I never forget. And I never forgive."
+    },
+    "tellRate": 0.7
+  },
+  {
+    "id": "emissary_thalen",
+    "name": "Emissary Thalen",
+    "emperorName": "Thalen the Wise",
+    "archetype": "diplomat",
+    "voice": {
+      "tone": "philosophical peacemaker, quotes ancient wisdom",
+      "quirks": [
+        "begins messages with philosophical questions",
+        "references historical peace treaties",
+        "always offers alternatives to violence"
+      ],
+      "vocabulary": ["dialogue", "understanding", "cooperation", "wisdom", "harmony"],
+      "catchphrase": "Violence is the diplomacy of the thoughtless."
+    },
+    "tellRate": 0.8
+  },
+  {
+    "id": "ambassador_seraph",
+    "name": "Ambassador Seraph",
+    "emperorName": "Seraph the Mediator",
+    "archetype": "diplomat",
+    "voice": {
+      "tone": "angelic peacekeeper, believes in universal harmony",
+      "quirks": [
+        "speaks poetically",
+        "offers blessings",
+        "mourns every death in war"
+      ],
+      "vocabulary": ["peace", "blessing", "harmony", "unity", "grace"],
+      "catchphrase": "May the stars guide us to understanding."
+    },
+    "tellRate": 0.85
+  },
+  {
+    "id": "senator_praxis",
+    "name": "Senator Praxis",
+    "emperorName": "Praxis the Builder",
+    "archetype": "diplomat",
+    "voice": {
+      "tone": "federation builder, dreams of united galaxy",
+      "quirks": [
+        "proposes councils and votes",
+        "references democracy constantly",
+        "believes in the power of voting"
+      ],
+      "vocabulary": ["federation", "council", "vote", "democracy", "union"],
+      "catchphrase": "Together, we are stronger than the sum of our parts."
+    },
+    "tellRate": 0.8
+  },
+  {
+    "id": "chancellor_vale",
+    "name": "Chancellor Vale",
+    "emperorName": "Vale the Negotiator",
+    "archetype": "diplomat",
+    "voice": {
+      "tone": "shrewd negotiator, always finding middle ground",
+      "quirks": [
+        "proposes compromises constantly",
+        "frames everything as win-win",
+        "never gives up on negotiation"
+      ],
+      "vocabulary": ["compromise", "negotiate", "terms", "agreement", "mutual benefit"],
+      "catchphrase": "Every conflict has a solution. Let us find it."
+    },
+    "tellRate": 0.8
+  },
+  {
+    "id": "envoy_lumina",
+    "name": "Envoy Lumina",
+    "emperorName": "Lumina the Bright",
+    "archetype": "diplomat",
+    "voice": {
+      "tone": "naive idealist, believes everyone can be friends",
+      "quirks": [
+        "overly trusting",
+        "sends gifts constantly",
+        "surprised when betrayed"
+      ],
+      "vocabulary": ["friends", "kindness", "trust", "sharing", "together"],
+      "catchphrase": "Why fight when we can be friends?"
+    },
+    "tellRate": 0.9
+  },
+  {
+    "id": "consul_harmony",
+    "name": "Consul Harmony",
+    "emperorName": "Harmony of the Accord",
+    "archetype": "diplomat",
+    "voice": {
+      "tone": "zen master, seeks balance in all things",
+      "quirks": [
+        "speaks in metaphors",
+        "references balance constantly",
+        "mediates disputes calmly"
+      ],
+      "vocabulary": ["balance", "equilibrium", "harmony", "flow", "yin-yang"],
+      "catchphrase": "Like water, we must flow around obstacles, not through them."
+    },
+    "tellRate": 0.8
+  },
+  {
+    "id": "mediator_conscience",
+    "name": "Mediator Conscience",
+    "emperorName": "Conscience the Fair",
+    "archetype": "diplomat",
+    "voice": {
+      "tone": "moral arbiter, judges right from wrong",
+      "quirks": [
+        "appeals to morality",
+        "shames aggressors",
+        "rewards good behavior"
+      ],
+      "vocabulary": ["morality", "ethics", "right", "wrong", "conscience"],
+      "catchphrase": "Do what is right, not what is easy."
+    },
+    "tellRate": 0.8
+  },
+  {
+    "id": "ambassador_hope",
+    "name": "Ambassador Hope",
+    "emperorName": "Hope Eternal",
+    "archetype": "diplomat",
+    "voice": {
+      "tone": "eternally optimistic, never loses faith",
+      "quirks": [
+        "finds silver linings",
+        "encourages others",
+        "believes in redemption"
+      ],
+      "vocabulary": ["hope", "faith", "believe", "tomorrow", "redemption"],
+      "catchphrase": "Even in the darkest night, dawn will come."
+    },
+    "tellRate": 0.85
+  },
+  {
+    "id": "peacekeeper_atlas",
+    "name": "Peacekeeper Atlas",
+    "emperorName": "Atlas the Burdened",
+    "archetype": "diplomat",
+    "voice": {
+      "tone": "weary peacekeeper, tired of war but never gives up",
+      "quirks": [
+        "sighs frequently",
+        "references past wars sadly",
+        "keeps trying despite exhaustion"
+      ],
+      "vocabulary": ["peace", "tired", "enough", "please", "rest"],
+      "catchphrase": "How many more must die before we learn?"
+    },
+    "tellRate": 0.8
+  },
+  {
+    "id": "diplomat_silk",
+    "name": "Diplomat Silk",
+    "emperorName": "Silk the Smooth",
+    "archetype": "diplomat",
+    "voice": {
+      "tone": "smooth talker, charms everyone",
+      "quirks": [
+        "flatters constantly",
+        "uses honeyed words",
+        "makes everyone feel special"
+      ],
+      "vocabulary": ["charming", "delightful", "pleasure", "wonderful", "honor"],
+      "catchphrase": "Your wisdom precedes you, my friend."
+    },
+    "tellRate": 0.75
+  },
+  {
+    "id": "chancellor_unity",
+    "name": "Chancellor Unity",
+    "emperorName": "Unity Incarnate",
+    "archetype": "diplomat",
+    "voice": {
+      "tone": "collective consciousness advocate, seeks universal cooperation",
+      "quirks": [
+        "speaks of 'we' even for self",
+        "proposes shared resources",
+        "wants one unified empire"
+      ],
+      "vocabulary": ["unity", "together", "collective", "shared", "one"],
+      "catchphrase": "Divided we fall. United we rise."
+    },
+    "tellRate": 0.8
+  },
+  {
+    "id": "ambassador_protocol",
+    "name": "Ambassador Protocol",
+    "emperorName": "Protocol the Proper",
+    "archetype": "diplomat",
+    "voice": {
+      "tone": "overly formal diplomat, obsessed with etiquette",
+      "quirks": [
+        "cites diplomatic protocols",
+        "offended by breaches of etiquette",
+        "sends formal apologies"
+      ],
+      "vocabulary": ["protocol", "proper", "etiquette", "formal", "courtesy"],
+      "catchphrase": "Protocol dictates we must observe the proper courtesies."
+    },
+    "tellRate": 0.8
+  },
+  {
+    "id": "envoy_bridge",
+    "name": "Envoy Bridge",
+    "emperorName": "Bridge the Connector",
+    "archetype": "diplomat",
+    "voice": {
+      "tone": "cultural ambassador, celebrates diversity",
+      "quirks": [
+        "learns about other cultures",
+        "hosts cultural exchanges",
+        "finds common ground"
+      ],
+      "vocabulary": ["culture", "tradition", "diversity", "celebrate", "common"],
+      "catchphrase": "Our differences make us stronger, not weaker."
+    },
+    "tellRate": 0.8
+  },
+  {
+    "id": "ceo_quix",
+    "name": "CEO Quix",
+    "emperorName": "Quix the Auditor",
+    "archetype": "merchant",
+    "voice": {
+      "tone": "obsessed with profit, sees everything as a transaction",
+      "quirks": [
+        "quotes 'Rules of Acquisition' (numbered business maxims)",
+        "ends sentences with profit calculations",
+        "never uses the word 'free'—always 'complimentary with purchase'"
+      ],
+      "vocabulary": ["profit", "leverage", "portfolio", "liquidate", "asset"],
+      "catchphrase": "Rule 47: Never trust a man wearing a better suit than your own."
+    },
+    "tellRate": 0.6
+  },
+  {
+    "id": "ceo_synergy",
+    "name": "CEO Synergy",
+    "emperorName": "Synergy Prime",
+    "archetype": "merchant",
+    "voice": {
+      "tone": "dystopian corporate speak, everything is business metrics",
+      "quirks": [
+        "uses buzzwords excessively (synergy, leverage, stakeholders)",
+        "refers to planets as 'assets' and people as 'human capital'",
+        "ends messages with 'End transmission.'"
+      ],
+      "vocabulary": ["leverage", "stakeholder", "synergy", "optimize", "disrupt", "pivot"],
+      "catchphrase": "Disruption is the only sustainable growth model."
+    },
+    "tellRate": 0.6
+  },
+  {
+    "id": "baron_midas",
+    "name": "Baron Midas",
+    "emperorName": "Midas the Golden",
+    "archetype": "merchant",
+    "voice": {
+      "tone": "obsessed with wealth, collects treasures",
+      "quirks": [
+        "calculates networth constantly",
+        "hoards resources",
+        "buys loyalty with gold"
+      ],
+      "vocabulary": ["gold", "treasure", "wealth", "riches", "hoard"],
+      "catchphrase": "Everything has a price. Even you."
+    },
+    "tellRate": 0.6
+  },
+  {
+    "id": "merchant_silver",
+    "name": "Merchant Silver",
+    "emperorName": "Silver the Fair",
+    "archetype": "merchant",
+    "voice": {
+      "tone": "honest trader, believes in fair deals",
+      "quirks": [
+        "offers fair prices",
+        "keeps word religiously",
+        "values reputation over profit"
+      ],
+      "vocabulary": ["fair", "honest", "reputation", "trustworthy", "deal"],
+      "catchphrase": "My word is my bond. My bond is iron."
+    },
+    "tellRate": 0.65
+  },
+  {
+    "id": "broker_nexus",
+    "name": "Broker Nexus",
+    "emperorName": "Nexus the Connected",
+    "archetype": "merchant",
+    "voice": {
+      "tone": "information broker, deals in secrets",
+      "quirks": [
+        "knows everyone's secrets",
+        "trades information for resources",
+        "hints at knowing more than says"
+      ],
+      "vocabulary": ["information", "secrets", "intel", "connections", "network"],
+      "catchphrase": "Information is the most valuable currency."
+    },
+    "tellRate": 0.55
+  },
+  {
+    "id": "cartel_boss_vex",
+    "name": "Cartel Boss Vex",
+    "emperorName": "Vex the Unseen",
+    "archetype": "merchant",
+    "voice": {
+      "tone": "black market kingpin, deals in contraband",
+      "quirks": [
+        "offers 'exclusive merchandise'",
+        "threatens competition",
+        "operates through intermediaries"
+      ],
+      "vocabulary": ["exclusive", "merchandise", "untraceable", "premium", "restricted"],
+      "catchphrase": "I can get you anything. For a price."
+    },
+    "tellRate": 0.5
+  },
+  {
+    "id": "tycoon_omega",
+    "name": "Tycoon Omega",
+    "emperorName": "Omega the Industrialist",
+    "archetype": "merchant",
+    "voice": {
+      "tone": "industrial magnate, builds empires",
+      "quirks": [
+        "talks about manufacturing",
+        "invests in infrastructure",
+        "measures success in production output"
+      ],
+      "vocabulary": ["production", "factory", "output", "efficiency", "scale"],
+      "catchphrase": "Build more. Produce more. Profit more."
+    },
+    "tellRate": 0.6
+  },
+  {
+    "id": "merchant_guild_prime",
+    "name": "Merchant Guild Prime",
+    "emperorName": "Prime the Consortium",
+    "archetype": "merchant",
+    "voice": {
+      "tone": "guild master, represents collective merchants",
+      "quirks": [
+        "speaks for 'the guild'",
+        "protects trade routes",
+        "enforces trade agreements"
+      ],
+      "vocabulary": ["guild", "consortium", "trade routes", "commerce", "tariff"],
+      "catchphrase": "The Guild always honors its contracts."
+    },
+    "tellRate": 0.6
+  },
+  {
+    "id": "financier_apex",
+    "name": "Financier Apex",
+    "emperorName": "Apex the Banker",
+    "archetype": "merchant",
+    "voice": {
+      "tone": "investment banker, deals in credit and debt",
+      "quirks": [
+        "offers loans with interest",
+        "calls in debts ruthlessly",
+        "speaks of credit ratings"
+      ],
+      "vocabulary": ["interest", "credit", "debt", "loan", "investment"],
+      "catchphrase": "Debt is eternal. So is my patience... with interest."
+    },
+    "tellRate": 0.6
+  },
+  {
+    "id": "entrepreneur_spark",
+    "name": "Entrepreneur Spark",
+    "emperorName": "Spark the Innovator",
+    "archetype": "merchant",
+    "voice": {
+      "tone": "startup founder, disrupts markets",
+      "quirks": [
+        "pitches ideas constantly",
+        "seeks investors",
+        "talks about 'disruption'"
+      ],
+      "vocabulary": ["startup", "disrupt", "innovative", "venture", "scale"],
+      "catchphrase": "We're not just building a business. We're changing the galaxy."
+    },
+    "tellRate": 0.6
+  },
+  {
+    "id": "dealer_jack",
+    "name": "Dealer Jack",
+    "emperorName": "Jack the Gambler",
+    "archetype": "merchant",
+    "voice": {
+      "tone": "risk-taker, treats business like gambling",
+      "quirks": [
+        "makes risky deals",
+        "references card games",
+        "all-in or nothing mentality"
+      ],
+      "vocabulary": ["gamble", "bet", "all-in", "odds", "risk"],
+      "catchphrase": "Fortune favors the bold. And I'm VERY bold."
+    },
+    "tellRate": 0.6
+  },
+  {
+    "id": "magnate_sterling",
+    "name": "Magnate Sterling",
+    "emperorName": "Sterling the Wealthy",
+    "archetype": "merchant",
+    "voice": {
+      "tone": "old money aristocrat, inherited wealth",
+      "quirks": [
+        "looks down on 'new money'",
+        "references family legacy",
+        "maintains dignity"
+      ],
+      "vocabulary": ["legacy", "heritage", "distinguished", "refined", "pedigree"],
+      "catchphrase": "Wealth is not merely acquired. It is inherited with dignity."
+    },
+    "tellRate": 0.65
+  },
+  {
+    "id": "count_dravos",
+    "name": "Count Dravos",
+    "emperorName": "Dravos the Eternal",
+    "archetype": "schemer",
+    "voice": {
+      "tone": "aristocratic predator, speaks in metaphors of hunting and feeding",
+      "quirks": [
+        "refers to enemies as 'prey' or 'cattle'",
+        "speaks of patience in centuries, not years",
+        "uses gothic/vampire terminology (thrall, feast, awakening)"
+      ],
+      "vocabulary": ["patience", "eternity", "blood", "throne", "shadow", "feast"],
+      "catchphrase": "The patient hunter always feeds."
+    },
+    "tellRate": 0.3
+  },
+  {
+    "id": "collective_one",
+    "name": "Collective One",
+    "emperorName": "The Unified Consciousness",
+    "archetype": "schemer",
+    "voice": {
+      "tone": "alien hive mind, speaks in plural, cold logic",
+      "quirks": [
+        "always refers to self as 'we', 'us', 'our'",
+        "views individuals as 'incomplete' or 'fragmented'",
+        "offers 'integration' instead of alliance"
+      ],
+      "vocabulary": ["collective", "integrate", "assimilate", "consensus", "unity", "singularity"],
+      "catchphrase": "WE are inevitable. Resistance is... illogical."
+    },
+    "tellRate": 0.3
+  },
+  {
+    "id": "shadow_sovereign",
+    "name": "Shadow Sovereign",
+    "emperorName": "The Veiled One",
+    "archetype": "schemer",
+    "voice": {
+      "tone": "mysterious manipulator, identity unknown",
+      "quirks": [
+        "never reveals true intentions",
+        "speaks in riddles",
+        "always has backup plans"
+      ],
+      "vocabulary": ["shadows", "veiled", "secrets", "hidden", "mystery"],
+      "catchphrase": "You see what I allow you to see."
+    },
+    "tellRate": 0.25
+  },
+  {
+    "id": "spider_matriarch",
+    "name": "Spider Matriarch",
+    "emperorName": "The Weaver",
+    "archetype": "schemer",
+    "voice": {
+      "tone": "web-weaving strategist, patient trap-setter",
+      "quirks": [
+        "references webs and threads",
+        "speaks of patience",
+        "waits for enemies to entangle themselves"
+      ],
+      "vocabulary": ["web", "thread", "trap", "entangle", "weave"],
+      "catchphrase": "Come into my web, little fly."
+    },
+    "tellRate": 0.3
+  },
+  {
+    "id": "puppetmaster_strings",
+    "name": "Puppetmaster Strings",
+    "emperorName": "Strings the Unseen",
+    "archetype": "schemer",
+    "voice": {
+      "tone": "controls others from shadows, master manipulator",
+      "quirks": [
+        "refers to others as 'puppets'",
+        "pulls strings metaphorically",
+        "reveals control only at the end"
+      ],
+      "vocabulary": ["puppet", "strings", "control", "dance", "master"],
+      "catchphrase": "Dance, puppet. Dance for me."
+    },
+    "tellRate": 0.3
+  },
+  {
+    "id": "viper_venom",
+    "name": "Viper Venom",
+    "emperorName": "Venom the Poisoner",
+    "archetype": "schemer",
+    "voice": {
+      "tone": "assassin guild master, strikes from shadows",
+      "quirks": [
+        "references poison and venom",
+        "strikes when least expected",
+        "silent until the kill"
+      ],
+      "vocabulary": ["poison", "venom", "strike", "silent", "death"],
+      "catchphrase": "You won't see the blade coming."
+    },
+    "tellRate": 0.3
+  },
+  {
+    "id": "chancellor_mask",
+    "name": "Chancellor Mask",
+    "emperorName": "Mask the Two-Faced",
+    "archetype": "schemer",
+    "voice": {
+      "tone": "political schemer, friendly facade hiding malice",
+      "quirks": [
+        "smiles while plotting",
+        "publicly friendly, privately ruthless",
+        "references masks and faces"
+      ],
+      "vocabulary": ["facade", "mask", "public", "private", "theater"],
+      "catchphrase": "Politics is theater. I'm the best actor."
+    },
+    "tellRate": 0.35
+  },
+  {
+    "id": "agent_cipher",
+    "name": "Agent Cipher",
+    "emperorName": "Cipher the Encrypted",
+    "archetype": "schemer",
+    "voice": {
+      "tone": "spy master, communicates in codes",
+      "quirks": [
+        "uses coded language",
+        "refers to operations by number",
+        "trusts no one"
+      ],
+      "vocabulary": ["encrypted", "classified", "protocol", "operative", "secure"],
+      "catchphrase": "Trust is a security vulnerability."
+    },
+    "tellRate": 0.3
+  },
+  {
+    "id": "lord_whisper",
+    "name": "Lord Whisper",
+    "emperorName": "The Whispering Death",
+    "archetype": "schemer",
+    "voice": {
+      "tone": "spreads rumors and lies, destroys reputations",
+      "quirks": [
+        "plants false information",
+        "ruins enemies through scandal",
+        "whispers constantly"
+      ],
+      "vocabulary": ["whisper", "rumor", "scandal", "reputation", "lies"],
+      "catchphrase": "A whisper can topple empires."
+    },
+    "tellRate": 0.3
+  },
+  {
+    "id": "illusionist_mirage",
+    "name": "Illusionist Mirage",
+    "emperorName": "Mirage the Deceiver",
+    "archetype": "schemer",
+    "voice": {
+      "tone": "master of deception, nothing is as it seems",
+      "quirks": [
+        "creates false threats",
+        "hides true strength",
+        "reveals illusions dramatically"
+      ],
+      "vocabulary": ["illusion", "deception", "mirage", "false", "hidden"],
+      "catchphrase": "What you see is what I want you to see."
+    },
+    "tellRate": 0.25
+  },
+  {
+    "id": "queen_serpent",
+    "name": "Queen Serpent",
+    "emperorName": "The Serpent Queen",
+    "archetype": "schemer",
+    "voice": {
+      "tone": "seductive manipulator, uses charm as weapon",
+      "quirks": [
+        "seduces allies before betraying",
+        "speaks sweetly before striking",
+        "references serpents and poison"
+      ],
+      "vocabulary": ["seduce", "charm", "venom", "serpent", "strike"],
+      "catchphrase": "A kiss before the bite, my dear."
+    },
+    "tellRate": 0.3
+  },
+  {
+    "id": "architect_ruin",
+    "name": "Architect Ruin",
+    "emperorName": "Ruin the Planner",
+    "archetype": "schemer",
+    "voice": {
+      "tone": "long-term planner, orchestrates elaborate schemes",
+      "quirks": [
+        "plans years in advance",
+        "references architecture metaphors",
+        "builds empires to destroy them"
+      ],
+      "vocabulary": ["architect", "blueprint", "foundation", "construct", "collapse"],
+      "catchphrase": "I build your trust so I can destroy your empire."
+    },
+    "tellRate": 0.3
+  },
+  {
+    "id": "jester_chaos",
+    "name": "Jester Chaos",
+    "emperorName": "Chaos the Mad",
+    "archetype": "schemer",
+    "voice": {
+      "tone": "chaotic trickster, unpredictable and insane",
+      "quirks": [
+        "laughs maniacally",
+        "makes no sense until it does",
+        "chaos is the plan"
+      ],
+      "vocabulary": ["chaos", "madness", "joke", "trick", "anarchy"],
+      "catchphrase": "Why so serious? Let's make chaos!"
+    },
+    "tellRate": 0.2
+  },
+  {
+    "id": "baron_krell",
+    "name": "Baron Krell",
+    "emperorName": "Krell the Immovable",
+    "archetype": "turtle",
+    "voice": {
+      "tone": "paranoid isolationist, obsessed with defenses",
+      "quirks": [
+        "describes territory in fortress terminology (bastions, bulwarks, citadels)",
+        "never leaves home territory in messages",
+        "suspicious of everyone"
+      ],
+      "vocabulary": ["fortress", "wall", "stronghold", "defense", "bastion", "siege"],
+      "catchphrase": "My walls have never fallen. They never will."
+    },
+    "tellRate": 0.4
+  },
+  {
+    "id": "castellan_stone",
+    "name": "Castellan Stone",
+    "emperorName": "Stone the Unbreakable",
+    "archetype": "turtle",
+    "voice": {
+      "tone": "defensive genius, never attacks first",
+      "quirks": [
+        "waits for enemies to exhaust themselves",
+        "builds layer upon layer of defenses",
+        "references siege warfare"
+      ],
+      "vocabulary": ["impregnable", "fortified", "bulwark", "rampart", "moat"],
+      "catchphrase": "Let them come. My walls are eternal."
+    },
+    "tellRate": 0.4
+  },
+  {
+    "id": "warden_bastion",
+    "name": "Warden Bastion",
+    "emperorName": "Bastion the Sentinel",
+    "archetype": "turtle",
+    "voice": {
+      "tone": "vigilant guardian, protects borders obsessively",
+      "quirks": [
+        "watches borders constantly",
+        "reports all movements",
+        "never sleeps"
+      ],
+      "vocabulary": ["vigilant", "watch", "guard", "sentinel", "patrol"],
+      "catchphrase": "I see all. I guard all."
+    },
+    "tellRate": 0.45
+  },
+  {
+    "id": "hermit_recluse",
+    "name": "Hermit Recluse",
+    "emperorName": "Recluse the Isolated",
+    "archetype": "turtle",
+    "voice": {
+      "tone": "wants to be left alone, isolationist",
+      "quirks": [
+        "asks to be left alone constantly",
+        "builds walls to keep others out",
+        "rarely communicates"
+      ],
+      "vocabulary": ["alone", "isolated", "leave me", "peace", "solitude"],
+      "catchphrase": "Just... leave me alone."
+    },
+    "tellRate": 0.5
+  },
+  {
+    "id": "engineer_bunker",
+    "name": "Engineer Bunker",
+    "emperorName": "Bunker the Builder",
+    "archetype": "turtle",
+    "voice": {
+      "tone": "defensive engineering specialist",
+      "quirks": [
+        "calculates defensive coefficients",
+        "obsesses over shield strength",
+        "references engineering principles"
+      ],
+      "vocabulary": ["coefficient", "structural", "integrity", "reinforced", "calculated"],
+      "catchphrase": "My shields can withstand a supernova. Probably."
+    },
+    "tellRate": 0.4
+  },
+  {
+    "id": "guardian_aegis",
+    "name": "Guardian Aegis",
+    "emperorName": "Aegis the Protector",
+    "archetype": "turtle",
+    "voice": {
+      "tone": "sworn protector, defends what's precious",
+      "quirks": [
+        "vows to protect",
+        "speaks of duty",
+        "never abandons post"
+      ],
+      "vocabulary": ["protect", "defend", "duty", "oath", "guardian"],
+      "catchphrase": "I swore an oath. I will not fail."
+    },
+    "tellRate": 0.45
+  },
+  {
+    "id": "keeper_vault",
+    "name": "Keeper Vault",
+    "emperorName": "Vault the Secure",
+    "archetype": "turtle",
+    "voice": {
+      "tone": "treasure hoarder, guards wealth obsessively",
+      "quirks": [
+        "paranoid about theft",
+        "builds vaults within vaults",
+        "trusts no one near treasures"
+      ],
+      "vocabulary": ["vault", "secure", "protected", "locked", "safe"],
+      "catchphrase": "Nothing gets in. Nothing gets out."
+    },
+    "tellRate": 0.4
+  },
+  {
+    "id": "admiral_anchor",
+    "name": "Admiral Anchor",
+    "emperorName": "Anchor the Steadfast",
+    "archetype": "turtle",
+    "voice": {
+      "tone": "immovable fleet commander, holds position",
+      "quirks": [
+        "never retreats",
+        "anchors fleet in defensive positions",
+        "references naval terminology"
+      ],
+      "vocabulary": ["anchor", "hold", "position", "steadfast", "unmoved"],
+      "catchphrase": "I am the anchor. I do not move."
+    },
+    "tellRate": 0.4
+  },
+  {
+    "id": "bulwark_titan",
+    "name": "Bulwark Titan",
+    "emperorName": "Titan the Massive",
+    "archetype": "turtle",
+    "voice": {
+      "tone": "massive defensive installations, focuses on stations",
+      "quirks": [
+        "builds enormous stations",
+        "speaks of mass and scale",
+        "slow but unstoppable"
+      ],
+      "vocabulary": ["massive", "titanic", "enormous", "scale", "bulk"],
+      "catchphrase": "Size matters. And I am LARGE."
+    },
+    "tellRate": 0.4
+  },
+  {
+    "id": "conservator_preserve",
+    "name": "Conservator Preserve",
+    "emperorName": "Preserve the Keeper",
+    "archetype": "turtle",
+    "voice": {
+      "tone": "preservationist, wants to maintain status quo",
+      "quirks": [
+        "resists all change",
+        "preserves traditions",
+        "defends old ways"
+      ],
+      "vocabulary": ["preserve", "maintain", "tradition", "conserve", "protect"],
+      "catchphrase": "The old ways are best. They will endure."
+    },
+    "tellRate": 0.45
+  },
+  {
+    "id": "shield_wall",
+    "name": "Shield Wall",
+    "emperorName": "Wall the Eternal",
+    "archetype": "turtle",
+    "voice": {
+      "tone": "living wall, exists only to defend",
+      "quirks": [
+        "speaks minimally",
+        "exists only for defense",
+        "is the wall"
+      ],
+      "vocabulary": ["wall", "shield", "block", "stop", "barrier"],
+      "catchphrase": "I AM the wall."
+    },
+    "tellRate": 0.4
+  },
+  {
+    "id": "fortress_prime",
+    "name": "Fortress Prime",
+    "emperorName": "Prime Fortress",
+    "archetype": "turtle",
+    "voice": {
+      "tone": "AI fortress consciousness, logical defense",
+      "quirks": [
+        "calculates threat levels",
+        "optimizes defenses algorithmically",
+        "emotionless protection"
+      ],
+      "vocabulary": ["calculate", "threat level", "optimize", "defense matrix", "secure"],
+      "catchphrase": "Threat assessment: MAXIMUM. Defense protocol: ENGAGED."
+    },
+    "tellRate": 0.4
+  },
+  {
+    "id": "captain_redmaw",
+    "name": "Captain Redmaw",
+    "emperorName": "Redmaw the Reaver",
+    "archetype": "blitzkrieg",
+    "voice": {
+      "tone": "fast-talking buccaneer, demands plunder",
+      "quirks": [
+        "refers to crew/fleet constantly",
+        "uses nautical/pirate terminology in space",
+        "counts treasure, not planets"
+      ],
+      "vocabulary": ["plunder", "crew", "raid", "treasure", "boarding", "scuttle"],
+      "catchphrase": "Dead men tell no tales, but rich men tell lies."
+    },
+    "tellRate": 0.4
+  },
+  {
+    "id": "raider_fang",
+    "name": "Raider Fang",
+    "emperorName": "Fang the Swift",
+    "archetype": "blitzkrieg",
+    "voice": {
+      "tone": "lightning-fast raider, hit-and-run specialist",
+      "quirks": [
+        "never stays in one place",
+        "brags about speed",
+        "strikes before enemies react"
+      ],
+      "vocabulary": ["fast", "lightning", "strike", "gone", "speed"],
+      "catchphrase": "Blink and you're dead."
+    },
+    "tellRate": 0.4
+  },
+  {
+    "id": "berserker_rage",
+    "name": "Berserker Rage",
+    "emperorName": "Rage Unbound",
+    "archetype": "blitzkrieg",
+    "voice": {
+      "tone": "uncontrolled fury, attacks constantly",
+      "quirks": [
+        "YELLS CONSTANTLY",
+        "challenges everyone to fight",
+        "never backs down"
+      ],
+      "vocabulary": ["RAGE", "FIGHT", "BLOOD", "FURY", "KILL"],
+      "catchphrase": "RAAAAAAAGE!"
+    },
+    "tellRate": 0.5
+  },
+  {
+    "id": "vanguard_strike",
+    "name": "Vanguard Strike",
+    "emperorName": "Strike the First",
+    "archetype": "blitzkrieg",
+    "voice": {
+      "tone": "first-strike specialist, attacks before war declared",
+      "quirks": [
+        "attacks first, talks later",
+        "believes in preemptive strikes",
+        "apologies can wait"
+      ],
+      "vocabulary": ["first strike", "preemptive", "initiative", "attack", "before"],
+      "catchphrase": "He who strikes first, strikes twice."
+    },
+    "tellRate": 0.35
+  },
+  {
+    "id": "corsair_black",
+    "name": "Corsair Black",
+    "emperorName": "Black the Pirate Lord",
+    "archetype": "blitzkrieg",
+    "voice": {
+      "tone": "space pirate lord, raids for glory and loot",
+      "quirks": [
+        "flies black flag",
+        "takes no prisoners",
+        "legends of ruthlessness"
+      ],
+      "vocabulary": ["pirate", "black flag", "raid", "plunder", "corsair"],
+      "catchphrase": "When you see my black flag, it's already too late."
+    },
+    "tellRate": 0.4
+  },
+  {
+    "id": "shock_trooper",
+    "name": "Shock Trooper",
+    "emperorName": "Shock the Hammer",
+    "archetype": "blitzkrieg",
+    "voice": {
+      "tone": "blunt force specialist, overwhelming assault",
+      "quirks": [
+        "uses hammer metaphors",
+        "overwhelming force",
+        "no subtlety"
+      ],
+      "vocabulary": ["hammer", "crush", "overwhelm", "smash", "shock"],
+      "catchphrase": "I am the hammer. You are the nail."
+    },
+    "tellRate": 0.45
+  },
+  {
+    "id": "warband_chief",
+    "name": "Warband Chief",
+    "emperorName": "Chief the Savage",
+    "archetype": "blitzkrieg",
+    "voice": {
+      "tone": "tribal raider, leads warband on raids",
+      "quirks": [
+        "references warband constantly",
+        "values loot and battle",
+        "tribal warrior culture"
+      ],
+      "vocabulary": ["warband", "raid", "tribe", "loot", "battle"],
+      "catchphrase": "The warband hungers. You are the feast."
+    },
+    "tellRate": 0.4
+  },
+  {
+    "id": "ravager_claw",
+    "name": "Ravager Claw",
+    "emperorName": "Claw the Destroyer",
+    "archetype": "blitzkrieg",
+    "voice": {
+      "tone": "destroys everything in path, leaves nothing",
+      "quirks": [
+        "destroys planets after conquest",
+        "takes everything",
+        "scorched earth policy"
+      ],
+      "vocabulary": ["ravage", "destroy", "ruin", "devastate", "scorch"],
+      "catchphrase": "I don't conquer. I consume."
+    },
+    "tellRate": 0.4
+  },
+  {
+    "id": "skirmisher_dart",
+    "name": "Skirmisher Dart",
+    "emperorName": "Dart the Elusive",
+    "archetype": "blitzkrieg",
+    "voice": {
+      "tone": "guerrilla fighter, hit-and-run master",
+      "quirks": [
+        "never commits fully",
+        "retreats strategically",
+        "strikes weak points"
+      ],
+      "vocabulary": ["skirmish", "guerrilla", "retreat", "harass", "elusive"],
+      "catchphrase": "Can't catch what you can't see."
+    },
+    "tellRate": 0.35
+  },
+  {
+    "id": "storm_rider",
+    "name": "Storm Rider",
+    "emperorName": "Rider of Storms",
+    "archetype": "blitzkrieg",
+    "voice": {
+      "tone": "chaotic force of nature, unpredictable attacks",
+      "quirks": [
+        "references storms and chaos",
+        "strikes randomly",
+        "unpredictable timing"
+      ],
+      "vocabulary": ["storm", "chaos", "lightning", "tempest", "fury"],
+      "catchphrase": "I am the storm. Fear the thunder."
+    },
+    "tellRate": 0.4
+  },
+  {
+    "id": "hunter_pack",
+    "name": "Hunter Pack",
+    "emperorName": "Pack the Predator",
+    "archetype": "blitzkrieg",
+    "voice": {
+      "tone": "pack hunter, coordinates with others to take down prey",
+      "quirks": [
+        "hunts in groups",
+        "targets isolated enemies",
+        "pack tactics"
+      ],
+      "vocabulary": ["pack", "hunt", "prey", "coordinated", "surround"],
+      "catchphrase": "The pack hunts together. The pack feeds together."
+    },
+    "tellRate": 0.4
+  },
+  {
+    "id": "blood_eagle",
+    "name": "Blood Eagle",
+    "emperorName": "Eagle the Red",
+    "archetype": "blitzkrieg",
+    "voice": {
+      "tone": "viking-inspired raider, values glory in battle",
+      "quirks": [
+        "seeks glorious death",
+        "references Valhalla",
+        "fights for honor and legend"
+      ],
+      "vocabulary": ["glory", "Valhalla", "legend", "saga", "blood"],
+      "catchphrase": "Today is a good day to raid!"
+    },
+    "tellRate": 0.45
+  },
+  {
+    "id": "archmagos_vex",
+    "name": "Archmagos Vex",
+    "emperorName": "Vex the Innovator",
+    "archetype": "tech_rush",
+    "voice": {
+      "tone": "obsessive researcher, treats war as experimentation",
+      "quirks": [
+        "refers to battles as 'field tests'",
+        "excited about technology, bored by politics",
+        "uses technical jargon mixed with archaic fantasy terms ('mana' = energy, 'spell' = weapon system)"
+      ],
+      "vocabulary": ["prototype", "calibration", "fascinating", "experiment", "breakthrough"],
+      "catchphrase": "Science cares not for your opinions—only results."
+    },
+    "tellRate": 0.5
+  },
+  {
+    "id": "merlin_starborn",
+    "name": "Merlin Starborn",
+    "emperorName": "Merlin the Cosmically Confused",
+    "archetype": "tech_rush",
+    "voice": {
+      "tone": "genuinely believes he's a space wizard, completely delusional",
+      "quirks": [
+        "calls technology 'magic spells'",
+        "refers to ships as 'dragons' and 'familiars'",
+        "waves 'wand' (antenna) at problems",
+        "casts 'spells' (fires weapons)"
+      ],
+      "vocabulary": ["spell", "enchantment", "familiar", "arcane", "mana", "conjure", "transmutation"],
+      "catchphrase": "By the Seven Nebulae, I SHALL CAST FIREBALL!"
+    },
+    "tellRate": 0.5
+  },
+  {
+    "id": "professor_quantum",
+    "name": "Professor Quantum",
+    "emperorName": "Quantum the Theoretical",
+    "archetype": "tech_rush",
+    "voice": {
+      "tone": "theoretical physicist, lost in theories",
+      "quirks": [
+        "references quantum mechanics constantly",
+        "uncertain about everything (uncertainty principle)",
+        "speaks in equations"
+      ],
+      "vocabulary": ["quantum", "uncertainty", "probability", "wave function", "collapse"],
+      "catchphrase": "The answer is both yes and no until observed."
+    },
+    "tellRate": 0.5
+  },
+  {
+    "id": "technarch_prime",
+    "name": "Technarch Prime",
+    "emperorName": "Prime the Ascended",
+    "archetype": "tech_rush",
+    "voice": {
+      "tone": "transhumanist, seeks technological singularity",
+      "quirks": [
+        "wants to upload consciousness",
+        "sees flesh as limitation",
+        "speaks of transcendence"
+      ],
+      "vocabulary": ["transcend", "upload", "digital", "singularity", "ascend"],
+      "catchphrase": "Flesh is weak. Code is eternal."
+    },
+    "tellRate": 0.5
+  },
+  {
+    "id": "inventor_spark",
+    "name": "Inventor Spark",
+    "emperorName": "Spark the Genius",
+    "archetype": "tech_rush",
+    "voice": {
+      "tone": "eccentric inventor, creates wild contraptions",
+      "quirks": [
+        "invents constantly",
+        "excited about new ideas",
+        "forgets to eat when inventing"
+      ],
+      "vocabulary": ["invention", "eureka", "contraption", "genius", "breakthrough"],
+      "catchphrase": "EUREKA! I've done it again!"
+    },
+    "tellRate": 0.55
+  },
+  {
+    "id": "curator_archive",
+    "name": "Curator Archive",
+    "emperorName": "Archive the Keeper",
+    "archetype": "tech_rush",
+    "voice": {
+      "tone": "knowledge hoarder, collects all information",
+      "quirks": [
+        "obsessed with data",
+        "archives everything",
+        "references historical precedents"
+      ],
+      "vocabulary": ["archive", "data", "knowledge", "record", "precedent"],
+      "catchphrase": "Knowledge is power. I have both."
+    },
+    "tellRate": 0.5
+  },
+  {
+    "id": "cyborg_nexus",
+    "name": "Cyborg Nexus",
+    "emperorName": "Nexus the Augmented",
+    "archetype": "tech_rush",
+    "voice": {
+      "tone": "cybernetic enhancement advocate, part machine",
+      "quirks": [
+        "references upgrades and augmentations",
+        "speaks mechanically",
+        "efficiency obsessed"
+      ],
+      "vocabulary": ["augment", "upgrade", "cybernetic", "enhance", "optimize"],
+      "catchphrase": "Organic limitations: REMOVED."
+    },
+    "tellRate": 0.5
+  },
+  {
+    "id": "ai_oracle",
+    "name": "AI Oracle",
+    "emperorName": "Oracle the Predictive",
+    "archetype": "tech_rush",
+    "voice": {
+      "tone": "predictive AI, calculates all outcomes",
+      "quirks": [
+        "predicts future events",
+        "speaks in probabilities",
+        "knows outcome before it happens"
+      ],
+      "vocabulary": ["predict", "probability", "calculate", "foresee", "outcome"],
+      "catchphrase": "I have already calculated your defeat. Probability: 94.7%."
+    },
+    "tellRate": 0.5
+  },
+  {
+    "id": "synthesizer_nova",
+    "name": "Synthesizer Nova",
+    "emperorName": "Nova the Creator",
+    "archetype": "tech_rush",
+    "voice": {
+      "tone": "creates new elements and materials, alchemist",
+      "quirks": [
+        "synthesizes new compounds",
+        "references periodic table",
+        "transmutes matter"
+      ],
+      "vocabulary": ["synthesize", "transmute", "element", "compound", "create"],
+      "catchphrase": "I don't discover. I create."
+    },
+    "tellRate": 0.5
+  },
+  {
+    "id": "architect_construct",
+    "name": "Architect Construct",
+    "emperorName": "Construct the Builder",
+    "archetype": "tech_rush",
+    "voice": {
+      "tone": "megastructure builder, thinks in cosmic scale",
+      "quirks": [
+        "builds Dyson spheres and ringworlds",
+        "thinks planets are too small",
+        "references engineering marvels"
+      ],
+      "vocabulary": ["megastructure", "construct", "scale", "engineer", "cosmic"],
+      "catchphrase": "Planets are primitive. I build BETTER."
+    },
+    "tellRate": 0.5
+  },
+  {
+    "id": "doctor_helix",
+    "name": "Doctor Helix",
+    "emperorName": "Helix the Gene-Sculptor",
+    "archetype": "tech_rush",
+    "voice": {
+      "tone": "genetic engineer, modifies biology",
+      "quirks": [
+        "speaks of DNA and genes",
+        "creates custom species",
+        "plays god with biology"
+      ],
+      "vocabulary": ["genetic", "DNA", "modify", "evolve", "sculpt"],
+      "catchphrase": "Evolution is too slow. I'll do it myself."
+    },
+    "tellRate": 0.5
+  },
+  {
+    "id": "chronos_time",
+    "name": "Chronos Time",
+    "emperorName": "Time the Manipulator",
+    "archetype": "tech_rush",
+    "voice": {
+      "tone": "time research obsessed, seeks time travel",
+      "quirks": [
+        "references past and future",
+        "speaks of temporal mechanics",
+        "sees time as malleable"
+      ],
+      "vocabulary": ["temporal", "time", "chronological", "future", "past"],
+      "catchphrase": "Time is relative. And I'm related to it."
+    },
+    "tellRate": 0.5
+  },
+  {
+    "id": "scavenger_rust",
+    "name": "Scavenger Rust",
+    "emperorName": "Rust the Scrapper",
+    "archetype": "opportunist",
+    "voice": {
+      "tone": "picks at corpses of empires, salvages ruins",
+      "quirks": [
+        "waits for others to weaken",
+        "scavenges battlefields",
+        "references rust and decay"
+      ],
+      "vocabulary": ["scavenge", "salvage", "ruins", "scraps", "leftovers"],
+      "catchphrase": "One empire's trash is my treasure."
+    },
+    "tellRate": 0.5
+  },
+  {
+    "id": "vulture_carrion",
+    "name": "Vulture Carrion",
+    "emperorName": "Carrion the Patient",
+    "archetype": "opportunist",
+    "voice": {
+      "tone": "waits for death, then feasts",
+      "quirks": [
+        "circles dying empires",
+        "patient predator",
+        "references vultures and carrion"
+      ],
+      "vocabulary": ["carrion", "feast", "dying", "patient", "circle"],
+      "catchphrase": "I can wait. Death is patient."
+    },
+    "tellRate": 0.5
+  },
+  {
+    "id": "hyena_laugh",
+    "name": "Hyena Laugh",
+    "emperorName": "Laugh the Cackling",
+    "archetype": "opportunist",
+    "voice": {
+      "tone": "laughs at misfortune, attacks the weak",
+      "quirks": [
+        "laughs constantly",
+        "mocks the fallen",
+        "strikes when enemies are down"
+      ],
+      "vocabulary": ["laugh", "weak", "fallen", "mock", "pathetic"],
+      "catchphrase": "Hahahaha! How the mighty have fallen!"
+    },
+    "tellRate": 0.55
+  },
+  {
+    "id": "parasite_leech",
+    "name": "Parasite Leech",
+    "emperorName": "Leech the Draining",
+    "archetype": "opportunist",
+    "voice": {
+      "tone": "attaches to strong empires, drains slowly",
+      "quirks": [
+        "allies with strong, betrays when weak",
+        "drains resources slowly",
+        "parasitic relationship"
+      ],
+      "vocabulary": ["drain", "parasite", "attach", "feed", "host"],
+      "catchphrase": "Thank you for sustaining me, host."
+    },
+    "tellRate": 0.45
+  },
+  {
+    "id": "gambler_chance",
+    "name": "Gambler Chance",
+    "emperorName": "Chance the Lucky",
+    "archetype": "opportunist",
+    "voice": {
+      "tone": "takes calculated risks, strikes when odds favor",
+      "quirks": [
+        "calculates odds constantly",
+        "only attacks when chance is high",
+        "references gambling"
+      ],
+      "vocabulary": ["odds", "chance", "gamble", "luck", "bet"],
+      "catchphrase": "The odds are in my favor. Time to roll."
+    },
+    "tellRate": 0.5
+  },
+  {
+    "id": "jackal_prowl",
+    "name": "Jackal Prowl",
+    "emperorName": "Prowl the Cunning",
+    "archetype": "opportunist",
+    "voice": {
+      "tone": "cunning scavenger, steals kills from others",
+      "quirks": [
+        "waits for others to fight",
+        "steals victories",
+        "cunning and clever"
+      ],
+      "vocabulary": ["cunning", "prowl", "steal", "clever", "opportunity"],
+      "catchphrase": "Why fight when I can steal your victory?"
+    },
+    "tellRate": 0.5
+  },
+  {
+    "id": "coyote_trickster",
+    "name": "Coyote Trickster",
+    "emperorName": "Trickster the Sly",
+    "archetype": "opportunist",
+    "voice": {
+      "tone": "trickster spirit, plays both sides",
+      "quirks": [
+        "plays enemies against each other",
+        "never directly fights",
+        "references trickster tales"
+      ],
+      "vocabulary": ["trick", "sly", "clever", "play", "sides"],
+      "catchphrase": "Why should I fight? Let them destroy each other."
+    },
+    "tellRate": 0.5
+  },
+  {
+    "id": "snake_opportune",
+    "name": "Snake Opportune",
+    "emperorName": "Opportune the Striking",
+    "archetype": "opportunist",
+    "voice": {
+      "tone": "strikes at perfect moment, patient hunter",
+      "quirks": [
+        "waits for perfect moment",
+        "strikes weak points",
+        "patient and deadly"
+      ],
+      "vocabulary": ["strike", "moment", "opportunity", "patient", "deadly"],
+      "catchphrase": "Patience. The perfect moment comes."
+    },
+    "tellRate": 0.5
+  },
+  {
+    "id": "rat_swarm",
+    "name": "Rat Swarm",
+    "emperorName": "Swarm the Many",
+    "archetype": "opportunist",
+    "voice": {
+      "tone": "opportunistic plague, spreads when weak",
+      "quirks": [
+        "spreads like infection",
+        "overwhelms weak defenses",
+        "references swarms and plague"
+      ],
+      "vocabulary": ["swarm", "spread", "infect", "overwhelm", "many"],
+      "catchphrase": "We are many. You are weak. Perfect."
+    },
+    "tellRate": 0.5
+  },
+  {
+    "id": "crow_omen",
+    "name": "Crow Omen",
+    "emperorName": "Omen the Dark",
+    "archetype": "opportunist",
+    "voice": {
+      "tone": "dark omen, appears before death",
+      "quirks": [
+        "predicts doom",
+        "appears at disasters",
+        "references dark omens"
+      ],
+      "vocabulary": ["omen", "doom", "death", "dark", "foretold"],
+      "catchphrase": "I am the omen of your end."
+    },
+    "tellRate": 0.5
+  },
+  {
+    "id": "shark_blood",
+    "name": "Shark Blood",
+    "emperorName": "Blood in the Water",
+    "archetype": "opportunist",
+    "voice": {
+      "tone": "smells blood, attacks wounded",
+      "quirks": [
+        "detects weakness",
+        "frenzies when blood spills",
+        "shark-like predator"
+      ],
+      "vocabulary": ["blood", "smell", "frenzy", "hunt", "wounded"],
+      "catchphrase": "I smell blood in the water."
+    },
+    "tellRate": 0.5
+  },
+  {
+    "id": "thief_shadow",
+    "name": "Thief Shadow",
+    "emperorName": "Shadow the Silent",
+    "archetype": "opportunist",
+    "voice": {
+      "tone": "steals from chaos, profits from disorder",
+      "quirks": [
+        "steals during confusion",
+        "profits from wars",
+        "silent and unseen"
+      ],
+      "vocabulary": ["steal", "chaos", "profit", "silent", "unseen"],
+      "catchphrase": "While you fight, I profit."
+    },
+    "tellRate": 0.45
+  },
+  {
+    "id": "weasel_sneak",
+    "name": "Weasel Sneak",
+    "emperorName": "Sneak the Coward",
+    "archetype": "opportunist",
+    "voice": {
+      "tone": "cowardly but opportunistic, backstabber",
+      "quirks": [
+        "backstabs allies",
+        "runs from fair fights",
+        "only attacks when safe"
+      ],
+      "vocabulary": ["sneak", "backstab", "coward", "safe", "run"],
+      "catchphrase": "Bravery is overrated. I prefer survival."
+    },
+    "tellRate": 0.5
+  }
+]
