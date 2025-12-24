@@ -415,27 +415,28 @@ Each milestone delivers a **playable vertical slice** that can be tested end-to-
 **Duration**: 2 days
 **Dependency**: M6
 **Testable**: Yes
+**Status**: 🔄 IN PROGRESS (Parallel Work 2024-12-24)
 
 ### Deliverables
-- **Covert points system**:
-  - Earn 5 points per turn
-  - Maximum: 50 points
-  - Operations consume points
-- **Agent capacity**: Government planets × 300
-- **10 covert operations** (PRD 6.8):
-  - Send Spy (reveal stats) - Low cost/risk
-  - Insurgent Aid (support rebels) - Medium
-  - Support Dissension (worsen civil status) - Medium
-  - Demoralize Troops (reduce effectiveness) - Medium
-  - Bombing Operations (destroy resources) - High
-  - Relations Spying (reveal diplomacy) - Low
-  - Take Hostages (demand ransom) - High
-  - Carriers Sabotage (damage carriers) - Very High
-  - Communications Spying (intercept messages) - Medium
-  - Setup Coup (overthrow government) - Very High
-- Success/failure resolution
-- Agent caught consequences
-- Covert operations UI
+- ✅ **Covert points system** — *`src/lib/covert/constants.ts`*:
+  - ✅ Earn 5 points per turn (`COVERT_POINTS_PER_TURN`)
+  - ✅ Maximum: 50 points (`MAX_COVERT_POINTS`)
+  - ✅ Operations consume points (defined per operation)
+- ✅ **Agent capacity**: Government planets × 300 — *`AGENT_CAPACITY_PER_GOV_PLANET`*
+- ✅ **10 covert operations** (PRD 6.8) — *All defined with cost, risk, effect, success rate*:
+  - ✅ Send Spy (reveal stats) - Low cost/risk
+  - ✅ Insurgent Aid (support rebels) - Medium
+  - ✅ Support Dissension (worsen civil status) - Medium
+  - ✅ Demoralize Troops (reduce effectiveness) - Medium
+  - ✅ Bombing Operations (destroy resources) - High
+  - ✅ Relations Spying (reveal diplomacy) - Low
+  - ✅ Take Hostages (demand ransom) - High
+  - ✅ Carriers Sabotage (damage carriers) - Very High
+  - ✅ Communications Spying (intercept messages) - Low risk
+  - ✅ Setup Coup (overthrow government) - Very High
+- ✅ Success/failure resolution — *`src/lib/covert/success-rate.ts`*
+- 🔲 Agent caught consequences — *Needs game state integration*
+- 🔲 Covert operations UI — *Needs implementation*
 
 ### Test Criteria
 ```
@@ -459,6 +460,17 @@ Each milestone delivers a **playable vertical slice** that can be tested end-to-
 ### Database Tables
 - `covert_operations`
 - `agent_assignments`
+
+### Parallel Work Completed (2024-12-24)
+- **Covert Constants**: All 10 operations defined with PRD 6.8 compliance (74 tests)
+  - `src/lib/covert/constants.ts` - Operation definitions, costs, risks, effects
+  - `src/lib/covert/success-rate.ts` - Success rate calculation with all PRD factors
+  - `src/lib/covert/index.ts` - Barrel exports
+- **PRD 6.8 Success Rate Factors Implemented**:
+  - Your agent count vs target's agent count
+  - Target's Government planet count
+  - Operation difficulty (risk level)
+  - ±20% random variance
 
 ---
 
