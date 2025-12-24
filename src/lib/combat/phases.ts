@@ -10,10 +10,8 @@
  * Attackers need to win all 3 phases for successful planet capture.
  */
 
-import {
-  type FleetComposition,
-  calculateFleetPower,
-} from "../formulas/combat-power";
+// Note: FleetComposition and calculateFleetPower are available from combat-power
+// but we use custom phase-specific power calculations here
 import {
   calculateLossRate,
   calculateVariance,

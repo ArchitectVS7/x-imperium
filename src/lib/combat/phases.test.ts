@@ -54,23 +54,9 @@ const spaceFleet: Forces = {
   carriers: 10,
 };
 
-const orbitalFleet: Forces = {
-  soldiers: 0,
-  fighters: 200,
-  stations: 20,
-  lightCruisers: 0,
-  heavyCruisers: 0,
-  carriers: 0,
-};
-
-const groundForce: Forces = {
-  soldiers: 5000,
-  fighters: 0,
-  stations: 0,
-  lightCruisers: 0,
-  heavyCruisers: 0,
-  carriers: 50,
-};
+// Additional test fixtures available if needed:
+// - orbitalFleet: { fighters: 200, stations: 20 }
+// - groundForce: { soldiers: 5000, carriers: 50 }
 
 // =============================================================================
 // SPACE COMBAT TESTS

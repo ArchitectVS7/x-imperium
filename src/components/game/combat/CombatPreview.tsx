@@ -89,7 +89,7 @@ interface PhasePreviewProps {
   label: string;
 }
 
-function PhasePreview({ phase, attackerPower, defenderPower, icon, label }: PhasePreviewProps) {
+function PhasePreview({ attackerPower, defenderPower, icon, label }: PhasePreviewProps) {
   const ratio = defenderPower > 0 ? attackerPower / defenderPower : Infinity;
   const percentage = Math.min(100, Math.round((ratio / (ratio + 1)) * 100));
 

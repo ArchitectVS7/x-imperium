@@ -214,7 +214,7 @@ describe("Turn Processor - Resource Production", () => {
         purchasePrice: 1000,
         name: null,
         createdAt: new Date(),
-        updatedAt: new Date(),
+        acquiredAtTurn: 1,
       },
     ];
 

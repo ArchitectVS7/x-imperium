@@ -9,7 +9,7 @@
  * Each phase shows power comparison, casualties, and outcome.
  */
 
-import type { PhaseResult, CombatResult, Forces } from "@/lib/combat";
+import type { PhaseResult, CombatResult } from "@/lib/combat";
 import { CasualtyReport } from "./CasualtyReport";
 
 // =============================================================================
