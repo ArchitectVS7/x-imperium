@@ -99,9 +99,6 @@ export const PLANET_CAPTURE_MAX_PERCENT = 0.15;
 /** Minimum carriers required per soldier for invasions */
 export const SOLDIERS_PER_CARRIER = 100;
 
-/** Power threshold for phase victory (attacker needs > this ratio to win) */
-export const PHASE_VICTORY_THRESHOLD = 0.5;
-
 // =============================================================================
 // PHASE POWER CALCULATIONS
 // =============================================================================
