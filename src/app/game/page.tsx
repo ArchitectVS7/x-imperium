@@ -14,6 +14,7 @@ import {
   fetchDashboardDataAction,
   startGameAction,
   hasActiveGameAction,
+  endGameAction,
 } from "@/app/actions/game-actions";
 
 async function DashboardContent({ errorFromUrl }: { errorFromUrl?: string }) {
@@ -71,8 +72,18 @@ async function DashboardContent({ errorFromUrl }: { errorFromUrl?: string }) {
       </div>
 
       {/* End Turn Section */}
-      <div className="mt-8 text-center">
+      <div className="mt-8 text-center space-y-4">
         <EndTurnButton />
+        <div>
+          <form action={endGameAction}>
+            <button
+              type="submit"
+              className="text-sm text-gray-500 hover:text-red-400 transition-colors"
+            >
+              End Game &amp; Start New
+            </button>
+          </form>
+        </div>
       </div>
     </div>
   );

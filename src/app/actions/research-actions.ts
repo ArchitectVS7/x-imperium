@@ -43,13 +43,22 @@ async function getGameCookies(): Promise<{
  * Get current research status for the player's empire.
  */
 export async function getResearchStatusAction(): Promise<ResearchStatus | null> {
-  const { empireId } = await getGameCookies();
+  const { gameId, empireId } = await getGameCookies();
 
-  if (!empireId) {
+  if (!gameId || !empireId) {
     return null;
   }
 
-  return await getResearchStatus(empireId);
+  let status = await getResearchStatus(empireId);
+
+  // Auto-initialize for existing games that don't have research entries
+  if (!status) {
+    await initializeResearch(empireId, gameId);
+    await initializeUnitUpgrades(empireId, gameId);
+    status = await getResearchStatus(empireId);
+  }
+
+  return status;
 }
 
 /**
