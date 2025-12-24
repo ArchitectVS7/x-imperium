@@ -3,54 +3,66 @@
 **Date:** December 23, 2024
 **Agent:** game-developer
 **Agent ID:** a3faf06
+**Status:** REVISED after stakeholder session
 
 ## Executive Summary
 
-X-Imperium has a solid strategic foundation with engaging 3-phase combat and multi-resource economy, but faces critical implementation gaps in bot AI decision-making, turn processing performance, and balance testing methodology. The core loop is mechanically sound but lacks progression hooks beyond turn 50.
+X-Imperium's core strategic foundation is now well-defined with engaging combat, multi-resource economy, and a robust mid-game engagement system. After stakeholder session, we've established: progressive unlocks, galactic events, alliance checkpoint system, and consequence-based balancing (not hard limits). Combat mechanics refined with retreat, reinforcements, and fog of war rules.
 
-**Priority**: Define concrete bot decision trees and establish performance budgets before v0.5 MVP.
+**Game Design Confidence: HIGH** — Ready for v0.5 implementation with clear mechanics.
 
 ## Core Loop Analysis
 
-### Engagement Score: 6/10
-- Solid for first 30-40 turns
-- Risks repetition in mid-game (turns 40-120)
+### Engagement Score: 8/10 (Revised)
+- Solid foundation throughout game
+- Mid-game sag addressed via progressive unlocks + galactic events
 
-### Monotony Risks
+### Mid-Game Framework — CONFIRMED
 
-**Turn 40-120 Mid-Game Sag**
-- Early expansion complete (~turn 30)
-- Victory still distant (~turn 150+)
-- No new mechanics unlocked
+**Progressive Unlocks:**
+| Turn | Unlock |
+|------|--------|
+| 1 | Core mechanics (build, expand, basic combat) |
+| 10 | Diplomacy basics (NAP, trade agreements) |
+| 20 | Coalition formation |
+| 30 | Black Market access |
+| 50 | Advanced ship classes |
+| 75 | Coalition warfare (coordinated attacks) |
+| 100 | Superweapons (nukes) |
+| 150 | Endgame ultimatums |
 
-**Solution: Era-Based Rule Changes**
-```
-Turn 50:  Black Market unlocks
-Turn 100: Coalition mechanics activate
-Turn 150: End-game weapons (nukes)
-```
+**Galactic Events (Every 10-20 turns, semi-random):**
+| Type | Example Effects |
+|------|-----------------|
+| Economic | Market crash, resource boom, trade disruption |
+| Political | New faction emerges, coup, assassination |
+| Military | Pirate armada, alien incursion, arms race |
+| Narrative | Lore drops, rumors, prophecies (flavor) |
+
+**Alliance Checkpoints (Every 30 turns):**
+- Check top 3 alliances + player alliance
+- Evaluate: size, strength, territory, talent distribution
+- If imbalance detected: merge weaker alliances, spawn challenger, force conflict
+- Presentation: Partially visible (player sees event, not algorithm) — **Option C confirmed**
 
 ### Pacing Recommendations
 ```
-Turns 1-30:   EXPANSION
-Turns 31-80:  COMPETITION  ← ADD MECHANICS HERE
-Turns 81-150: DOMINATION
-Turns 151-200: ENDGAME
+Turns 1-30:   EXPANSION (learn mechanics, form alliances)
+Turns 31-80:  COMPETITION (galactic events, coalition politics)
+Turns 81-150: DOMINATION (superweapons, major conflicts)
+Turns 151-200: ENDGAME (ultimatums, final showdowns)
 ```
-
-**Crisis Events** at turns 60, 120, 180:
-- Turn 60: Galactic Recession (-30% production)
-- Turn 120: Alien Invasion (temporary truces)
-- Turn 180: Singularity Event (experimental weapons)
 
 ## Combat System Review
 
-### Critical Balance Issues
+### Balance Issues — RESOLVED
 
-**Current Formula Problems:**
-- Stations TOO dominant (100× multiplier)
-- Carrier dominance (20× makes others obsolete)
-- Fixed 30% casualty rate (no tactical variety)
+**Original Problems → Solutions:**
+| Issue | Old Value | New Value | Rationale |
+|-------|-----------|-----------|-----------|
+| Station dominance | 100× | 50× (2× on defense) | Still strong, not unbeatable |
+| Carrier obsolescence | 20× | 12× | Best unit, but not absurd |
+| Fixed casualties | 30% always | 15-35% dynamic | Power ratio matters |
 
 ### Recommended Formula Revision (v0.5)
 
@@ -84,10 +96,26 @@ function calculateLosses(attackPower, defensePower, units) {
 }
 ```
 
-### Missing Mechanics (v0.5)
-1. **Retreat Mechanics** - No mention of fleeing battles
-2. **Reinforcement Rules** - Can you send backup mid-battle?
-3. **Fog of War** - See enemy composition before attacking?
+### Combat Mechanics — CONFIRMED
+
+| Mechanic | Rule |
+|----------|------|
+| **Retreat** | Allowed, but suffer "attack of opportunity" — 15% additional losses |
+| **Reinforcements** | Request from alliance, arrival = distance-based (1-5 turns) |
+| **Request System** | Alliance member gets notification, can Accept/Deny |
+| **Deny Consequence** | Alliance standing drops, trust decay, potential diplomatic event |
+| **Fog of War** | See total military power, not composition. Scouts/spies reveal details |
+| **Diversity Bonus** | +15% combat power if army has 4+ unit types |
+
+**Unit Stats (Revised):**
+| Unit | Attack | Defense | Cost |
+|------|--------|---------|------|
+| Soldiers | 1 | 1 | 50 |
+| Fighters | 3 | 2 | 200 |
+| Light Cruisers | 5 | 4 | 500 |
+| Heavy Cruisers | 8 | 6 | 1000 |
+| Carriers | 12 | 10 | 2500 |
+| Stations | 50 | 50 | 5000 |
 
 ## AI Bot Architecture
 
@@ -205,16 +233,25 @@ Need **unique passive abilities**, not just behavior weights:
 
 ## Economy & Balance
 
-### Dominant Strategy Risks
+### Dominant Strategy Risks — REVISED
 
-**1. Carrier Spam Meta**
-- Solution: Diversity bonus, carrier nerf to 12×
+**1. Carrier Spam Meta** ✓ SOLVED
+- Diversity bonus (+15% for mixed fleets)
+- Carrier nerf to 12×
 
-**2. Turtle + Economic Victory**
-- Solution: Passive empire penalty (2% networth loss/turn after 30 turns peace)
+**2. Turtle + Economic Victory** → TESTING
+- Original: Passive empire penalty
+- **Revised:** Mark for playtesting, may self-balance
+- If problematic: Narrative intervention (unrest, rebellion events)
 
-**3. Market Manipulation**
-- Solution: Purchase limits (10k/resource/turn), price volatility cap (2×)
+**3. Market Manipulation** → CONSEQUENCE-BASED
+- **No hard limits** — manipulation is a valid strategy!
+- **Consequence:** Hoarding >40% of any resource triggers events:
+  - Turn N: "Rumors spread of your monopoly..."
+  - Turn N+5: "The Merchant Guild demands fair pricing"
+  - Turn N+10: CHOICE — release stock OR face consequences
+  - Turn N+15: Pirates/Cartel/Rival coalition attacks
+- Risk/Reward: Survive the heat → economic dominance
 
 ### Market System (Undefined)
 
@@ -235,36 +272,47 @@ class GlobalMarket {
 }
 ```
 
-### Snowball Prevention
+### Snowball Prevention — REVISED
 
-```javascript
-// Progressive Taxation
-let maintenanceMultiplier = 1 + (wealthTier * 0.1); // +10% per 100k networth
+**Philosophy:** Consequence-based, not artificial rubber-banding
 
-// Rebellion System
-if (empireSize > 20) {
-  rebellionRisk += (empireSize - 20) * 0.005; // +0.5% per planet over 20
-}
+**Approach: MEDIUM**
+- ✓ Alliance checkpoint system (every 30 turns)
+- ✓ Maintenance scaling for large empires
+- ✗ NO catch-up bonuses for losing players
 
-// Catch-Up Mechanics
-if (ranking > totalEmpires * 0.75) { // Bottom 25%
-  return { productionBonus: 0.25, researchBonus: 0.50 };
-}
+**Detection System (v0.5-v0.6):**
+```
+LOGGED, NOT AUTO-APPLIED:
+├─ "Runaway detected: Player controls 45%, next is 12%"
+├─ "Recommended interventions: [list]"
+└─ Designer manually decides what to trigger
+
+NARRATIVE RESPONSES (preferred):
+├─ Alliance mergers
+├─ Economic sanctions on leader
+├─ "Galactic Liberation Front" spawns
+└─ Skirmishes level playing field organically
 ```
 
-## Victory Conditions
+**Key Principle:** Player can re-establish dominance (triggers more events). Winning is possible AND losing is possible.
 
-### Redundant Victories
-- **Cultural (tourism)** = Economic with different resource
-- **Population** = Correlates with economic
+## Victory Conditions — CONFIRMED
 
-### Recommended 6 Victories
-1. **Conquest** (60% territory)
-2. **Economic** (1.5× second place networth)
-3. **Diplomatic** (coalition 50% networth)
-4. **Research** (100% tech tree)
-5. **Military** (2× second place military)
-6. **Survival** (turn 200 timeout)
+### Simplified to 6 Clear Paths
+
+| Victory | Condition | Playstyle |
+|---------|-----------|-----------|
+| **Conquest** | Control 60% of territory | Aggressive expansion |
+| **Economic** | 1.5× networth of 2nd place | Builder/trader |
+| **Diplomatic** | Coalition controls 50% territory | Alliance politics |
+| **Research** | Complete tech tree | Turtle/tech rush |
+| **Military** | 2× military of all others combined | Domination |
+| **Survival** | Highest score at turn 200 | Balanced play |
+
+**Removed (redundant):**
+- ~~Cultural (tourism)~~ — just economic with different label
+- ~~Population~~ — correlates with economic
 
 ### Edge Cases
 

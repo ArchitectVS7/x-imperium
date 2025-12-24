@@ -198,7 +198,7 @@ Devastating strike (requires Black Market).
 
 ### Combat Mechanics
 - **Battle rounds**: Up to 20 per invasion
-- **Defense bonus**: Defender gets 1.3x effectiveness
+- **Defense bonus**: Defender gets 1.2x effectiveness
 - **Randomness**: 20% variance factor
 - **Carrier transport**: Capacity based on research level
 

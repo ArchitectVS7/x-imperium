@@ -3,40 +3,57 @@
 **Date:** December 23, 2024
 **Agent:** project-manager
 **Agent ID:** a023fe1
+**Status:** REVISED after stakeholder sessions (Passes 1-4)
 
-# X-Imperium Weekend MVP Sprint Plan
+# X-Imperium One-Week MVP Sprint Plan
 ## Project Management Synthesis Document
 
-**Version:** 1.0
+**Version:** 2.0
 **Date:** 2025-12-23
-**Target:** Playable v0.5 MVP by End of Weekend
-**Status:** CRITICAL PATH PLANNING
+**Target:** Playable v0.5 MVP in 7 Days
+**Status:** READY FOR EXECUTION
 
 ---
 
 ## EXECUTIVE SUMMARY
 
-### Critical Decision: Technology Foundation
-**RULING:** Pure greenfield Next.js/TypeScript implementation. Existing PHP codebase treated as **reference documentation only**.
+### Stakeholder Sessions Complete
+All 4 specialist reviews revised after stakeholder clarification sessions. Major scope and design decisions locked.
 
-**Rationale:**
-- PRD explicitly specifies Next.js/TypeScript stack
-- PHP codebase architecture incompatible with modern real-time requirements
-- Turn processing bottleneck (48s) unsolvable in PHP without complete rewrite
-- Weekend timeline requires rapid iteration with modern tooling
+### Critical Decisions Confirmed
 
-### Critical Scope Decisions
+| Decision | Resolution |
+|----------|------------|
+| **Tech Stack** | Greenfield Next.js/TypeScript, Supabase PostgreSQL |
+| **Architecture** | Unified actor model — bots and players interchangeable |
+| **Multiplayer** | Async-first, same codebase as single-player |
+| **MVP Bots** | 25 Tier 4 random bots (placeholder names, no personality) |
+| **Turn Processing** | <2 second target, async LLM when added |
+| **Save System** | Auto-save only, ironman mode (no manual save/load) |
+| **Timeline** | 7 days (revised from weekend) |
 
-| Feature | v0.5 (Weekend) | v0.6 (Sprint 2) | v0.7+ (Backlog) |
+### Scope Decisions
+
+| Feature | v0.5 (Week 1) | v0.6 (Week 2-3) | v0.7+ (Backlog) |
 |---------|---------------|-----------------|-----------------|
-| Tech Stack | Next.js/Drizzle/Zustand | <- Same | <- Same |
-| Turn Processing | Sequential, rule-based bots | Parallel processing | LLM bots |
-| Bot Personalities | 3 archetypes, template messages | 6 archetypes, 100+ templates | Full LLM personalities |
-| Combat System | Core 6 units + stations | Balance pass + diversity | Advanced tactics |
-| Diplomacy | **CUT** | Basic treaties | Coalitions |
-| Save/Load | **IN** (critical) | Cloud sync | Multiple saves |
-| Multiplayer | **CUT** | Async turns | Real-time |
-| Victory Conditions | 3 types (Conquest/Economic/Military) | 6 types | Dynamic |
+| Bots | 25 random (Tier 4), placeholder names, silent | 100 personas, templates, Tier 2-3 | LLM Tier 1 |
+| Combat | Core units, rebalanced values | Retreat/reinforcements, diversity bonus | Advanced tactics |
+| Narrative | None (bots don't talk) | Persona system, emotional states | LLM generation |
+| Diplomacy | NAP + Alliance mechanics (random bot responses) | Bot decision trees for diplomacy | Full alliance politics |
+| Trade | Global market (random bot participation) | Strategic bot trading | Market manipulation |
+| Mid-Game | Core loop only | Progressive unlocks, galactic events | Alliance checkpoints |
+| Save | Auto-save | Cloud sync | — |
+| Auth | Anonymous sessions | Email/password | OAuth |
+| Victory | 3 types | 6 types | Dynamic |
+| Epilogue | None | Stats summary | LLM-generated narrative |
+
+**v0.5 Philosophy: Mechanics Without Personality**
+- All game systems work (trade, diplomacy, combat)
+- Bots make random decisions (no archetypes)
+- No bot messages (silent opponents)
+- Player can: `[n]` Negotiate Trade, `[j]` Join Alliance, `[a]` Attack
+- Bots randomly accept/reject proposals
+- Validates game loop before adding AI complexity
 
 ---
 
@@ -175,30 +192,51 @@ export const COMBAT_MODIFIERS = {
 **A working game means:**
 - Player can create empire, see starmap
 - Player can build units, manage planets
-- Player can attack bot empires
-- 3 bot archetypes make coherent decisions
-- Turn processing completes <1 second
+- Player can attack bot empires (and bots attack player after turn 20)
+- Player can propose/accept NAP and Alliance treaties
+- Player can trade on global market
+- 25 random bots take actions each turn (no personality, no messages)
+- Turn processing completes <2 seconds
 - Victory/defeat conditions trigger correctly
-- Game state persists (save/load)
+- Game state persists (auto-save)
 
 **Explicitly Stubbed:**
-- LLM personalities (template messages only)
-- Advanced diplomacy (just war/peace)
+- Bot personalities (random decisions only)
+- Bot messages (silent bots)
+- Advanced diplomacy (coalitions deferred)
 - Multiplayer
 - Complex events (just 3 basic types)
-- Detailed analytics
 
 **Explicitly Cut:**
-- Coalitions
-- Trading (global market only)
+- Bot archetypes (v0.6)
+- Bot message templates (v0.6)
+- Coalitions (v0.6)
 - Covert operations beyond basic spying
 - Nuclear warfare (v0.6+)
 
 ---
 
-## DAY 1: FOUNDATION (8 Hours)
+## REVISED 7-DAY SPRINT PLAN
 
-### Morning Session (4h): Core Infrastructure
+### Development Workflow
+- Claude Code runs continuously with periodic checkpoints
+- Testing and code review at each checkpoint
+- First playable target: Day 3-4 (starmap + turn loop)
+
+### Milestone Checkpoints
+
+| Day | Checkpoint | Deliverable |
+|-----|------------|-------------|
+| 2 | Foundation Complete | Scaffolding, DB, state management |
+| 4 | **First Playable** | Starmap visible, planets clickable, turns advance |
+| 6 | Game Loop Complete | Combat, bots, victory conditions |
+| 7 | MVP Ship | Auto-save, polish, deployment |
+
+---
+
+## DAYS 1-2: FOUNDATION
+
+### Day 1: Project Setup
 
 #### Task 1.1: Project Scaffolding (45min)
 ```bash
@@ -340,68 +378,96 @@ export async function processTurn(gameId: string) {
 
 ## DAY 2: CORE GAME LOOP (8 Hours)
 
-### Morning Session (4h): Bot Intelligence
+### Morning Session (4h): Game Mechanics
 
-#### Task 2.1: Bot Archetype Decision Trees (120min)
+#### Task 2.1: Random Bot Engine (90min)
 ```typescript
-// lib/bots/archetypes/warlord.ts
-export class WarlordBot implements BotStrategy {
+// lib/bots/random-bot.ts
+export class RandomBot {
   async executeTurn(empire: Empire, gameState: GameState): Promise<BotActions> {
-    const decisions: BotActions = {
-      production: this.planProduction(empire),
-      military: this.planAttacks(empire, gameState),
-      diplomacy: this.updateStances(empire, gameState)
-    };
+    const actions: BotActions = [];
 
-    return decisions;
-  }
+    // Weighted random action selection
+    const roll = Math.random();
 
-  private planProduction(empire: Empire): ProductionPlan {
-    // 70% military, 20% research, 10% infrastructure
-    return {
-      fighters: Math.floor(empire.production * 0.3),
-      carriers: Math.floor(empire.production * 0.4),
-      stations: Math.floor(empire.production * 0.2)
-    };
-  }
+    if (roll < 0.35) {
+      // 35% - Build units (random type)
+      actions.push(this.randomBuild(empire));
+    } else if (roll < 0.55) {
+      // 20% - Buy planet
+      actions.push(this.buyRandomPlanet(empire));
+    } else if (roll < 0.70) {
+      // 15% - Attack neighbor (if past turn 20)
+      if (gameState.turn > 20) {
+        actions.push(this.attackRandomNeighbor(empire, gameState));
+      }
+    } else if (roll < 0.80) {
+      // 10% - Propose/accept treaty
+      actions.push(this.randomDiplomacy(empire, gameState));
+    } else if (roll < 0.90) {
+      // 10% - Trade on market
+      actions.push(this.randomTrade(empire, gameState));
+    }
+    // 10% - Do nothing
 
-  private planAttacks(empire: Empire, gameState: GameState): Attack[] {
-    // Find weakest adjacent enemy
-    const targets = this.findVulnerableTargets(empire, gameState);
-    return this.selectBestAttack(targets);
+    return actions;
   }
 }
 ```
 
-**Deliverable:** 3 working bot archetypes (Warlord, Economist, Diplomat)
+**Deliverable:** 25 random bots that take weighted random actions each turn
 
-#### Task 2.2: Bot Message Templates (60min)
+#### Task 2.2: Diplomacy Mechanics (60min)
 ```typescript
-// data/bot-messages.ts
-export const BOT_MESSAGES = {
-  warlord: {
-    greeting: [
-      "Your empire borders mine. I suggest you fortify your defenses.",
-      "Strength respects strength. Show me yours.",
-      "I've crushed 7 empires. Don't be the 8th."
-    ],
-    attack: [
-      "Your weakness invited this attack.",
-      "Consider this a lesson in military superiority.",
-      "I take what I want. Today, I want your sector."
-    ],
-    victory: [
-      "Your empire is dust. As it should be.",
-      "Conquest complete. Who's next?"
-    ]
-  },
-  // ... economist, diplomat templates
-};
+// lib/diplomacy/treaties.ts
+export async function proposeNAP(fromEmpire: string, toEmpire: string) {
+  // Create pending treaty
+  await db.insert(treaties).values({
+    type: 'NAP',
+    proposer: fromEmpire,
+    target: toEmpire,
+    status: 'pending'
+  });
+}
+
+export async function acceptTreaty(treatyId: string) {
+  // Activate treaty - prevents attacks between parties
+  await db.update(treaties)
+    .set({ status: 'active', activatedAt: new Date() })
+    .where(eq(treaties.id, treatyId));
+}
+
+// Bot response: 50% accept, 50% reject (random)
+export function botRespondToTreaty(): boolean {
+  return Math.random() > 0.5;
+}
 ```
 
-**Deliverable:** 50+ messages across 3 archetypes, 5 categories each
+**Deliverable:** NAP and Alliance treaty system with random bot responses
 
-#### Task 2.3: Save/Load System (60min)
+#### Task 2.3: Global Market (60min)
+```typescript
+// lib/market/trading.ts
+export async function buyResource(empire: string, resource: Resource, amount: number) {
+  const price = await getMarketPrice(resource);
+  const cost = price * amount;
+
+  // Deduct credits, add resource
+  await db.transaction(async (tx) => {
+    await tx.update(empires).set({
+      credits: sql`credits - ${cost}`,
+      [resource]: sql`${resource} + ${amount}`
+    }).where(eq(empires.id, empire));
+
+    // Update market price (supply/demand)
+    await updateMarketPrice(resource, -amount);
+  });
+}
+```
+
+**Deliverable:** Buy/sell resources with dynamic pricing
+
+#### Task 2.4: Save/Load System (60min)
 ```typescript
 // lib/save-system/serializer.ts
 export async function saveGame(gameId: string, saveName?: string) {
@@ -426,7 +492,7 @@ export async function loadGame(saveId: string) {
 
 ### Afternoon Session (4h): Combat & Victory
 
-#### Task 2.4: Combat UI & Visualization (90min)
+#### Task 2.5: Combat UI & Visualization (90min)
 ```typescript
 // components/combat/BattleReport.tsx
 export function BattleReport({ battle }: { battle: BattleResult }) {
@@ -443,7 +509,7 @@ export function BattleReport({ battle }: { battle: BattleResult }) {
 
 **Deliverable:** Animated combat reports showing phase-by-phase results
 
-#### Task 2.5: Victory Condition System (60min)
+#### Task 2.6: Victory Condition System (60min)
 ```typescript
 // lib/victory/conditions.ts
 export const VICTORY_CONDITIONS = {
@@ -466,7 +532,7 @@ export const VICTORY_CONDITIONS = {
 
 **Deliverable:** 3 victory types working with celebration screens
 
-#### Task 2.6: Event System (60min)
+#### Task 2.7: Event System (60min)
 ```typescript
 // lib/events/generator.ts
 export function generateRandomEvent(game: GameState): GameEvent | null {
@@ -494,7 +560,7 @@ export function generateRandomEvent(game: GameState): GameEvent | null {
 
 **Deliverable:** 3 event types (pirate raid, resource discovery, diplomatic incident)
 
-#### Task 2.7: New Player Experience (30min)
+#### Task 2.8: New Player Experience (30min)
 ```typescript
 // lib/tutorial/onboarding.ts
 export const TUTORIAL_STEPS = [
@@ -603,10 +669,11 @@ npm run db:seed:prod
 #### Task 3.7: Final Playtest (30min)
 **Test Scenarios:**
 1. Complete game start to finish (30 turns)
-2. All 3 bot archetypes encountered
-3. All 3 victory conditions tested
-4. Save/load mid-game
-5. Combat with all unit types
+2. Propose treaty to bot (verify accept/reject works)
+3. Trade on global market (verify prices update)
+4. All 3 victory conditions tested
+5. Auto-save persists game state
+6. Combat with all unit types
 
 ---
 
@@ -626,7 +693,7 @@ npm run db:seed:prod
 
 | Risk | Probability | Impact | Mitigation |
 |------|-------------|--------|------------|
-| **Bot decision quality poor** | 50% | MEDIUM | Accept simple but coherent decisions v0.5, improve in v0.6 |
+| **Treaty system edge cases** | 40% | MEDIUM | Comprehensive unit tests, prevent attack on allied empire |
 | **Starmap performance issues** | 40% | MEDIUM | Viewport culling, lazy loading, canvas optimization |
 | **Victory conditions unbalanced** | 60% | MEDIUM | Playtest data collection, easy parameter tuning |
 | **UI/UX unclear** | 45% | MEDIUM | Tutorial system required, tooltips everywhere |
@@ -636,27 +703,31 @@ npm run db:seed:prod
 | Risk | Probability | Impact | Mitigation |
 |------|-------------|--------|------------|
 | **Deployment issues** | 30% | LOW | Vercel staging environment, rollback plan |
-| **Message templates repetitive** | 70% | LOW | Accept for v0.5, expand in v0.6 with LLM |
+| **Random bots feel lifeless** | 60% | LOW | Accept for v0.5 (mechanics focus), personalities in v0.6 |
 | **Event system dull** | 50% | LOW | 3 events enough for MVP, more in v0.6 |
 
 ---
 
-## POST-WEEKEND: v0.6 PLANNING (Next Sprint)
+## POST-MVP: v0.6 PLANNING (Next Sprint)
 
 ### Week 2 Priorities
 
-#### Infrastructure (Week 2, Days 1-2)
-- Parallel turn processing (target: <200ms)
+#### Bot Personality System (Week 2, Days 1-3)
+- 100 bot personas with unique names and identities
+- 3 initial archetypes: Warlord, Diplomat, Merchant
+- Template message library (30-45 per persona)
+- Archetype-based decision trees (replace random)
+- Emotional state system
+
+#### Infrastructure (Week 2, Days 2-3)
+- Parallel turn processing (target: <500ms)
 - Redis caching layer
-- Background job queue (BullMQ)
 - Advanced error tracking (Sentry)
 
-#### Game Features (Week 2, Days 3-5)
-- 6 bot archetypes (add Schemer, Peaceful, Aggressive)
-- 100+ message templates
-- LLM personality integration (Vercel AI SDK)
-- 6 victory conditions
-- Basic treaty system (NAP, Trade Agreement, Alliance)
+#### Game Features (Week 2, Days 4-5)
+- 6 victory conditions (add Diplomatic, Research, Military)
+- Coalitions (group alliances)
+- Retreat and reinforcement mechanics
 - Nuclear warfare mechanics
 - Advanced events (15 types)
 
@@ -695,21 +766,23 @@ npm run db:seed:prod
 ### v0.5 MVP Definition of Done
 
 **Core Gameplay (MUST HAVE):**
-- [ ] Player can create empire with custom name/logo
-- [ ] Starmap displays 100 sectors with clear ownership
+- [ ] Player can create empire with custom name
+- [ ] Starmap displays all empires with clear ownership
 - [ ] Planet management (build units, view production)
-- [ ] Turn processing completes in <1 second
+- [ ] Turn processing completes in <2 seconds
 - [ ] Combat system resolves all scenarios correctly
-- [ ] 3 bot archetypes make different strategic decisions
+- [ ] 25 random bots take actions each turn
+- [ ] Player can propose/accept treaties (NAP, Alliance)
+- [ ] Player can trade on global market
 - [ ] 3 victory conditions trigger correctly
-- [ ] Save/load preserves complete game state
+- [ ] Auto-save preserves complete game state
 
 **User Experience (MUST HAVE):**
 - [ ] Tutorial overlays guide first 3 turns
-- [ ] Bot messages appear with appropriate personality
 - [ ] Combat reports display detailed results
 - [ ] Victory/defeat screens celebrate/commiserate
 - [ ] All UI elements have hover tooltips
+- [ ] Diplomacy UI shows treaty status
 
 **Technical (MUST HAVE):**
 - [ ] Zero runtime errors in normal gameplay
@@ -728,21 +801,21 @@ npm run db:seed:prod
 **The game is SHIPPABLE when:**
 
 1. **A new player can:**
-   - Create account and empire in <2 minutes
+   - Create empire in <2 minutes
    - Understand core mechanics from tutorial
    - Complete first 5 turns without confusion
-   - Experience meaningful bot interaction
+   - Trade, ally, and fight with bots
    - Win or lose clearly
 
 2. **The system can:**
-   - Process 24-bot turn in <500ms
-   - Save/load without data loss
+   - Process 25-bot turn in <2 seconds
+   - Auto-save without data loss
    - Handle 10 concurrent games
    - Recover from common errors gracefully
 
 3. **The experience delivers:**
    - "Just one more turn" engagement
-   - Memorable bot personalities (via templates)
+   - Functional game mechanics (trade, diplomacy, combat)
    - Strategic depth in combat
    - Clear progression toward victory
 
@@ -783,14 +856,14 @@ npm run db:seed:prod
 This sprint plan resolves all conflicts between reviewers by:
 
 1. **Technology:** Pure greenfield Next.js (Architect's recommendation)
-2. **Scope:** Cut diplomacy/coalitions, add save/load (Product Manager's recommendation)
-3. **Performance:** Rule-based bots v0.5, defer LLM to v0.6 (Game Developer + Architect consensus)
-4. **Bot Quality:** Template messages v0.5, full LLM v0.6 (Narrative Designer's phased approach)
-5. **Timeline:** Realistic 3-day MVP, not oversold (Agent Organizer's conservative estimate adapted)
+2. **Scope:** Mechanics without personality — trade, diplomacy, combat all work with random bots
+3. **Performance:** Random bots v0.5, defer decision trees to v0.6 (Game Developer + Architect consensus)
+4. **Bot Personality:** Deferred to v0.6 (Narrative Designer's phased approach)
+5. **Timeline:** Realistic 7-day MVP with testable milestones
 
-**Weekend deliverable:** A playable, save-able, completable strategy game with coherent bot opponents and meaningful combat decisions.
+**v0.5 deliverable:** A playable, save-able, completable strategy game where all game mechanics work (trade, alliances, combat) with random bot opponents.
 
-**Next sprint deliverable (v0.6):** The LLM-powered personality system that makes X-Imperium memorable.
+**Next sprint deliverable (v0.6):** Bot personalities, archetypes, and message templates that make opponents memorable.
 
 **Long-term vision:** A thriving multiplayer community telling stories about their bot rivals.
 
@@ -818,9 +891,9 @@ const result = resolveBattle(attackerFleet, defenderFleet, context);
 import { processTurn } from '@/lib/turn-engine/processor';
 await processTurn(gameId);
 
-// Bot AI
-import { WarlordBot, EconomistBot, DiplomatBot } from '@/lib/bots/archetypes';
-const bot = new WarlordBot();
+// Bot AI (v0.5 - random, v0.6+ - archetypes)
+import { RandomBot } from '@/lib/bots/random-bot';
+const bot = new RandomBot();
 const actions = await bot.executeTurn(empire, gameState);
 ```
 
@@ -847,5 +920,57 @@ const actions = await bot.executeTurn(empire, gameState);
 
 ---
 
+## FUTURE PLANNING SESSIONS FLAGGED
+
+### Session 1: Bot Creation Phase (Post v0.5)
+**Participants:** Narrative Designer + Game Designer + Stakeholder
+**Topics:**
+- 100 unique bot personas with names and identities
+- Voice seeds, quirks, vocabulary per persona
+- 30-45 template phrases per persona (15 categories × 2-3 each)
+- Archetype distribution across personas
+- Broadcast shout templates
+- Messages that can MISLEAD about true archetype
+
+### Session 2: Communication Decision Trees (Post v0.5)
+**Participants:** Narrative Team + Game Design Team
+**Topics:**
+- Map conversation flows to mechanical outcomes
+- Define relationship gates for each action
+- Response option unlocking rules
+- Narrative choices with strategic weight
+
+### Session 3: Retention & GTM Planning (Post Alpha)
+**Trigger:** After closed testing with ~20 players
+**Topics:**
+- Push notification strategy
+- Email digest content
+- Comeback mechanics
+- Marketing channels
+- Launch strategy
+
+### Session 4: Balance & Anti-Snowball (Ongoing)
+**Topics:**
+- Monitor runaway detection logs
+- Evaluate narrative intervention effectiveness
+- Tune alliance checkpoint thresholds
+- Market manipulation event triggers
+
+---
+
+## KEY DESIGN PRINCIPLES ESTABLISHED
+
+1. **Unified Actor Model:** Bots and players flow through identical turn pipeline
+2. **Async-First Multiplayer:** No synchronous play, submit turns and wait
+3. **Bot Opacity:** Players cannot see bot archetype — must deduce through observation
+4. **Consequence Over Limits:** Market manipulation triggers events, not hard caps
+5. **Ironman Mode:** Auto-save only, no rewinding decisions
+6. **Weighted Memory:** Events don't expire, but influence fades by weight
+7. **Narrative Payoff:** LLM epilogues turn every game into a shareable story
+
+---
+
 **PROJECT STATUS: READY TO BEGIN**
-**NEXT ACTION: Execute Task 1.1 (Project Scaffolding)**
+**TIMELINE: 7 Days to Playable MVP**
+**FIRST CHECKPOINT: Day 4 — Starmap + Turn Loop**
+**NEXT ACTION: Execute Day 1 Tasks (Project Scaffolding)**

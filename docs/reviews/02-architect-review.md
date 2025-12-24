@@ -3,53 +3,44 @@
 **Date:** December 23, 2024
 **Agent:** architect-reviewer
 **Agent ID:** aa9d172
+**Status:** REVISED after stakeholder session
 
 ## Executive Summary
 
-**Critical Architectural Mismatch Detected**: The PRD specifies a modern TypeScript/Next.js stack, but the existing codebase is a legacy PHP 8.2/MySQL/Smarty application. This represents a **complete rewrite requirement**, not incremental modernization. The bot architecture is well-designed but completely misaligned with the current technology foundation.
+**Greenfield Build Confirmed**: After stakeholder clarification, the repository has been cleared of legacy PHP code. This is a **pure greenfield Next.js/TypeScript build** with no migration concerns. The bot architecture aligns well with the chosen stack. Key decisions finalized: Supabase for database, OpenAI-compatible LLM abstraction with provider failover, and performance logging from day one.
+
+**Architecture Confidence: HIGH**
 
 ## Tech Stack Assessment
 
-### PRD vs Reality Disconnect
+### Stack Confirmed — RESOLVED
 ```
-PRD Specifies:          Current Reality:
-├─ Next.js 14+          ├─ PHP 8.2
-├─ TypeScript           ├─ No TypeScript
-├─ React                ├─ Smarty templates
-├─ Tailwind CSS         ├─ Custom CSS
-├─ Drizzle ORM          ├─ ADOdb (legacy)
-├─ PostgreSQL           ├─ MySQL 8.0
-└─ Server Actions       └─ Traditional PHP scripts
-```
-
-### Missing from Stack Definition
-1. **State management strategy** - Server vs client authority undefined
-2. **Caching layer** - Redis for 99 bot processing?
-3. **Job queue system** - BullMQ, Inngest for bot processing?
-4. **Authentication choice** - NextAuth vs Clerk?
-
-### Recommended Additions
-```typescript
-// State Management
-- Zustand for client state
-- React Query for server state
-- Server Actions for mutations
-
-// Real-time Updates
-- Server-Sent Events (not WebSocket - turn-based)
-
-// Background Jobs
-- Inngest for bot turn processing
-
-// Caching
-- Vercel KV (Redis) for game state
+CONFIRMED STACK:
+├─ Next.js 14+ (App Router)
+├─ TypeScript (strict mode)
+├─ React 18+
+├─ Tailwind CSS + shadcn/ui
+├─ Drizzle ORM
+├─ Supabase (PostgreSQL)
+└─ Server Actions for mutations
 ```
 
-### Migration Strategy
-**Recommended: Option C - Abandon Existing Codebase**
-- Treat PHP version as reference implementation
-- Pure greenfield Next.js build
-- Timeline: 4-6 months, cleanest outcome
+### Decisions Finalized After Session
+
+| Component | Decision | Rationale |
+|-----------|----------|-----------|
+| **State Management** | Server authority (game), Client authority (UI) | Prevents cheating, clean separation |
+| **Caching** | In-memory now, Redis scaffolded | Simple for MVP, ready to scale |
+| **Database** | Supabase PostgreSQL | Stakeholder experience, generous free tier |
+| **Authentication** | Anonymous v0.5, Email/password v0.6 | Minimize MVP scope |
+| **LLM Provider** | OpenAI-compatible abstraction | Free tier arbitrage, provider failover chain |
+| **Deployment** | Vercel now, Railway scaffolded | Simple start, ready for long-running jobs |
+
+### No Migration Required
+**CONFIRMED:** Repository cleared of legacy PHP code. This is a pure greenfield build.
+- PHP codebase served as design reference only
+- Analysis informed what to keep vs what was "feature bloat"
+- Zero code porting required
 
 ## Data Architecture
 
@@ -98,41 +89,51 @@ CREATE TABLE game_events (...); -- Event sourcing for replays
 
 ## Performance Analysis
 
-### Turn Processing Budget
+### Turn Processing Budget — REVISED
 
-**Target: < 10 seconds**
+**Target: < 2 seconds** (confirmed with stakeholder)
 
 ```
-Current Analysis:
-├─ Tier 4 (25 bots): ~10ms each = 250ms
-├─ Tier 3 (25 bots): ~50ms each = 1.25s
-├─ Tier 2 (25 bots): ~100ms each = 2.5s
-└─ Tier 1 (24 bots): ~2000ms each = 48s ← PROBLEM
+v0.5 MVP (25 Tier 4 random bots):
+├─ Random decisions: 25 × 5ms = 125ms
+├─ Combat resolution: ~100ms
+├─ Database writes: ~200ms
+└─ TOTAL: ~425ms ✓
+
+v0.7+ (with 10 LLM bots):
+├─ Tier 4 random: 15 × 5ms = 75ms
+├─ Tier 2-3 scripted: ~300ms
+├─ Tier 1 LLM (async): Non-blocking
+├─ Combat/DB: ~300ms
+└─ TOTAL: <1 second ✓
 ```
 
-**Issue**: Sequential LLM processing = 48 seconds!
+### LLM Optimization Strategy (Confirmed)
 
-**Solution**: Parallel batched LLM processing
+1. **Reduce LLM bots to 10** (down from 24) — sufficient variety
+2. **Async LLM processing** — decisions computed for NEXT turn while current resolves
+3. **Graceful fallback** — if LLM slow, use Tier 2 scripted logic
+4. **Provider failover chain** — free tier arbitrage (Groq → Together → OpenAI)
+
+### Rate Limiting (Required)
+
 ```typescript
-// Process in batches of 5 to avoid rate limits
-async function processTier1Bots(bots) {
-  const batches = chunk(bots, 5);
-  for (const batch of batches) {
-    await Promise.all(batch.map(bot => processLLMBot(bot)));
-  }
-  // 24 bots / 5 = ~5 batches × 2s = ~10s
+interface RateLimits {
+  llmCallsPerGame: 5000,    // Hard ceiling
+  llmCallsPerTurn: 50,      // Per-turn max
+  llmCallsPerHour: 500,     // Abuse prevention
+  maxDailySpend: 50.00,     // Cost ceiling ($)
 }
 ```
 
-### LLM Cost Analysis
-```
-Per game (24 LLM bots × 200 turns):
-- Input: ~500 tokens/bot × 24 × 200 = 2.4M tokens
-- Output: ~200 tokens/bot × 24 × 200 = 960K tokens
-- Cost: ~$4.00 per game (Haiku pricing)
+### Performance Logging (From Day One)
 
-With prompt caching: ~$0.80 per game (80% reduction)
+```jsonl
+// /logs/perf-{date}.jsonl
+{"ts":"...","turn":15,"event":"turn_complete","ms":847,"breakdown":{"bots":312,"combat":89,"db":446}}
 ```
+
+Lightweight, append-only, non-blocking. Essential for Alpha/Beta debugging.
 
 ### UI Performance
 - **Galaxy Map**: Use react-konva (100 entities OK)
@@ -250,8 +251,20 @@ jobs:
 16. Galaxy map (react-konva)
 17. Scenario system
 
-### Red Flags
-1. No PHP→TypeScript migration mentioned
-2. LLM timeout risk (48s exceeds Vercel 10s limit)
-3. Database schema incomplete
-4. Cost analysis missing ($4/game × 1000 players = $4000/mo)
+### Red Flags — ALL RESOLVED
+
+| Original Flag | Resolution |
+|---------------|------------|
+| ~~No PHP→TypeScript migration~~ | **RESOLVED:** Greenfield build, no migration |
+| ~~LLM timeout risk (48s)~~ | **RESOLVED:** Async processing, 10 LLM bots, <2s target |
+| ~~Database schema incomplete~~ | **IN PROGRESS:** Schema to be finalized Day 1 |
+| ~~Cost analysis missing~~ | **RESOLVED:** Free tier arbitrage + rate limiting + $50/day cap |
+
+## New Architecture Artifacts Required
+
+### Day One Scaffolding
+1. **lib/cache/index.ts** — Cache interface with in-memory default
+2. **lib/llm/provider.ts** — OpenAI-compatible abstraction with failover
+3. **lib/telemetry/perf-logger.ts** — Performance logging (JSONL)
+4. **lib/rate-limit/llm-guard.ts** — Rate limiting for LLM calls
+5. **deployment/railway.toml** — Stubbed for future bot worker

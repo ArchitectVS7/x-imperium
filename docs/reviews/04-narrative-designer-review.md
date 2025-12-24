@@ -3,92 +3,146 @@
 **Date:** December 23, 2024
 **Agent:** narrative-designer
 **Agent ID:** a41b5f2
+**Status:** REVISED after stakeholder session
 
 ## Executive Summary
 
-The bot personality system is **X-Imperium's killer feature** but currently underspecified for emotional impact. The 8 archetypes provide excellent mechanical diversity, but lack the narrative depth needed to create memorable "water cooler moments." The LLM-powered messaging system is revolutionary but requires robust fallback templates.
+The bot personality system is now fully architected to deliver **memorable character-driven gameplay**. After stakeholder session: 100 unique personas with voice seeds, emotional states with mechanical effects, weighted relationship memory with permanent scars, and LLM-powered epilogues. The system balances template efficiency with LLM creativity — templates until exhausted, then generate fresh content.
 
-**Critical gap**: No emotional arc design for player-bot relationships across a 50-100 turn game.
+**Narrative Confidence: HIGH** — Ready for Bot Creation Phase planning session.
 
-## Bot Personality Assessment
+**Key Principle Established:** "Bots aren't opponents — they're characters in YOUR story."
 
-### Current State: Mechanics Only
-```
-Warlord: Aggressive expansion, military focus
-Diplomat: Alliance builder, trade focus
-Schemer: Deception, backstabbing
-```
+## Bot Personality Assessment — CONFIRMED
 
-### What's Missing
+### Persona Architecture
 
-**1. Distinct Voice Patterns**
-- Warlord: Military jargon ("Your fleet is outgunned, Commander")
-- Diplomat: Flattery ("A leader of your caliber understands...")
-- Schemer: Riddles ("Interesting alliance. How... fragile.")
-- Economist: Transactional ("You're losing 347 credits/turn. I can fix that.")
+```typescript
+interface BotPersona {
+  id: string;                    // "commander_hexen"
+  name: string;                  // "Commander Hexen"
+  archetype: Archetype;
 
-**2. Emotional Range**
-- Desperate (losing badly)
-- Arrogant (winning easily)
-- Vengeful (betrayed recently)
-- Fearful (under attack)
-- Triumphant (just won battle)
+  voice: {
+    tone: string;                // "gruff military veteran"
+    quirks: string[];            // ["never says please", "references old wars"]
+    vocabulary: string[];        // ["soldier", "campaign", "flank"]
+    catchphrase?: string;        // "Victory favors the prepared"
+  };
 
-**3. Relationship Memory**
-- "You refused my trade 5 turns ago. Now you come begging?"
-- "We've been allies 20 turns. I won't forget this."
+  templates: {                   // 2-3 seeds per category
+    greeting: string[];
+    battleTaunt: string[];
+    victoryGloat: string[];
+    defeat: string[];
+    tradeOffer: string[];
+    allianceProposal: string[];
+    betrayal: string[];
+  };
 
-### Player Readability
-
-Players need "tells" to read bot behavior:
-
-**Warlord Telegraph:**
-- 3 turns before attack: "Your borders look... vulnerable."
-- 2 turns before: "I admire leaders who know when to surrender."
-- 1 turn before: "Last chance to negotiate."
-
-**Schemer Telegraph (subtle):**
-- Before betrayal: Overly complimentary messages
-- Red flag: "You're my most trusted ally" (too much affirmation)
-- Behavioral: Stops sharing intel suddenly
-
-## Communication System
-
-### LLM Prompt Engineering Required
-
-```
-You are {personality_archetype} ruling Empire {empire_name}.
-
-PERSONALITY TRAITS:
-- Voice: {voice_description}
-- Motivation: {core_drive}
-- Current emotional state: {emotion}
-- Recent history: {last_3_actions}
-
-RELATIONSHIP WITH PLAYER:
-- Stance: {allied/neutral/hostile}
-- History: {betrayals, trades, battles}
-- Grudge level: {0-10}
-
-Write a 1-2 sentence message that:
-1. Matches your personality voice
-2. Reflects current relationship
-3. References recent events
-4. Stays in character under pressure
-
-Tone: {defiant/pleading/arrogant/fearful/triumphant}
+  usedPhrases: Set<string>;      // Prevent repetition
+}
 ```
 
-### Template Library Required: 100+ Templates
+**Message Flow:** Template first → Mark as used → If exhausted, LLM generates fresh
 
-**Categories Needed:**
-- Diplomatic Messages (20)
-- Hostile Messages (20)
-- Reactive Messages (15)
-- Event-Driven Messages (15)
-- Relationship Messages (10)
-- State-Driven Messages (10)
-- Flavor Messages (10)
+### Emotional State System — CONFIRMED
+
+| Emotion | Decision | Alliance | Aggression | Negotiation |
+|---------|----------|----------|------------|-------------|
+| **Confident** | +5% | -20% | +10% | +10% |
+| **Arrogant** | -15% | -40% | +30% | -30% |
+| **Desperate** | -10% | +40% | -20% | -20% |
+| **Vengeful** | -5% | -30% | +40% | -40% |
+| **Fearful** | -10% | +50% | -30% | +10% |
+| **Triumphant** | +10% | -10% | +20% | -20% |
+
+- States are **hidden** from player (inferred from messages)
+- Intensity scales effects (0.0 - 1.0)
+- Mechanical impact on decisions, not just flavor
+
+### Relationship Memory — CONFIRMED
+
+**Weighted, Not Expiring:**
+- Events have weight (1-100) and decay resistance
+- Major events (betrayal, life saved) resist being "washed away"
+- 20% of negative events are **permanent scars**
+- Can't spam messages to erase capturing a planet
+
+| Event | Weight | Decay Resistance |
+|-------|--------|------------------|
+| Captured planet | 80 | HIGH |
+| Saved from destruction | 90 | HIGH |
+| Broke alliance | 70 | HIGH |
+| Won battle | 40 | MEDIUM |
+| Trade accepted | 10 | LOW |
+| Message sent | 1 | VERY LOW |
+
+### Player Readability — CONFIRMED
+
+**Tells are archetype-specific and percentage-based:**
+
+| Archetype | Telegraph % | Style | Advance Warning |
+|-----------|-------------|-------|-----------------|
+| **Warlord** | 70% | Obvious | 2-3 turns |
+| **Diplomat** | 80% | Polite | 3-5 turns |
+| **Schemer** | 30% | Cryptic/Inverted | 1 turn (if any) |
+| **Economist** | 60% | Transactional | 2 turns |
+| **Aggressor** | 40% | Minimal | 1 turn |
+| **Peaceful** | 90% | Clear | 5+ turns |
+
+**Key principles:**
+- Not every attack has a warning
+- Emotional state modifies telegraph chance (vengeful = less warning)
+- Observant players learn patterns over time
+
+## Communication System — CONFIRMED
+
+### Two Message Channels
+
+| Channel | Visibility | Examples |
+|---------|------------|----------|
+| **Direct** | Private | Threats, offers, negotiations |
+| **Broadcast** | All players | Galactic events, conquest news, shouts |
+
+**Bots can broadcast:** Add shouts to persona seeds (Warlord boasts, Schemer hints)
+
+### Response Options
+
+**Always available:**
+- Text responses (generic replies)
+
+**Gated by relationship + conversation state:**
+- Propose Alliance (requires 1+ exchange, neutral+ attitude)
+- Request Reinforcements (requires allied status)
+- Accept/Counter trade (requires active offer)
+
+**Contextual blocking:**
+- Can't propose alliance mid-battle
+- Can't request help from enemy
+
+### Template + LLM Hybrid
+
+**15 categories × 2-3 templates per persona = 30-45 seed phrases each**
+
+| Category | Trigger |
+|----------|---------|
+| Greeting | First contact |
+| Battle Taunt | Combat initiated |
+| Battle Victory | Bot wins |
+| Battle Defeat | Bot loses |
+| Trade Offer | Proposing trade |
+| Trade Accept/Reject | Responding to offer |
+| Alliance Proposal | Bot proposes |
+| Alliance Accept/Reject | Responding |
+| Betrayal | Breaking alliance |
+| Threat | Warning before attack |
+| Retreat | Fleeing battle |
+| Eliminated | Bot destroyed |
+| Endgame | Final turns |
+| Broadcast Shout | Global announcements |
+
+**Flow:** Use template → Mark as used → If all used, LLM generates fresh → Cache new phrase
 
 ### Sample Templates
 
@@ -203,25 +257,41 @@ TURN 1 EXPERIENCE:
 2. **Boss Battle Frame** - Pre-battle monologue
 3. **Final Turn** - Personality-specific defeat/victory messages
 
-### Victory/Defeat Payoff
+### Victory/Defeat Payoff — CONFIRMED
 
-**Victory:**
-```
-1. Final enemy message (personality-specific)
-2. Victory narration ("The Outer Rim falls silent...")
-3. Epilogue based on playstyle (Honorable/Ruthless/Diplomatic)
-4. Memorable moments recap
-   - "Emperor Krix betrayed you Turn 28. You eliminated him Turn 42."
-5. Shareable screenshot
+**LLM-Generated Epilogue System:**
+
+```typescript
+interface GameEpilogue {
+  stats: {
+    turnsPlayed: number;
+    victoriesInCombat: number;
+    alliancesFormed: number;
+    nemesis: BotPersona;        // Most fought
+    closestAlly: BotPersona;    // Longest alliance
+    betrayer?: BotPersona;
+  };
+
+  pivotalMoments: PivotalMoment[];  // Auto-captured during game
+}
 ```
 
-**Defeat:**
-```
-1. Final enemy taunt
-2. Defeat narration ("Your empire crumbles...")
-3. Lessons learned ("Your military was 40% weaker")
-4. Revenge hook ("Krix remains undefeated. Face him again?")
-```
+**Epilogue format:**
+- 150-200 words (quick read, not a novel)
+- Dramatic opening based on outcome
+- References 2-3 key moments by name
+- Characterizes player's playstyle
+- Memorable closing line
+- Stats summary
+- Comparison vs player's other campaigns
+- Leaderboard ranking (if online)
+
+**Playstyle Titles (auto-generated):**
+- Fast conquest → "The Blitzkrieg"
+- Economic dominance → "The Monopolist"
+- Many alliances → "The Puppet Master"
+- Comeback victory → "The Phoenix"
+- Never lost a battle → "The Unbroken"
 
 ## Replayability
 
@@ -238,38 +308,45 @@ TURN 1 EXPERIENCE:
 2. **Story Recap** - Timeline of events, relationship chart
 3. **Achievements** - "Backstabbed", "Giant Slayer", "Master Diplomat"
 
-## Priority Items
+## Priority Items — REVISED
 
-### v0.5 (MVP - Core Narrative)
+### v0.5 (MVP - No narrative, random bots)
+- No messaging system (Tier 4 random bots don't talk)
+- Foundation only
 
-1. **Message Template Library** - 100 templates across personalities
-2. **Personality Voice Guide** - Vocabulary, sentence structure, catchphrases
-3. **LLM Prompt Engineering** - Personality-specific prompts with validation
-4. **First 5 Minutes Experience** - Turn 1 introduction sequence
-5. **Betrayal Dramatic Reveal** - Full-screen event UI
+### v0.6 (Core Narrative)
+1. **Persona data structure** - 100 bot definitions with voice seeds
+2. **Template library** - 30-45 phrases per persona (15 categories × 2-3 each)
+3. **Two-channel messaging** - Direct + Broadcast
+4. **Usage tracking** - Prevent repetition
+5. **Basic emotional states** - 6 states, mechanical effects
 
-### v0.6 (Emotional Depth)
+### v0.7 (Emotional Depth)
+6. **LLM integration** - Generate fresh when templates exhausted
+7. **Weighted relationship memory** - Events with decay resistance
+8. **Emotional intensity scaling** - States affect decisions
+9. **Tell system** - Archetype-specific, percentage-based
+10. **Response gating** - Conversation state unlocks game actions
 
-6. **Emotional State System** - 5 states driving message selection
-7. **Revenge Arc Closure** - Grudge settlement detection
-8. **Alliance Relationship Progression** - Multi-phase arc
-9. **Endgame Cinematic Treatment** - Final showdown framing
-10. **Victory/Defeat Story Recap** - Shareable timeline
+### v0.8 (Payoff Systems)
+11. **LLM epilogue generation** - 150-word campaign summaries
+12. **Pivotal moment tracking** - Auto-capture key events
+13. **Playstyle titles** - Auto-generated based on victory path
+14. **Leaderboard with flavor** - Stats + narrative hooks
+15. **Extended chronicle** - Optional longer narrative
 
-### v0.7 (Replayability)
+### Future Planning Sessions Flagged
 
-11. **Personality Quirks** - Random traits per game
-12. **Pre-Existing Bot Rivalries** - Grudges at game start
-13. **Scenario Narrative Themes** - Unique intros/epilogues
-14. **Player Reputation System** - Honorable/Treacherous/Ruthless
-15. **"One More Game" Hooks** - Revenge prompts, scenario tracking
+**Bot Creation Phase:**
+- 100 unique personas
+- Voice seeds, quirks, vocabulary
+- 30-45 template phrases each
+- Archetype distribution
 
-### v0.8+ (Advanced)
-
-16. Dialogue Choice System
-17. Provocation System (player-initiated trash talk)
-18. Memory Beyond Grudges (gratitude, respect, contempt)
-19. Cultural/Factional Identity (backstory lore)
+**Communication Decision Trees:**
+- Narrative + Game Design collaboration
+- Map conversation flows to mechanical outcomes
+- Define relationship gates for each action
 
 ## Design Principle
 
