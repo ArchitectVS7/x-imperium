@@ -247,6 +247,10 @@ export interface DashboardData {
     population: number;
     civilStatus: string;
   };
+  turn: {
+    currentTurn: number;
+    turnLimit: number;
+  };
 }
 
 export async function getDashboardData(
@@ -255,6 +259,13 @@ export async function getDashboardData(
   const empireWithPlanets = await getEmpireWithPlanets(empireId);
 
   if (!empireWithPlanets) {
+    return null;
+  }
+
+  // Fetch game data for turn info
+  const game = await getGameById(empireWithPlanets.gameId);
+
+  if (!game) {
     return null;
   }
 
@@ -282,6 +293,10 @@ export async function getDashboardData(
       planetCount: empireWithPlanets.planetCount,
       population: empireWithPlanets.population,
       civilStatus: empireWithPlanets.civilStatus,
+    },
+    turn: {
+      currentTurn: game.currentTurn,
+      turnLimit: game.turnLimit,
     },
   };
 }

@@ -6,6 +6,9 @@ import {
   PopulationPanel,
   MilitaryPanel,
   PlanetList,
+  TurnCounter,
+  CivilStatusDisplay,
+  EndTurnButton,
 } from "@/components/game";
 import {
   fetchDashboardDataAction,
@@ -27,33 +30,47 @@ async function DashboardContent() {
   }
 
   return (
-    <div
-      className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-      data-testid="dashboard"
-    >
-      <ResourcePanel
-        credits={data.resources.credits}
-        food={data.resources.food}
-        ore={data.resources.ore}
-        petroleum={data.resources.petroleum}
-        researchPoints={data.resources.researchPoints}
-      />
-      <PopulationPanel
-        population={data.stats.population}
-        civilStatus={data.stats.civilStatus}
-      />
-      <MilitaryPanel
-        soldiers={data.military.soldiers}
-        fighters={data.military.fighters}
-        stations={data.military.stations}
-        lightCruisers={data.military.lightCruisers}
-        heavyCruisers={data.military.heavyCruisers}
-        carriers={data.military.carriers}
-        covertAgents={data.military.covertAgents}
-      />
-      <PlanetList planets={data.planets} />
-      <ResearchPanel researchPoints={data.resources.researchPoints} />
-      <NetworthPanel networth={data.stats.networth} />
+    <div data-testid="dashboard">
+      {/* Turn and Status Header */}
+      <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
+        <TurnCounter
+          currentTurn={data.turn.currentTurn}
+          turnLimit={data.turn.turnLimit}
+        />
+        <CivilStatusDisplay status={data.stats.civilStatus} />
+      </div>
+
+      {/* Main Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <ResourcePanel
+          credits={data.resources.credits}
+          food={data.resources.food}
+          ore={data.resources.ore}
+          petroleum={data.resources.petroleum}
+          researchPoints={data.resources.researchPoints}
+        />
+        <PopulationPanel
+          population={data.stats.population}
+          civilStatus={data.stats.civilStatus}
+        />
+        <MilitaryPanel
+          soldiers={data.military.soldiers}
+          fighters={data.military.fighters}
+          stations={data.military.stations}
+          lightCruisers={data.military.lightCruisers}
+          heavyCruisers={data.military.heavyCruisers}
+          carriers={data.military.carriers}
+          covertAgents={data.military.covertAgents}
+        />
+        <PlanetList planets={data.planets} />
+        <ResearchPanel researchPoints={data.resources.researchPoints} />
+        <NetworthPanel networth={data.stats.networth} />
+      </div>
+
+      {/* End Turn Section */}
+      <div className="mt-8 text-center">
+        <EndTurnButton />
+      </div>
     </div>
   );
 }
@@ -141,13 +158,6 @@ export default function DashboardPage() {
       <Suspense fallback={<DashboardSkeleton />}>
         <DashboardContent />
       </Suspense>
-
-      {/* End Turn Button */}
-      <div className="mt-8 text-center">
-        <button className="lcars-button text-lg px-12 py-3" disabled>
-          END TURN (Coming in M2)
-        </button>
-      </div>
     </div>
   );
 }

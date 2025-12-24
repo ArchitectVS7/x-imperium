@@ -37,19 +37,23 @@ describe("Civil Status Service", () => {
     });
 
     it("should return correct multiplier for unhappy status", () => {
-      expect(getIncomeMultiplier("unhappy")).toBe(0.0);
+      // PRD: "0× (no bonus)" means baseline (1×) with no bonus
+      expect(getIncomeMultiplier("unhappy")).toBe(1.0);
     });
 
     it("should return correct multiplier for angry status", () => {
-      expect(getIncomeMultiplier("angry")).toBe(-0.1);
+      // Extrapolated: 25% penalty
+      expect(getIncomeMultiplier("angry")).toBe(0.75);
     });
 
     it("should return correct multiplier for rioting status", () => {
-      expect(getIncomeMultiplier("rioting")).toBe(-0.25);
+      // Extrapolated: 50% penalty
+      expect(getIncomeMultiplier("rioting")).toBe(0.5);
     });
 
     it("should return correct multiplier for revolting status", () => {
-      expect(getIncomeMultiplier("revolting")).toBe(-0.5);
+      // Extrapolated: 75% penalty (near collapse)
+      expect(getIncomeMultiplier("revolting")).toBe(0.25);
     });
   });
 
@@ -362,7 +366,9 @@ describe("Civil Status Service", () => {
     });
 
     it("should return correct multipliers for all statuses", () => {
-      const expectedMultipliers = [4.0, 3.0, 2.0, 1.0, 0.0, -0.1, -0.25, -0.5];
+      // Updated to match corrected PRD interpretation
+      // "0× (no bonus)" for unhappy = 1.0 baseline
+      const expectedMultipliers = [4.0, 3.0, 2.0, 1.0, 1.0, 0.75, 0.5, 0.25];
 
       statuses.forEach((status, index) => {
         const result = evaluateCivilStatus(status, []);

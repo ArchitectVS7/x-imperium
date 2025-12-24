@@ -133,15 +133,16 @@ export const CIVIL_STATUS_LEVELS = [
 export type CivilStatusLevel = (typeof CIVIL_STATUS_LEVELS)[number];
 
 // PRD 4.4: Civil Status Income Multipliers
+// "0× (no bonus)" means baseline income (1×) with no bonus
 export const CIVIL_STATUS_INCOME_MULTIPLIERS: Record<CivilStatusLevel, number> = {
   ecstatic: 4.0,   // PRD: "4× multiplier" - Many victories, high education
   happy: 3.0,      // PRD: "3× multiplier" - Stable empire, winning wars
   content: 2.0,    // PRD: "2× multiplier" - Normal state
   neutral: 1.0,    // PRD: "1× multiplier" - Minor problems
-  unhappy: 0.0,    // PRD: "0× (no bonus)" - Starvation, battle losses
-  angry: -0.1,     // Extrapolated: 10% penalty
-  rioting: -0.25,  // Extrapolated: 25% penalty
-  revolting: -0.5, // Extrapolated: 50% penalty (near collapse)
+  unhappy: 1.0,    // PRD: "0× (no bonus)" = baseline (1×) - Starvation, battle losses
+  angry: 0.75,     // Extrapolated: 25% penalty
+  rioting: 0.5,    // Extrapolated: 50% penalty
+  revolting: 0.25, // Extrapolated: 75% penalty (near collapse)
 };
 
 // =============================================================================
