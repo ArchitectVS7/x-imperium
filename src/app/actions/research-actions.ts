@@ -9,11 +9,13 @@ import {
   investResearchPoints,
   calculateTurnsToLevel,
   getNextUnlock,
+  initializeResearch,
   RESEARCH_POINTS_PER_PLANET,
   MAX_RESEARCH_LEVEL,
   type ResearchStatus,
   type ResearchResult,
 } from "@/lib/game/services/research-service";
+import { initializeUnitUpgrades } from "@/lib/game/services/upgrade-service";
 
 // =============================================================================
 // COOKIE HELPERS
@@ -67,9 +69,17 @@ export async function getResearchInfoAction(): Promise<{
   }
 
   try {
-    const status = await getResearchStatus(empireId);
+    let status = await getResearchStatus(empireId);
+
+    // Auto-initialize for existing games that don't have research entries
     if (!status) {
-      return null;
+      await initializeResearch(empireId, gameId);
+      await initializeUnitUpgrades(empireId, gameId);
+      status = await getResearchStatus(empireId);
+
+      if (!status) {
+        return null;
+      }
     }
 
     // Count research planets

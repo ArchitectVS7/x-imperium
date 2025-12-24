@@ -63,7 +63,10 @@ async function DashboardContent({ errorFromUrl }: { errorFromUrl?: string }) {
           covertAgents={data.military.covertAgents}
         />
         <PlanetList planets={data.planets} />
-        <ResearchPanel researchPoints={data.resources.researchPoints} />
+        <ResearchPanel
+          researchLevel={data.empire.fundamentalResearchLevel}
+          researchPoints={data.resources.researchPoints}
+        />
         <NetworthPanel networth={data.stats.networth} />
       </div>
 
@@ -75,7 +78,13 @@ async function DashboardContent({ errorFromUrl }: { errorFromUrl?: string }) {
   );
 }
 
-function ResearchPanel({ researchPoints }: { researchPoints: number }) {
+function ResearchPanel({
+  researchLevel,
+  researchPoints,
+}: {
+  researchLevel: number;
+  researchPoints: number;
+}) {
   return (
     <div className="lcars-panel" data-testid="research-panel">
       <h2 className="text-lg font-semibold text-lcars-lavender mb-4">
@@ -84,14 +93,19 @@ function ResearchPanel({ researchPoints }: { researchPoints: number }) {
       <div className="space-y-2 text-gray-300">
         <div className="flex justify-between">
           <span>Fundamental Level:</span>
-          <span className="font-mono text-lcars-amber">0</span>
+          <span className="font-mono text-lcars-amber">{researchLevel}</span>
         </div>
         <div className="flex justify-between">
-          <span>Points/Turn:</span>
+          <span>Research Points:</span>
           <span className="font-mono text-lcars-blue">
             {researchPoints.toLocaleString()}
           </span>
         </div>
+        {researchLevel < 2 && (
+          <div className="text-xs text-gray-500 mt-2">
+            Level 2 unlocks Light Cruisers
+          </div>
+        )}
       </div>
     </div>
   );
