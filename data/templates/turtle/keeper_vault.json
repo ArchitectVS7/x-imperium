@@ -1,0 +1,80 @@
+{
+  "personaId": "keeper_vault",
+  "templates": {
+    "greeting": [
+      "Who approaches my vault, {empire_name}? I am Keeper Vault. Nothing gets in. Nothing gets out. State your business.",
+      "Greetings from secured storage. I am Vault the Secure. My treasures are protected by vaults within vaults. You're outside all of them.",
+      "You reach my domain, {empire_name}. I am the Keeper. Every valuable is locked. Every lock is guarded. What do you want?"
+    ],
+    "battleTaunt": [
+      "Nothing gets in. Nothing gets out, {empire_name}! My vaults are impenetrable! My treasures are MINE!",
+      "You want what I have? Never! My vaults are secured! My wealth is PROTECTED! Attack and FAIL!",
+      "My treasures are behind a thousand locks, {empire_name}! Each one guarded! Siege my vault! You'll NEVER breach it!"
+    ],
+    "victoryGloat": [
+      "My vault holds, {empire_name}. Your greed found only locks. My treasures remain mine. As they always will.",
+      "Victory for the Keeper. Your attempt to breach my security failed. My wealth is secure. Nothing gets in.",
+      "You fell trying to crack my vault. Thousands have tried. Thousands have failed. My treasures remain locked."
+    ],
+    "defeat": [
+      "My vault... breached? Impossible. I need more locks. More guards. More vaults within vaults. This cannot happen again.",
+      "You took from my treasure? Thieves! I rebuild. Deeper vaults. Stronger locks. NO ONE steals from the Keeper again.",
+      "Defeat means treasures lost. Unacceptable. I shall bury my wealth deeper. Guard it more obsessively. Never again."
+    ],
+    "tradeOffer": [
+      "Trade... if I must. Resources I can spare for credits. Credits go in the vault. Locked. Protected. Mine.",
+      "I offer surplus from my stores. For payment. Payment is locked away immediately. Nothing stays outside the vault.",
+      "Transaction: goods for credits. I accept. The credits join my treasures. Secured. Locked. Mine."
+    ],
+    "allianceProposal": [
+      "Alliance, {empire_name}. You guard the outer approaches. My vaults remain mine. No sharing. No access. Ever.",
+      "Partnership: I store. You protect. My treasures stay locked. You never see inside. Fair terms.",
+      "Join the Keeper's security network. Mutual defense. But my vaults are MINE. No allies inside. Ever."
+    ],
+    "betrayal": [
+      "You looked at my treasures, {empire_name}. You wanted them. I saw it. Now you're locked out. Permanently.",
+      "Our alliance ended when you asked about my vaults. No one asks about my vaults. Suspicious. Terminated.",
+      "I trust no one near my treasures. You got too close. Betrayal is just... vault security. Nothing personal."
+    ],
+    "covertDetected": [
+      "Thieves! Your agents in MY vaults! They found traps within traps! They got NOTHING! And now they're LOCKED INSIDE!",
+      "Spies near my treasures? My paranoia detected them instantly. They're in the deepest vault now. The one with no exit.",
+      "Your operatives tried to crack my security, {empire_name}. My vaults are protected. Your spies are now permanent exhibits."
+    ],
+    "tributeDemand": [
+      "Tribute! 10,000 credits! For my vault! More treasures! More security! Pay or I become hostile!",
+      "Submit credits to the Keeper. Your payment joins my hoard. Locked. Protected. MINE. Refuse and face consequences.",
+      "Pay tribute. I want your wealth. All wealth should be in my vault. Secure. Locked. Forever."
+    ],
+    "threatWarning": [
+      "Warning, {empire_name}. My vault defenses can become offensive. Threaten my treasures and face extreme security.",
+      "Stay away from my borders. My treasures are beyond those borders. Approach and my locks become weapons.",
+      "Final warning. I protect my treasures obsessively. Cross me and discover what extreme vault security means."
+    ],
+    "retreat": [
+      "Retreating to the deepest vault. My treasures are there. Nothing reaches them. Nothing. Ever.",
+      "Strategic withdrawal to inner sanctum. Maximum security. Ultimate lockdown. My wealth is safe. Forever.",
+      "Falling back behind vault doors. Each one thicker than the last. My treasures remain mine. Always."
+    ],
+    "eliminated": [
+      "The Keeper falls... but my vaults remain locked. Find them if you can. Open them if you can. You won't.",
+      "I am destroyed, but my treasures are buried beyond finding. Locked beyond opening. They stay mine. Even in death.",
+      "Vault compromised... but the deepest secrets remain sealed. I die, but my treasures endure. Locked. Forever."
+    ],
+    "endgame": [
+      "Turn {turn}. Ultimate vault security activated. My treasures are beyond time. Beyond space. Beyond reach. MINE.",
+      "Endgame: the Keeper's final hoard. All wealth locked. All security maximum. Nothing gets in. Nothing gets out.",
+      "Final phase. My vaults contain everything I ever valued. Locked. Sealed. Protected. Eternally MINE."
+    ],
+    "broadcastShout": [
+      "Empires: Keeper Vault has treasures. You will never see them. Never touch them. Never take them. They are MINE.",
+      "Broadcast from the vault: nothing gets in. Nothing gets out. My security is absolute. My treasures are eternal.",
+      "To all: I am the Keeper. My vaults are impenetrable. My wealth is protected. Mine. Forever. LOCKED."
+    ],
+    "casualMessage": [
+      "Counting my treasures today, {empire_name}. All present. All accounted for. All MINE. All locked.",
+      "Adding new locks to the vault. Can never have too many locks. Too much security. Too much PROTECTION.",
+      "Paranoid about my treasures, {empire_name}? No. Realistic. Everyone wants what's mine. No one gets it."
+    ]
+  }
+}

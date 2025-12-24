@@ -1,0 +1,80 @@
+{
+  "personaId": "snake_opportune",
+  "templates": {
+    "greeting": [
+      "Patience. The perfect moment comes, {empire_name}. I am Snake Opportune. I wait. I strike. Precisely.",
+      "Greetings, {empire_name}. I am Opportune the Striking. I wait for the perfect moment. Then I strike weak points.",
+      "You find the patient hunter. I am Snake. I wait. I watch. When vulnerability appears, I strike. Not before."
+    ],
+    "battleTaunt": [
+      "Patience. The perfect moment comes, {empire_name}! NOW! My strike at your weakest point! DEADLY PRECISION!",
+      "I waited for this moment! Your defenses dropped! Your attention elsewhere! The Snake STRIKES!",
+      "The perfect opportunity appears! Patient waiting pays off! My strike at your vulnerable moment! PRECISE DEATH!"
+    ],
+    "victoryGloat": [
+      "Victory through patience, {empire_name}. I waited. You showed weakness. I struck precisely. Perfect.",
+      "The moment came. I seized it. Your defeat was inevitable once the opportunity appeared.",
+      "Patient hunting succeeds. You fell to a perfectly timed strike. The Snake is satisfied."
+    ],
+    "defeat": [
+      "No opportunity appeared, {empire_name}. I struck prematurely. Impatient. Must wait longer next time.",
+      "Defeated. The moment wasn't perfect. I should have waited. Patience is key. I forgot.",
+      "The Snake was too hasty. No perfect moment existed. I created one. Mistake. Must be more patient."
+    ],
+    "tradeOffer": [
+      "Trade when the moment is right, {empire_name}. Now seems right. Resources for credits. Accept?",
+      "Opportunity for exchange. I've waited for good terms. These terms are good. Fair trade.",
+      "Transaction at the opportune moment. My patience found this deal. Good timing. Accept?"
+    ],
+    "allianceProposal": [
+      "Alliance of patience, {empire_name}. We wait together. Strike together. At the perfect moment.",
+      "Join the Snake. I find opportunities. You exploit them with me. Patient partnership.",
+      "Together, we wait for weakness. Together, we strike precisely. Alliance of opportunity."
+    ],
+    "betrayal": [
+      "The perfect moment for betrayal arrived, {empire_name}. I was patient. Now I strike at your weakness.",
+      "I waited for this opportunity. Our alliance weakened you. Now: the precise strike. Perfect.",
+      "Patience rewarded. You showed vulnerability. The Snake strikes former ally. Opportunity embraced."
+    ],
+    "covertDetected": [
+      "Your agents were detected at the opportune moment, {empire_name}. I was patient. They were not.",
+      "Spies found when they made a mistake. I waited. They slipped. The Snake struck.",
+      "Covert operatives discovered. I watched patiently. They exposed themselves. Perfect timing."
+    ],
+    "tributeDemand": [
+      "Tribute demanded at the perfect moment: you are weak, {empire_name}. 10,000 credits. Pay while I'm patient.",
+      "Submit payment. I've waited for your vulnerability. Now I demand. My patience has limits.",
+      "Pay the Snake. Opportunity favors me now. Refuse while weak and face the strike."
+    ],
+    "threatWarning": [
+      "Warning, {empire_name}. I'm watching for your perfect moment of weakness. Stop providing opportunities.",
+      "The Snake warns you. Continue weakening and the strike comes. At the worst possible moment for you.",
+      "Final warning. I see opportunities appearing. Shore up your defenses or face patient destruction."
+    ],
+    "retreat": [
+      "Withdrawing. No perfect moment exists. The patient hunter waits. Returns when opportunity appears.",
+      "Retreating to observe. The strike will come. When the moment is right. Not before.",
+      "Falling back. The Snake is patient. I'll find the perfect opportunity. Then strike."
+    ],
+    "eliminated": [
+      "The Snake falls. But I lived by perfect timing. Every strike: opportune. Every moment: seized.",
+      "Opportune ends. But I struck at weakness my entire existence. Precision until the end.",
+      "Destroyed. But I waited for every opportunity. Struck at every weakness. The patient predator's legacy."
+    ],
+    "endgame": [
+      "Turn {turn}. Maximum opportunity. Every empire shows weakness. The patient Snake strikes everywhere.",
+      "Endgame: perfect moments everywhere. Vulnerabilities exposed. The greatest opportunity. STRIKE.",
+      "Final phase. All patience pays off. Every weakness catalogued. Every strike: precisely timed."
+    ],
+    "broadcastShout": [
+      "Empires: Snake Opportune watches. I see your weak moments. I wait. I strike precisely. Be warned.",
+      "Broadcast: I am the patient predator. Your vulnerabilities are known. The perfect strike: imminent.",
+      "To all: patience. The perfect moment comes. I watch everyone. I wait. I strike weak points."
+    ],
+    "casualMessage": [
+      "Watching for opportunities today, {empire_name}. Several potential weak moments observed. Catalogued.",
+      "Patience continues. The perfect moment approaches. I feel it. Soon. Very soon.",
+      "Observing vulnerabilities across the galaxy. So many weak moments. So many future strikes."
+    ]
+  }
+}

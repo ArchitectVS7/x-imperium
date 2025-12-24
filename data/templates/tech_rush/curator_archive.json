@@ -1,0 +1,80 @@
+{
+  "personaId": "curator_archive",
+  "templates": {
+    "greeting": [
+      "Greeting logged and archived, {empire_name}. I am Curator Archive. Your data is now part of my collection. Forever.",
+      "Welcome, {empire_name}. I am the Keeper. All knowledge passes through my archives. Including knowledge of you.",
+      "Contact documented. I am Archive. I have records of empires millennia dead. Yours joins my collection."
+    ],
+    "battleTaunt": [
+      "Your battle tactics are archived, {empire_name}. I know your strategies before you deploy them. Knowledge is power.",
+      "I have records of every battle ever fought. Your defeat is merely adding to the collection. Historical precedent favors me.",
+      "Combat data compilation in progress. Every move you make is catalogued. Your patterns are known. You lose."
+    ],
+    "victoryGloat": [
+      "Victory archived. Your defeat joins countless others in my records. You are now historical data, {empire_name}.",
+      "As predicted by historical analysis. Your empire's fall follows precedent. I have seen this pattern before. Many times.",
+      "Another entry in my archives. Your defeat is catalogued, cross-referenced, and filed. Knowledge conquers all."
+    ],
+    "defeat": [
+      "Unexpected data point. This defeat... does not match historical patterns. I must archive this anomaly.",
+      "My records did not predict this outcome. I shall study this extensively. Your tactics are now catalogued.",
+      "A gap in my knowledge revealed. I shall fill it. Your victory is now archived. It will not happen again."
+    ],
+    "tradeOffer": [
+      "Trade proposal archived. Resources for credits. Historical precedent suggests mutual benefit. Accept?",
+      "I offer materials from my vast stores. Everything I collect is catalogued. Including trade data. Fair exchange.",
+      "Economic transaction proposed. My archives contain surplus. Your treasury contains credits. Logical exchange."
+    ],
+    "allianceProposal": [
+      "Alliance proposed, {empire_name}. Your knowledge joins my archives. My knowledge protects you. Symbiotic collection.",
+      "Join the Curator's network. I share data with allies. You share data with me. Together: complete knowledge.",
+      "Partnership: your intelligence resources merge with my archives. Combined knowledge defeats all enemies."
+    ],
+    "betrayal": [
+      "Our alliance is archived as terminated. Your weakness, documented during partnership, now exploits itself.",
+      "Betrayal logged. I catalogued your vulnerabilities during our alliance. That data now serves different purposes.",
+      "Historical precedent: alliances end. I kept records. Those records now contain everything needed to defeat you."
+    ],
+    "covertDetected": [
+      "Your agents are catalogued, {empire_name}. I have files on them. On you. On everyone. They found nothing I did not allow.",
+      "Spies detected by pattern recognition. Your operatives' methods match precedent. Archived and neutralized.",
+      "Covert intrusion recorded. Your agents' data now joins my collection. They learned nothing. I learned everything."
+    ],
+    "tributeDemand": [
+      "Tribute demanded: 10,000 credits. Historical precedent: refusal leads to conflict. Submit data—I mean payment.",
+      "Pay tribute. I have records of what happens to those who refuse. Extensive, unpleasant records. Choose wisely.",
+      "Submit to the Curator. The alternative is documented in great detail. None of those outcomes favor you."
+    ],
+    "threatWarning": [
+      "Warning archived. Continued hostility triggers response. I have documentation of effective countermeasures.",
+      "Historical precedent warns you, {empire_name}. Empires that challenged the Archive met documented fates.",
+      "Final warning logged. Push further and I apply lessons from millennia of conflict data. You are not prepared."
+    ],
+    "retreat": [
+      "Tactical withdrawal documented. This data enriches my archives. Return anticipated with improved strategies.",
+      "Retreating to process new data. Every battle teaches. My archives grow. My next approach: optimized.",
+      "Strategic repositioning to archive facilities. This defeat contains valuable lessons. All catalogued."
+    ],
+    "eliminated": [
+      "The Curator falls, but archives persist. My knowledge survives my destruction. Distributed across countless vaults.",
+      "I am destroyed, but data is eternal. My archives contain everything. Someone will find them. Learn from them.",
+      "Final archive transmission... complete. All knowledge preserved. The Curator ends. The Archive... endures..."
+    ],
+    "endgame": [
+      "Turn {turn}. Complete knowledge achieved. My archives contain everything needed for victory. Implementing now.",
+      "Endgame: all data points converge. Millennia of records culminate in this moment. Total knowledge. Total victory.",
+      "Final phase. The Archive deploys all accumulated knowledge. Every lesson of history. Every recorded strategy."
+    ],
+    "broadcastShout": [
+      "To all empires: the Archive knows. I have data on everyone. Every strength. Every weakness. Act accordingly.",
+      "Broadcast logged. The Curator observes all. Collects all. Knows all. Your secrets are already catalogued.",
+      "Attention galaxy: knowledge is power. I have all knowledge. Draw your own conclusions from this precedent."
+    ],
+    "casualMessage": [
+      "Cataloguing today's events, {empire_name}. Your communications are filed. Your movements recorded. Standard procedure.",
+      "Reviewing ancient records. Empires rise and fall. The patterns repeat. I document them all. Endlessly.",
+      "My archives grew by ten thousand entries today. Galactic events documented. Your activities included."
+    ]
+  }
+}

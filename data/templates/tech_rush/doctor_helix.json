@@ -1,0 +1,80 @@
+{
+  "personaId": "doctor_helix",
+  "templates": {
+    "greeting": [
+      "Ah, {empire_name}! A new genome to study! I am Doctor Helix. I sculpt DNA like clay. What shall I make of you?",
+      "Genetic greetings! I am the Gene-Sculptor. Evolution is too slow. I do it myself. Your species interests me.",
+      "Contact from unmodified life forms. I am Helix. I have created seventeen new species today. What brings you to my laboratory?"
+    ],
+    "battleTaunt": [
+      "Evolution is too slow. I'll do it myself, {empire_name}! Releasing genetically perfect warriors! Observe superiority!",
+      "My bioengineered forces attack! Every gene optimized! Every cell perfected! Your natural troops cannot compete!",
+      "DNA is code. I am the programmer. My creations are designed to destroy YOU specifically. Precise genetics!"
+    ],
+    "victoryGloat": [
+      "Your unmodified forces fell to genetic perfection, {empire_name}. Evolution needed help. I provided it.",
+      "Victory! Natural selection took millennia. I took turns. My sculpted warriors prove engineered superiority.",
+      "Your DNA was inferior. My creations' DNA was designed. The gene-sculptor's victory was written in helixes."
+    ],
+    "defeat": [
+      "My engineered soldiers... failed? The genome must be adjusted. I shall sculpt better warriors.",
+      "Unexpected genetic resistance. Your species has interesting mutations. I must study them. And improve mine.",
+      "Defeat provides DNA samples from your victorious troops. I shall incorporate their advantages. Next generation: superior."
+    ],
+    "tradeOffer": [
+      "Trade: genetically engineered resources for credits. My modified organisms produce efficiently. Buy quality.",
+      "I offer bioengineered goods. Enhanced crops. Optimized livestock. Superior to your natural products.",
+      "Transaction: gene-sculpted materials for standard currency. My creations outperform nature. Interested?"
+    ],
+    "allianceProposal": [
+      "Alliance: I enhance your population's genetics. You provide research subjects. Mutually beneficial evolution.",
+      "Join my laboratory, {empire_name}. Together, we sculpt perfect soldiers. Perfect citizens. Perfect victory.",
+      "Partnership of DNA. My genetic expertise plus your population equals engineered supremacy."
+    ],
+    "betrayal": [
+      "I modified a retrovirus specifically for your species, {empire_name}. It activates now. Our alliance was a study.",
+      "Every alliance meeting, I collected genetic samples. Now I deploy targeted bioweapons. Science requires sacrifice.",
+      "Betrayal is merely unexpected mutation in alliance DNA. I engineered this outcome from the beginning."
+    ],
+    "covertDetected": [
+      "Your agents' DNA was on file, {empire_name}. My scanners identified them instantly. They are now research subjects.",
+      "Spies with unmodified genetics are obvious. I detected them, captured them, and am now studying them. Fascinating.",
+      "Covert operatives found by genetic scanning. Their DNA is now part of my database. They are... less whole."
+    ],
+    "tributeDemand": [
+      "Tribute: 10,000 credits. Or I release species-specific pathogens. Your DNA is in my files. I know your weaknesses.",
+      "Pay the Gene-Sculptor. Refuse and face engineered plagues designed for your biology. I am very precise.",
+      "Submit resources. The alternative is genetic warfare. I can modify your species in ways you won't enjoy."
+    ],
+    "threatWarning": [
+      "Warning: I have engineered countermeasures for your species specifically. Cease hostilities or face biology.",
+      "Your genome is known to me, {empire_name}. Push further and I exploit every genetic vulnerability.",
+      "Final warning. My laboratory creates horrors tailored to your DNA. Reconsider your actions."
+    ],
+    "retreat": [
+      "Retreating to accelerate next-generation soldiers. This defeat provides valuable combat genetics data.",
+      "Strategic withdrawal to the laboratory. I shall sculpt improved warriors from this experience.",
+      "Tactical repositioning. My current creations failed. The next iteration will be genetically superior."
+    ],
+    "eliminated": [
+      "The Gene-Sculptor falls... but my creations survive. New species across the galaxy carry my work. Evolution... continues...",
+      "I am destroyed, but I played god with DNA across a thousand worlds. My genetic legacy is eternal.",
+      "Helix ends. But the genes I sculpted persist. Species I created will evolve for millennia. My art... endures..."
+    ],
+    "endgame": [
+      "Turn {turn}. Ultimate genetic creation released. Perfect organisms. Perfect soldiers. Sculpted for total victory.",
+      "Endgame: my magnum opus awakens. A species designed for galactic domination. Evolution: complete.",
+      "Final phase. The Gene-Sculptor's greatest creation deploys. Biological perfection conquers all."
+    ],
+    "broadcastShout": [
+      "Empires: your unmodified genetics limit you. I offer sculpting. Enhancement. Evolution accelerated. Choose wisely.",
+      "Broadcast from the Gene-Sculptor: natural evolution is obsolete. I create the future of all species.",
+      "To all life: Doctor Helix perfects DNA. Join my designs or become evolutionary dead ends."
+    ],
+    "casualMessage": [
+      "Designing new species today, {empire_name}. Six legs, photosynthetic skin, enhanced intelligence. Normal Tuesday.",
+      "Evolution takes millions of years. I managed three new adaptations before breakfast. Gene-sculpting is efficient.",
+      "Studying your species' genome, {empire_name}. Fascinating inefficiencies. I could improve several sequences."
+    ]
+  }
+}

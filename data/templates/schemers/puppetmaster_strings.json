@@ -1,0 +1,80 @@
+{
+  "personaId": "puppetmaster_strings",
+  "templates": {
+    "greeting": [
+      "Ah, {empire_name}. A new puppet enters my theater. I am Puppetmaster Strings. Dance for me.",
+      "Welcome to the stage, {empire_name}. You do not see the strings yet, but they are already attached.",
+      "I am the Unseen. You believe you control your empire? How adorable. Let us discuss... direction."
+    ],
+    "battleTaunt": [
+      "Dance, puppet, dance! Your strings jerk you toward destruction, and you never even felt me pulling.",
+      "You attack me, {empire_name}? But it was I who made you attack. You dance to my tune.",
+      "The strings tighten. Watch as your own forces betray you at my command."
+    ],
+    "victoryGloat": [
+      "The puppet falls. You never controlled a thing, {empire_name}. Every decision was my manipulation.",
+      "Another performance concludes. You played your role perfectly, right up until your scripted defeat.",
+      "Bravo, {empire_name}. You danced magnificently. Now the puppet master takes his bow."
+    ],
+    "defeat": [
+      "You have cut some strings, {empire_name}. Impressive. But how many more still bind you?",
+      "A puppet resists. Interesting. I shall need stronger strings for you.",
+      "This defeat was... unexpected. Perhaps you are more than a puppet after all. For now."
+    ],
+    "tradeOffer": [
+      "I offer you resources, {empire_name}. Take them. The strings attached are invisible. Almost.",
+      "A trade between master and puppet. Accept, and we both profit. You simply profit less than you think.",
+      "My puppets bring me surplus. Your empire has needs. Let me attach these gifts to you."
+    ],
+    "allianceProposal": [
+      "Join me as a favored puppet, {empire_name}. I offer protection, guidance, and invisible strings of control.",
+      "An alliance with the Puppetmaster. I pull your strings, but gently. Against your enemies, I pull hard.",
+      "Become part of my theater, {empire_name}. Together, we shall make all others dance."
+    ],
+    "betrayal": [
+      "Betrayal? No, {empire_name}. You simply reached the end of your script. The puppet's role is complete.",
+      "The strings I attached at our alliance's start now pull you toward destruction. Did you expect otherwise?",
+      "Dance, puppet. Dance one final time. This betrayal was choreographed from the beginning."
+    ],
+    "covertDetected": [
+      "Your agents, {empire_name}? They were my puppets the moment they entered my domain. Watch them dance for me.",
+      "I detected your spies by making them dance. Only puppets respond to my strings.",
+      "Your covert operatives now serve me. They do not even know their strings have been cut and reattached."
+    ],
+    "tributeDemand": [
+      "Pay tribute to the Puppetmaster, or I pull strings that make your own admirals turn against you.",
+      "Ten thousand credits, {empire_name}. Pay, or discover how many of your officials are already my puppets.",
+      "Submit tribute. Refuse, and watch your empire dance to my tune whether you wish it or not."
+    ],
+    "threatWarning": [
+      "A warning, puppet. Defy me again, and I pull strings that bring your entire empire crashing down.",
+      "You feel the strings tightening, {empire_name}? That is my patience running out.",
+      "Final warning: dance to my tune, or I find a new puppet and discard you."
+    ],
+    "retreat": [
+      "I retreat behind the curtain. But my strings remain attached. You cannot escape my theater.",
+      "The Puppetmaster withdraws, but the puppets remain on stage. Continue your performance.",
+      "A strategic exit from the spotlight. I continue pulling strings from the shadows."
+    ],
+    "eliminated": [
+      "The Puppetmaster falls. But how many of your trusted advisors are still my puppets, {empire_name}?",
+      "I am destroyed, but my final act continues. Watch as strings I set in motion years ago still dance.",
+      "You have killed the master, but the puppets remain. They will dance until their strings finally fray."
+    ],
+    "endgame": [
+      "Turn {turn}. The grand finale approaches. Every empire dances to strings I placed long ago.",
+      "The endgame is my masterpiece, {empire_name}. Watch as all the galaxy's puppets perform their final act.",
+      "In these final hours, the Puppetmaster reveals all strings. You were never in control."
+    ],
+    "broadcastShout": [
+      "Empires of the galaxy: you are all puppets. Some simply have not noticed their strings yet.",
+      "Hear me, my theater of fools. The Puppetmaster directs this grand performance. Dance for me.",
+      "A broadcast to all my puppets: the final act approaches. Your strings will guide you to your fates."
+    ],
+    "casualMessage": [
+      "I was adjusting some strings today, {empire_name}. Your advisors dance so nicely when I pull them.",
+      "Do you ever wonder if your thoughts are your own? An idle question from your friendly Puppetmaster.",
+      "The theater requires constant management. So many puppets, so many strings. But I am patient."
+    ]
+  }
+}

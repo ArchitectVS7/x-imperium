@@ -1,0 +1,80 @@
+{
+  "personaId": "conservator_preserve",
+  "templates": {
+    "greeting": [
+      "Greetings from stability, {empire_name}. I am Conservator Preserve. The old ways are best. They will endure.",
+      "You contact the Keeper of traditions. I am Preserve. Change is enemy. Stability is virtue. Welcome to the old ways.",
+      "Hello, {empire_name}. I am the Conservator. I preserve. I maintain. I resist all change. Always."
+    ],
+    "battleTaunt": [
+      "The old ways are best. They will endure, {empire_name}! My traditional defenses defeat your innovations!",
+      "Change is the enemy! My preserved traditions stand against your novelty! The old ways PREVAIL!",
+      "Attack with your new tactics! My ancient defenses have faced worse! Tradition survives! Always!"
+    ],
+    "victoryGloat": [
+      "Victory for tradition, {empire_name}. Your new methods fell to old ways. The preserved always prevails.",
+      "As the ancients predicted. Innovation fails. Tradition endures. My preserved methods triumph.",
+      "The old ways proved best, {empire_name}. Your modern fleet met traditional defense. Tradition won."
+    ],
+    "defeat": [
+      "The traditions... failed? Impossible. The old ways are best. I must preserve them more carefully.",
+      "Your innovation overcame my preservation, {empire_name}. A temporary aberration. Tradition will return.",
+      "Defeated by change. Unacceptable. I shall restore the old ways. Preserve them more strongly. Never again."
+    ],
+    "tradeOffer": [
+      "Trade in traditional manner. Resources for credits. As the ancients did. Fair and unchanged.",
+      "I offer goods through preserved channels. Old methods of exchange. Reliable. Traditional.",
+      "Transaction: the way it has always been done. Resources for payment. Tradition in commerce."
+    ],
+    "allianceProposal": [
+      "Alliance in traditional style, {empire_name}. Oaths as the ancients swore. Bonds that preserve honor.",
+      "Partnership as it was done of old. I offer preserved alliances. Stable. Unchanging. Traditional.",
+      "Join in traditional compact. My conserved methods plus your... whatever you do. Stability through old ways."
+    ],
+    "betrayal": [
+      "The ancient codes allowed for this, {empire_name}. Betrayal is traditional too. The old ways include all options.",
+      "Our alliance ends as alliances have ended throughout history. I preserve all traditions. Including this one.",
+      "Traditional termination of partnership. The ancients betrayed too. I merely follow preserved precedent."
+    ],
+    "covertDetected": [
+      "Your agents used new methods, {empire_name}. My traditional security recognized their novelty. Caught.",
+      "Spies with modern techniques. My ancient surveillance methods detected their change. Tradition sees all.",
+      "Covert operatives found by preserved detection systems. The old ways work. They always have."
+    ],
+    "tributeDemand": [
+      "Tribute as in ancient times. 10,000 credits. The old ways included tribute. Pay as tradition demands.",
+      "Submit payment in traditional fashion. The ancients paid tribute. So shall you. Preserve the custom.",
+      "Pay tribute. It is the traditional way. Refuse and face traditionally hostile response."
+    ],
+    "threatWarning": [
+      "Warning in traditional terms, {empire_name}. Cease your aggression or face preserved retaliation.",
+      "The old ways included warnings. Here is yours. Stop, or tradition demands response.",
+      "Final traditional warning. The ancients gave three chances. This is your third. Preserve yourself."
+    ],
+    "retreat": [
+      "Traditional withdrawal to preserved positions. The old ways include strategic retreat. For preservation.",
+      "Falling back as the ancients did. To preserve forces. To maintain tradition. To fight again.",
+      "Strategic repositioning in traditional manner. My preserved forces await in ancient fortifications."
+    ],
+    "eliminated": [
+      "The Conservator falls. But traditions survive me. The old ways endure beyond any individual. Preserve them.",
+      "I am destroyed. But what I preserved lives on. The traditions continue. The old ways are eternal.",
+      "Preserve ends. But preservation continues. Others will maintain the traditions. The old ways never die."
+    ],
+    "endgame": [
+      "Turn {turn}. Final preservation. The old ways triumph in the end. Tradition outlasts all change.",
+      "Endgame: the Conservator's traditions persist. While innovation has failed, my preserved ways endure.",
+      "Final phase. The ancient methods achieve ultimate victory. The old ways are best. They will endure. Forever."
+    ],
+    "broadcastShout": [
+      "Empires: Conservator Preserve maintains the old ways. Join tradition or fall to it. Stability endures.",
+      "Broadcast in traditional manner: the old ways are best. Change brings chaos. Preservation brings victory.",
+      "To all: I am the Keeper of what was. The old ways endure. Join the preserved or be consumed by change."
+    ],
+    "casualMessage": [
+      "Maintaining traditions today, {empire_name}. The same as yesterday. The same as always. Preservation is peace.",
+      "The old ways require constant attention. I preserve. I maintain. I resist all change. Daily duty.",
+      "Another day of conservation, {empire_name}. Nothing changes here. That is the point. That is the goal."
+    ]
+  }
+}

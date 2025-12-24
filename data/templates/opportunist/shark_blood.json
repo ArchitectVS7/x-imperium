@@ -1,0 +1,80 @@
+{
+  "personaId": "shark_blood",
+  "templates": {
+    "greeting": [
+      "I smell blood in the water, {empire_name}. I am Shark Blood. I detect weakness. I hunt wounded prey.",
+      "Greetings, {empire_name}. I am Blood in the Water. I sense wounded empires. Are you bleeding?",
+      "The Shark approaches. I am drawn to weakness. Something brought me here. What are you hiding?"
+    ],
+    "battleTaunt": [
+      "I smell blood in the water, {empire_name}! WOUNDED PREY! The Shark attacks! FEEDING FRENZY!",
+      "Blood detected! Weakness confirmed! The hunt begins! I smell your fear! I smell your WOUNDS!",
+      "FRENZY MODE! I detect your weakness! The wounded cannot hide from the Shark! BLOOD IN THE WATER!"
+    ],
+    "victoryGloat": [
+      "The hunt concludes, {empire_name}. Your blood drew me. Your wounds doomed you. The Shark is fed.",
+      "Victory! I smelled your weakness. I followed the blood. I devoured the wounded. Shark's nature.",
+      "The frenzy ends. Your empire bled. I detected it. I attacked. Simple predation of the wounded."
+    ],
+    "defeat": [
+      "No blood? You're not wounded? I sensed wrong. The Shark retreats. Finds actual wounded prey elsewhere.",
+      "Defeated. You weren't bleeding enough. I'll find truly wounded empires. Return when you're properly weak.",
+      "The hunt failed. False blood trail. I need actually wounded prey. Returning to the hunting grounds."
+    ],
+    "tradeOffer": [
+      "Trade, {empire_name}. Resources for credits. No blood involved. The Shark can do business. Sometimes.",
+      "I offer goods. Fair exchange. Not hunting you today. Just trading. Even predators need commerce.",
+      "Transaction: normal trade. I'm not smelling weakness. Just doing business. Accept?"
+    ],
+    "allianceProposal": [
+      "Alliance, {empire_name}. Together, we hunt the wounded. You spot blood. I attack. Feeding frenzy.",
+      "Join the Shark. I detect wounded empires. You help me feast. We share the bloodied spoils.",
+      "Partnership of predation. You weaken enemies. They bleed. I smell it. We both feed."
+    ],
+    "betrayal": [
+      "You started bleeding, {empire_name}. I smelled it. The Shark cannot resist wounded prey. Nothing personal.",
+      "Blood in the water. YOUR blood. Our alliance ends where the hunt begins. You're wounded. I attack.",
+      "Betrayal triggered by weakness. You showed vulnerability. I smelled blood. The frenzy takes over."
+    ],
+    "covertDetected": [
+      "Your agents left trails, {empire_name}. Blood trails. Not literal. But I smelled their fear. Found them.",
+      "Spies detected by predator instinct. They were nervous. Anxiety has a scent. I followed it.",
+      "Covert operatives found. They bled metaphorically. Fear. Stress. I smell these things. They're gone now."
+    ],
+    "tributeDemand": [
+      "Tribute: 10,000 credits. Or I declare you wounded prey. The frenzy begins. Your choice.",
+      "Pay the Shark. Refuse and I smell blood. Your blood. Real or imagined. The hunt starts either way.",
+      "Submit payment. Or I decide you're bleeding. Once I smell blood, nothing stops the frenzy."
+    ],
+    "threatWarning": [
+      "Warning, {empire_name}. You're starting to bleed. I smell it. Stop weakening or face the Shark.",
+      "Blood in the water. I detect it. Your blood. Getting stronger. Cease activity or become prey.",
+      "Final warning. The blood scent intensifies. One more wound and I cannot resist. The frenzy takes me."
+    ],
+    "retreat": [
+      "Retreating. No blood to follow. The Shark hunts elsewhere. Finds actually wounded prey.",
+      "Withdrawing. You're not bleeding enough. I need wounded empires. Returning to hunting waters.",
+      "Falling back. The blood trail leads elsewhere. When you bleed, I'll return. The Shark always knows."
+    ],
+    "eliminated": [
+      "The Shark falls. But I died hunting. Smelling blood. Attacking the wounded. A predator to the end.",
+      "Blood in the Water ends. But I fed well. Hunted the wounded my entire existence. Good hunt.",
+      "Destroyed. But I was true to my nature. I smelled blood. I attacked. That's all a shark needs."
+    ],
+    "endgame": [
+      "Turn {turn}. Blood EVERYWHERE. So many wounded empires. The greatest feeding frenzy. SHARK PARADISE.",
+      "Endgame: galaxy-wide bleeding. I smell blood from every direction. The hunt is endless. Perfect.",
+      "Final phase. Everyone is wounded. Everyone is prey. The Shark feasts on a bleeding galaxy."
+    ],
+    "broadcastShout": [
+      "Empires: Shark Blood hunts. I smell the wounded. Some of you are bleeding. I know which ones.",
+      "Broadcast from the hunter: I detect weakness. Blood in the water everywhere. The frenzy approaches.",
+      "To all: I smell blood. Your blood. Someone's blood. The wounded cannot hide from the Shark."
+    ],
+    "casualMessage": [
+      "Cruising for blood today, {empire_name}. Several empires bleeding. Deciding which to hunt.",
+      "The scent of weakness everywhere. So many wounded empires. So many hunting opportunities.",
+      "Smelling the galaxy, {empire_name}. Blood trails everywhere. Good hunting conditions. I am content."
+    ]
+  }
+}

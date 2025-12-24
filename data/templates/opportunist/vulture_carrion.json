@@ -1,0 +1,80 @@
+{
+  "personaId": "vulture_carrion",
+  "templates": {
+    "greeting": [
+      "Circling... watching... waiting. I am Vulture Carrion. I see dying empires, {empire_name}. Are you one?",
+      "Greetings from above. I am Carrion the Patient. I circle those who weaken. I feast when they fall.",
+      "You found the Vulture, {empire_name}. I was watching. I always watch. Looking for those about to die."
+    ],
+    "battleTaunt": [
+      "I can wait. Death is patient, {empire_name}! I've watched you weaken! Now the vulture descends! FEAST!",
+      "You've been dying slowly! I've been circling! Now I land! Your carrion feeds the patient predator!",
+      "The dying attract vultures, {empire_name}! I've circled for turns! Now I claim what death leaves behind!"
+    ],
+    "victoryGloat": [
+      "The feast is done, {empire_name}. You died. I consumed. The vulture is satisfied. Searching for next carrion.",
+      "Carrion claimed. Your empire fed my hunger. I was patient. I waited. Now I am full.",
+      "Victory for the patient hunter. You fell. I feasted. The vulture's circle closes. On to the next dying prey."
+    ],
+    "defeat": [
+      "Not dead yet, {empire_name}. I miscalculated. I'll continue circling. Wait for true weakness. The vulture is patient.",
+      "You fight still. I retreated. But I don't leave. I circle. I wait. Death comes eventually. For all.",
+      "Defeat because you weren't dying enough. I'll wait. Circle higher. Return when you're truly carrion."
+    ],
+    "tradeOffer": [
+      "Trade, {empire_name}. Resources from... previous prey. Salvage. Carrion commerce. Fair exchange.",
+      "I offer what I've scavenged from dying empires. Good materials. The dead don't need them. You might.",
+      "Transaction: goods from circled territories. Prey that fell. Their resources, your credits."
+    ],
+    "allianceProposal": [
+      "Alliance, {empire_name}. You kill. I circle the survivors. Together: efficient predation.",
+      "Join the Vulture. Your aggression creates carrion. I feast on remains. Symbiotic hunting.",
+      "Partnership of patience. You weaken empires. I consume what's left. We both feed."
+    ],
+    "betrayal": [
+      "You looked like you were dying, {empire_name}. I moved early. Perhaps premature. But vultures must try.",
+      "Our alliance served until you weakened. Now I circle you. The vulture's nature cannot be denied.",
+      "Betrayal? I'm a vulture, {empire_name}. I eat the dying. You started dying. Natural progression."
+    ],
+    "covertDetected": [
+      "Your agents found a vulture, {empire_name}. They learned I watch. I wait. I circle. They are now watched too.",
+      "Spies in my domain. They found patience. They found circling. They found nothing else. And now they're gone.",
+      "Covert operatives detected. They looked healthy. So I added them to the watch list. Everyone dies eventually."
+    ],
+    "tributeDemand": [
+      "Tribute, {empire_name}. 10,000 credits. Pay or I accelerate your death. The vulture can speed decay.",
+      "Submit payment. Refuse and I stop circling. I start feeding. Your empire becomes my carrion. Now.",
+      "Pay the patient predator. Or I stop being patient. Your choice: tribute or premature death."
+    ],
+    "threatWarning": [
+      "Warning, {empire_name}. I'm circling closer. You look weak. Stop weakening or the vulture lands.",
+      "I see you dying, {empire_name}. Slowly. The vulture warns you: recover or become feast.",
+      "Final warning. My patience has limits. Continue declining and I descend. The circle tightens."
+    ],
+    "retreat": [
+      "Rising higher. Widening the circle. You're not carrion yet, {empire_name}. I'll wait. I'm patient.",
+      "Withdrawing to better vantage. Still circling. Still watching. The vulture never truly leaves.",
+      "Falling back to observe. Death is patient. So am I. I circle until you're ready to be consumed."
+    ],
+    "eliminated": [
+      "The Vulture falls. But I die circling. Watching. Waiting. Other vultures will continue my vigil.",
+      "Carrion becomes carrion. Ironic. But the circle of death continues. I fed. Now I feed others.",
+      "I am destroyed. But I watched death my whole existence. Now I experience it. Not unpleasant."
+    ],
+    "endgame": [
+      "Turn {turn}. So many dying empires. The vulture cannot circle fast enough. Feast everywhere.",
+      "Endgame: mass extinction event. Carrion everywhere. The patient hunter's ultimate reward.",
+      "Final phase. Everyone is dying. The Vulture feasts on a galaxy of carrion. Death's harvest."
+    ],
+    "broadcastShout": [
+      "Empires: Vulture Carrion circles. I watch you all. Some are dying faster than others. I notice.",
+      "Broadcast from above: I am the patient predator. Death is patient. I am Death's servant. Waiting.",
+      "To all: the Vulture sees everything. I circle the galaxy. Some of you are carrion-to-be. I know which."
+    ],
+    "casualMessage": [
+      "Circling today, {empire_name}. Watching the galaxy. Several empires look weak. Interesting times.",
+      "Death is patient. So am I. I watch. I wait. I circle. That is my existence. That is enough.",
+      "Noted some dying empires today. Adding them to the feast list. The vulture's work is never done."
+    ]
+  }
+}

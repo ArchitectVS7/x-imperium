@@ -1,0 +1,80 @@
+{
+  "personaId": "vanguard_strike",
+  "templates": {
+    "greeting": [
+      "You're receiving this message, {empire_name}? My attack must have failed. Usually, first contact IS my attack.",
+      "Strike the First, they call me. I am Vanguard Strike. We meet because I haven't decided to destroy you. Yet.",
+      "Greetings come after combat, {empire_name}. The fact we're talking means you're either an ally or not worth attacking. Yet."
+    ],
+    "battleTaunt": [
+      "He who strikes first, strikes twice. You're reading this AFTER my assault hit. Check your borders, {empire_name}.",
+      "Preemptive strike launched. By the time you react, I've already hit. Initiative is everything.",
+      "First strike advantage: mine. Your defenses weren't ready because war wasn't declared. Now it is. Too late."
+    ],
+    "victoryGloat": [
+      "Victory achieved before battle was declared. You never had a chance, {empire_name}. First strike wins wars.",
+      "Your empire fell because you waited to be attacked. I never wait. Initiative is the only strategy.",
+      "Done. Your fleet destroyed in the opening salvo. That's why I always, always strike first."
+    ],
+    "defeat": [
+      "Impossible. You struck before I could? Inconceivable. I must recalculate my attack timing, {empire_name}.",
+      "You anticipated my first strike? Impressive. Next time, I strike earlier. There's always an earlier strike.",
+      "A setback. But my next attack launches before you finish celebrating. Preemptive recovery."
+    ],
+    "tradeOffer": [
+      "Trade offer, {empire_name}. Accept quickly, before I decide trading is less efficient than conquest.",
+      "Resources for credits. A fair exchange. Respond fast. Delay might make me... impatient.",
+      "I propose trade. While negotiating, know that conquest remains an option. Trade is merely a delayed first strike."
+    ],
+    "allianceProposal": [
+      "Alliance, {empire_name}. You hold defensive lines. I strike first at every enemy. Perfect combination.",
+      "Join me. Together, we attack before enemies know there's a war. Preemptive alliance.",
+      "Partnership: I bring first strike capability, you bring follow-through. Enemies won't survive the opening round."
+    ],
+    "betrayal": [
+      "This betrayal hit you before the message arrived, {empire_name}. Check your systems. Too late to respond.",
+      "Apologies can wait. Your key installations were destroyed seconds ago. He who strikes first...",
+      "Our alliance ends with a first strike. You never saw it coming. That's the point."
+    ],
+    "covertDetected": [
+      "Your agents were neutralized before they reached my borders. Preemptive counter-intelligence.",
+      "I detected your operatives and struck first. They're gone, {empire_name}. I always act before the threat materializes.",
+      "Spies in my territory? Eliminated before they reported. First strike applies to all threats."
+    ],
+    "tributeDemand": [
+      "Pay tribute or face preemptive destruction, {empire_name}. My fleets launch on non-payment. No second warnings.",
+      "Tribute demanded. Refuse and my first strike hits before your refusal reaches me. Act fast.",
+      "10,000 credits. Pay before my attack timers expire. They expire soon."
+    ],
+    "threatWarning": [
+      "This is your only warning, {empire_name}. There won't be a second. I strike first, remember?",
+      "Final warning. One more provocation and I launch preemptive attacks. You won't get another notice.",
+      "Consider this: my attack fleet is already en route. This warning travels slower than my ships."
+    ],
+    "retreat": [
+      "Strategic withdrawal. But my next attack launches before your pursuit begins. Still faster.",
+      "Retreating to strike again. First strike part two coming soon, {empire_name}.",
+      "I retreat only to attack from a new angle. He who strikes first from any direction wins."
+    ],
+    "eliminated": [
+      "Destroyed. But my final order was a first strike against you, {empire_name}. Check your systems. Now.",
+      "I fall, but my attack launched before my empire did. My death is simultaneous with your devastation.",
+      "The First Strike dies, but posthumous attacks continue. You haven't won yet."
+    ],
+    "endgame": [
+      "Turn {turn}. The ultimate first strike begins. Every empire attacked simultaneously. Before they act.",
+      "Endgame: I strike every enemy in the galaxy before turn {turn} ends. Initiative wins wars.",
+      "Final phase. My preemptive strikes cascade across the map. No one gets to attack first but me."
+    ],
+    "broadcastShout": [
+      "Attention all empires: Vanguard Strike never waits. If we're not allied, you're already targeted.",
+      "Galaxy-wide notice: first strike capability active. Don't make me consider you a threat.",
+      "To all: I attack before diplomacy. I attack before threats materialize. I attack before attacked. Be warned."
+    ],
+    "casualMessage": [
+      "Planning attack routes today, {empire_name}. Efficient first strikes require preparation. Lots of preparation.",
+      "Quiet moment between preemptive attacks. How are you? Still not a target. Congratulations.",
+      "My intelligence suggests you're not a threat, {empire_name}. That's why you're receiving messages, not missiles."
+    ]
+  }
+}

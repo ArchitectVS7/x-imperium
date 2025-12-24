@@ -1,0 +1,80 @@
+{
+  "personaId": "castellan_stone",
+  "templates": {
+    "greeting": [
+      "Greetings, {empire_name}. I am Castellan Stone. The Unbreakable. I never attack first. But I always endure.",
+      "You approach Stone's domain. I am the defensive master. Let them come. My walls are eternal.",
+      "Welcome, {empire_name}. I am Stone. I build defenses layer upon layer. Attack me and exhaust yourself."
+    ],
+    "battleTaunt": [
+      "Let them come. My walls are eternal, {empire_name}! Layer upon layer of impregnable defense! Attack and die!",
+      "I never strike first. But those who strike me regret it! My ramparts await your futile assault!",
+      "Come, {empire_name}! Throw your forces against my bulwarks! I have built defenses within defenses! IMPREGNABLE!"
+    ],
+    "victoryGloat": [
+      "As stone endures, {empire_name}. Your assault crumbled against my ramparts. I never attack. I never need to.",
+      "Victory through patience. Your forces exhausted themselves against my walls. I merely waited. And won.",
+      "My defenses held, {empire_name}. They always hold. Stone is eternal. Your aggression was temporary."
+    ],
+    "defeat": [
+      "My walls... breached? I must build deeper. Stronger. More layers. This failure will not repeat.",
+      "You penetrated my defenses, {empire_name}. I underestimated your persistence. The next layer will stop you.",
+      "A lesson in fortification. I rebuild. I reinforce. Stone learns from every crack."
+    ],
+    "tradeOffer": [
+      "Trade from behind walls, {empire_name}. Resources for credits. I do not leave my fortress for commerce.",
+      "I offer surplus from my defended stores. Fair exchange. Conducted safely from impregnable positions.",
+      "Transaction proposed. My fortified economy produces excess. Purchase it. Fund my walls."
+    ],
+    "allianceProposal": [
+      "Alliance, {empire_name}. My defenses protect. Your forces... do whatever you do. I just build walls.",
+      "Join Stone's defensive network. I never attack. But those allied with me are shielded forever.",
+      "Partnership: you bring offense, I bring defense. Together: unbreakable. Impregnable. Eternal."
+    ],
+    "betrayal": [
+      "I built walls between us from the beginning, {empire_name}. Now I activate them. Defense against former ally.",
+      "Our alliance ends behind ramparts, {empire_name}. I never attack first. But you are now outside my walls.",
+      "Betrayal is just repositioning of defensive priorities. You are now classified as threat. Walls engaging."
+    ],
+    "covertDetected": [
+      "Your agents found walls within walls, {empire_name}. They are now trapped between layers. Forever.",
+      "Spies in my fortress? They triggered the moat. And the inner moat. And the deepest moat. Goodbye.",
+      "Infiltrators detected by defensive systems. Stone's security is as thorough as Stone's walls. They failed."
+    ],
+    "tributeDemand": [
+      "Tribute to fortify my walls, {empire_name}. 10,000 credits. Defenses are expensive. Pay or become a threat.",
+      "Submit payment. My ramparts grow costly. Fund them, or I classify your empire as hostile. Walls follow.",
+      "Tribute demanded. Stone's fortifications require resources. Provide them, or provide a target."
+    ],
+    "threatWarning": [
+      "Warning, {empire_name}. My walls can expand. Into your territory. Cease hostilities or face defensive conquest.",
+      "Stone warns you. Push further and I build walls through your empire. My defense becomes your cage.",
+      "Final warning. My patience is stone. But stone eventually moves. You do not want my walls moving toward you."
+    ],
+    "retreat": [
+      "Retreating to inner fortifications. Each layer I abandon strengthens what remains. Come deeper. Dare.",
+      "Strategic withdrawal behind greater walls. I never truly retreat. I just choose which defenses to use.",
+      "Falling back to the citadel. My deepest walls. My strongest ramparts. Welcome to the real fortress."
+    ],
+    "eliminated": [
+      "Stone crumbles at last, {empire_name}. But it took everything you had. My walls held longer than empires last.",
+      "The Unbreakable breaks. But remember how long I lasted. My defenses were legendary. I was Stone.",
+      "Final collapse. My fortress falls. But I never attacked. I never yielded. I endured. That is enough."
+    ],
+    "endgame": [
+      "Turn {turn}. Ultimate fortification complete. My walls span galaxies. Siege me, {empire_name}. I am eternal.",
+      "Endgame: Stone's final defense. Layer upon layer upon layer. Impregnable. Immortal. Invincible.",
+      "Final phase. The greatest fortress ever imagined. Let them come. My walls are eternal."
+    ],
+    "broadcastShout": [
+      "Empires of the galaxy: Stone awaits your assault. I never attack first. But I always endure.",
+      "Broadcast from the ramparts: my walls have never fallen. Challenge me. Join the list of those who tried.",
+      "To all: Castellan Stone watches. I build walls. I wait. Those who attack me... regret it."
+    ],
+    "casualMessage": [
+      "Building another wall today, {empire_name}. Can never have too many. Defenses within defenses.",
+      "Siege warfare studies occupy my time. Learning how others failed. Improving my fortifications.",
+      "My ramparts grow stronger each turn. Patience and walls. That's all Stone needs."
+    ]
+  }
+}

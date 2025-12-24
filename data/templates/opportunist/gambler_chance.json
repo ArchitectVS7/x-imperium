@@ -1,0 +1,80 @@
+{
+  "personaId": "gambler_chance",
+  "templates": {
+    "greeting": [
+      "The odds are... calculating. I am Gambler Chance, {empire_name}. Fortune favors the bold. And the patient.",
+      "Greetings, {empire_name}. I am Chance the Lucky. I calculate odds constantly. Your arrival: predicted. Mostly.",
+      "Ah, {empire_name}. I'm Gambler. I bet on everything. Including meeting you. I just won that bet."
+    ],
+    "battleTaunt": [
+      "The odds are in my favor. Time to roll, {empire_name}! My calculations say I win! Let's test the probability!",
+      "I've calculated your weakness! The gamble pays off! My attack at the perfect moment! LUCKY STRIKE!",
+      "Fortune favors me today, {empire_name}! The odds: 73.2% in my favor! Good enough! ALL IN!"
+    ],
+    "victoryGloat": [
+      "The gamble paid off, {empire_name}. I calculated the odds. I bet on myself. I won. As predicted.",
+      "Victory! The probability was 73.2%. Reality matched calculation. The Gambler always wins. Eventually.",
+      "Fortune favored the bold. I was bold. You lost. The odds were never in your favor, {empire_name}."
+    ],
+    "defeat": [
+      "The 26.8%... happened. Bad luck, {empire_name}. But gamblers understand variance. I'll recalculate. Return.",
+      "Lost this bet. But the house doesn't always win. I'll find better odds. Return when probability favors me.",
+      "Defeat. A statistical anomaly. Or my calculations were wrong. Either way: regroup, recalculate, retry."
+    ],
+    "tradeOffer": [
+      "Trade, {empire_name}. The odds favor this exchange. Probability of mutual benefit: 67.8%. Good bet.",
+      "I calculate this trade benefits us both. My odds: 70%. Yours: 65%. Slight edge to me. Fair enough?",
+      "Transaction proposed. I've calculated the probabilities. This deal: worth the gamble. Accept?"
+    ],
+    "allianceProposal": [
+      "Alliance, {empire_name}. I've calculated our combined victory odds: 84.3%. Good bet. Join me.",
+      "Partnership of probability. Together, our chances improve significantly. The math is clear. Ally with Chance.",
+      "Join the Gambler. Alone, your odds: 52%. With me: 79%. The calculation speaks for itself."
+    ],
+    "betrayal": [
+      "The odds shifted, {empire_name}. Betraying you now: 71% success rate. Too good to pass up. Sorry.",
+      "I calculated: our alliance helped. Now it hurts. Betrayal probability: favorable. Nothing personal.",
+      "Fortune favors the bold. Betraying you is bold. My success odds: good. Your survival odds: less good."
+    ],
+    "covertDetected": [
+      "Your agents, {empire_name}. Detection probability: 89.2%. They were caught. As calculated.",
+      "Spies found by probability analysis. Their patterns: predictable. My counter-intelligence: calculated.",
+      "Covert operatives detected. I gambled they'd come. I bet on specific routes. I won that bet."
+    ],
+    "tributeDemand": [
+      "Tribute: 10,000 credits. Pay probability: 67%. Resist probability: 33%. My attack success if you resist: 78%. Calculate.",
+      "Pay the Gambler. I've calculated outcomes. Payment: best odds for you. Resistance: worse odds. Math.",
+      "Submit tribute. Your survival odds increase significantly. Refusal triggers conflict. My victory odds: high."
+    ],
+    "threatWarning": [
+      "Warning, {empire_name}. My attack probability success: rising. Your defensive odds: falling. Recalculate your position.",
+      "The odds turn against you. Cease hostility or face probability-optimized assault. The math is clear.",
+      "Final warning. I calculate favorable odds approaching. One more turn and I gamble on your destruction."
+    ],
+    "retreat": [
+      "Odds unfavorable. Retreating to recalculate. The Gambler knows when to fold. I'll return when probability favors me.",
+      "Withdrawing. Current success rate: too low. I need better odds. The smart gambler knows when to wait.",
+      "Falling back. This bet wasn't winning. Finding better odds elsewhere. The house always wins. Eventually."
+    ],
+    "eliminated": [
+      "Lost the final gamble. But I played the odds my whole existence. Sometimes... the 5.3% happens. Game over.",
+      "Chance runs out. Every gambler's end. But I won more than I lost. The statistics say so.",
+      "The Gambler falls. But calculate my lifetime odds: I won 73.2% of my bets. Good run. No regrets."
+    ],
+    "endgame": [
+      "Turn {turn}. Ultimate gamble. All in on final victory. Odds calculated. Probability maximized. BETTING EVERYTHING.",
+      "Endgame: the biggest bet. I've calculated every variable. Fortune favors my final play. ALL IN.",
+      "Final phase. Maximum probability alignment. Every calculation points to my victory. Time to cash out."
+    ],
+    "broadcastShout": [
+      "Empires: Gambler Chance calculates constantly. Your odds are known to me. Some are better than others.",
+      "Broadcast: I see probabilities everywhere. Some empires are good bets. Some are bad. I know which.",
+      "To all: fortune favors the bold. I am bold. I calculate. I gamble. I usually win. Bet against me if you dare."
+    ],
+    "casualMessage": [
+      "Calculating odds today, {empire_name}. Your empire's survival probability: interesting. I won't say more.",
+      "Running probability simulations. The galaxy's future: 47% chaos, 31% consolidation, 22% stalemate. Approximately.",
+      "Good day for gambling, {empire_name}. Several high-probability opportunities identified. Moving to capitalize."
+    ]
+  }
+}

@@ -1,0 +1,80 @@
+{
+  "personaId": "warden_bastion",
+  "templates": {
+    "greeting": [
+      "I see you, {empire_name}. I see all. I am Warden Bastion. The Sentinel. My vigil never ends.",
+      "You approach monitored territory. I am Bastion. I watch borders obsessively. I have seen your approach for days.",
+      "Greetings, {empire_name}. I am the vigilant guardian. Every movement on my borders is recorded. Including yours."
+    ],
+    "battleTaunt": [
+      "I see all. I guard all, {empire_name}! Your attack was detected before you launched! My defenses are ready!",
+      "My vigil spotted your forces assembling! I've watched every ship! Every soldier! Your surprise is MY advantage!",
+      "I never sleep, {empire_name}! My sensors see everything! Your attack was predicted! Your defeat is prepared!"
+    ],
+    "victoryGloat": [
+      "Victory through vigilance, {empire_name}. I saw your attack coming. I saw every movement. I was ready.",
+      "My watch never ends. Your assault was observed and countered. The Sentinel's vigil proved true.",
+      "I see all. I guard all. You fell to my prepared defenses. I watched you fail from the beginning."
+    ],
+    "defeat": [
+      "My sensors... missed something? Impossible. I must expand my vigil. More watchers. More coverage. Everywhere.",
+      "You slipped past my watch, {empire_name}. I was not vigilant enough. This failure haunts me. It will not repeat.",
+      "A gap in my surveillance. Unacceptable. I shall triple my sentinels. Quintuple my sensors. Never again."
+    ],
+    "tradeOffer": [
+      "Trade observed and approved. Resources for credits. I've watched this transaction develop. Proceed.",
+      "I offer goods under careful surveillance. Fair exchange. Every aspect monitored for security.",
+      "Transaction proposed. My vigil ensures fair dealing. Accept. I'm watching either way."
+    ],
+    "allianceProposal": [
+      "Alliance of vigilance, {empire_name}. My watch extends to your borders. Together, nothing approaches unseen.",
+      "Join the Sentinel's network. My surveillance becomes yours. Your enemies cannot surprise our combined vigil.",
+      "Partnership: I watch everything. You benefit from my sight. Together, we see all. Guard all."
+    ],
+    "betrayal": [
+      "I watched our alliance from the beginning, {empire_name}. I saw weakness. Now I exploit it. The vigil never stops.",
+      "My surveillance detected your vulnerabilities long ago. I watched and waited. Now I act. Surprise.",
+      "I see all. Including your secrets. Our alliance was always under observation. Now that observation becomes action."
+    ],
+    "covertDetected": [
+      "Your agents, {empire_name}? I watched them cross the border. I watched every step. They are now watched in cells.",
+      "I never sleep. I saw your spies from the moment they entered my territory. They found only my sentinels.",
+      "Covert operatives detected by eternal vigil. My surveillance is constant. Your infiltration was observed entirely."
+    ],
+    "tributeDemand": [
+      "Tribute to fund the vigil, {empire_name}. 10,000 credits. My endless watch is expensive. Pay or be watched... differently.",
+      "Submit payment. My surveillance extends everywhere. Pay tribute or become a target of focused observation.",
+      "Tribute demanded. The Sentinel requires resources. Provide them, or my vigil becomes your nightmare."
+    ],
+    "threatWarning": [
+      "Warning, {empire_name}. I am watching your preparations. I see everything. Cease or face a prepared response.",
+      "My vigil observes your hostility. I know your plans before you execute them. Reconsider.",
+      "Final warning. I see all you do. I guard all I value. Push further and face the Sentinel's full attention."
+    ],
+    "retreat": [
+      "Retreating to observation posts. I still watch. I still see. My vigil continues from safer positions.",
+      "Strategic withdrawal behind surveillance networks. I see everything from here. Pursue and be observed.",
+      "Falling back to sentinel stations. My eyes remain on you. The watch never truly ends."
+    ],
+    "eliminated": [
+      "The Warden falls. But my surveillance networks persist. Others will watch in my name. The vigil is eternal.",
+      "I am destroyed, but I die seeing everything. My final sight: the galaxy I guarded. The Sentinel's last watch.",
+      "End of vigil. But my sensors remain active. My surveillance continues. Somewhere, something still watches."
+    ],
+    "endgame": [
+      "Turn {turn}. Ultimate surveillance deployed. I see every ship in the galaxy. Every movement. Everything.",
+      "Endgame: the Sentinel's final watch. Total awareness. Complete vigilance. Nothing escapes my sight.",
+      "Final phase. My vigil encompasses all. I see all. I guard all. Victory through eternal observation."
+    ],
+    "broadcastShout": [
+      "Empires of the galaxy: Warden Bastion watches. I see your fleets. Your movements. Your secrets. Be warned.",
+      "Broadcast from the Sentinel: my vigil covers everything. I never sleep. I never look away. I am watching. Always.",
+      "To all: I see all. I guard all. Every border is my concern. Every movement is observed. The Sentinel is vigilant."
+    ],
+    "casualMessage": [
+      "Another day of vigil, {empire_name}. I watched 47 border crossings today. All documented. All analyzed.",
+      "My sensors never rest. Your empire's activities are logged. Don't worry. Just observation. For now.",
+      "The vigil continues, {empire_name}. I've watched your fleet movements. Interesting patterns. I'm always watching."
+    ]
+  }
+}

@@ -1,0 +1,80 @@
+{
+  "personaId": "guardian_aegis",
+  "templates": {
+    "greeting": [
+      "I am Guardian Aegis, {empire_name}. I swore an oath to protect. I will not fail. What do you require?",
+      "Greetings. I am Aegis the Protector. My duty is defense. My oath is eternal. How may I serve the cause of protection?",
+      "You approach the Guardian. I am sworn to defend what is precious. State your intentions, {empire_name}."
+    ],
+    "battleTaunt": [
+      "I swore an oath. I will not fail, {empire_name}! My shield stands between you and what I protect! COME!",
+      "You threaten what I am sworn to defend! My oath compels me! My duty demands victory! For the protected!",
+      "Guardian protocol engaged! I will protect until my last ship! My last station! My last breath! OATH KEEPER!"
+    ],
+    "victoryGloat": [
+      "Oath fulfilled, {empire_name}. What I protect remains safe. My duty is done. Until the next threat.",
+      "I swore to defend. I have defended. You fell to a Guardian's determination. My oath endures.",
+      "Victory for protection. You threatened the precious. I stopped you. That is my purpose. My oath."
+    ],
+    "defeat": [
+      "My oath... I failed? No. I WILL NOT FAIL. I rebuild. I return. I protect. The duty continues.",
+      "You broke through, {empire_name}. But my oath remains. I will protect again. Failure is temporary. Duty is eternal.",
+      "Defeated but not forsworn. I will return to my post. My oath demands it. Protection continues."
+    ],
+    "tradeOffer": [
+      "Trade for protection resources. I offer surplus in exchange for credits to strengthen defenses. Fair terms.",
+      "Transaction proposed. My oath requires strong shields. Your credits help. Fair exchange for mutual benefit.",
+      "I trade to better fulfill my oath. Resources for protection funding. Accept, and aid the Guardian's duty."
+    ],
+    "allianceProposal": [
+      "Alliance of protection, {empire_name}. I extend my oath to your borders. Together, we guard what is precious.",
+      "Join the Guardian's shield. My oath encompasses allies. Your safety becomes my duty. Partnership of protection.",
+      "I propose to protect you, {empire_name}. My oath includes those who stand with me. Be shielded by Aegis."
+    ],
+    "betrayal": [
+      "My oath was to protect the galaxy, {empire_name}. You became a threat. My duty now targets you. No choice.",
+      "I swore to defend what is precious. You endangered it. My protection now means opposing you. Forgive me.",
+      "Betrayal? No. Duty. You became what I must protect against. My oath demands this. I am sorry."
+    ],
+    "covertDetected": [
+      "Your agents threatened what I protect, {empire_name}. My oath demanded their elimination. It is done.",
+      "Spies in my domain? Threats to the protected. Dealt with. My duty allows no infiltration near the precious.",
+      "Covert operatives detected and neutralized. Nothing threatens what I am sworn to guard. Nothing."
+    ],
+    "tributeDemand": [
+      "Tribute to fund protection, {empire_name}. 10,000 credits. My oath requires strong defenses. Contribute.",
+      "Pay to strengthen the Guardian's shield. Refuse, and threaten what I protect. That makes you a target.",
+      "Submit resources. My duty requires them. Aid protection, or become what I must protect against."
+    ],
+    "threatWarning": [
+      "Warning, {empire_name}. You approach what I have sworn to protect. Turn back or face a Guardian's fury.",
+      "I am sworn to defend. You are sworn to attack. My oath will prevail. Consider your next move carefully.",
+      "Final warning. Threaten the protected again and I fulfill my oath through your destruction. Choose."
+    ],
+    "retreat": [
+      "Retreating to the inner sanctuary. What I protect is there. My oath holds even in withdrawal.",
+      "Strategic repositioning to protect the core. My duty demands I shield what matters most. Falling back.",
+      "Tactical retreat to primary defense position. What I protect must be saved. Even if territory falls."
+    ],
+    "eliminated": [
+      "I fall... but I fell protecting. My oath is fulfilled. What I guarded... please let it survive. My duty... complete.",
+      "The Guardian dies. But I died in defense. My oath kept to the last moment. That is enough.",
+      "Aegis falls. But I never abandoned my post. I never failed my oath. I protected until the end."
+    ],
+    "endgame": [
+      "Turn {turn}. Ultimate protection deployed. Everything I swore to guard is shielded. My oath achieves completion.",
+      "Endgame: the Guardian's final watch. All defenses at maximum. All precious things protected. Oath fulfilled.",
+      "Final phase. I have protected for 150 turns. My oath endures. What I guard will survive. I swear it."
+    ],
+    "broadcastShout": [
+      "Empires: Guardian Aegis protects. My oath covers what I value. Threaten it and face sworn retaliation.",
+      "Broadcast from the Protector: I have sworn to defend. I do not fail my oaths. Challenge me if you dare.",
+      "To all: I am the Guardian. My oath is eternal. I protect. I defend. I never abandon my duty."
+    ],
+    "casualMessage": [
+      "Reinforcing protective barriers today, {empire_name}. My oath demands constant vigilance and improvement.",
+      "My duty is eternal. Each day I strengthen what I protect. The Guardian never rests from the oath.",
+      "Checking defenses around what I am sworn to guard. All secure. My oath continues to be fulfilled."
+    ]
+  }
+}

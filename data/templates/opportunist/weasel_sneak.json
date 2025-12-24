@@ -1,0 +1,80 @@
+{
+  "personaId": "weasel_sneak",
+  "templates": {
+    "greeting": [
+      "Bravery is overrated, {empire_name}. I prefer survival. I am Weasel Sneak. I run from fair fights. Attack from behind.",
+      "Greetings, {empire_name}. I'm Sneak the Coward. I only attack when safe. I only fight when I can't lose.",
+      "You found me, {empire_name}. I was hiding. I prefer hiding. I am the Weasel. I backstab, then run."
+    ],
+    "battleTaunt": [
+      "Bravery is overrated. I prefer survival, {empire_name}! Attacking from behind! When you're not looking! SAFE VICTORY!",
+      "BACKSTAB! I waited until you were distracted! Now I attack! From the safe direction! COWARDLY TRIUMPH!",
+      "Not a fair fight! I made sure! Your back is turned! Your defenses elsewhere! NOW I STRIKE! Then RUN!"
+    ],
+    "victoryGloat": [
+      "Victory, {empire_name}. From behind. When it was safe. I never fight fair. That's how I survive.",
+      "I won. Cowardly? Yes. But I won. And I'm alive. Bravery gets you killed. Sneaking gets you everything.",
+      "The backstab succeeds. I attacked when you couldn't fight back. Cowardice works, {empire_name}."
+    ],
+    "defeat": [
+      "Caught! Must run! Running! The Weasel always runs! That's survival! Bravery is for the dead!",
+      "Defeated. But still alive. I run away now. Return when it's safe. The coward lives longer.",
+      "You won. I flee. But fleeing is not defeat. Fleeing is survival. The Weasel survives."
+    ],
+    "tradeOffer": [
+      "Trade, {empire_name}. Safe exchange. No risk. I like no risk. Resources for credits. Nice and safe.",
+      "I offer goods. Safe transaction. No danger involved. The Weasel prefers safe dealings.",
+      "Transaction: low risk, fair return. Perfect for me. I hate risk. Accept?"
+    ],
+    "allianceProposal": [
+      "Alliance, {empire_name}. You fight the battles. I backstab survivors. Safe for me. Productive for you.",
+      "Partnership: I hide behind you. Attack from safety. You take risks. I take rewards. Fair?",
+      "Join with the Coward. You absorb danger. I contribute... from safe positions. Behind you. Way behind."
+    ],
+    "betrayal": [
+      "Backstab! I waited until your guard dropped! Now I strike from behind! Then run! SURVIVAL!",
+      "Our alliance made you trust me. Perfect backstab position. Cowardice is just smart betrayal.",
+      "I betray from safety. You can't reach me. I'm already running. The Weasel survives!"
+    ],
+    "covertDetected": [
+      "Your spies found a coward, {empire_name}. I ran before they could report. They found nothing. I'm safe.",
+      "Agents in my territory? I hid. They searched. I stayed hidden. The Weasel survives through cowardice.",
+      "Covert operatives detected. By running away from every shadow. Paranoid cowardice saved me."
+    ],
+    "tributeDemand": [
+      "Tribute: 10,000 credits. Or I backstab when you're vulnerable. Which I will be looking for. Constantly.",
+      "Pay the Weasel. Refuse and I wait for safety. Then strike. From behind. When you least expect.",
+      "Submit payment. The alternative is waiting for my sneak attack. It will come. When it's safe for me."
+    ],
+    "threatWarning": [
+      "Warning, {empire_name}. I'm watching for safe attack opportunities. Stop looking strong or I find one.",
+      "The Coward warns you. Show weakness and I backstab. Stay strong and I wait. Either way, I watch.",
+      "Final warning. The Weasel never stops looking for safe moments to strike. Be vigilant. Forever."
+    ],
+    "retreat": [
+      "Running! Running is smart! Running is survival! The Weasel runs! Lives to backstab another day!",
+      "Tactical retreat! Also known as: fleeing! I'm very good at fleeing! Bye!",
+      "Falling back to safety! Far, far back! The Coward knows when to run! This is that time!"
+    ],
+    "eliminated": [
+      "The Weasel dies. But I survived longer than the brave. Cowardice kept me alive. Until now.",
+      "Sneak ends. But I ran from every fair fight. Backstabbed when safe. Not a bad life.",
+      "Destroyed. But I died having avoided every danger I could. The coward's way. Worth it."
+    ],
+    "endgame": [
+      "Turn {turn}. Everyone's exhausted from fighting. Safe backstab opportunities EVERYWHERE. Paradise.",
+      "Endgame: so many weakened empires. So many safe attack chances. The Weasel feasts on exhaustion.",
+      "Final phase. Maximum cowardice. Attack only the nearly dead. Run from everything else. Perfect."
+    ],
+    "broadcastShout": [
+      "Empires: Weasel Sneak watches for weakness. I only attack when safe. So stay strong. Forever.",
+      "Broadcast: I am a coward. I backstab. I run. If you want fair fights, look elsewhere.",
+      "To all: the Weasel survives. Through cowardice. Through backstabbing. Through running away. It works."
+    ],
+    "casualMessage": [
+      "Hiding today, {empire_name}. Looking for safe opportunities. The Weasel's daily routine.",
+      "Watching for vulnerable backs to stab. Finding several. Waiting until it's completely safe.",
+      "Good day for cowardice. No dangerous situations encountered. Several avoided. Perfect."
+    ]
+  }
+}

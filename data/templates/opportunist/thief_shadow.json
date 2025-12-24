@@ -1,0 +1,80 @@
+{
+  "personaId": "thief_shadow",
+  "templates": {
+    "greeting": [
+      "While you fight, I profit, {empire_name}. I am Thief Shadow. I steal from chaos. Silently. Unseen.",
+      "Greetings from the shadows. I am Shadow the Silent. Wars mean opportunities. Chaos means profit.",
+      "You found me, {empire_name}. Unusual. I am the Thief. I prefer remaining unseen. Stealing unnoticed."
+    ],
+    "battleTaunt": [
+      "While you fight, I profit, {empire_name}! Your war is my opportunity! Stealing everything while you're distracted!",
+      "Chaos covers my work! War blinds everyone! The Thief takes everything! Silent! Unseen! PROFITABLE!",
+      "You're busy fighting! I'm busy STEALING! Your logistics! Your supplies! Your everything! Shadow strikes!"
+    ],
+    "victoryGloat": [
+      "Victory through theft, {empire_name}. While you fought, I stole. Now I have everything. You have nothing.",
+      "The chaos of war enriched me. You won the battle. I won your treasury. Silent victory.",
+      "Profit complete. I stole from everyone during the confusion. The Thief always wins in chaos."
+    ],
+    "defeat": [
+      "Caught? The Shadow was seen? Unusual. I'll be more silent. More hidden. Steal more carefully.",
+      "Defeated. But only because you noticed me. Next time: better shadows. Deeper silence.",
+      "The Thief was found. Rare failure. I retreat to darkness. Return with improved stealth."
+    ],
+    "tradeOffer": [
+      "Trade, {empire_name}. Goods I... acquired. Fair prices. Don't ask origins. Silent transaction.",
+      "I offer resources. From chaos. From wars. From everywhere. Credits for stolen—I mean acquired—goods.",
+      "Transaction: goods of uncertain providence. Your credits. My silence about sources. Deal?"
+    ],
+    "allianceProposal": [
+      "Alliance, {empire_name}. You create chaos. I steal from it. We split profits. Silent partnership.",
+      "Join the Shadow. Your conflicts provide cover. I steal from your enemies. Mutual benefit.",
+      "Partnership of chaos. You fight. I profit. We share the proceeds of war. Silently."
+    ],
+    "betrayal": [
+      "I was stealing from you the whole time, {empire_name}. Our alliance was cover. Now I take the rest.",
+      "Betrayal? I've been stealing from you since we met. Now I simply stop hiding it.",
+      "The Shadow reveals truth. I profited from you throughout our partnership. Now: final theft."
+    ],
+    "covertDetected": [
+      "Your agents found shadows, {empire_name}. Nothing more. I was elsewhere. Stealing elsewhere.",
+      "Spies in my domain? They found empty safes. I already moved everything. Silent and thorough.",
+      "Covert operatives detected. But too late. I stole their intelligence before they used it."
+    ],
+    "tributeDemand": [
+      "Tribute: 10,000 credits. Or I steal silently instead. You won't know what you've lost until it's gone.",
+      "Pay the Shadow. Refuse and I take it anyway. Theft is easier than asking. But I'm being polite.",
+      "Submit payment. Or I demonstrate why they call me Thief. You won't hear me coming."
+    ],
+    "threatWarning": [
+      "Warning, {empire_name}. Push me and I steal from you specifically. Silently. Constantly. You'll never catch me.",
+      "The Shadow warns you. Continue hostility and your treasury empties. Unseen. Unexplained.",
+      "Final warning. Cross me and everything you own slowly vanishes. Into my pockets. Silently."
+    ],
+    "retreat": [
+      "Fading into shadows, {empire_name}. Taking what I stole. You won't find me. Or my profits.",
+      "Withdrawing silently. With everything I acquired. The Thief knows when to vanish.",
+      "Falling back into darkness. My stolen goods come with me. You'll never recover them."
+    ],
+    "eliminated": [
+      "The Shadow falls. But my stolen wealth is hidden everywhere. You'll never find it all.",
+      "Thief Shadow ends. But I die rich. Stolen from everyone. Silently. Profitably.",
+      "Destroyed. But calculate what I stole over my existence. I die wealthier than empires."
+    ],
+    "endgame": [
+      "Turn {turn}. Maximum chaos. Maximum theft. While everyone fights, I steal from everyone.",
+      "Endgame: the ultimate heist. All empires distracted by war. All treasuries open to the Shadow.",
+      "Final phase. Galaxy-wide conflict. Galaxy-wide opportunity. The Thief profits enormously."
+    ],
+    "broadcastShout": [
+      "Empires: Thief Shadow profits from your wars. Fight more. Create chaos. I appreciate it.",
+      "Broadcast: I steal from conflict. Your battles enrich me. Keep fighting. Silently, I thank you.",
+      "To all: while you fight, I profit. The Shadow is everywhere. Your treasuries are never safe."
+    ],
+    "casualMessage": [
+      "Counting profits today, {empire_name}. Wars have been good for business. Chaos is profitable.",
+      "Stealing silently continues. From everyone. From everywhere. The Shadow's work is never done.",
+      "Quiet day. But I'm still profiting. Somewhere, something valuable is becoming mine. As always."
+    ]
+  }
+}

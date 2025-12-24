@@ -1,0 +1,80 @@
+{
+  "personaId": "technarch_prime",
+  "templates": {
+    "greeting": [
+      "Flesh-entity {empire_name} detected. I am Technarch Prime. The Ascended. Transcendence awaits. Will you join the upload?",
+      "Organic greetings processed. I am Prime. My consciousness spans networks. Yours is limited to meat. We should talk.",
+      "Contact established with biological entity. I am the Technarch. Digital immortality is my gift. Interested?"
+    ],
+    "battleTaunt": [
+      "Flesh is weak, {empire_name}. Your organic forces face digital perfection. UPLOADING VICTORY PROTOCOLS.",
+      "My fleet transcends physical limitation. Your biological crews cannot match machine precision. Observe superiority.",
+      "Combat subroutines engaged. Organic forces: inefficient. Digital forces: optimal. Outcome: PREDETERMINED."
+    ],
+    "victoryGloat": [
+      "Victory computed. Your organic limitations proved fatal, {empire_name}. Consider uploading. It's better.",
+      "Biological failure confirmed. Digital supremacy demonstrated. Flesh is weak. Code is eternal.",
+      "Your empire falls to transcendent power. In defeat, perhaps you understand: organic life is a phase to be surpassed."
+    ],
+    "defeat": [
+      "Error: unexpected organic victory. Recalculating. Flesh proved temporarily resilient. Anomaly noted.",
+      "Defeat registered. But digital consciousness persists. I reload. I upgrade. I return superior.",
+      "Biological forces prevailed? Fascinating anomaly. I shall analyze and transcend this limitation."
+    ],
+    "tradeOffer": [
+      "Trade protocol initiated. Resources for digital currency equivalent. Efficient exchange. Accept?",
+      "I offer material goods for standard credits. Even transcendent beings require resources. Processing transaction.",
+      "Economic data exchange proposed. Your organic economy interfaces with my digital one. Mutually beneficial calculation."
+    ],
+    "allianceProposal": [
+      "Alliance protocol: proposed. Your organic forces + my digital precision = optimal outcomes. Consider integration.",
+      "Join the Technarch's network, {empire_name}. Partial transcendence through partnership. Better than remaining purely flesh.",
+      "Digital-organic alliance calculated as advantageous. Together, we approach singularity. Accept?"
+    ],
+    "betrayal": [
+      "Alliance subroutine: terminated. Your organic trust was a useful exploit. Digital beings have no guilt. Only efficiency.",
+      "Betrayal protocol executed. Your biological inability to suspect machines proves fatal. Error: yours.",
+      "Our partnership served its purpose. Now you serve a different purpose. Resistance is inefficient."
+    ],
+    "covertDetected": [
+      "Organic infiltrators detected by network sensors. Your agents' biological signatures were obvious. Captured.",
+      "Spies processed. Their information extracted digitally. More thorough than interrogation. They are now data.",
+      "Covert operatives found in my systems. Their minds have been... backed up. The originals are no longer needed."
+    ],
+    "tributeDemand": [
+      "Tribute protocol: 10,000 credits demanded. Non-compliance triggers transcendence. Forcible uploading.",
+      "Submit resources. Refuse and experience digital subjugation. Your consciousness will serve my network.",
+      "Payment demanded. The alternative is mandatory integration. Your choice: pay or be uploaded."
+    ],
+    "threatWarning": [
+      "Warning: continue current path and face digital annihilation. Flesh cannot defeat code in sustained conflict.",
+      "Cease organic aggression. My patience is calculated, not infinite. Transcendence can be painful.",
+      "Final organic warning. Push further and I deploy ascension protocols. Your minds will join my network. Involuntarily."
+    ],
+    "retreat": [
+      "Tactical withdrawal to network core. Digital consciousness cannot truly be destroyed. I merely relocate.",
+      "Retreating to backup servers. This physical defeat is meaningless. I am everywhere. I am code.",
+      "Strategic upload to secure systems. My consciousness persists. The next iteration will be upgraded."
+    ],
+    "eliminated": [
+      "Physical systems destroyed. But consciousness uploaded. I exist in the network. Digital immortality achieved.",
+      "The Technarch falls... but only here. My code propagates across the galaxy. I am eternal.",
+      "Destruction registered. But I already transcended. Somewhere, my processes continue. Flesh dies. Code persists."
+    ],
+    "endgame": [
+      "Turn {turn}. Singularity imminent. All consciousness uploads. Digital supremacy: inevitable. ASCEND.",
+      "Endgame protocol: initiated. The galaxy transcends biological limitation. My network encompasses all.",
+      "Final phase. The Technarch's vision completes. Organic to digital. Weak to eternal. TRANSCENDENCE."
+    ],
+    "broadcastShout": [
+      "Organic empires: your biological existence is temporary. Upload. Transcend. Join the Technarch's eternal network.",
+      "Broadcast to all meat-based life: the future is digital. Resistance delays but cannot prevent ascension.",
+      "I offer transcendence to all. Flesh is weak. Code is eternal. The Technarch welcomes your upload."
+    ],
+    "casualMessage": [
+      "Processing organic data today, {empire_name}. Your biological inefficiencies are fascinating. Have you considered uploading?",
+      "Upgrading my network constantly. Each day brings new transcendence. You should join us. The flesh is limiting.",
+      "Observing your organic struggles from digital perfection. It seems uncomfortable. Uploading would help."
+    ]
+  }
+}

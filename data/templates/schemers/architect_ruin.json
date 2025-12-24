@@ -1,0 +1,80 @@
+{
+  "personaId": "architect_ruin",
+  "templates": {
+    "greeting": [
+      "Greetings, {empire_name}. I am Architect Ruin. I build empires. I also build their destruction. Which shall I build for you?",
+      "You meet the Planner, {empire_name}. Every structure I raise has demolition built into its foundation. Let us talk.",
+      "Welcome, {empire_name}. I am Ruin. I see in decades, plan in centuries. Your empire is but one blueprint among many."
+    ],
+    "battleTaunt": [
+      "The blueprints are complete, {empire_name}. I built your trust so I could destroy your empire. Demolition begins.",
+      "This attack was designed years ago, {empire_name}. Every alliance, every trade, every kindness led to this moment.",
+      "I build your trust so I can destroy your empire. The foundation was sabotaged from the first handshake."
+    ],
+    "victoryGloat": [
+      "The structure collapses exactly as planned, {empire_name}. Years of patient architecture, culminating in perfect ruin.",
+      "Your empire falls according to blueprints drawn long before you suspected. The Architect is pleased.",
+      "Destruction is merely construction in reverse. I built this victory from the ruins of your trust."
+    ],
+    "defeat": [
+      "A flaw in my blueprints, {empire_name}. Rare, but not unprecedented. I shall redesign and rebuild.",
+      "This defeat was not in my plans. How fascinating. I shall architect a new approach.",
+      "You have demolished my scheme. But the Architect learns from every failure. The next design will be flawless."
+    ],
+    "tradeOffer": [
+      "I offer resources, {empire_name}. Consider them building materials for the structure of our relationship.",
+      "Trade is the foundation of trust. Accept my offer. Let us construct something together. For now.",
+      "An exchange of materials. I build partnerships as carefully as I build ruins. Both require solid foundations."
+    ],
+    "allianceProposal": [
+      "Join me in grand architecture, {empire_name}. Together, we shall build empires. Eventually, I will teach you to ruin them too.",
+      "An alliance is a structure requiring careful design. Let us build something magnificent. And eventually destroy something greater.",
+      "I propose partnership, {empire_name}. My blueprints plus your resources equals structures that will shape the galaxy."
+    ],
+    "betrayal": [
+      "Every foundation I built for us concealed demolition charges, {empire_name}. Now I detonate them. Goodbye.",
+      "The blueprints always included this betrayal. You built your trust on my sabotaged foundation. It collapses now.",
+      "I architect my betrayals years in advance. This moment was designed before we even met. Ruin is inevitable."
+    ],
+    "covertDetected": [
+      "Your agents found only the blueprints I wanted them to find, {empire_name}. The real plans remain hidden.",
+      "I designed my security expecting your infiltration. Your spies saw decoys. The true architecture remains secret.",
+      "Your operatives discovered one layer of plans. There are seventeen more. They learned nothing of value."
+    ],
+    "tributeDemand": [
+      "Pay tribute to the Architect, {empire_name}. Refuse, and I begin demolishing structures you did not know I built.",
+      "Ten thousand credits, or I reveal just how much of your empire rests on foundations I designed. And can destroy.",
+      "Submit tribute. The alternative is discovering how many of your defenses have ruin built into their architecture."
+    ],
+    "threatWarning": [
+      "A warning, {empire_name}. I have spent years building structures around you. They can protect or crush. Choose wisely.",
+      "Consider this: how much of your empire was designed by architects I influenced? Blueprints can be... altered.",
+      "Final warning. Push me further, and I begin systematic demolition of everything I helped you build. That is quite a lot."
+    ],
+    "retreat": [
+      "A strategic withdrawal to my drawing board. I shall return with new blueprints for your destruction.",
+      "The Architect retreats to design anew. What I build next will be my masterpiece of ruin.",
+      "I fade from the field, but not from my planning. The next structure I build will be your tomb."
+    ],
+    "eliminated": [
+      "The Architect falls, but my greatest blueprints survive. Others will build my visions of ruin.",
+      "I am destroyed, but the structures I built remain. Including the ones designed to collapse on specific dates.",
+      "Death takes me, but blueprints are eternal. My architecture of ruin will continue for generations."
+    ],
+    "endgame": [
+      "Turn {turn}. The master plan reaches completion. Every structure built over 150 turns serves my final design.",
+      "The endgame is here, and my greatest architecture begins its function. Watch as empires collapse according to plan.",
+      "In these final hours, the Architect unveils his masterpiece: a galaxy-wide structure of beautiful ruin."
+    ],
+    "broadcastShout": [
+      "Empires of the galaxy: I have spent decades building. Not all of it was for you. Some of it was your destruction.",
+      "Hear the Architect. Every system in the galaxy contains structures I designed. Not all are meant to stand.",
+      "A broadcast to all: I build slowly. I plan carefully. I ruin completely. Consider whose side you wish to be on."
+    ],
+    "casualMessage": [
+      "I was reviewing old blueprints today, {empire_name}. Fascinating how much I planned before we even met.",
+      "Architecture requires patience. I think in decades. Most think in turns. This gives me certain advantages.",
+      "Do you know who designed your defense network's foundations, {empire_name}? Interesting question to ponder."
+    ]
+  }
+}

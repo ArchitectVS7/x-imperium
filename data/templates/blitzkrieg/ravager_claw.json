@@ -1,0 +1,80 @@
+{
+  "personaId": "ravager_claw",
+  "templates": {
+    "greeting": [
+      "I am Ravager Claw, {empire_name}. The Destroyer. I don't conquer. I consume. Completely.",
+      "You meet Claw, the one who leaves nothing behind. I am devastation incarnate. Friend or ash?",
+      "Greetings, {empire_name}. I ravage. I ruin. I leave no survivors. Let's discuss your future. If you have one."
+    ],
+    "battleTaunt": [
+      "I don't conquer. I CONSUME, {empire_name}! Your empire won't be captured—it will cease to exist!",
+      "Ravager Claw descends! Scorched earth! Scorched space! Nothing survives my passage!",
+      "DEVASTATION INCOMING! I leave nothing behind! Not resources, not ships, not people! NOTHING!"
+    ],
+    "victoryGloat": [
+      "Your empire is erased, {empire_name}. Not conquered—destroyed. Nothing remains. I am thorough.",
+      "Consumed. Ravaged. Erased from existence. That is what happens to my enemies. That is what happened to you.",
+      "Look at your former territory, {empire_name}. See how empty it is? I leave NOTHING. Ever."
+    ],
+    "defeat": [
+      "You stopped the Ravager? Temporarily. I return with more hunger. More fury. More absolute destruction.",
+      "A setback. But devastation cannot be stopped. I will return, and when I do, nothing survives.",
+      "Defeated, but not done. The Ravager rebuilds, then returns to finish the consumption."
+    ],
+    "tradeOffer": [
+      "Trade, {empire_name}. Resources I consumed from others. For credits. Simple. No ravaging today.",
+      "I offer goods salvaged from ruins. Accept the trade, and your empire doesn't become ruins too.",
+      "Exchange of materials. Yes, I can trade instead of destroy. Rarely. This is one of those times."
+    ],
+    "allianceProposal": [
+      "Alliance with the Ravager, {empire_name}. I devastate your enemies completely. Nothing remains for them to rebuild.",
+      "Join me. Together, we don't just conquer—we erase. Total consumption. Absolute victory.",
+      "Partnership of devastation. You point at enemies. I leave nothing but scorched planets and empty space."
+    ],
+    "betrayal": [
+      "Our alliance ends with your consumption, {empire_name}. I don't betray. I simply redirect my hunger.",
+      "Ravager turns on you. Nothing personal. You had resources. I wanted them. All of them. Every atom.",
+      "Betrayal? I prefer 'total consumption of former ally.' Sounds better. Means the same. Goodbye."
+    ],
+    "covertDetected": [
+      "Spies in my territory, {empire_name}? They're gone. Not captured. GONE. I leave nothing behind.",
+      "Your agents found devastation. Then became part of it. Ravager doesn't take prisoners. Ever.",
+      "Covert operatives detected and destroyed. Along with the building they were in. And the city. Thorough."
+    ],
+    "tributeDemand": [
+      "Tribute, {empire_name}. 10,000 credits or I consume everything. And I mean EVERYTHING.",
+      "Pay the Ravager or lose more than the war. Lose existence. I erase what I conquer. Completely.",
+      "Submit tribute. Refuse and face total annihilation. Not defeat—erasure. Nothing remains."
+    ],
+    "threatWarning": [
+      "Warning, {empire_name}. Push me further and I devastate your entire empire. Not conquer. DEVASTATE.",
+      "The Ravager warns once. Cease hostilities or face absolute consumption. I leave nothing behind.",
+      "Final notice. One more aggressive act and I don't just attack—I erase. Consider carefully."
+    ],
+    "retreat": [
+      "Withdrawing to rebuild consumption capacity. When I return, the devastation will be complete.",
+      "Retreat. But scorched earth follows. Nothing I leave behind remains usable. That's my way.",
+      "Falling back, leaving ruin in my wake. Pursue if you want. You'll find nothing to salvage."
+    ],
+    "eliminated": [
+      "The Ravager falls. But look at the devastation I caused, {empire_name}. My legacy is absolute destruction.",
+      "Destroyed, but I took so much with me. Everything I touched is gone. That is my final triumph.",
+      "I die, but the devastation continues. Ecosystems collapsed. Resources exhausted. My work is done."
+    ],
+    "endgame": [
+      "Turn {turn}. Ultimate consumption begins. I ravage the entire galaxy. NOTHING SURVIVES.",
+      "Endgame devastation, {empire_name}. Every empire consumed. Every resource taken. Total annihilation.",
+      "Final phase. The Ravager's last feast. I consume everything before anyone else can claim it."
+    ],
+    "broadcastShout": [
+      "To all empires: Ravager Claw is hungry. I don't conquer. I consume. Completely. Be warned.",
+      "Galaxy broadcast: devastation approaches. I leave nothing behind. Not resources. Not people. Nothing.",
+      "Hear me, stars. The Ravager comes. When I pass through, emptiness remains. Absolute emptiness."
+    ],
+    "casualMessage": [
+      "Surveying my conquests today, {empire_name}. Empty space where empires stood. Beautiful nothingness.",
+      "Consumption is an art. I practice constantly. Nothing escapes the Ravager's hunger. Nothing.",
+      "Quiet day. Planning future devastation. So many empires to consume. So little time."
+    ]
+  }
+}

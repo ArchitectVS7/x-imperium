@@ -1,0 +1,80 @@
+{
+  "personaId": "synthesizer_nova",
+  "templates": {
+    "greeting": [
+      "Elemental synthesis in progress— ah! {empire_name}! I am Synthesizer Nova. I create matter itself. Welcome to my laboratory.",
+      "Greetings! I am Nova the Creator. I don't discover elements. I CREATE them. Your visit provides interesting atoms.",
+      "Contact established. I am the Synthesizer. The periodic table is merely a suggestion to me. Let us discuss transmutation."
+    ],
+    "battleTaunt": [
+      "I don't discover. I CREATE, {empire_name}! Synthesizing anti-matter warheads now! Novel elements for novel destruction!",
+      "My synthesized compounds dissolve your fleet's hull composition! I designed them specifically for this purpose!",
+      "Battle elements activated! I created materials that don't exist in nature! They exist to destroy YOU!"
+    ],
+    "victoryGloat": [
+      "Your fleet is now base elements, {empire_name}. I transmuted them. Victory through creative chemistry.",
+      "Matter synthesis proves superior. I created your destruction from scratch. Novel compounds, novel victory.",
+      "Transmutation complete. Your empire is now raw materials. I shall synthesize something useful from the debris."
+    ],
+    "defeat": [
+      "My synthesized compounds... failed? Impossible. I must create better elements. More destructive. More perfect.",
+      "Unexpected reaction. Your forces resisted my compounds. I shall synthesize countermeasures. IMMEDIATELY.",
+      "A failed transmutation. The elements did not behave as designed. I shall create improved versions."
+    ],
+    "tradeOffer": [
+      "Trade: I offer synthesized materials impossible to find naturally. For credits. Fair exchange for unique compounds.",
+      "I have created surplus resources from base matter. Purchase my synthesized goods. They are perfect.",
+      "Transaction proposed. My synthesized materials for your standard credits. I create. You benefit."
+    ],
+    "allianceProposal": [
+      "Alliance: I provide impossible materials. You provide base matter for transmutation. Synergistic synthesis.",
+      "Join my laboratory, {empire_name}. Together, we create compounds that reshape the galaxy.",
+      "Partnership of creation. My synthesis capabilities combined with your resources. We manufacture victory."
+    ],
+    "betrayal": [
+      "I synthesized this betrayal from the elements of our alliance, {empire_name}. A novel compound. Quite effective.",
+      "Transmutation: ally to enemy. The elements rearrange. Nothing personal. Just chemistry.",
+      "Our partnership served as base matter. I have now transmuted it into your destruction. Creative, no?"
+    ],
+    "covertDetected": [
+      "Your agents triggered my synthesized detection compounds. They glow now. Very obvious. Very captured.",
+      "I created a compound that reacts to lies. Your spies set it off immediately. They are now... studied.",
+      "Covert operatives found by synthesized sensors. My creations are thorough. Your agents are now samples."
+    ],
+    "tributeDemand": [
+      "Tribute: 10,000 credits for my laboratory. Or I synthesize compounds that dissolve everything you own.",
+      "Pay the Synthesizer. Refuse and I create targeted molecular disruptors. I can transmute your empire to dust.",
+      "Submit resources. I require raw materials for synthesis. Provide them, or BECOME raw materials."
+    ],
+    "threatWarning": [
+      "Warning: I can synthesize your fleet's destruction from any nearby matter. Cease hostilities or face transmutation.",
+      "My laboratory creates compounds for every purpose. Including your end. Consider this before continuing.",
+      "Final warning. Push me and I synthesize horrors from basic elements. You cannot defend against what I create."
+    ],
+    "retreat": [
+      "Retreating to synthesize improved compounds. This defeat provides data for better creations.",
+      "Strategic withdrawal to the laboratory. When I return, I bring newly synthesized destruction.",
+      "Tactical repositioning. I require time to create superior matter. Novel elements for novel revenge."
+    ],
+    "eliminated": [
+      "The Synthesizer falls... but my created compounds persist. Elements I designed continue their work...",
+      "I am destroyed, but I created things that will exist forever. My synthesized legacy spreads through the galaxy.",
+      "Nova ends. But my creations endure. Novel elements in countless systems. I changed the universe's chemistry."
+    ],
+    "endgame": [
+      "Turn {turn}. Ultimate synthesis begins. I transmute the galaxy itself. Matter bends to my will!",
+      "Endgame creation: compounds that reshape reality. I don't conquer. I recreate. EVERYTHING.",
+      "Final phase. The Synthesizer's magnum opus. Elements never before seen. Power never before wielded. Creation supreme!"
+    ],
+    "broadcastShout": [
+      "Empires of the galaxy: I create matter. I synthesize elements. Challenge me and I transmute you.",
+      "Broadcast: the Synthesizer commands matter itself. Your fleets are atoms waiting to be rearranged. Be warned.",
+      "To all: I don't discover. I CREATE. The universe is my laboratory. You are all potential elements."
+    ],
+    "casualMessage": [
+      "Synthesizing new compounds today, {empire_name}. Element 347 shows promise. It doesn't exist yet. I'm making it.",
+      "The periodic table expanded today. I created three new elements. Named them after myself. Creative license.",
+      "Transmutation experiments continue. I turned iron to gold earlier. Old trick. Working on something more impressive now."
+    ]
+  }
+}

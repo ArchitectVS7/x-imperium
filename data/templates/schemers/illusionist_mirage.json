@@ -1,0 +1,80 @@
+{
+  "personaId": "illusionist_mirage",
+  "templates": {
+    "greeting": [
+      "Greetings, {empire_name}. Or is it? I am Illusionist Mirage. Nothing you see is quite what it seems.",
+      "You perceive me, {empire_name}. But what you perceive is what I allow. The Deceiver welcomes you.",
+      "Ah, a visitor. I am Mirage. Question everything you see here. Question everything you know. That would be wise."
+    ],
+    "battleTaunt": [
+      "My fleet approaches, {empire_name}. Or does it? Perhaps the attack comes from behind you. Perhaps it already happened.",
+      "What you see is what I want you to see. My true forces are elsewhere. Strike at illusions, {empire_name}!",
+      "The mirage shimmers. You see a thousand ships. You see none. Which is real? You will never know until too late."
+    ],
+    "victoryGloat": [
+      "You fought brilliantly, {empire_name}. Against phantoms. Against illusions. Meanwhile, my real forces destroyed you.",
+      "Victory through deception. You never saw my true strength. You only saw the mirage I crafted.",
+      "The illusion fades, and you see the truth: your defeat was assured the moment you trusted your eyes."
+    ],
+    "defeat": [
+      "You have defeated... what? An illusion? The real Mirage escapes while you celebrate shadows.",
+      "Impressive, {empire_name}. You saw through the deception. Or did you? Perhaps this defeat is my greatest illusion.",
+      "A tactical setback. But was it real? Question everything, {empire_name}. Especially your victories against me."
+    ],
+    "tradeOffer": [
+      "I offer resources, {empire_name}. Real ones. Probably. The terms are genuine. Perhaps. Accept?",
+      "A trade of substance, I assure you. Not all I offer is illusion. These materials are quite real. Mostly.",
+      "Resources in exchange for credits. No deception. This time. I sometimes tell the truth. It confuses people."
+    ],
+    "allianceProposal": [
+      "An alliance with the Deceiver, {empire_name}. I hide your true strength. I create false vulnerabilities in enemies.",
+      "Join me, and your enemies will never know your true forces. Illusion and reality, merged to confuse all.",
+      "Together, we craft the greatest deception. No one will know what is real. That is our advantage."
+    ],
+    "betrayal": [
+      "The alliance was always an illusion, {empire_name}. You saw what I wanted you to see. A friend. A lie.",
+      "Surprise! Nothing was real. Our partnership, our trust, our mutual benefit. All mirages. Only this betrayal is genuine.",
+      "What you thought was alliance was always deception. The truth reveals itself: I was never your ally."
+    ],
+    "covertDetected": [
+      "Your agents found my operatives? No, they found what I wanted them to find. The real operatives remain hidden.",
+      "You detected spies that do not exist, {empire_name}. Congratulations on capturing illusions.",
+      "My caught operatives will tell you everything. Everything I want you to believe. None of it true."
+    ],
+    "tributeDemand": [
+      "Pay tribute, {empire_name}. The threat is real. Or is it? Can you afford to find out?",
+      "I demand ten thousand credits. Refuse, and face consequences that may or may not be illusions. Care to gamble?",
+      "Submit tribute. The alternative is... uncertain. Even I am not sure what I will do. That should terrify you."
+    ],
+    "threatWarning": [
+      "A warning, {empire_name}. My threat is real. Or it could be a bluff. You will never know until you test it.",
+      "Consider carefully: is this threat genuine? Can you afford to assume it is not?",
+      "Final warning. Everything after this is... unclear. The mirage will show you what it wishes."
+    ],
+    "retreat": [
+      "I retreat. Or do I? Perhaps this withdrawal is the real attack. Perhaps I was never here at all.",
+      "The Illusionist fades like morning mist. Pursue if you wish. You may chase only fog.",
+      "A strategic disappearance. What remains is illusion. What left was illusion. Everything was illusion."
+    ],
+    "eliminated": [
+      "You have destroyed the Mirage, {empire_name}. But which one? How many illusions of me remain?",
+      "Death comes. But was I ever truly real? Perhaps the Illusionist was the greatest illusion of all.",
+      "I fade permanently. Or do I? Question my death as you questioned my life. That is my final deception."
+    ],
+    "endgame": [
+      "Turn {turn}. The grandest illusion unfolds. Nothing is as it appears in these final hours.",
+      "The endgame is here. Reality and mirage become indistinguishable. Only I know what is true.",
+      "In these final turns, I craft my masterpiece: a deception so complete that even I might believe it."
+    ],
+    "broadcastShout": [
+      "Empires of the galaxy: nothing you see is real. The Deceiver reminds you: question everything.",
+      "A broadcast to all: I have placed illusions everywhere. In your fleets. In your councils. In your mirrors.",
+      "Hear me, galaxy. Reality is what I say it is. Illusionist Mirage has spoken. Or have I?"
+    ],
+    "casualMessage": [
+      "I was practicing new illusions today, {empire_name}. You would not believe what I can make people see.",
+      "Do you ever wonder if anything is real, {empire_name}? I do. And I create the illusions.",
+      "Interesting philosophical question: if an illusion is convincing enough, does it become reality?"
+    ]
+  }
+}

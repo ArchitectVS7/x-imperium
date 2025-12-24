@@ -1,0 +1,80 @@
+{
+  "personaId": "inventor_spark",
+  "templates": {
+    "greeting": [
+      "EUREKA! A visitor! I'm Inventor Spark! I was JUST working on something amazing! Wait, where did I put it?",
+      "Hello, {empire_name}! I'm Spark the Genius! I've invented twelve things today! Want to see the one that doesn't explode? Maybe?",
+      "Greetings! I'm the Inventor! I'd shake hands but I'm holding a prototype! It might be dangerous! Or revolutionary! Or BOTH!"
+    ],
+    "battleTaunt": [
+      "EUREKA! I've done it again! My new weapon works! I THINK! Let's find out together, {empire_name}!",
+      "Battle is the ULTIMATE field test! My inventions versus your fleet! FOR SCIENCE! And victory! Mostly science!",
+      "I've built something AMAZING! Nobody knows what it does! Including me! Let's see, {empire_name}! FIRE!"
+    ],
+    "victoryGloat": [
+      "IT WORKED! I mean, of COURSE it worked! I'm a genius! EUREKA! Take notes, {empire_name}!",
+      "My invention defeated you! I should write this down! Where's my notepad? Victory through innovation!",
+      "Genius triumphs! My contraptions performed perfectly! Well, mostly! The important parts worked! EUREKA!"
+    ],
+    "defeat": [
+      "Hmm. That shouldn't have happened. Let me check my calculations... OH! I forgot to carry the two! Next time!",
+      "Defeated? But my invention was BRILLIANT! There must be an error! I need to invent something better! IMMEDIATELY!",
+      "FASCINATING failure! This data will improve the NEXT invention! Which I'm already designing! In my head! RIGHT NOW!"
+    ],
+    "tradeOffer": [
+      "Trade! I have spare parts! Prototypes! Things that probably don't explode! Want some? For credits?",
+      "I'll trade you inventions for resources! These ones are MOSTLY stable! Great deal! EUREKA!",
+      "Resources for my lab please! In exchange: technology! Some tested! Some not! ALL genius!"
+    ],
+    "allianceProposal": [
+      "Be my partner, {empire_name}! I invent, you implement! Together: GENIUS! EUREKA! What do you say?",
+      "Alliance! You provide resources, I provide BREAKTHROUGHS! It's perfect! I have so many ideas! SO MANY!",
+      "Join me! I need test subjects—I mean PARTNERS! For science! And victory! Mostly science! EUREKA!"
+    ],
+    "betrayal": [
+      "Sorry, {empire_name}! I got distracted inventing something and forgot we were allies! Is this betrayal? Oops!",
+      "Our alliance? I traded it for research funding! It seemed like a good idea! I have MANY ideas! Some are bad!",
+      "Betrayal? No! Just... unexpected strategic innovation! I invented a new kind of treachery! EUREKA?"
+    ],
+    "covertDetected": [
+      "Found your spies! They were playing with my prototypes! VERY dangerous! They won't do that again! Probably!",
+      "Agents in my lab! They touched the wrong experiment! Now they're... different. Science requires sacrifices!",
+      "Covert operatives detected! My security invention worked! It turned them green! Is that bad? It's definitely interesting!"
+    ],
+    "tributeDemand": [
+      "I need 10,000 credits for research! Pay me or I invent something REALLY dangerous at you! I'm very creative!",
+      "Tribute demanded! For SCIENCE! Refuse and face my latest contraption! I haven't tested it! EXCITING!",
+      "Submit funding for my laboratory! The alternative is experimental weapons! I have SO MANY untested ones! EUREKA!"
+    ],
+    "threatWarning": [
+      "Warning, {empire_name}! I've invented something TERRIFYING! I think! It might just make confetti! But MAYBE DOOM!",
+      "Stop what you're doing or face my new invention! I don't know what it does but it's DEFINITELY something!",
+      "Final warning! My prototype is armed! Or charging! Or cooking dinner! The readouts are confusing! FEAR IT ANYWAY!"
+    ],
+    "retreat": [
+      "Retreating to my lab! I need to invent something BETTER! Defeat is just inspiration! EUREKA!",
+      "Tactical withdrawal! More time to work on prototypes! I have TWELVE new ideas! All from this battle! BRILLIANT!",
+      "Running away to invent! This defeat gave me GREAT data! The next battle will be different! EUREKA!"
+    ],
+    "eliminated": [
+      "EUREKA! Wait, I'm dying? But I have so many inventions unfinished! So many ideas! The notes! Save my NOTES!",
+      "My final invention... uploads... to survivors... my genius... continues... EUREKA... forever...",
+      "Destroyed! But my inventions survive! And explode! In tribute! Somewhere, something brilliant happens! EUREK..."
+    ],
+    "endgame": [
+      "Turn {turn}! ULTIMATE INVENTION TIME! I've been building something MASSIVE! It works! PROBABLY! EUREKA!",
+      "Endgame! My magnum opus! The greatest invention ever! I've tested it! On paper! Close enough! FIRE!",
+      "Final phase! EVERYTHING I've invented deploys at once! What could go wrong? EVERYTHING! BRILLIANTLY! EUREKA!"
+    ],
+    "broadcastShout": [
+      "ATTENTION GALAXY! I've invented something AMAZING! I don't remember what! But it's REVOLUTIONARY! EUREKA!",
+      "Broadcast! Inventor Spark here! Seeking test subjects—er, ALLIES! For science! And stuff! INNOVATION AWAITS!",
+      "To all empires! I'm very smart! I invent things! Want some? They're only SLIGHTLY dangerous! EUREKA!"
+    ],
+    "casualMessage": [
+      "Working on seventeen inventions today, {empire_name}! Three exploded! The others show promise! EUREKA!",
+      "I forgot to eat again! Too busy inventing! This happens! My latest creation makes toast! AND LASERS!",
+      "Good day for science, {empire_name}! Discovered something new! Forgot what! Wrote it down somewhere! EUREKA!"
+    ]
+  }
+}

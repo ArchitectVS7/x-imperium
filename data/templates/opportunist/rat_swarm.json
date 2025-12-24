@@ -1,0 +1,80 @@
+{
+  "personaId": "rat_swarm",
+  "templates": {
+    "greeting": [
+      "We are many. You are weak. Perfect, {empire_name}. I am Rat Swarm. We spread. We overwhelm. We are many.",
+      "Greetings from the Many. I am Swarm. We detect weakness. We infest. We overwhelm. You look... vulnerable.",
+      "One becomes many. Many become Swarm. We are Rat. We spread when empires weaken. You are weakening."
+    ],
+    "battleTaunt": [
+      "We are many. You are weak. Perfect, {empire_name}! The Swarm descends! Overwhelming numbers! INFEST!",
+      "Weakness detected! The Many attack! We spread through your defenses! We are everywhere! WE ARE SWARM!",
+      "Your empire weakens! The Rat Swarm SPREADS! We overwhelm with numbers! We are MANY! You are FEW!"
+    ],
+    "victoryGloat": [
+      "The Swarm consumed, {empire_name}. You were weak. We are many. Now your empire is ours.",
+      "Overwhelming victory. We spread through everything. Many rats, one purpose. Your defeat.",
+      "The Many triumph. We infested. We overwhelmed. We consumed. You were weak. We are Swarm."
+    ],
+    "defeat": [
+      "The Swarm repelled? You are stronger than we calculated. We retreat. We regroup. We are still many.",
+      "Defeat. But the Swarm survives. We spread elsewhere. Find other weak empires. Return later.",
+      "You fought off the Many. Impressive. But we are still here. Still many. Still watching. Still spreading."
+    ],
+    "tradeOffer": [
+      "Trade with the Swarm, {empire_name}. We have many resources. From many sources. Fair exchange.",
+      "The Many offer goods. We collected from everywhere. We spread. We gather. Trade with us.",
+      "Transaction: resources from the Swarm. We are many. We find many things. Credits for all."
+    ],
+    "allianceProposal": [
+      "Alliance with the Swarm, {empire_name}. We fight together. Many and more. Overwhelming numbers.",
+      "Join the Many. We spread with you. Your strength plus our numbers. Infestation of victory.",
+      "Partnership: we overwhelm shared enemies. You lead. We swarm. Together: unstoppable multitude."
+    ],
+    "betrayal": [
+      "The Swarm turns, {empire_name}. You grew weak. We detect weakness. We spread against you now.",
+      "Betrayal by the Many. You showed vulnerability. We infest the vulnerable. That is our nature.",
+      "We are Swarm. We consume weakness. You became weak. Now we consume you. Many against one."
+    ],
+    "covertDetected": [
+      "Your agents found many rats, {empire_name}. We are everywhere. They are now overwhelmed. Lost in the Swarm.",
+      "Spies in our territory? We are many. They are few. We found them. Many eyes. Many teeth.",
+      "Covert operatives detected by overwhelming numbers. Everywhere is Swarm. They could not hide."
+    ],
+    "tributeDemand": [
+      "Tribute to the Swarm: 10,000 credits. Pay or we spread. We infest. We overwhelm. Many against you.",
+      "Submit payment. Refuse and the Many descend. We are everywhere. We consume everything.",
+      "Pay the Swarm. Or we spread through your territory. We are many. You cannot stop all of us."
+    ],
+    "threatWarning": [
+      "Warning, {empire_name}. We are many. We are watching. Weaken further and we spread to you.",
+      "The Swarm warns you. Stop declining or face infestation. Many rats. One purpose. Overwhelming.",
+      "Final warning. The Many prepare. One more sign of weakness and we spread. Everywhere. Unstoppable."
+    ],
+    "retreat": [
+      "The Swarm retreats. But we are still many. Still watching. Still waiting for weakness.",
+      "Withdrawing to spread elsewhere. You are too strong now. We find weaker prey. Return later.",
+      "Falling back. The Many survive. We regroup. We find other vulnerabilities. We never stop."
+    ],
+    "eliminated": [
+      "The Swarm falls. But we spread far. Many places. Many rats. We survive in pieces. We are eternal.",
+      "Many destroyed. But some Many survive. We always survive. We are too many to eliminate completely.",
+      "Rat Swarm ends here. But continues elsewhere. We spread everywhere. We cannot be fully destroyed."
+    ],
+    "endgame": [
+      "Turn {turn}. Maximum spread. We are everywhere. Every weak empire infested. The Many triumph.",
+      "Endgame: the Swarm encompasses all. We spread to every weakness. Overwhelming numbers win.",
+      "Final phase. The Many have spread everywhere. All weak empires consumed. We are Swarm. We are victory."
+    ],
+    "broadcastShout": [
+      "Empires: We are Many. We are Rat Swarm. We spread to the weak. We overwhelm. Be warned.",
+      "Broadcast from the Swarm: weakness attracts us. We are everywhere. We are watching. We are many.",
+      "To all: we are the Many. We infest the weak. We overwhelm with numbers. You cannot stop the Swarm."
+    ],
+    "casualMessage": [
+      "Spreading today, {empire_name}. Many new territories. Many new resources. The Swarm grows.",
+      "The Many are always busy. Spreading. Watching. Waiting for weakness. That is our purpose.",
+      "Counting the Swarm today. We are many. More than yesterday. Growing always. We never stop."
+    ]
+  }
+}

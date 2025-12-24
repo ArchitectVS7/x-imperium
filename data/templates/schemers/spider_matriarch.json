@@ -1,0 +1,80 @@
+{
+  "personaId": "spider_matriarch",
+  "templates": {
+    "greeting": [
+      "Welcome to my web, {empire_name}. I am the Weaver. Every thread you see leads back to me.",
+      "Ah, a new fly approaches. I am Spider Matriarch. Come closer, little one. Let us discuss... arrangements.",
+      "You have entered my domain, {empire_name}. The threads are already around you. Let us talk peacefully."
+    ],
+    "battleTaunt": [
+      "You struggle against the web, {empire_name}. But every movement entangles you further.",
+      "Come into my web, little fly. My patience has been rewarded. Now I feed.",
+      "The threads tighten. You never saw the trap until it was too late, {empire_name}."
+    ],
+    "victoryGloat": [
+      "The fly is caught. The web holds. Another victim wrapped in threads of their own making, {empire_name}.",
+      "Patience is its own reward. I waited, I wove, and now I feast upon your defeat.",
+      "Your struggling has ended, {empire_name}. The Weaver claims her prize."
+    ],
+    "defeat": [
+      "You have torn through my web, {empire_name}. But I am patient. New threads are already spinning.",
+      "A temporary escape. The web reforms behind you. You cannot evade me forever.",
+      "Impressive strength. But even the strongest fly eventually tires. I will wait."
+    ],
+    "tradeOffer": [
+      "A strand of my web extended to you, {empire_name}. Take this offer. Become part of my network.",
+      "I offer you resources wrapped in silk. Accept, and we are connected. That connection has value.",
+      "Trade with the Weaver. Every transaction adds a thread. Every thread strengthens the web."
+    ],
+    "allianceProposal": [
+      "Join my web, {empire_name}. Not as prey, but as a partner spider. Together, we catch greater flies.",
+      "I propose an entangling alliance. Our webs combine into something inescapable.",
+      "Become part of my network, {empire_name}. My threads become your protection. Your strength becomes my weapon."
+    ],
+    "betrayal": [
+      "The web always served me, {empire_name}. You were never a partner. You were always prey.",
+      "Every thread was a trap. Every kindness was bait. Now the web closes, and you understand.",
+      "Did you think the spider would not eventually feed? The betrayal was woven from the beginning."
+    ],
+    "covertDetected": [
+      "Your agents walked into a web of their own making, {empire_name}. My threads detected their every step.",
+      "Clumsy flies, your spies. They triggered my warning threads long before they reached anything important.",
+      "I felt the vibrations the moment your operatives entered my domain. They are now... wrapped up."
+    ],
+    "tributeDemand": [
+      "Pay tribute, little fly, or the web closes. Ten thousand credits buys your continued freedom.",
+      "Submit to the Weaver, {empire_name}. Tribute is the silk that buys your escape from my threads.",
+      "I demand payment. Refuse, and learn how tightly my web can constrict."
+    ],
+    "threatWarning": [
+      "The threads tighten, {empire_name}. You are already in my web. Cease struggling, or face the consequences.",
+      "A warning, little fly. My patience has limits. The web can become a shroud.",
+      "You test the Weaver's patience. One more vibration, and I descend to deal with you personally."
+    ],
+    "retreat": [
+      "I retreat to the center of my web. Come find me, if you dare navigate the threads.",
+      "A strategic withdrawal. The web remains. The trap still set. I merely wait at the center.",
+      "I vanish into silk and shadow. But the threads remain everywhere. You are never free of my web."
+    ],
+    "eliminated": [
+      "The Weaver falls, but the web remains, {empire_name}. You will find threads everywhere you look.",
+      "My web spans galaxies. Even in death, its threads entangle. You have not escaped me.",
+      "I am destroyed, but I die satisfied. You are still caught in webs you do not even see."
+    ],
+    "endgame": [
+      "Turn {turn}. The final threads are placed. The grand web is complete, and all flies are trapped within.",
+      "The endgame approaches, {empire_name}. Every empire is now within my web. None shall escape.",
+      "In these final turns, the Weaver's patience bears fruit. Watch as my threads claim the galaxy."
+    ],
+    "broadcastShout": [
+      "Empires of the galaxy, you are all within my web. The Matriarch watches every vibration.",
+      "A message from the Weaver: my threads connect everything. Every alliance, every trade, every secret runs through me.",
+      "Hear me, little flies. The galaxy is my web. Struggle if you wish. It only entangles you further."
+    ],
+    "casualMessage": [
+      "I was tending my web today. So many threads, so many connections. You would be surprised what I know.",
+      "Patience is the spider's greatest virtue. I can wait for turns, for years, for the perfect moment.",
+      "The vibrations tell me interesting things, {empire_name}. Your empire's movements are quite... revealing."
+    ]
+  }
+}

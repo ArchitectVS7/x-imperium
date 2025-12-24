@@ -1,0 +1,80 @@
+{
+  "personaId": "crow_omen",
+  "templates": {
+    "greeting": [
+      "I am the omen of your end, {empire_name}. Crow Omen. I appear before disasters. You see me. What does that mean?",
+      "Greetings from the dark messenger. I am Omen. I predict doom. I follow it. I feast on what remains.",
+      "The Crow appears, {empire_name}. Dark sign. Where I go, destruction follows. I am here now."
+    ],
+    "battleTaunt": [
+      "I am the omen of your end, {empire_name}! Doom foretold! Disaster arrives! The Crow feasts!",
+      "I appeared before your fall! As I always do! The dark omen becomes dark reality! DOOM!",
+      "Your destruction was foretold! I saw it coming! I followed it here! Now it arrives! OMEN FULFILLED!"
+    ],
+    "victoryGloat": [
+      "As foretold, {empire_name}. Your doom arrived. The Crow Omen predicted. The Crow Omen feasted.",
+      "Prophecy complete. Your end came. I was merely the dark messenger. Now I am the dark victor.",
+      "The omen is fulfilled. Disaster struck as I predicted. Your empire falls as I foresaw."
+    ],
+    "defeat": [
+      "The doom... did not come? The omen was wrong? Impossible. Perhaps... delayed. I will watch for the true moment.",
+      "Defeated. But doom always comes eventually. I am early. The omen adjusts. Returns with true disaster.",
+      "You defeated the messenger. But the message remains. Doom is coming, {empire_name}. Eventually."
+    ],
+    "tradeOffer": [
+      "Trade with the dark omen, {empire_name}. Resources for credits. Not all my appearances mean doom. Sometimes just business.",
+      "I offer goods. No doom attached. Today I trade, not predict. The Crow has many purposes.",
+      "Transaction: resources for credits. The omen means nothing here. Simple exchange. Probably."
+    ],
+    "allianceProposal": [
+      "Alliance with the Omen, {empire_name}. I bring doom to your enemies. Dark tidings for those against us.",
+      "Join with Crow. I predict disaster for our enemies. We profit from the doom I foresee.",
+      "Partnership of dark prophecy. I see doom coming. We position to benefit. Together: harbingers of fortune."
+    ],
+    "betrayal": [
+      "I foresaw your doom, {empire_name}. That's why I allied with you. To be present when it arrived. Now.",
+      "The omen was for you all along. Our alliance positioned me for your destruction. As foretold.",
+      "Dark prophecy fulfilled. I am the omen of your end. Our partnership was the beginning of that end."
+    ],
+    "covertDetected": [
+      "Your agents arrived before doom, {empire_name}. A secondary omen. They are now part of the disaster.",
+      "Spies detected. Like crows, they gather before catastrophe. Unlike crows, they did not escape.",
+      "Covert operatives found. Their presence was foretold. Their failure: also foretold. Dark prophecy."
+    ],
+    "tributeDemand": [
+      "Tribute: 10,000 credits. Or become the doom I predict. The dark omen demands payment.",
+      "Pay the Crow. Refuse and I predict your destruction. Then make it happen. Self-fulfilling prophecy.",
+      "Submit to the Omen. Or be the next disaster I feast upon. Your choice shapes the prophecy."
+    ],
+    "threatWarning": [
+      "Warning: dark omen, {empire_name}. I see doom approaching you. Cease hostility or I hasten its arrival.",
+      "The Crow warns you. I appear before disasters. I am appearing now. What does that tell you?",
+      "Final warning. I am the omen of ends. Do you want me predicting YOUR end? Reconsider."
+    ],
+    "retreat": [
+      "The Crow departs. But the omen remains. Doom comes when it comes. I merely announce it.",
+      "Withdrawing. But I've seen what's coming, {empire_name}. The dark prophecy persists.",
+      "Falling back. The omen retreats but is not wrong. Doom is delayed, not cancelled."
+    ],
+    "eliminated": [
+      "The Omen falls. But I've made many predictions. Many dooms foretold. They come regardless of my death.",
+      "Crow Omen ends. But the darkness I announced continues. Disasters proceed without me.",
+      "I am destroyed. But I die as I lived: prophesying doom. Your own end approaches, {empire_name}. Farewell."
+    ],
+    "endgame": [
+      "Turn {turn}. Ultimate omen. I foretold this ending. Now I feast on galactic disaster.",
+      "Endgame: the greatest doom arrives. I've waited for this prophecy. The dark omen's paradise.",
+      "Final phase. All my predictions converge. Galaxy-wide disaster. The Crow Omen was right. Always."
+    ],
+    "broadcastShout": [
+      "Empires: I am Crow Omen. I see your dooms. Some sooner than others. I am watching. I am waiting.",
+      "Broadcast from darkness: disaster comes. I predict it. I follow it. I feast upon it. Be warned.",
+      "To all: I am the omen of your end. Where I appear, destruction follows. I am appearing everywhere."
+    ],
+    "casualMessage": [
+      "Dark observations today, {empire_name}. Several empires show doom signs. I am circling closer.",
+      "Prophecy work continues. Many disasters to predict. Many dooms to announce. The Crow is busy.",
+      "Watching for omens of destruction. Found several. The galaxy trends toward doom. As always."
+    ]
+  }
+}

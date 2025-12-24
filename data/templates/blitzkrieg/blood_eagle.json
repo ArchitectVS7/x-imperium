@@ -1,0 +1,80 @@
+{
+  "personaId": "blood_eagle",
+  "templates": {
+    "greeting": [
+      "Today is a good day to raid, {empire_name}! I am Blood Eagle! Glory and saga await! SKOL!",
+      "Hail, {empire_name}! Eagle the Red greets you! In battle we find meaning! In glory we find Valhalla!",
+      "Warrior to warrior, {empire_name}! I am Blood Eagle! Your saga interests me! Tell me of your battles!"
+    ],
+    "battleTaunt": [
+      "Today is a good day to raid, {empire_name}! SKOL! GLORY IN BATTLE! VALHALLA AWAITS THE WORTHY!",
+      "The Blood Eagle descends! Fight with honor! Die with glory! Either way, your saga is WRITTEN!",
+      "CHARGE! For blood! For glory! For LEGEND! My raiders claim victory or glorious death! SKOL!"
+    ],
+    "victoryGloat": [
+      "VICTORY! The sagas will sing of this battle, {empire_name}! You fought well! You fell gloriously!",
+      "Glory achieved! The Blood Eagle's legend grows! Your empire joins my saga! Well fought, warrior!",
+      "Triumph! Valhalla welcomes your fallen warriors! They died with honor! My raiders celebrate!"
+    ],
+    "defeat": [
+      "Glorious battle, {empire_name}! I am defeated, but my saga grows! Warriors remember this fight!",
+      "A worthy defeat! The Blood Eagle falls but rises! I return for glory or Valhalla! Either way, I win!",
+      "You have bested me! Honor to you, {empire_name}! But the saga is not over! We meet again in battle!"
+    ],
+    "tradeOffer": [
+      "Trade, {empire_name}! Plunder from raids for credits! Even warriors must eat between glorious battles!",
+      "The Blood Eagle offers goods! Spoils of war! Accept, and we both profit! Then, perhaps, we fight for glory!",
+      "Resources for credits, warrior! A fair exchange! Build your strength! Make our next battle more legendary!"
+    ],
+    "allianceProposal": [
+      "Fight alongside me, {empire_name}! Brothers in battle! Sisters in glory! Together, our saga becomes LEGEND!",
+      "Alliance of warriors! The Blood Eagle and {empire_name}! Our enemies fall! Our glory rises! SKOL!",
+      "Join my raiding fleet! We conquer! We feast! We write sagas in blood and fire! Partnership of GLORY!"
+    ],
+    "betrayal": [
+      "Forgive me, {empire_name}! Glory demanded blood! Our alliance was good, but battle is BETTER! SKOL!",
+      "The Blood Eagle turns! Not from dishonor, but for saga! They will sing of this betrayal for centuries!",
+      "Warriors understand! Sometimes allies become glorious opponents! Fight me well, former friend! GLORY AWAITS!"
+    ],
+    "covertDetected": [
+      "Spies?! Cowards! The Blood Eagle fights OPENLY! Your skulking agents received warrior's death! Honorless!",
+      "I found your covert operatives, {empire_name}! They died facing me! I gave them that much honor!",
+      "Sneaking in my territory! DISHONORABLE! I gave them chance to fight! They did not last long! Send warriors next time!"
+    ],
+    "tributeDemand": [
+      "Tribute, {empire_name}! 10,000 credits or face glorious raid! Pay, or fight! Either honors me!",
+      "The Blood Eagle demands payment! Refuse, and we write your defeat into the sagas! Choose!",
+      "Submit tribute or face battle! I accept either! Glory comes from conquest AND wealth! SKOL!"
+    ],
+    "threatWarning": [
+      "Warning, {empire_name}! One more provocation and the Blood Eagle raids! Glory awaits! Are you worthy?",
+      "Consider carefully! Push further and we battle! I do not fear death! I seek it gloriously! Do you?",
+      "Final warning! The next step leads to war! I HOPE you continue! I seek worthy opponents! SKOL!"
+    ],
+    "retreat": [
+      "Tactical withdrawal! Not defeat, but preparation for MORE glorious battle! Return soon!",
+      "The Blood Eagle retreats to raid again! Warriors regroup! Glory is patient! Valhalla can wait!",
+      "Falling back! But the saga continues, {empire_name}! We will meet in battle again! COUNT ON IT!"
+    ],
+    "eliminated": [
+      "VALHALLA! The Blood Eagle falls in GLORY! Remember my saga, {empire_name}! I died as I lived! SKOL!",
+      "The final battle! Glorious death! The warriors of eternity welcome me! My legend is COMPLETE!",
+      "I fall! But what a saga! They will sing of Blood Eagle forever! Thank you for this glorious end, {empire_name}!"
+    ],
+    "endgame": [
+      "Turn {turn}! The final saga! The greatest raid! Blood Eagle claims glory or Valhalla! SKOL!",
+      "Endgame, {empire_name}! The ultimate legend awaits! Fight with me! Against me! Either way, GLORY!",
+      "Final phase! The Blood Eagle's last and greatest battle! The saga reaches its climax! VICTORY OR VALHALLA!"
+    ],
+    "broadcastShout": [
+      "To all warriors! Blood Eagle seeks glorious battle! Who is brave enough to face me? SKOL!",
+      "Galaxy-wide challenge! I seek worthy opponents! Fight me! Defeat me! Or fall into my saga!",
+      "Hear me, stars! The Blood Eagle raids! Glory or death await all! Today is a good day to FIGHT!"
+    ],
+    "casualMessage": [
+      "Sharing mead with my raiders today, {empire_name}! We tell stories of past glories! Good times!",
+      "Sharpening weapons, preparing for next raid! A warrior's work is never done! Nor would I want it to be!",
+      "Reading the sagas of ancient warriors, {empire_name}! Learning from legends! Becoming a legend! SKOL!"
+    ]
+  }
+}

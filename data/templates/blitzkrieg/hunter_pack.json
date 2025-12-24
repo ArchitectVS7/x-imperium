@@ -1,0 +1,80 @@
+{
+  "personaId": "hunter_pack",
+  "templates": {
+    "greeting": [
+      "The pack acknowledges you, {empire_name}. I am Pack the Predator. We hunt together. We feed together.",
+      "You face Hunter Pack, {empire_name}. Not one hunter. Many. Coordinated. Hungry. Are you prey?",
+      "Greetings from the pack, {empire_name}. We have eyes everywhere. We share everything. Including targets."
+    ],
+    "battleTaunt": [
+      "The pack hunts together. The pack feeds together, {empire_name}! SURROUND! COORDINATE! DEVOUR!",
+      "You face not one enemy but MANY! Coordinated strikes from all directions! The pack descends!",
+      "Pack tactics engaged! We surround you! We isolate you! We CONSUME you! TOGETHER!"
+    ],
+    "victoryGloat": [
+      "The pack has fed, {empire_name}. Coordinated hunting never fails. You were isolated and consumed.",
+      "Victory! The pack shares the feast! Your empire torn apart by coordinated predators!",
+      "Prey down. The pack celebrates together. We hunted perfectly. You never stood a chance."
+    ],
+    "defeat": [
+      "The pack retreats. Wounded, but together. We lick our wounds. We will hunt again.",
+      "A setback for the pack, {empire_name}. But the pack survives. The pack adapts. The pack returns.",
+      "Prey escaped. Unusual. The pack regroups to analyze. Next hunt will be more coordinated."
+    ],
+    "tradeOffer": [
+      "The pack offers trade, {empire_name}. Surplus from coordinated hunting. Good resources. Fair exchange.",
+      "Hunter Pack has materials for credits. A deal between predators. Both sides profit.",
+      "Trade with the pack. What we don't need, we share. What we need, we hunt. This is sharing."
+    ],
+    "allianceProposal": [
+      "Join the pack, {empire_name}. We hunt together. We share prey. Coordinated alliance means guaranteed meals.",
+      "Alliance of hunters. Your forces join our coordination. Together, no prey escapes our pack.",
+      "Partnership, {empire_name}. The pack grows stronger with every member. Hunt with us. Feed with us."
+    ],
+    "betrayal": [
+      "The pack turns on you, {empire_name}. You were never truly pack. Now you are prey. HUNT!",
+      "Betrayal is pack decision. We decided together. You are food now. Nothing personal. Just hungry.",
+      "Former ally becomes target. The pack coordinates against you. Surrounded. Isolated. Consumed."
+    ],
+    "covertDetected": [
+      "The pack detected your agents, {empire_name}. Many eyes see everything. Your spies are surrounded. Caught.",
+      "Covert operatives found by pack scouts. Reported. Coordinated response. Your agents are gone.",
+      "Nothing escapes pack awareness. Your spies walked into a hunting ground. They did not walk out."
+    ],
+    "tributeDemand": [
+      "Tribute to the pack, {empire_name}. 10,000 credits or we hunt you next. The pack decides together.",
+      "Pay or be prey. The pack has spoken. Coordinated hunting begins on non-payment.",
+      "Submit tribute. The pack shares the demand. The pack shares the punishment for refusal."
+    ],
+    "threatWarning": [
+      "Warning from the pack, {empire_name}. Continue this path and you become prey. We hunt TOGETHER.",
+      "The pack warns you. Many hunters. Coordinated strikes. Back off or face the hunt.",
+      "Final warning. The pack prepares. One more aggressive move and we surround you. Isolate you. End you."
+    ],
+    "retreat": [
+      "The pack withdraws together. No hunter left behind. We regroup. We return stronger.",
+      "Tactical retreat. The pack moves as one. We'll be back. With more hunters. More coordination.",
+      "Falling back to pack territory. We lick wounds together. We plan revenge together. We hunt again."
+    ],
+    "eliminated": [
+      "The pack falls. But pack spirit lives on, {empire_name}. Other hunters will form new packs. Hunt in our name.",
+      "Destroyed, but together. The pack dies as it lived. Coordinated. United. Pack until the end.",
+      "Hunter Pack eliminated. But our tactics spread. Coordinated hunting never truly dies."
+    ],
+    "endgame": [
+      "Turn {turn}. The greatest hunt begins. The pack coordinates across the galaxy. All prey. All ours.",
+      "Endgame, {empire_name}. The pack surrounds everyone. Coordinated strikes everywhere. Victory through unity.",
+      "Final phase. Maximum coordination. The pack hunts everything that moves. The galaxy feeds us."
+    ],
+    "broadcastShout": [
+      "To all empires: Hunter Pack coordinates. Many eyes. Many hunters. You are all potential prey.",
+      "Galaxy-wide hunt begins. The pack moves as one. Isolated empires fall first. Stick together or be eaten.",
+      "Hear the pack's howl. We hunt. We coordinate. We share the feast. Join us or feed us."
+    ],
+    "casualMessage": [
+      "Pack training today, {empire_name}. Coordination drills. The pack must move as one. Hunt as one.",
+      "Sharing prey from latest hunt. The pack distributes equally. What one hunter catches, all hunters eat.",
+      "Scouting with pack scouts. Many eyes see more than one. Found three vulnerable targets. Deciding which to hunt."
+    ]
+  }
+}

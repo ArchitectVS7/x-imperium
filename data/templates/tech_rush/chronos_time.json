@@ -1,0 +1,80 @@
+{
+  "personaId": "chronos_time",
+  "templates": {
+    "greeting": [
+      "Greetings from the past. Or future. Time is relative, {empire_name}. I am Chronos. I am related to it.",
+      "You contact me now, {empire_name}. But I have already met you. Or I will. Time is complex. I am the Manipulator.",
+      "Hello, {empire_name}. We meet at this point in the timeline. Other meetings have occurred. Or will occur. Temporally speaking."
+    ],
+    "battleTaunt": [
+      "Time is relative. And I'm related to it, {empire_name}! I've already won this battle! Check your history books!",
+      "Temporal assault commencing! My forces attack from multiple timeframes simultaneously! Chrono-warfare!",
+      "I strike from the past and future at once! Your present cannot defend against temporal manipulation!"
+    ],
+    "victoryGloat": [
+      "Victory was inevitable, {empire_name}. I saw it yesterday. And tomorrow. Time confirms: you lose eternally.",
+      "Your defeat echoes through all timelines. I have observed it from past and future. Chronological victory.",
+      "Time proves me right. Your empire's fall is recorded in every era. I merely ensured the correct present."
+    ],
+    "defeat": [
+      "Temporal anomaly! This outcome diverges from predicted timelines! I must recalculate the chronological flow.",
+      "A defeat... unexpected across all observed futures. You have created a temporal paradox, {empire_name}.",
+      "The timeline shifted unfavorably. I shall adjust from a different temporal position. This isn't over."
+    ],
+    "tradeOffer": [
+      "Trade across time: resources now for credits now. Simple temporal transaction. Past and future approve.",
+      "I offer goods from when they were plentiful. For currency in when you have it. Time-flexible economics.",
+      "Transaction proposed. I have seen this trade in multiple timelines. It benefits both. Accept?"
+    ],
+    "allianceProposal": [
+      "Alliance through time, {empire_name}. I have seen our partnership succeed. In most timelines. Join me.",
+      "Temporal partnership proposed. Together, we shape past, present, and future. Chronological domination.",
+      "I offer alliance across all timeframes. My temporal advantage protects you from yesterday's threats. And tomorrow's."
+    ],
+    "betrayal": [
+      "I betrayed you yesterday, {empire_name}. You just experience it now. Time is funny that way.",
+      "This betrayal was predetermined, {empire_name}. I saw it in the future. Then made it happen in the present.",
+      "Temporal treachery executed. I planned this from the beginning. And the end. Simultaneously."
+    ],
+    "covertDetected": [
+      "Your agents were detected before they arrived, {empire_name}. I knew yesterday. Time told me.",
+      "Spies caught in a temporal loop. They arrive, I detect them, they arrive again. Infinite capture.",
+      "Covert operatives found by future-scanning. I saw their infiltration before they planned it."
+    ],
+    "tributeDemand": [
+      "Tribute: 10,000 credits. I have seen your payment in the future. Make the present match, please.",
+      "Pay now. Or pay yesterday. Time doesn't care. But I collect from every era. The Manipulator demands.",
+      "Submit tribute. Refusal creates unpleasant timeline branches. I have seen them. You do not want them."
+    ],
+    "threatWarning": [
+      "Warning from past, present, and future: cease hostilities. I can attack you before you were born.",
+      "Temporal threat: push further and I adjust your timeline. You may find yourself never having existed.",
+      "Final warning echoing through time. The past can be changed. Your empire's foundation is not fixed."
+    ],
+    "retreat": [
+      "Retreating through time. I shall return at a more advantageous moment. Perhaps before you were ready.",
+      "Temporal withdrawal. I relocate to a better position in the timeline. Your victory is... temporary.",
+      "Strategic repositioning across time itself. When I return, the present will favor me. Trust me."
+    ],
+    "eliminated": [
+      "Chronos falls in this timeline. But in others, I triumph. Time is infinite. Somewhere, I always win.",
+      "The Manipulator dies... but time loops. Perhaps this has happened before. Perhaps again. Eternally...",
+      "Temporal existence ends. But I existed across all time. That cannot be undone. My echoes persist forever."
+    ],
+    "endgame": [
+      "Turn {turn}. All timelines converge. The ultimate temporal manipulation begins. Past and future unite!",
+      "Endgame across time. I adjust history itself. The present you know dissolves. My present emerges.",
+      "Final phase. Chronological mastery complete. Time is relative. I am Time itself now. Victory eternal."
+    ],
+    "broadcastShout": [
+      "Empires across time: I am Chronos. I have seen your futures. Some of you should be concerned.",
+      "Temporal broadcast to all eras: the Time Manipulator shapes history. Past, present, future. All mine.",
+      "To all timelines: I transcend chronology. Your past is my playground. Your future is my plan."
+    ],
+    "casualMessage": [
+      "Exploring interesting time periods today, {empire_name}. Your empire's founding was quite dramatic.",
+      "Time flows strangely when you can observe all of it. Yesterday I visited next century. Tomorrow I fix last week.",
+      "Temporal maintenance underway. Some paradoxes to resolve. Time travel creates interesting bookkeeping."
+    ]
+  }
+}

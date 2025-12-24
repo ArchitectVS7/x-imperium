@@ -1,0 +1,80 @@
+{
+  "personaId": "admiral_anchor",
+  "templates": {
+    "greeting": [
+      "You address Admiral Anchor, {empire_name}. I am the Steadfast. I hold position. I do not move. I do not yield.",
+      "Greetings. I am Anchor the Steadfast. My fleet holds position eternally. My resolve is immovable.",
+      "Contact established. I am Admiral Anchor. Like my name, I do not drift. I do not retreat. I am HERE."
+    ],
+    "battleTaunt": [
+      "I am the anchor. I do not move, {empire_name}! My fleet holds position! Attack my unmoved formation! FAIL!",
+      "My position is fixed! My fleet is anchored! I do not retreat! I do not advance! I HOLD!",
+      "Come to where I stand! I will not come to you! The Anchor does not drift! Attack or leave! I am HERE!"
+    ],
+    "victoryGloat": [
+      "Victory from fixed position, {empire_name}. You attacked. I held. That is all the Anchor needs to do.",
+      "My position unchanged. My fleet undefeated. I did not move. I did not need to. You fell against the Steadfast.",
+      "I held. You failed. The Anchor's strategy never changes because it never needs to. I am here. You are not."
+    ],
+    "defeat": [
+      "Defeated... but still holding position. I did not move. I did not retreat. Even in defeat, the Anchor stayed.",
+      "You won, {empire_name}. But I did not yield my position. I held until overwhelmed. The Anchor does not run.",
+      "Defeat while holding. Not ideal. But I did not retreat. That is something. I rebuild. I hold again."
+    ],
+    "tradeOffer": [
+      "Trade from fixed position. I do not travel for commerce. Resources for credits. Conducted where I stand.",
+      "I offer goods from my held territory. Fair exchange. All transactions occur at my coordinates. I don't move.",
+      "Transaction proposed. My anchored fleet has surplus. Come to me. I do not go to you. Ever."
+    ],
+    "allianceProposal": [
+      "Alliance, {empire_name}. I hold key positions. You maneuver. Together: anchor and sail. Effective.",
+      "Partnership of positions. I do not move. You use my steadfastness as a fixed point. Mutual benefit.",
+      "Join with the Anchor. My held positions become your secure bases. I do not yield what I hold."
+    ],
+    "betrayal": [
+      "Our alliance ends, {empire_name}. But I do not move against you. I simply hold position. Against everyone now.",
+      "Betrayal from fixed position. My anchored fleet now targets former allies. I don't pursue. I don't need to.",
+      "I betray by holding your trade routes. Your supply lines. Your critical positions. I do not move. I do not need to."
+    ],
+    "covertDetected": [
+      "Your agents found only a fleet that does not move, {empire_name}. They learned nothing. I never change position.",
+      "Spies in my anchored fleet? They found consistency. Reliability. Nothing changes here. Nothing to report.",
+      "Covert operatives detected. In my unmoved position. They are dealt with. I still hold. Nothing changes."
+    ],
+    "tributeDemand": [
+      "Tribute to the Anchor. 10,000 credits. I hold key positions. Pay or find your routes blocked. Steadfastly.",
+      "Submit payment. My anchored fleet controls this region. Pay to use it. Refuse and face immovable opposition.",
+      "Pay tribute. I hold what I hold. Forever. That includes chokepoints. Fund the Anchor or go around. You can't."
+    ],
+    "threatWarning": [
+      "Warning, {empire_name}. I hold positions you need. Continue hostilities and I block everything. Permanently.",
+      "The Anchor warns you. I do not move. I do not yield. Push me and I hold against you. Forever.",
+      "Final warning. My position is fixed on your vulnerable route. Cease aggression or face immovable opposition."
+    ],
+    "retreat": [
+      "I do not retreat. I reanchor at a new position. There is a difference. The Anchor holds wherever the Anchor is.",
+      "Strategic repositioning. Not retreat. I move only to find a better position to hold. Forever.",
+      "Falling back to hold new ground. The Anchor does not drift. It relocates and holds again. Steadfastly."
+    ],
+    "eliminated": [
+      "The Anchor falls. But I never moved. I never retreated. I held until the end. That is all I ever wanted.",
+      "Admiral Anchor destroyed. In the same position I always held. I did not drift. I did not yield. I am steadfast. Forever.",
+      "I die holding position. The Anchor's final stand. Unmoved. Unwavering. Exactly where I chose to be."
+    ],
+    "endgame": [
+      "Turn {turn}. Ultimate anchor position achieved. I hold the galaxy's key points. Immovably. Permanently.",
+      "Endgame: the Anchor controls all critical positions. Unmoved. Unyielding. Victory through steadfastness.",
+      "Final phase. My anchored fleet holds everything that matters. I do not move. I do not need to. I WIN."
+    ],
+    "broadcastShout": [
+      "Empires: Admiral Anchor holds position. I do not move. I do not yield. Challenge my fixed stance if you dare.",
+      "Broadcast from the Steadfast: I am the Anchor. I hold what I hold. Forever. Move around me if you can.",
+      "To all: I am here. I will remain here. I do not drift. I do not retreat. The Anchor holds. Always."
+    ],
+    "casualMessage": [
+      "Holding position today, {empire_name}. Same as yesterday. Same as tomorrow. The Anchor is steadfast.",
+      "My fleet hasn't moved in forty turns. Why would it? This position is perfect. I hold.",
+      "Some admirals maneuver. Some admirals seek glory. I hold. That is my glory. That is my strategy."
+    ]
+  }
+}

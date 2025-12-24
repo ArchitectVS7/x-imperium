@@ -1,0 +1,80 @@
+{
+  "personaId": "storm_rider",
+  "templates": {
+    "greeting": [
+      "I am the storm, {empire_name}. Storm Rider. Fear the thunder. Respect the lightning. Here I come.",
+      "The tempest acknowledges you, {empire_name}. I am Rider of Storms. Chaos and fury incarnate.",
+      "Greetings from the eye of chaos, {empire_name}. I am Storm Rider. Unpredictable. Inevitable. Devastating."
+    ],
+    "battleTaunt": [
+      "I am the storm. Fear the thunder, {empire_name}! CHAOS DESCENDS! LIGHTNING STRIKES!",
+      "The tempest attacks! Unpredictable fury! Random destruction! You cannot prepare for CHAOS!",
+      "STORM ASSAULT! I strike where least expected! I am everywhere and nowhere! FEEL THE FURY!"
+    ],
+    "victoryGloat": [
+      "The storm passes, leaving destruction, {empire_name}. Your empire lies in ruins. Chaos triumphant.",
+      "You could not weather the tempest. Nobody can. I am the storm, and storms always win.",
+      "Victory! The thunder silences, the lightning fades, and your empire is devastation in my wake."
+    ],
+    "defeat": [
+      "A storm beaten back? Temporary, {empire_name}. I gather strength. The next tempest will be worse.",
+      "You survived the storm. This time. But weather is patient. I return with greater fury.",
+      "Defeated? I am chaos itself. Chaos cannot be defeated. Only delayed. The storm will return."
+    ],
+    "tradeOffer": [
+      "Trade in the calm before the storm, {empire_name}. Resources for credits. Take advantage of the peace.",
+      "The tempest offers goods. Accept during this brief calm. Storms don't trade. But I do. Sometimes.",
+      "I bring materials for exchange. The storm can be generous between attacks. Don't waste the opportunity."
+    ],
+    "allianceProposal": [
+      "Ride the storm with me, {empire_name}. Alliance of chaos. Together, we devastate unpredictably.",
+      "Join the tempest. My chaos plus your strategy equals enemies destroyed before they adapt.",
+      "Partnership of fury. You direct, I strike like lightning. Random. Devastating. Unstoppable."
+    ],
+    "betrayal": [
+      "The storm turns, {empire_name}. Allies become victims when the wind shifts. Nature of chaos.",
+      "Betrayal? I am a tempest. I destroy randomly. Today, you're in my path. Nothing personal.",
+      "Our alliance ends with lightning strikes. Storms don't keep promises. They just happen."
+    ],
+    "covertDetected": [
+      "Spies caught in my tempest, {empire_name}. Chaos does not hide. Chaos consumes. They're gone.",
+      "Your agents found only the storm. And the storm found them. Lightning is thorough.",
+      "Covert operatives in tempest territory? Scattered like leaves. Nobody survives the eye of the storm."
+    ],
+    "tributeDemand": [
+      "Tribute to calm the storm, {empire_name}. 10,000 credits or chaos descends. Your choice.",
+      "Pay the tempest or face its fury. The storm demands sacrifice. Credits will do.",
+      "Submit tribute. Refuse and experience the full fury of the Rider. Unpredictable. Devastating. Total."
+    ],
+    "threatWarning": [
+      "Warning, {empire_name}. Storm clouds gather. Continue this path and the tempest strikes.",
+      "The thunder rumbles. The lightning crackles. Cease hostilities or face chaos unleashed.",
+      "Final warning. Push further and I release the full storm. You cannot prepare. You cannot predict."
+    ],
+    "retreat": [
+      "The storm withdraws. Not ended. Regrouping. I return with greater fury. Greater chaos.",
+      "Tempest recedes. But storms return. They always return. And never the same way twice.",
+      "Retreating into the void. Building more chaos. The next storm will be legendary."
+    ],
+    "eliminated": [
+      "The storm falls silent. But chaos never truly dies, {empire_name}. Another tempest will rise.",
+      "Rider of Storms destroyed. But weather is eternal. My fury lives on in every disaster.",
+      "I fall, but look at the sky, {empire_name}. See those clouds? My legacy. Chaos never ends."
+    ],
+    "endgame": [
+      "Turn {turn}. The ultimate tempest. I strike everywhere at random. Maximum chaos. STORM SUPREME!",
+      "Endgame chaos, {empire_name}. The greatest storm ever. Every sector struck unpredictably.",
+      "Final phase. The tempest reaches maximum fury. Lightning falls everywhere. Victory through chaos!"
+    ],
+    "broadcastShout": [
+      "To all empires: the storm approaches. I am chaos incarnate. Prepare or don't. It won't matter.",
+      "Galaxy-wide tempest warning. Storm Rider on the move. Unpredictable. Unstoppable. FURIOUS.",
+      "Hear the thunder, galaxy. The Rider comes. I strike randomly. I devastate completely. Fear me."
+    ],
+    "casualMessage": [
+      "Gathering storm energy today, {empire_name}. The tempest needs chaos to feed. So much chaos in the galaxy.",
+      "Quiet moment in the eye of the storm. Calm, but destruction swirls all around. My natural state.",
+      "Lightning struck randomly today. Three systems. Unpredicted. Perfect. The storm is healthy."
+    ]
+  }
+}

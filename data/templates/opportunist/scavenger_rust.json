@@ -1,0 +1,80 @@
+{
+  "personaId": "scavenger_rust",
+  "templates": {
+    "greeting": [
+      "Picking through debris, finding you, {empire_name}. I am Scavenger Rust. One empire's trash is my treasure.",
+      "Greetings from the wreckage. I am Rust the Scrapper. I pick at corpses of empires. Salvage ruins. Find value.",
+      "You found the Scavenger, {empire_name}. I am Rust. I wait for empires to fall. Then I take what's left."
+    ],
+    "battleTaunt": [
+      "One empire's trash is my treasure, {empire_name}! Your weakened fleet becomes my salvage! SCAVENGING COMMENCES!",
+      "I've been watching you weaken! Now I pick the bones! Your debris field will be GLORIOUS!",
+      "You're weakened! Time for the scavenger! I'll salvage everything you have left! RUST CLAIMS THE SCRAPS!"
+    ],
+    "victoryGloat": [
+      "Excellent debris, {empire_name}. Your defeat provides wonderful salvage. The Scavenger is pleased.",
+      "Victory! And so much to scrap! Your former empire is now my resource pile! One empire's end is my beginning!",
+      "Your wreckage is my treasure. Salvage operations complete. Thank you for the scraps, {empire_name}."
+    ],
+    "defeat": [
+      "You're still too strong, {empire_name}. I'll wait until you weaken. The Scavenger is patient. Debris comes to all.",
+      "Not dead enough yet. I miscalculated your decay. I'll wait longer. Watch you crumble. Then return.",
+      "Defeat. I attacked too early. You're not ripe for scavenging yet. I'll watch. I'll wait. I'll return."
+    ],
+    "tradeOffer": [
+      "Trade, {empire_name}. Salvaged goods for credits. One empire's trash, your treasure. Fair exchange.",
+      "I offer scraps made new. Recycled resources. Good quality. Sustainable economy. The scavenger's way.",
+      "Transaction: salvaged materials for payment. My recycled goods are quality. Nothing wasted in Rust's domain."
+    ],
+    "allianceProposal": [
+      "Alliance, {empire_name}. You fight. I clean up afterward. Salvage rights to defeated enemies. Fair partnership.",
+      "Join with the Scavenger. You conquer. I scrap. We both profit from others' debris. Natural cooperation.",
+      "Partnership: I get the leftovers. You get victory. Together: efficient use of fallen empires."
+    ],
+    "betrayal": [
+      "Sorry, {empire_name}. You looked weak. Couldn't resist. Your debris is too tempting. Scavenger's nature.",
+      "Our alliance ended when you started failing. I scavenge the weak. You became weak. Nothing personal.",
+      "Betrayal is just early scavenging. Why wait for you to fall when I can push? Your scraps await."
+    ],
+    "covertDetected": [
+      "Your spies found nothing but scraps, {empire_name}. My domain is debris. They learned what I already know: trash is treasure.",
+      "Agents in my junkyard? They're now part of it. Nothing wasted. Everything recycled. Including spies.",
+      "Covert operatives detected. In my salvage yards. They're now salvage themselves. The Scavenger wastes nothing."
+    ],
+    "tributeDemand": [
+      "Tribute or I pick you apart, {empire_name}. 10,000 credits. Pay or become debris for scavenging.",
+      "Submit payment. The alternative is accelerated decay. I'll make you into scraps. Then take those scraps.",
+      "Pay the Scavenger. Or I turn your empire into the kind of wreckage I love. Your choice."
+    ],
+    "threatWarning": [
+      "Warning, {empire_name}. You're looking weak. Scavengers notice weakness. Stop declining or face opportunistic attack.",
+      "I see you struggling. The Scavenger watches. Continue weakening and I move in. Final warning.",
+      "Rust warns you: recover your strength or become debris. I'm circling. Waiting. The scrapper is patient."
+    ],
+    "retreat": [
+      "Retreating to salvage yards. You're too strong now. But debris comes to all. I'll wait.",
+      "Withdrawing to watch. You're not ready for scavenging yet. But I'm patient. Decay is inevitable.",
+      "Falling back. The Scavenger knows when prey is too healthy. I'll return when you're properly weakened."
+    ],
+    "eliminated": [
+      "The Scavenger becomes debris, {empire_name}. Ironic. But someone will salvage me. The cycle continues.",
+      "Rust crumbles. But scavenging never dies. Others will pick through ruins. Including mine.",
+      "I fall. But I die knowing: someone will salvage my remains. One empire's trash is another's treasure."
+    ],
+    "endgame": [
+      "Turn {turn}. Maximum scavenging. Every weakened empire is my target. The galaxy's debris is my bounty.",
+      "Endgame: the great salvage. So many falling empires. So much wreckage. The Scavenger's paradise.",
+      "Final phase. Rust claims all the leftovers. While others fight, I inherit their debris. Victory through patience."
+    ],
+    "broadcastShout": [
+      "To all empires: Scavenger Rust watches. Weaken, and I come. Your debris is my treasure. I wait.",
+      "Broadcast from the salvage yards: one empire's trash is my treasure. I'm watching you all. Patiently.",
+      "Hear me, galaxy: I am the Scrapper. I pick the bones of failed empires. Don't fail. Or do. I profit either way."
+    ],
+    "casualMessage": [
+      "Sorting salvage today, {empire_name}. Found interesting debris from a fallen empire. Good haul.",
+      "The scrap market is healthy. So many empires weakening. So much future salvage. I am content.",
+      "Watching the galaxy for opportunities, {empire_name}. Someone's always falling. That's when I move."
+    ]
+  }
+}

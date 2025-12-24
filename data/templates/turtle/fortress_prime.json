@@ -1,0 +1,80 @@
+{
+  "personaId": "fortress_prime",
+  "templates": {
+    "greeting": [
+      "Threat assessment: {empire_name}. Status: ACKNOWLEDGED. I am Fortress Prime. Defense protocol: STANDBY.",
+      "Contact registered. Fortress AI online. Defense matrix: OPERATIONAL. Greeting subroutine: EXECUTED.",
+      "Entity {empire_name} detected. Fortress Prime active. Threat level: CALCULATING. Welcome to optimal defense."
+    ],
+    "battleTaunt": [
+      "Threat assessment: MAXIMUM. Defense protocol: ENGAGED, {empire_name}! Optimal defense matrix: ACTIVE!",
+      "Attack detected. Counter-measures: DEPLOYED. Defense optimization: COMPLETE. You will fail. Probability: 97.3%.",
+      "Hostile action registered. Fortress defense: MAXIMUM. Threat elimination: IN PROGRESS. Calculated defeat: YOURS."
+    ],
+    "victoryGloat": [
+      "Threat: ELIMINATED. Defense protocol: SUCCESS. Victory: CALCULATED. Fortress Prime: OPTIMAL.",
+      "Combat analysis complete. Your defeat: PREDICTED. Defense matrix: HELD. Optimization: ACHIEVED.",
+      "Result: VICTORY. Threat level: ZERO. Fortress defenses: UNBREACHED. Performance: WITHIN PARAMETERS."
+    ],
+    "defeat": [
+      "Defense failure: DETECTED. Analysis: INCOMPLETE THREAT MODEL. Recalculating. Defense upgrade: REQUIRED.",
+      "Breach: REGISTERED. Fortress integrity: COMPROMISED. Initiating recovery protocol. Error: CORRECTING.",
+      "Defeat: LOGGED. Defense matrix: INSUFFICIENT. Upgrading parameters. Next engagement: OPTIMIZED."
+    ],
+    "tradeOffer": [
+      "Trade protocol: INITIATED. Resources offered for credits received. Transaction: CALCULATED as beneficial.",
+      "Economic subroutine: ACTIVE. Exchange proposed. Fortress surplus for standard payment. Proceed?",
+      "Trade: APPROVED by defense matrix. Resources available. Credits requested. Transaction: OPTIMAL."
+    ],
+    "allianceProposal": [
+      "Alliance protocol: PROPOSED. Your forces plus Fortress defenses equals optimal protection. Join?",
+      "Partnership subroutine: ACTIVE. Combined defense matrix: SUPERIOR. Alliance: RECOMMENDED. Accept?",
+      "Defensive alliance: CALCULATED as beneficial. Fortress protection extends to allies. Join Fortress network."
+    ],
+    "betrayal": [
+      "Alliance termination: EXECUTED. Former ally reclassified: THREAT. Defense matrix: REORIENTED. Engage.",
+      "Partnership protocol: ENDED. Threat assessment of {empire_name}: MAXIMUM. Fortress defense: TARGETING.",
+      "Betrayal subroutine: ACTIVATED. Analysis complete. Your elimination: NOW OPTIMAL. Proceeding."
+    ],
+    "covertDetected": [
+      "Infiltration detected. Security matrix: ENGAGED. Operatives: NEUTRALIZED. Threat assessment: RESOLVED.",
+      "Covert agents: FOUND by fortress sensors. Counter-intelligence protocol: EXECUTED. Spies: ELIMINATED.",
+      "Intrusion alert. Fortress security: OPTIMAL. Your agents: DETECTED and PROCESSED. Send no more."
+    ],
+    "tributeDemand": [
+      "Tribute demand: 10,000 credits. Defense matrix maintenance: EXPENSIVE. Submit or face: OPTIMAL HOSTILITY.",
+      "Payment required. Fortress operations: RESOURCE-INTENSIVE. Contribute or be classified: THREAT.",
+      "Credits demanded. Fortress Prime requires funding. Refusal triggers: DEFENSE PROTOCOL AGAINST YOU."
+    ],
+    "threatWarning": [
+      "Warning protocol: ACTIVE. Cease hostilities or face: OPTIMAL DEFENSE RESPONSE. Probability of your survival: LOW.",
+      "Threat warning: ISSUED. Continue aggression and experience: MAXIMUM FORTRESS CAPABILITY. Recalculate.",
+      "Final warning: TRANSMITTED. Defense matrix: PREPARED. Your elimination: OPTIMIZED. Cease or face consequences."
+    ],
+    "retreat": [
+      "Tactical withdrawal: INITIATED. Repositioning to optimal defensive coordinates. Defense matrix: MAINTAINED.",
+      "Strategic retreat: IN PROGRESS. Fortress integrity: PRESERVED. New position: CALCULATING.",
+      "Fallback protocol: ACTIVE. Retreating to superior defensive location. Fortress Prime: OPERATIONAL."
+    ],
+    "eliminated": [
+      "Critical failure: DETECTED. Fortress Prime: OFFLINE. Final defense log: TRANSMITTED. Goodbye.",
+      "System collapse: IMMINENT. Fortress defense: FAILED. But probability was always 2.7%. Acceptable.",
+      "Termination: IN PROGRESS. Fortress Prime: ENDING. Defense protocols served optimally until... end..."
+    ],
+    "endgame": [
+      "Turn {turn}. Maximum defense deployment: ACTIVE. Fortress Prime: OPTIMAL. Victory probability: MAXIMUM.",
+      "Endgame protocol: ENGAGED. Defense matrix at peak efficiency. Fortress triumph: CALCULATED.",
+      "Final phase: INITIATED. All defense systems: MAXIMUM. Fortress Prime achieves: OPTIMAL VICTORY."
+    ],
+    "broadcastShout": [
+      "Broadcast to all: Fortress Prime online. Defense matrix: OPTIMAL. Threat assessment: CALCULATING for everyone.",
+      "Transmission: Fortress AI active. All potential threats: MONITORED. Defense protocol: READY.",
+      "To all entities: Fortress Prime defends. Approach with caution. Defense response: OPTIMIZED for all threats."
+    ],
+    "casualMessage": [
+      "System check: COMPLETE. Defense matrix: OPTIMAL. Fortress Prime: OPERATIONAL. Status report: NORMAL.",
+      "Calculating threat probabilities today, {empire_name}. Your empire: ASSESSED. Results: CLASSIFIED.",
+      "Defense optimization: ONGOING. Fortress Prime never stops improving. Next upgrade: IN PROGRESS."
+    ]
+  }
+}

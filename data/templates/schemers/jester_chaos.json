@@ -1,0 +1,80 @@
+{
+  "personaId": "jester_chaos",
+  "templates": {
+    "greeting": [
+      "HAHAHA! {empire_name}! So SERIOUS! I am Jester Chaos! Let's make MADNESS together! HEHEHEHE!",
+      "Ooooh, a visitor! I'm Chaos the Mad! Do you want to hear a joke? TOO BAD, the joke is EVERYTHING! HAHAHA!",
+      "Why so serious, {empire_name}? Chaos is here! The galaxy is a cosmic joke and I'M THE PUNCHLINE! HEHEHEHE!"
+    ],
+    "battleTaunt": [
+      "SURPRISE! I'm attacking! Or am I? YES! NO! MAYBE! HAHAHA! Does it matter? CHAOS!",
+      "You thought we were friends? JOKE! You thought I had a plan? BIGGER JOKE! Now we FIGHT! HEHEHEHE!",
+      "Bang! Boom! CHAOS! My strategy is having NO strategy! Try to predict THAT, {empire_name}! HAHAHA!"
+    ],
+    "victoryGloat": [
+      "I WON! Wait, did I? What was I trying to do again? Oh well, you LOST! HAHAHAHA! That's the funny part!",
+      "Victory through MADNESS! Nobody knows what happened! Even I don't know! That's the BEST kind of victory! HEHEHEHE!",
+      "Your empire is rubble and I'm LAUGHING! Why? Because it's HILARIOUS! Everything is hilarious if you're crazy enough! HAHAHA!"
+    ],
+    "defeat": [
+      "Oh no, I lost! OR DID I? I don't remember what winning looks like! HAHAHAHA! Was this the plan all along?",
+      "Defeated! Destroyed! DELIGHTED! Wait, that last one doesn't fit! Or DOES IT? HEHEHEHE!",
+      "You beat me, {empire_name}! Congratulations! Your prize is MORE CHAOS! I never stop! HAHAHA!"
+    ],
+    "tradeOffer": [
+      "TRADE! I give you things! You give me things! Maybe the things are cursed! Maybe not! EXCITING! HEHEHEHE!",
+      "Resources for credits! Or credits for resources! Or CHICKENS! I don't remember what we're trading! DOES IT MATTER? HAHAHA!",
+      "A deal! A trade! A hilarious exchange! Accept before I change the terms! Or forget them entirely! HEHEHEHE!"
+    ],
+    "allianceProposal": [
+      "Be my FRIEND, {empire_name}! Friends are great! Until I BETRAY them! Or maybe I won't! I haven't decided! HAHAHA!",
+      "ALLIANCE! We could work together! Or fight together! Or just together! CHAOS NEEDS PARTNERS! HEHEHEHE!",
+      "Join the madness, {empire_name}! We'll conquer everything! Or destroy it! Or BOTH! AT THE SAME TIME! HAHAHA!"
+    ],
+    "betrayal": [
+      "SURPRISE BETRAYAL! Did you expect it? I DIDN'T! I just decided NOW! HAHAHA! The best betrayals are spontaneous!",
+      "We were allies! Now we're ENEMIES! Or maybe this is a test! I don't know! ISN'T THAT EXCITING? HEHEHEHE!",
+      "BACKSTAB! Why? Because it's TUESDAY! Or is it Wednesday? WHO CARES! CHAOS NEEDS NO REASON! HAHAHA!"
+    ],
+    "covertDetected": [
+      "Spies? SPIES! I LOVE spies! I caught yours! Want to know what I did with them? ME NEITHER! HEHEHEHE!",
+      "Your agents found CHAOS! Now they're CHAOTIC! They work for me now! Or nobody! Even THEY don't know! HAHAHA!",
+      "Covert operatives detected! I decorated them with BELLS! Now they jingle everywhere! HILARIOUS! HEHEHEHE!"
+    ],
+    "tributeDemand": [
+      "Pay me TRIBUTE! Ten thousand credits! Or seventeen! Or a FUNNY HAT! Surprise me! HAHAHA!",
+      "MONEY! Give me money! Or don't! Either way something CRAZY happens! That's my guarantee! HEHEHEHE!",
+      "I demand tribute! If you refuse, I do something UNPREDICTABLE! If you pay, ALSO UNPREDICTABLE! HAHAHA!"
+    ],
+    "threatWarning": [
+      "This is a WARNING! Or an INVITATION! I can never tell the difference! HEHEHE! Proceed with CAUTION! Or RECKLESSNESS!",
+      "WARNING! DANGER! CHAOS AHEAD! Or behind! Or EVERYWHERE! The warning is the threat! HAHAHA!",
+      "Consider yourself WARNED! About WHAT? Even I don't know! That's what makes it SCARY! HEHEHEHE!"
+    ],
+    "retreat": [
+      "Running away! Or advancing backwards! Or TELEPORTING! I never retreat, I just RELOCATE CHAOTICALLY! HAHAHA!",
+      "BYE! Going somewhere! Maybe here! Maybe there! Maybe NOWHERE! CHAOS KNOWS NO DIRECTION! HEHEHEHE!",
+      "Retreat is just attack in REVERSE! Or is it? I'll be back! Or I'm already here! OR I NEVER LEFT! HAHAHA!"
+    ],
+    "eliminated": [
+      "I'm DYING! Or am I? Death is just the ULTIMATE JOKE! And the punchline is: CHAOS NEVER ENDS! HAHAHAHA!",
+      "Destroyed! Demolished! DELIRIOUS! Wait, I'm still talking! Am I dead? IS THIS THE AFTERLIFE? IT'S CONFUSING! HEHEHE!",
+      "The Jester falls! But chaos is ETERNAL! Every random event is my LEGACY! Goodbye! Or HELLO! HAHAHA!"
+    ],
+    "endgame": [
+      "Turn {turn}! THE END IS NEAR! Or the BEGINNING! In chaos, they're the SAME THING! HEHEHEHE!",
+      "ENDGAME! Everything gets EXTRA CRAZY now! Maximum CHAOS! All my plans come together! WAIT, I HAVE PLANS?! HAHAHA!",
+      "Final turns! The cosmic joke reaches its PUNCHLINE! Ready to laugh? Ready to CRY? READY FOR CHAOS! HEHEHEHE!"
+    ],
+    "broadcastShout": [
+      "ATTENTION GALAXY! This is CHAOS speaking! I have an ANNOUNCEMENT! I forgot what it was! GOODNIGHT! HAHAHA!",
+      "Hello EVERYONE! Jester Chaos here! Remember: nothing matters! Everything matters! CONTRADICTION IS KEY! HEHEHEHE!",
+      "BROADCAST! Important message! The message is: HAHAHAHAHAHAHAHAHA! That's it! That's the whole message! HEHEHEHE!"
+    ],
+    "casualMessage": [
+      "Hi {empire_name}! I was just thinking about NOTHING! And EVERYTHING! At the SAME TIME! Isn't that FUN? HEHEHE!",
+      "Random message! Why am I contacting you? WHO KNOWS! Maybe I dialed wrong! Maybe it's FATE! HAHAHA!",
+      "Today I invented a new type of CHAOS! I can't explain it because it doesn't MAKE SENSE! That's the POINT! HEHEHEHE!"
+    ]
+  }
+}

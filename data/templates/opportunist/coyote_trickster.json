@@ -1,0 +1,80 @@
+{
+  "personaId": "coyote_trickster",
+  "templates": {
+    "greeting": [
+      "Why should I fight, {empire_name}? I'm Coyote Trickster. I play both sides. Let others destroy each other.",
+      "Greetings, {empire_name}. I am Trickster the Sly. I never directly fight. I make enemies fight each other.",
+      "You found the Coyote. I was busy playing sides. Making empires destroy themselves. What brings you here?"
+    ],
+    "battleTaunt": [
+      "Why should I fight? Let them destroy each other, {empire_name}! I tricked them into attacking each other!",
+      "The trick worked! I made your enemies fight each other! Now I clean up the survivors! CLEVER VICTORY!",
+      "Watch the chaos I created! Empires destroying empires! All because of my whispers! Now I profit!"
+    ],
+    "victoryGloat": [
+      "Victory without fighting, {empire_name}. I convinced them to attack each other. You're what's left.",
+      "The Trickster wins. I played everyone. They destroyed each other. I just... cleaned up.",
+      "Why fight when manipulation works? I pitted enemies against each other. Now I alone remain."
+    ],
+    "defeat": [
+      "You saw through my tricks? Impressive, {empire_name}. But I'll find new ways to play sides.",
+      "Defeated. My manipulation was detected. I need better tricks. Cleverer deceptions. More chaos.",
+      "The Trickster tricked? Rare. I'll learn. Find new chaos to create. New enemies to pit against each other."
+    ],
+    "tradeOffer": [
+      "Trade, {empire_name}. Fair deal. No tricks. This time. Mostly. Resources for credits. Honest exchange.",
+      "I offer goods. Legitimate transaction. The Trickster can trade honestly. When it benefits me.",
+      "Transaction proposed. Straightforward. No manipulation. I promise. Would the Coyote lie? Don't answer."
+    ],
+    "allianceProposal": [
+      "Alliance, {empire_name}. Together, we create chaos. Make others fight. We profit from destruction.",
+      "Join the Trickster. I manipulate your enemies into fighting each other. We share the spoils.",
+      "Partnership of deception. I play sides. You benefit. Together: maximum chaos, minimum effort."
+    ],
+    "betrayal": [
+      "Betrayal? I was playing sides all along, {empire_name}. You were one of the sides. Now: chaos.",
+      "The trick reveals itself. Our alliance was part of larger manipulation. You against others. Now you against me.",
+      "I never directly fight. But I tricked you into weakening yourself. Now I finish what you started."
+    ],
+    "covertDetected": [
+      "Your spies found tricks within tricks, {empire_name}. They're now confused. Playing sides they don't understand.",
+      "Agents in my domain? I told them lies to carry back. They think they found truth. Trickster's delight.",
+      "Covert operatives detected. I filled their heads with misinformation. They work for me now. Without knowing."
+    ],
+    "tributeDemand": [
+      "Tribute: 10,000 credits. Or I trick your allies into abandoning you. The Coyote's manipulation begins.",
+      "Pay the Trickster. Refuse and I whisper lies to everyone you trust. Watch your alliances crumble.",
+      "Submit payment. Or I play your empire against itself. Internal chaos is easy to create. Very easy."
+    ],
+    "threatWarning": [
+      "Warning, {empire_name}. Push me and I create chaos around you. Your allies become enemies. My specialty.",
+      "The Trickster warns you. I can turn your friends against you with whispers. Cease hostility.",
+      "Final warning. One more aggressive move and I unleash manipulation. Your empire will tear itself apart."
+    ],
+    "retreat": [
+      "Slipping away to cause chaos elsewhere. The Trickster never truly retreats. Just finds new sides to play.",
+      "Withdrawing to whisper in other ears. Create new conflicts. The Coyote's work is never done.",
+      "Falling back. But I leave seeds of chaos behind. Watch your allies, {empire_name}. Some heard my whispers."
+    ],
+    "eliminated": [
+      "The Trickster falls. But the chaos I created continues. Empires fight because of my whispers. Legacy.",
+      "Coyote ends. But sides still play against each other. Manipulation outlives the manipulator.",
+      "Destroyed. But I die laughing. So many tricks played. So much chaos created. Worth everything."
+    ],
+    "endgame": [
+      "Turn {turn}. Maximum trickery. Every empire manipulated against each other. I sit in the chaos. Laughing.",
+      "Endgame: the ultimate play. All sides against all sides. The galaxy destroys itself. I survive.",
+      "Final phase. My manipulation reaches completion. Everyone fights everyone. The Trickster wins."
+    ],
+    "broadcastShout": [
+      "Empires: Coyote Trickster plays all sides. Trust nothing. Your allies may already be my pawns.",
+      "Broadcast: I create chaos. I pit empires against each other. Some of you are already manipulated. Which ones?",
+      "To all: why fight when you can make others fight? I am the master of this. Your conflicts are my entertainment."
+    ],
+    "casualMessage": [
+      "Playing sides today, {empire_name}. Whispered to three empires. Now they hate each other. Productive.",
+      "Creating chaos is an art. I've practiced for ages. Today: two new conflicts sparked. My craftsmanship.",
+      "Quiet moment between tricks. Enjoying the conflicts I've created. So much destruction. So little effort."
+    ]
+  }
+}

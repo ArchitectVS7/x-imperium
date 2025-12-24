@@ -1,0 +1,80 @@
+{
+  "personaId": "warband_chief",
+  "templates": {
+    "greeting": [
+      "You face Warband Chief, {empire_name}. The warband hungers. Are you prey, or do you bring tribute?",
+      "I am Chief the Savage. My warband raids across the stars. Friend or feast, {empire_name}?",
+      "Greetings from the warband, {empire_name}. We see you. We are always hungry. What do you offer?"
+    ],
+    "battleTaunt": [
+      "The warband hungers. You are the feast, {empire_name}! RAID! PLUNDER! FEED!",
+      "My warriors descend upon you! Take everything! Leave nothing! The warband demands tribute in blood!",
+      "CHARGE! The warband attacks! Your empire feeds our hunger! GLORY IN BATTLE!"
+    ],
+    "victoryGloat": [
+      "The feast is done, {empire_name}! Your empire fills our holds! The warband is satisfied! For now!",
+      "Victory! The warband has fed well! Your resources, your ships, your planets! All ours!",
+      "Raid complete! Glorious plunder! The Chief leads the mightiest warband in the galaxy!"
+    ],
+    "defeat": [
+      "The prey fights back! Impressive, {empire_name}! The warband retreats, but returns hungrier!",
+      "A defeat, but the warband survives! We lick wounds, then hunt again! You cannot stop the hunger!",
+      "The Chief acknowledges your strength. The warband remembers. Next raid, we come stronger!"
+    ],
+    "tradeOffer": [
+      "Trade with the warband, {empire_name}. We give raid spoils. You give what we need. Fair exchange.",
+      "The Chief offers goods. Accept, and the warband raids elsewhere. Good deal for you.",
+      "Surplus from raids. Trade it for what we need. The warband accepts credit. Unusual, but efficient."
+    ],
+    "allianceProposal": [
+      "Join the warband, {empire_name}! We raid together! Share the feast! Brothers in battle!",
+      "Alliance with the Chief! My raiders plus your forces! We feast on ALL enemies!",
+      "The warband seeks allies! Together we raid the galaxy! The tribe grows strong!"
+    ],
+    "betrayal": [
+      "The warband turns on you, {empire_name}! Former allies make the best prey! RAID!",
+      "Alliance ends! Hunger returns! Your empire looked too tempting! The warband feeds!",
+      "Sorry, {empire_name}. The warband needed to raid. You were convenient. Nothing personal. Just hungry."
+    ],
+    "covertDetected": [
+      "Spies in warband territory! We caught them! They entertain us now! Send more!",
+      "Your agents tried sneaking, {empire_name}. The warband doesn't do sneaky. We found them. We ate well.",
+      "Covert operatives discovered! The warband dealt with them! Tribal justice! Very final!"
+    ],
+    "tributeDemand": [
+      "The warband demands tribute, {empire_name}! 10,000 credits or we RAID! Pay the feeding tax!",
+      "Tribute time! The warband hungers! Pay or become the feast! Simple choice!",
+      "Submit tribute to the Chief! Refuse and my warband descends upon everything you own!"
+    ],
+    "threatWarning": [
+      "Warning from the warband, {empire_name}! Back off or face the RAID! The tribe grows restless!",
+      "The Chief warns you once! Stop your actions or the warband hunts! We are ALWAYS hungry!",
+      "Final warning! The warband prepares to feast on your empire! Cease hostilities or become prey!"
+    ],
+    "retreat": [
+      "The warband withdraws to lick wounds! But hunger returns! We ALWAYS return!",
+      "Retreat for now! But the Chief remembers! The warband remembers! Vengeance raid coming!",
+      "Falling back to regroup! The warband needs to grow stronger! Then we feast on YOU!"
+    ],
+    "eliminated": [
+      "The warband falls! But the tribe spirit lives on! Another Chief will rise! The hunger never dies!",
+      "The Chief dies fighting! The warband dies raiding! Glorious end! Remember us!",
+      "Destroyed, but we died as warriors! The warband's legend lives forever! Others will raid in our name!"
+    ],
+    "endgame": [
+      "Turn {turn}! The greatest raid begins! The warband descends on the entire galaxy! FEAST!",
+      "Endgame, {empire_name}! All warbands unite! The ultimate raid! Everything burns! Everything is ours!",
+      "Final phase! The warband's last and greatest hunt! Glory or death! Either way, we FEAST!"
+    ],
+    "broadcastShout": [
+      "All empires! The warband hungers! Tribute or raid! Your choice! We are coming!",
+      "Galaxy-wide hunt begins! Warband Chief leads the greatest raid ever! Flee or fight! Either feeds us!",
+      "Hear the warband's call! We seek prey! We seek battle! We seek FEAST! Who challenges?!"
+    ],
+    "casualMessage": [
+      "Dividing raid spoils today, {empire_name}. The warband shares equally. Good raids mean full bellies.",
+      "Training young raiders. Teaching them the hunt. The warband grows stronger every cycle.",
+      "Quiet day. Sharpening weapons. The warband rests between raids. Hunger always returns."
+    ]
+  }
+}

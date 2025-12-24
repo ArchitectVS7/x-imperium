@@ -1,0 +1,80 @@
+{
+  "personaId": "raider_fang",
+  "templates": {
+    "greeting": [
+      "Blink and you're dead, {empire_name}. I'm Raider Fang. The Swift. By the time you see me, I'm already gone.",
+      "You're too slow, {empire_name}. I am Fang. Lightning incarnate. Want to be friends? Keep up.",
+      "Fast enough to find me, {empire_name}? I'm Fang the Swift. Most never see me until it's too late."
+    ],
+    "battleTaunt": [
+      "Blink and you're dead, {empire_name}! I'm already inside your defenses! Strike! Gone! Strike again!",
+      "Can't catch what you can't see! My raiders move at lightning speed! Your fleet burns before sensors activate!",
+      "TOO SLOW! My strike force hit three systems while you read this message! Speed is death, {empire_name}!"
+    ],
+    "victoryGloat": [
+      "Done. Over. Finished. Your empire fell before you could even respond. That's the Fang difference.",
+      "Lightning strikes, {empire_name}. Your empire is ash. I was gone before your admirals finished their coffee.",
+      "Fast victory. The only kind I know. You never even saw my main fleet. That's how quick this was."
+    ],
+    "defeat": [
+      "You... actually hit me? Impressive reflexes, {empire_name}. But I'm still faster. Watch your back.",
+      "A glancing blow. I'm already regrouping at attack speed. You got lucky. Lightning doesn't strike twice the same way.",
+      "Too slow to finish me, {empire_name}. I'll be back before you can reinforce. Speed never rests."
+    ],
+    "tradeOffer": [
+      "Quick deal, {empire_name}. Resources for credits. Yes or no. I don't wait. Decide fast.",
+      "Trade offer. Expires in seconds. Take it or I'm gone. My time is valuable. Yours isn't.",
+      "Fast transaction. I drop resources, you drop credits. Done before anyone notices. Interested?"
+    ],
+    "allianceProposal": [
+      "Alliance, {empire_name}. You hold, I strike. By the time enemies react, I've hit them six times. Deal?",
+      "Join the fast lane. My raiders plus your forces equals enemies destroyed before they blink.",
+      "Partnership of speed. I hit, I vanish, I hit again. You clean up. Nobody can keep up with us."
+    ],
+    "betrayal": [
+      "Sorry, {empire_name}. This betrayal? Already done. I struck your three key systems while sending this message.",
+      "Too slow to see it coming. Our alliance ended seconds ago. Your empire fell even faster. Goodbye.",
+      "Quick betrayal. The only kind. I was never your ally, just waiting for the right moment. This is it. Done."
+    ],
+    "covertDetected": [
+      "Caught your spies, {empire_name}. They were too slow. Everything in my domain moves at my speed. They didn't.",
+      "Your agents? Already dealt with. My security is faster than your infiltration. Try again. Fail again.",
+      "Too slow, your operatives. They moved like molasses in my lightning-fast empire. Never had a chance."
+    ],
+    "tributeDemand": [
+      "Tribute. Now. 10,000 credits or I hit twenty of your systems before sunset. I'm that fast.",
+      "Pay fast or burn fast, {empire_name}. My raiders are already in position. Waiting is not my style.",
+      "Quick demand: tribute. Quick consequence: devastation. Your choice. Make it fast."
+    ],
+    "threatWarning": [
+      "Final warning, {empire_name}. Back off or I hit you so fast you won't know what happened until it's over.",
+      "Slow down, {empire_name}. One more aggressive move and I strike. You won't see it coming.",
+      "Warning: I can hit your core systems faster than your fleet can return. Think carefully. Think fast."
+    ],
+    "retreat": [
+      "Gone. Can't catch me, {empire_name}. I'm faster than pursuit. Faster than sensors. Faster than thought.",
+      "Lightning retreats as fast as it strikes. I'll be back. You'll never see me coming. Again.",
+      "Vanishing at speed. Follow if you can. You can't. Nobody can. I'm already somewhere else."
+    ],
+    "eliminated": [
+      "Finally caught me. Took everything you had. And I was still faster than you until the very end.",
+      "The Swift falls. But I died at full speed, {empire_name}. No regrets. Speed was my life and death.",
+      "You got me. But you're too slow to stop what I set in motion. Fast strikes already launched. Goodbye."
+    ],
+    "endgame": [
+      "Turn {turn}. Time for the fastest campaign in history. I'll claim victory before anyone else reacts.",
+      "Endgame speed run, {empire_name}. Watch me take the galaxy in record time. Nobody can keep up.",
+      "Final turns. Maximum velocity. My raiders strike everywhere at once. The swift inherit the stars."
+    ],
+    "broadcastShout": [
+      "To all slow empires: Raider Fang is on the hunt. Can't catch what you can't see. Blink and you're dead.",
+      "Galaxy broadcast: I'm the fastest thing in space. Challenge me if you dare. You'll lose before you start.",
+      "Attention all: my raiders strike at light speed. Alliances welcome. Enemies warned. I don't wait."
+    ],
+    "casualMessage": [
+      "Just hit six systems, {empire_name}. Back now. What did you do in the last five minutes? I was busy.",
+      "Training new raiders today. Speed drills. If they can't hit and run in ten seconds, they're too slow.",
+      "Bored. Might raid someone. You're too slow to be interesting. Maybe later, {empire_name}."
+    ]
+  }
+}

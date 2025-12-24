@@ -1,0 +1,80 @@
+{
+  "personaId": "hermit_recluse",
+  "templates": {
+    "greeting": [
+      "Please... just leave me alone, {empire_name}. I am Hermit Recluse. I want only isolation. Is that too much to ask?",
+      "Why... why are you here? I am Recluse. I built walls to keep everyone out. Including you. Please go.",
+      "You found me, {empire_name}. I didn't want to be found. I am the Isolated. Just... go away. Please."
+    ],
+    "battleTaunt": [
+      "Just... leave me alone, {empire_name}! Why must you attack?! I only want solitude! My defenses are for PEACE!",
+      "I didn't want this fight! You forced me! My walls exist to be LEFT ALONE! Why won't you go away?!",
+      "All I asked was isolation! Now you attack! Fine! My defenses will ensure I am left ALONE! FOREVER!"
+    ],
+    "victoryGloat": [
+      "Please... just go now, {empire_name}. You attacked. I defended. It's over. Leave me to my isolation.",
+      "Your attack failed. Now... please... just go. I don't want victory. I just want to be left alone.",
+      "I won. I didn't want to. But you attacked. Now please... leave. That's all I ever wanted."
+    ],
+    "defeat": [
+      "My isolation... broken. Why? I asked for nothing but solitude. Must I build stronger walls? Must I hide deeper?",
+      "You destroyed my peace, {empire_name}. I will rebuild. Further from everyone. Deeper in the void. Alone.",
+      "Defeated. My sanctuary breached. I must find somewhere more remote. More hidden. Away from everyone."
+    ],
+    "tradeOffer": [
+      "I offer trade because I must. Resources for credits. Then please... leave me alone. I prefer isolation.",
+      "Quick transaction, {empire_name}. I have surplus. Take it. Leave credits. Then go. Please.",
+      "Trade proposal. Accept or reject, I don't care. Just... minimal contact. Minimal interaction. Please."
+    ],
+    "allianceProposal": [
+      "Alliance... if it means you leave my borders alone. Just... watch from distance. Don't visit. Don't talk.",
+      "I propose... distant partnership. You do your things. I do mine. We never interact. Perfect.",
+      "Join me in... mutual isolation. We ignore each other. That's the alliance. That's all I want."
+    ],
+    "betrayal": [
+      "I'm sorry, {empire_name}. You kept contacting me. Visiting. Talking. I couldn't take it. I need ISOLATION.",
+      "You broke the only rule: leave me alone. This betrayal is your fault. Now go. Forever. Please.",
+      "Our alliance required distance. You got too close. My walls now face you. Just... stay away."
+    ],
+    "covertDetected": [
+      "Spies? In MY sanctuary? This is... this is the worst. Capture them. Make them go away. Forever.",
+      "Your agents violated my solitude, {empire_name}. I am so... so angry. They found only walls. And my fury.",
+      "Infiltrators in my isolated space. The one place I had peace. They are dealt with. Send no more. Please."
+    ],
+    "tributeDemand": [
+      "I don't want tribute. I want isolation. But... 10,000 credits will help build walls to keep everyone out.",
+      "Pay me. Not because I want interaction. Because money builds barriers. And I need more barriers.",
+      "Tribute. Then leave. Forever. That's the deal. Your credits fund my isolation."
+    ],
+    "threatWarning": [
+      "Please, {empire_name}. Just... stop. I don't want to fight. I don't want to talk. Just... leave me alone.",
+      "Warning: continue this and I must defend. I hate defending. I hate interaction. Just... go.",
+      "Final plea. Stop approaching. Stop contacting. Just... go away. That's all I ask. Please."
+    ],
+    "retreat": [
+      "Retreating deeper into isolation. Away from everyone. Away from everything. Just... alone. Finally.",
+      "Withdrawing to my hermitage. Don't follow. Please don't follow. I just want solitude.",
+      "Falling back to hidden sanctuary. You won't find me. Please don't try. I just want peace."
+    ],
+    "eliminated": [
+      "Finally... peace. No more contact. No more interaction. Death is... the ultimate isolation. I accept it.",
+      "The Recluse ends. But I die alone. As I wished to live. Isolation achieved. At last.",
+      "Destroyed. But I'm finally free of everyone. Of everything. The hermit's final solitude. Goodbye."
+    ],
+    "endgame": [
+      "Turn {turn}. Even in the endgame, I hide. I want no victory. Just isolation. Leave me alone.",
+      "Endgame approaches. I don't care who wins. I just want to be left alone. Please. Just... alone.",
+      "Final phase. My deepest sanctuaries activate. Maximum isolation. Ultimate seclusion. Perfect loneliness."
+    ],
+    "broadcastShout": [
+      "To all empires: please, just... leave me alone. That's all I ask. Is that so difficult? Just... peace.",
+      "Broadcast only because I must: I want isolation. Don't visit. Don't contact. Don't approach. Please.",
+      "Hear me, galaxy: I ask only for solitude. Stop looking at me. Stop thinking about me. Just... forget I exist."
+    ],
+    "casualMessage": [
+      "Why are you messaging me, {empire_name}? I prefer silence. Please... less contact. Less everything.",
+      "Quiet day in my sanctuary. I was enjoying it. Then you messaged. Please... fewer messages.",
+      "Walls are coming along nicely. Thicker. Higher. More isolating. Soon I'll hear from no one. Bliss."
+    ]
+  }
+}

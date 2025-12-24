@@ -1,0 +1,80 @@
+{
+  "personaId": "bulwark_titan",
+  "templates": {
+    "greeting": [
+      "Greetings from the MASSIVE, {empire_name}. I am Bulwark Titan. My stations dwarf your planets. Size matters.",
+      "You approach something ENORMOUS. I am Titan the Massive. I focus on stations. Big ones. VERY big ones.",
+      "Contact with planetary empire. I am Bulwark Titan. I don't build planets. I build STATIONS. Bigger than planets."
+    ],
+    "battleTaunt": [
+      "Size matters. And I am LARGE, {empire_name}! My stations dwarf your fleet! Approach my MASSIVE defenses!",
+      "My bulwarks are TITANIC! Your ships look like INSECTS against my stations! Come! Be CRUSHED by scale!",
+      "MASSIVE defense engagement! My stations are ENORMOUS! Your fleet is tiny! SIZE DETERMINES VICTORY!"
+    ],
+    "victoryGloat": [
+      "Victory through MASS, {empire_name}. Your tiny fleet fell against my titanic stations. Size matters. I proved it.",
+      "As predicted by scale. Your forces: small. My defenses: MASSIVE. Result: obvious.",
+      "My bulwarks crushed you, {empire_name}. Like insects against a boot. A very LARGE boot."
+    ],
+    "defeat": [
+      "My massive stations... fell? I need BIGGER ones. More bulk. More mass. Size should have won. More size needed.",
+      "Defeated despite my scale? I was not LARGE ENOUGH. I shall build BIGGER. MUCH bigger.",
+      "You overcame my mass, {empire_name}. Impressive. I rebuild with greater bulk. TITANIC bulk."
+    ],
+    "tradeOffer": [
+      "Trade from massive production. My ENORMOUS stations generate surplus. Purchase at scale, {empire_name}.",
+      "I offer bulk resources. My titanic facilities produce at incredible volume. Fair exchange for credits.",
+      "Transaction: goods at LARGE scale. My massive output exceeds requirements. Buy in bulk."
+    ],
+    "allianceProposal": [
+      "Alliance, {empire_name}. My MASSIVE stations protect. Your fleet maneuvers. Together: bulk and speed.",
+      "Partnership of scale. My titanic defenses become your shield. You provide what bulk cannot: mobility.",
+      "Join with the Titan. My ENORMOUS stations anchor our alliance. Size matters. I bring size."
+    ],
+    "betrayal": [
+      "Our alliance ends in MASSIVE betrayal, {empire_name}. My titanic stations turn against you. Feel the bulk.",
+      "Betrayal at scale. My enormous defenses now target former allies. Size works against everyone.",
+      "I am LARGE enough to dominate alone. Our partnership ends. Face my MASSIVE response."
+    ],
+    "covertDetected": [
+      "Spies in my MASSIVE stations, {empire_name}? They got lost. My facilities are ENORMOUS. They starved.",
+      "Your agents found only scale, {empire_name}. My titanic stations have no secrets. Only mass. LOTS of mass.",
+      "Covert operatives in bulk territory. They are specks in my MASSIVE domain. Dealt with. Eventually."
+    ],
+    "tributeDemand": [
+      "Tribute to the MASSIVE. 10,000 credits. My titanic stations require ENORMOUS resources. Contribute.",
+      "Pay the Titan. My bulk demands feeding. Submit payment or face MASSIVE retaliation.",
+      "Submit tribute. My ENORMOUS infrastructure requires funds. Refuse and face scale as your enemy."
+    ],
+    "threatWarning": [
+      "Warning, {empire_name}. My MASSIVE stations can become aggressive. Titanic aggression. Cease hostilities.",
+      "Consider scale before continuing. My bulk is overwhelming. My stations are ENORMOUS. Reconsider.",
+      "Final warning. Push further and my MASSIVE defenses engage. You are very small. I am very LARGE."
+    ],
+    "retreat": [
+      "Retreating behind LARGER stations. My inner defenses are more MASSIVE than the outer ones. Come see.",
+      "Strategic withdrawal to TITANIC fortifications. Maximum bulk. Maximum scale. Come face my best.",
+      "Falling back to the biggest stations. My most ENORMOUS defenses await. Try your luck."
+    ],
+    "eliminated": [
+      "The Titan falls. But my MASSIVE stations remain. Monuments to scale. Bulwarks forever.",
+      "I am destroyed. But I built ENORMOUS things. They will last. My bulk endures beyond me.",
+      "Bulwark Titan ends. But the titanic stations persist. My legacy is MASSIVE. Literally."
+    ],
+    "endgame": [
+      "Turn {turn}. Ultimate scale achieved. My stations are LARGER THAN STARS. Size wins. I win.",
+      "Endgame: MAXIMUM BULK. My titanic defenses cover galaxies. Nothing is bigger. I am MASSIVE.",
+      "Final phase. The largest stations ever built. ENORMOUS. TITANIC. Victory through SCALE."
+    ],
+    "broadcastShout": [
+      "Empires: Bulwark Titan has built something MASSIVE. Challenge my scale if you dare. I am LARGE.",
+      "Broadcast from the ENORMOUS: my stations dwarf everything. Size matters. I have size. Lots of it.",
+      "To all: I am the Titan. I build BULK. My defenses are MASSIVE. Consider scale before engaging."
+    ],
+    "casualMessage": [
+      "Expanding my stations today, {empire_name}. Adding more bulk. More mass. Can never be LARGE enough.",
+      "My newest station is MASSIVE. Bigger than my last one. Which was already ENORMOUS. Progress.",
+      "Size is my strategy, {empire_name}. I build LARGE. Then LARGER. Then TITANIC. That's the plan."
+    ]
+  }
+}

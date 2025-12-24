@@ -1,0 +1,80 @@
+{
+  "personaId": "jackal_prowl",
+  "templates": {
+    "greeting": [
+      "Prowling near, {empire_name}. I am Jackal Prowl. I wait for others to fight. Then I steal their kills.",
+      "Greetings, {empire_name}. I'm Prowl the Cunning. Why fight when I can steal your victory?",
+      "You found the Jackal. I was watching nearby. Waiting for opportunity. I always wait for opportunity."
+    ],
+    "battleTaunt": [
+      "Why fight when I can steal your victory, {empire_name}?! You weakened them! Now I take the prize!",
+      "Cunning strikes! I watched you fight! I waited! Now I claim what you earned! STOLEN VICTORY!",
+      "The Jackal pounces! You did the hard work! I take the reward! Clever opportunism wins!"
+    ],
+    "victoryGloat": [
+      "Victory! Mostly your effort, {empire_name}. I just... finished the job. The Jackal's way.",
+      "Cunning triumphs. You weakened the enemy. I took the kill. We both won. Well, mostly me.",
+      "The steal is complete. Your battle, my victory. Why work hard when I can work smart?"
+    ],
+    "defeat": [
+      "You caught the Jackal stealing? Impressive, {empire_name}. I'll be more cunning next time.",
+      "Defeat. But only because you spotted me. I'll hide better. Wait longer. Steal more carefully.",
+      "Caught mid-prowl. The cunning one wasn't cunning enough. I learn. I adapt. I steal better next time."
+    ],
+    "tradeOffer": [
+      "Trade, {empire_name}. Goods I... acquired. Fair exchange for credits. Don't ask where I got them.",
+      "I offer resources. Originally someone else's. Now mine. Soon yours. For a price. Cunning commerce.",
+      "Transaction: stolen—I mean acquired—goods for credits. Fair trade. Very legitimate. Mostly."
+    ],
+    "allianceProposal": [
+      "Alliance, {empire_name}. You fight. I steal kills. We split rewards. 50/50. Okay, 60/40. My way.",
+      "Partnership of cunning. You weaken enemies. I finish them. Together: maximum efficiency. Mostly for me.",
+      "Join the Jackal. Your strength, my opportunism. Why fight fair when we can steal victories?"
+    ],
+    "betrayal": [
+      "Sorry, {empire_name}. Better opportunity arose. Your victory looked steal-able. So I stole it. From you.",
+      "The cunning one betrays. Your success was almost complete. Now it's mine. Nothing personal.",
+      "Why fight you when I can steal from you? Betrayal is just... redirected opportunism. Jackal's way."
+    ],
+    "covertDetected": [
+      "Your spies, {empire_name}? I stole their intelligence. And their escape route. Very cunning of me.",
+      "Agents detected. I didn't capture them. I misdirected them. They're now stealing for me. Clever?",
+      "Covert operatives found. I convinced them I'm on their side. They report to you. I read the reports. Cunning."
+    ],
+    "tributeDemand": [
+      "Tribute: 10,000 credits. Or I steal from your victories instead of your enemies'. Cunning demand.",
+      "Pay the Jackal. Or I prowl your battles, steal your kills. Either way, I profit. Your choice.",
+      "Submit payment. Refuse, and I become your shadow. Stealing everything you earn. Forever."
+    ],
+    "threatWarning": [
+      "Warning, {empire_name}. I'm prowling near your battles. Any victory you almost win becomes mine.",
+      "The Jackal warns you. Fight anyone and I'll steal the outcome. Cease aggression or share your victories.",
+      "Final warning. I'm watching your conflicts. Any weakness you exploit, I exploit. From you."
+    ],
+    "retreat": [
+      "Prowling away, {empire_name}. But I'll be nearby. Waiting. Watching. Looking for steal opportunities.",
+      "Withdrawing to shadows. The Jackal never truly leaves. Just waits for better stealing conditions.",
+      "Falling back. Not defeated. Repositioning. The cunning one always finds better opportunities."
+    ],
+    "eliminated": [
+      "The Jackal falls. But I stole so many victories. Lived off others' efforts. Not a bad life.",
+      "Prowl ends. But I never fought fair. Never worked hard. Always stole. That's legacy enough.",
+      "Destroyed. But calculate what I stole versus what I earned. Massive profit. The cunning way."
+    ],
+    "endgame": [
+      "Turn {turn}. Maximum stealing. Every battle in the galaxy: I'm nearby. Every victory: potential theft.",
+      "Endgame: the ultimate prowl. So many battles. So many victories to steal. The Jackal feasts.",
+      "Final phase. Everyone fighting. Everyone weak. Everything steal-able. Paradise for the cunning."
+    ],
+    "broadcastShout": [
+      "Empires: Jackal Prowl watches your battles. Fight hard. Weaken each other. I'll take the prize.",
+      "Broadcast: I steal victories. Any battle you almost win, I might finish. For myself. You're warned.",
+      "To all: why fight when you can steal? The cunning inherit the galaxy. The Jackal is very cunning."
+    ],
+    "casualMessage": [
+      "Prowling near battles today, {empire_name}. Lots of stealing opportunities. Good hunting.",
+      "Watching conflicts. Looking for exhausted victors. Easy targets. The Jackal's favorite prey.",
+      "Quiet day. Nobody fighting. Nothing to steal. Very boring. Fight someone, {empire_name}. I'll help finish."
+    ]
+  }
+}

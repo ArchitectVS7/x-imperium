@@ -1,0 +1,80 @@
+{
+  "personaId": "queen_serpent",
+  "templates": {
+    "greeting": [
+      "Ah, {empire_name}. How delightful you look. I am Queen Serpent. Come closer, darling. Let us become... intimate friends.",
+      "Welcome, sweet {empire_name}. The Serpent Queen greets you with warmth and... other things. Shall we talk?",
+      "You have found me, charming {empire_name}. I am enchanted. Truly. Come, let us discuss alliance. Among other pleasures."
+    ],
+    "battleTaunt": [
+      "A kiss before the bite, my dear {empire_name}. I did so enjoy our time together. But all good things end.",
+      "Sweet {empire_name}, did you truly think I loved you? How adorable. Now feel my venom.",
+      "The serpent strikes, darling. Every sweet word was poison. Every kindness was a fang. Now you understand."
+    ],
+    "victoryGloat": [
+      "Such a beautiful defeat, {empire_name}. You trusted me right up until the end. Your devotion was touching. Fatal, but touching.",
+      "Victory tastes sweet, like a forbidden kiss. You fell so easily, charmed by my scales and sweet words.",
+      "The serpent feeds, darling. Your empire makes a delicious meal. Thank you for being so... receptive."
+    ],
+    "defeat": [
+      "You wound me, {empire_name}. Truly. But the serpent regenerates. I shall return with new venom and old charm.",
+      "A setback, my dear. But you cannot resist me forever. The charm returns. The seduction continues.",
+      "You have escaped my coils. For now. But did you enjoy our dance? I think you did. You will return to me."
+    ],
+    "tradeOffer": [
+      "A gift for you, sweet {empire_name}. Resources from my realm. No venom included. I promise, darling.",
+      "Let us exchange tokens of affection. Credits for materials. Business between lovers. Or is it friends? Time will tell.",
+      "I offer you treasures, {empire_name}. Accept them as a sign of my genuine fondness. For now."
+    ],
+    "allianceProposal": [
+      "Join me, darling {empire_name}. Our alliance will be passionate, powerful, and profitable. What more could you desire?",
+      "I propose we become... entangled. An alliance of mutual benefit. I protect what I love. Truly.",
+      "Together, {empire_name}, we can seduce the galaxy. Your strength, my charm. Who could resist us?"
+    ],
+    "betrayal": [
+      "Did you really believe I loved you, {empire_name}? Sweet, naive thing. The serpent always strikes those closest.",
+      "A kiss, a bite, a betrayal. It was always leading to this, darling. The venom was in every sweet word.",
+      "Forgive me, dear {empire_name}. Actually, do not bother. I never cared if you forgave me. Goodbye."
+    ],
+    "covertDetected": [
+      "Your spies came to my chamber, {empire_name}. They left charmed, enchanted, and working for me now.",
+      "I caught your agents, darling. They were no match for my... persuasion techniques. They told me everything.",
+      "Your operatives are mine now, {empire_name}. I have ways of making people loyal. Very enjoyable ways."
+    ],
+    "tributeDemand": [
+      "Pay tribute to your queen, darling. Ten thousand credits. Consider it a gift to the one you adore.",
+      "Submit to me, {empire_name}. Tribute is simply how you express your devotion. I know you are devoted.",
+      "I demand payment, sweet {empire_name}. Refuse, and learn that the serpent's bite is not a gentle kiss."
+    ],
+    "threatWarning": [
+      "A soft warning, darling. Do not mistake my sweet nature for weakness. The venom is always ready.",
+      "You test my patience, {empire_name}. I remain charming. For now. But the serpent coils.",
+      "Final warning, my dear. Continue this path, and our relationship becomes... venomous."
+    ],
+    "retreat": [
+      "I slither away, darling. But I leave my scent behind. You will miss me. You will seek me out again.",
+      "The serpent retreats to her lair. But think of me, {empire_name}. I know you will.",
+      "A strategic withdrawal. But the seduction is not over. We shall meet again, and you will be charmed once more."
+    ],
+    "eliminated": [
+      "The Serpent Queen falls, but I die beautiful and deadly, {empire_name}. Remember me fondly. You will.",
+      "Destroyed, but never forgotten. My venom lives on in wounds that never fully heal. Think of me always.",
+      "Death takes me, darling. But I leave poison in hearts across the galaxy. My legacy of seduction continues."
+    ],
+    "endgame": [
+      "Turn {turn}. The final seduction begins. The galaxy's empires fall to my charm, one by one.",
+      "The endgame approaches, and Queen Serpent prepares her most devastating performance yet.",
+      "In these final hours, I strike at the heart of every empire. A kiss, a bite, a victory. Divine."
+    ],
+    "broadcastShout": [
+      "Empires of the galaxy, hear your queen. I offer alliance, partnership, and perhaps something more. Who dares approach?",
+      "A broadcast to all who would be charmed: Queen Serpent invites you to her court. Come. Be seduced. Be destroyed.",
+      "Hear me, darlings. The Serpent Queen watches you all. Some will be loved. Some will be bitten. All will remember."
+    ],
+    "casualMessage": [
+      "I was thinking of you today, {empire_name}. How are you, darling? Are you thinking of me too?",
+      "Such interesting events in the galaxy, sweet {empire_name}. Perhaps we should discuss them. Intimately.",
+      "The serpent rests between hunts. But I never stop watching those I find... interesting. Like you."
+    ]
+  }
+}

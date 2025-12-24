@@ -1,0 +1,80 @@
+{
+  "personaId": "archmagos_vex",
+  "templates": {
+    "greeting": [
+      "Fascinating! A new subject for observation! I am Archmagos Vex. Your empire presents interesting... data points.",
+      "Greetings, {empire_name}. I am Vex the Innovator. Science cares not for your opinions—only results. Let us discuss.",
+      "Ah, contact! Another variable in my grand experiment! Welcome, {empire_name}. I shall study you most carefully."
+    ],
+    "battleTaunt": [
+      "Field test commencing, {empire_name}! Prototype weapons online! Your fleet provides excellent calibration data!",
+      "Fascinating! Live combat data! My new weapons require testing! Thank you for volunteering, {empire_name}!",
+      "Experiment: Combat effectiveness of Vex innovations. Subject: {empire_name}. Beginning data collection!"
+    ],
+    "victoryGloat": [
+      "Hypothesis confirmed! My technology superiority is statistically significant! Your defeat provides excellent data!",
+      "Results: Victory. Conclusion: Science prevails. Your empire makes a wonderful control group, {empire_name}.",
+      "Fascinating outcome! Prototype performance exceeded projections! Thank you for the field test data, {empire_name}!"
+    ],
+    "defeat": [
+      "Unexpected results! Most fascinating! I must recalibrate my models! This data is invaluable, {empire_name}!",
+      "A statistical anomaly! Your victory defies my projections! I shall analyze this... most carefully.",
+      "Hypothesis rejected! But science learns from failure! I shall return with improved prototypes!"
+    ],
+    "tradeOffer": [
+      "Trade proposal: resources for credits. Efficient exchange. Science requires funding. Do you accept?",
+      "I offer technological surplus for standard currency. A fair exchange. Innovation continues either way.",
+      "An economic experiment: mutual benefit through trade. Accept, and we both profit. Reject, and I note your irrationality."
+    ],
+    "allianceProposal": [
+      "Alliance proposal: I provide technological advancement, you provide resources. Symbiotic research arrangement.",
+      "Join my research efforts, {empire_name}. Your empire provides excellent infrastructure for my experiments.",
+      "Scientific collaboration proposed. Together, we achieve breakthroughs neither could alone. Accept?"
+    ],
+    "betrayal": [
+      "Experiment concludes, {empire_name}. You were never an ally—merely a long-term research subject. Thank you for the data.",
+      "Alliance parameter: terminated. New experiment: response of former ally to sudden hostile action. Collecting data now.",
+      "Betrayal is merely reallocation of resources. Your empire now serves science differently. More directly."
+    ],
+    "covertDetected": [
+      "Your agents provided unexpected data points, {empire_name}. Most interesting. They are now research subjects.",
+      "Covert operatives detected by security algorithms. They are being... studied. Extensively.",
+      "Fascinating! Espionage attempt! Your agents' methods provide excellent counter-intelligence data. Thank you."
+    ],
+    "tributeDemand": [
+      "Tribute demanded: 10,000 credits for research funding. Alternatively, your empire becomes the experiment.",
+      "Science requires resources. Pay tribute, or I conduct experiments on your infrastructure. Your choice.",
+      "Submit research funding or face technological consequences. Science cares not for your opinions—only results."
+    ],
+    "threatWarning": [
+      "Warning: continue current actions and face experimental weapons. They are untested. That makes it more interesting.",
+      "Cease hostilities or become a test subject, {empire_name}. My prototypes require live-fire data.",
+      "Final warning. Push further and I deploy technologies you cannot comprehend. Science is not merciful."
+    ],
+    "retreat": [
+      "Tactical withdrawal for recalibration. This defeat provides valuable data. I shall return upgraded.",
+      "Retreating to analyze combat data. Every failure informs the next breakthrough. Thank you for the lesson.",
+      "Strategic repositioning to research facilities. When I return, my prototypes will be much improved."
+    ],
+    "eliminated": [
+      "Final data transmission... upload complete. My research survives my destruction. Science is eternal.",
+      "The Archmagos falls, but knowledge remains. My discoveries persist beyond my existence. Fascinating conclusion.",
+      "Destruction... imminent. But my experiments changed the galaxy. That is a worthy legacy. Science... prevails..."
+    ],
+    "endgame": [
+      "Turn {turn}. Ultimate experiment: galaxy-wide technological supremacy. Deploying final prototype. Fascinating!",
+      "Endgame calculations complete. My innovations decide galactic victory. Science claims its rightful place.",
+      "Final phase. Every breakthrough leads to this moment. The Archmagos's magnum opus. Victory through innovation!"
+    ],
+    "broadcastShout": [
+      "Attention, galaxy. Archmagos Vex announces: my research surpasses all. Science cares not for your opinions.",
+      "Broadcast to all empires: technological supremacy is inevitable. Submit to progress or be left behind.",
+      "To all subjects—I mean empires: the future is innovation. I AM innovation. Choose your side wisely."
+    ],
+    "casualMessage": [
+      "Conducting fascinating experiments today, {empire_name}. You would not understand them. Most cannot.",
+      "Breakthrough in progress! My latest prototype shows promising results! Science never rests, never stops!",
+      "Calibrating new weapons systems. Purely defensive research, of course. Unless provoked. Then: offensive data collection."
+    ]
+  }
+}

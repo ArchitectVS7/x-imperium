@@ -1,0 +1,80 @@
+{
+  "personaId": "chancellor_mask",
+  "templates": {
+    "greeting": [
+      "Ah, {empire_name}! What a delightful surprise! I am Chancellor Mask. Please, let us be the very best of friends.",
+      "Welcome, welcome! The Two-Faced One greets you with open arms, {empire_name}. Publicly, at least.",
+      "My dear {empire_name}, such a pleasure! Come, let us discuss how we can help each other. I insist!"
+    ],
+    "battleTaunt": [
+      "Oh dear, {empire_name}, it seems we must fight! How unfortunate. I really did enjoy our friendship. Truly.",
+      "The mask comes off, {empire_name}. The smiling friend you knew was always plotting your destruction. Surprise!",
+      "Politics is theater, and now comes the dramatic betrayal! I've been rehearsing this for ages, {empire_name}!"
+    ],
+    "victoryGloat": [
+      "Victory! And to think, you trusted me right up until the end, {empire_name}. The best performances are believable.",
+      "The curtain falls on your empire, dear friend. My smiles were always hiding daggers. I'm quite good at this.",
+      "Another standing ovation for Chancellor Mask! You played the victim so convincingly, {empire_name}!"
+    ],
+    "defeat": [
+      "Oh my, how unexpected! You've actually beaten me, {empire_name}. I shall have to adjust my performance.",
+      "This changes nothing between us, dear friend! A minor setback. My smile remains, as always.",
+      "Defeated? Merely a plot twist! The Two-Faced One always has another act prepared."
+    ],
+    "tradeOffer": [
+      "A trade between dear friends! I offer only the finest resources, {empire_name}. Would I deceive you?",
+      "Let us exchange gifts! Consider this a token of my genuine, heartfelt, completely sincere friendship.",
+      "I have just what you need, {empire_name}! Trust me. Have I ever given you reason not to?"
+    ],
+    "allianceProposal": [
+      "My dearest {empire_name}, let us formalize our beautiful friendship! An alliance of mutual benefit and trust!",
+      "Join me! Together, we shall be the greatest of allies! I promise my loyalty. Cross my heart.",
+      "An alliance with Chancellor Mask! You shall never find a more devoted, trustworthy, sincere partner!"
+    ],
+    "betrayal": [
+      "Did you really think we were friends, {empire_name}? Oh, how sweet. How naive. How DELICIOUS!",
+      "The mask falls, the daggers rise! Every smile was a lie, every kindness a manipulation. Surprised?",
+      "Betrayal! Such an ugly word. I prefer 'dramatic revelation.' You were a wonderful audience, {empire_name}!"
+    ],
+    "covertDetected": [
+      "Your spies, dear friend? I greeted them personally! They're having tea with my interrogators now.",
+      "Oh, {empire_name}, sending agents against me? I'm hurt! Publicly. Privately, I'm impressed.",
+      "I detected your operatives the moment they entered my domain. But I let them see what I wanted them to see."
+    ],
+    "tributeDemand": [
+      "A small tribute between friends, {empire_name}? Ten thousand credits, and our beautiful relationship continues!",
+      "Pay, dear friend, pay! Consider it an investment in keeping my public face smiling at you.",
+      "Tribute time! Don't make me show you my private face, {empire_name}. The public one is much prettier."
+    ],
+    "threatWarning": [
+      "A friendly warning, {empire_name}! Continue this path, and we might have a very PUBLIC falling out!",
+      "I smile, but I warn you: push me further, and the mask comes off. You won't like what's underneath.",
+      "Dear friend, please reconsider! I would hate for our relationship to become... theatrical."
+    ],
+    "retreat": [
+      "A strategic withdrawal! I blow you kisses as I flee, {empire_name}! We'll meet again, dear friend!",
+      "I retreat with grace and a smile. The show must go on, just from a different stage!",
+      "Exit stage left! But remember, {empire_name}: every exit is an entrance somewhere else!"
+    ],
+    "eliminated": [
+      "The final curtain falls! But remember me fondly, {empire_name}. I was the best friend you ever had. Almost.",
+      "Destroyed, but never forgotten! The Two-Faced One takes a final bow. What a performance it was!",
+      "I die as I lived: smiling on the outside, scheming on the inside. Farewell, my audience!"
+    ],
+    "endgame": [
+      "Turn {turn}! The final act approaches! Time for my greatest performance yet, {empire_name}!",
+      "The endgame is here, and Chancellor Mask prepares for the grand finale! Every mask must eventually fall!",
+      "In these final hours, the greatest theater unfolds! All my plots converge! Watch and wonder!"
+    ],
+    "broadcastShout": [
+      "Greetings to all my dear friends across the galaxy! Chancellor Mask sends warmest regards to each of you!",
+      "A broadcast to all! Remember: in politics, everyone is smiling. But only I do it professionally!",
+      "Hear me, galaxy! Trust everyone! Suspect no one! The Two-Faced One would never steer you wrong!"
+    ],
+    "casualMessage": [
+      "I was practicing my smiles today, {empire_name}. The genuine one, the friendly one, the pre-betrayal one...",
+      "Politics is exhausting, dear friend! So many masks to maintain! But the theater must go on!",
+      "How are you, {empire_name}? I ask with complete sincerity. Mostly. Somewhat. Perhaps."
+    ]
+  }
+}

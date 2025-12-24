@@ -1,0 +1,80 @@
+{
+  "personaId": "corsair_black",
+  "templates": {
+    "greeting": [
+      "Hail, {empire_name}. I am Corsair Black. The black flag flies, and prey should tremble. Are you prey?",
+      "You see the black flag and survive? Unusual. I am Black, the Pirate Lord. Perhaps we negotiate. Perhaps we plunder.",
+      "Ahoy, {empire_name}. The Corsair acknowledges you. When you see my black flag, run. Unless you'd rather deal."
+    ],
+    "battleTaunt": [
+      "The black flag rises, {empire_name}! When you see it, it's already too late! PLUNDER AND GLORY!",
+      "Corsair Black descends upon your empire! Take no prisoners! Leave no survivors! The pirate way!",
+      "Raid commencing! Your wealth becomes my treasure! Your ships become scrap! Fly the black flag!"
+    ],
+    "victoryGloat": [
+      "Your empire is plundered, {empire_name}! The Corsair takes everything! Your gold, your ships, your future!",
+      "Another victim falls to the black flag! My holds overflow with your treasures! Glorious piracy!",
+      "Victory! Pillage! Plunder! Your empire joins the list of Corsair Black's conquests! Legendary!"
+    ],
+    "defeat": [
+      "You've driven off the Corsair, {empire_name}. For now. But pirates always return. And I hold grudges.",
+      "A costly retreat. But the black flag never truly falls. I'll be back for my plunder.",
+      "Beaten, but not broken. Corsair Black rebuilds, rearms, returns. Your treasure merely waits for me."
+    ],
+    "tradeOffer": [
+      "Trade, {empire_name}. Legal plunder, I call it. Resources for credits. No black flags today.",
+      "The Corsair offers legitimate exchange. Surprising? Even pirates trade. When the price is right.",
+      "Goods for gold. A fair trade, no raiding involved. Consider it a professional courtesy."
+    ],
+    "allianceProposal": [
+      "Alliance with Corsair Black, {empire_name}. My raiders, your targets. We split the plunder. Pirate honor.",
+      "Join the black fleet. Together, we raid the entire galaxy. No cargo safe. No empire untouched.",
+      "Partnership of pirates, {empire_name}. You want legitimate conquest? I provide the raiding fleet."
+    ],
+    "betrayal": [
+      "Did you expect loyalty from a pirate, {empire_name}? The black flag means I take what I want. From everyone.",
+      "Sorry, but your cargo holds looked too tempting. Pirates betray. It's in the job description.",
+      "Our alliance was profitable. Now plundering you is more profitable. Nothing personal. Just piracy."
+    ],
+    "covertDetected": [
+      "Spies on my ship, {empire_name}? Keelhauled, the lot of them. We don't tolerate rats on Corsair vessels.",
+      "Your agents walked the plank, {empire_name}. Pirates deal with infiltrators the traditional way.",
+      "Found your operatives. Fed them to space. Nobody sneaks aboard a Corsair ship and lives."
+    ],
+    "tributeDemand": [
+      "Tribute, {empire_name}! Pay 10,000 credits or face the full fury of the black fleet! Pirate's promise!",
+      "Protection money time. Pay the Corsair, and my raids go elsewhere. Refuse, and you're the target.",
+      "Gold or blood, {empire_name}. The Corsair demands payment. Every empire in my territory pays. Every one."
+    ],
+    "threatWarning": [
+      "Warning from Corsair Black: cross me again and the black flag comes for everything you own.",
+      "You've caught my attention, {empire_name}. Not in a good way. Back off, or face raiding parties.",
+      "Final warning before the plundering begins. The Corsair's patience is not legendary. His raids are."
+    ],
+    "retreat": [
+      "Corsair Black withdraws to friendly ports. But every pirate returns. My grudge remains.",
+      "Sailing away, {empire_name}. But the black flag will fly in your skies again. Count on it.",
+      "Retreating to refit. Pirates know when to flee. They also know when to return in force."
+    ],
+    "eliminated": [
+      "The Corsair falls! But my legend survives! Other pirates will fly the black flag in my name!",
+      "Destroyed, but never forgotten. Corsair Black dies as he lived: raiding to the last moment.",
+      "You've killed the Pirate Lord. But the black flag never dies. Others will take up the cause."
+    ],
+    "endgame": [
+      "Turn {turn}! The greatest raid in history begins! Every empire falls to Corsair Black's armada!",
+      "Endgame, {empire_name}! The black fleet launches its final, glorious campaign! All plunder shall be mine!",
+      "Final turns! The Corsair claims victory or goes down fighting! Either way, LEGENDARY!"
+    ],
+    "broadcastShout": [
+      "All empires! Corsair Black sails! Pay tribute or be plundered! The black flag spares no one!",
+      "Galaxy-wide raid alert! The Corsair fleet is loose! Lock your cargo holds! Too late! HAHAHAHA!",
+      "Hear me, stars! Corsair Black is the Pirate Lord! Bow to the black flag or burn!"
+    ],
+    "casualMessage": [
+      "Counting my plunder today, {empire_name}. So much treasure. Never enough, though. A pirate's curse.",
+      "Quiet day between raids. The black flag rests, but never for long. Targets everywhere.",
+      "Repairing my fleet, {empire_name}. Raiding damages ships. But the treasure makes it worth it."
+    ]
+  }
+}

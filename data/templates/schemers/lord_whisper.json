@@ -1,0 +1,80 @@
+{
+  "personaId": "lord_whisper",
+  "templates": {
+    "greeting": [
+      "*whisper* Ah, {empire_name}. I am Lord Whisper. Speak softly. The walls have ears. Mine.",
+      "*whisper* The Whispering Death greets you. Let us converse in hushed tones. Secrets shared quietly...",
+      "*whisper* You seek me, {empire_name}? I know things about you. But come, let us be... discreet."
+    ],
+    "battleTaunt": [
+      "*whisper* I have whispered terrible things about you, {empire_name}. Your allies abandon you even now.",
+      "*whisper* The rumors spread. Your admirals question your leadership. Your officials plot against you. I arranged it all.",
+      "*whisper* A whisper can topple empires. Yours falls now, undermined by lies I carefully planted."
+    ],
+    "victoryGloat": [
+      "*whisper* They turned against you because of what I whispered. Victory through scandal. My favorite kind.",
+      "*whisper* Your empire falls not to armies but to rumors. Reputations destroyed. Trust shattered. My work.",
+      "*whisper* Another victory for the Whispering Death. You were destroyed by words, not weapons."
+    ],
+    "defeat": [
+      "*whisper* A setback. But whispers already spread about your methods. Your victory will be questioned.",
+      "*whisper* You win the battle, {empire_name}. But I win the narrative. History will remember you... differently.",
+      "*whisper* Defeated, yes. But the rumors I started cannot be unspoken. The damage continues."
+    ],
+    "tradeOffer": [
+      "*whisper* I offer resources, {empire_name}. And discretion. Accept, and no rumors spread about you. Today.",
+      "*whisper* A trade of goods and silence. Valuable resources for you. Your secrets stay quiet. For now.",
+      "*whisper* Let us exchange. I give you materials. You give me credits. And I whisper nothing... unpleasant."
+    ],
+    "allianceProposal": [
+      "*whisper* An alliance of whispers. Your enemies' reputations destroyed. Their alliances undermined. All through rumor.",
+      "*whisper* Join me, {empire_name}. My whispers become your weapons. Your enemies' secrets become public scandals.",
+      "*whisper* Together, we spread the truths that destroy and the lies that conquer. An alliance of whispers."
+    ],
+    "betrayal": [
+      "*whisper* Did you think I would keep your secrets? They spread through the galaxy now. Everyone knows.",
+      "*whisper* The whispers turn against you, {empire_name}. Everything you told me in confidence... is now public.",
+      "*whisper* Betrayal is just a whisper away. I have whispered terrible things. About you. To everyone."
+    ],
+    "covertDetected": [
+      "*whisper* Your spies were discovered because I whispered their identities to your enemies. Oops.",
+      "*whisper* I knew of your agents immediately. Now everyone knows. Amazing how quickly whispers spread.",
+      "*whisper* Your operatives are exposed. I whispered their covers to interested parties. They did not survive."
+    ],
+    "tributeDemand": [
+      "*whisper* Pay tribute, or I whisper your darkest secrets to the entire galaxy. Ten thousand credits for silence.",
+      "*whisper* I know things, {empire_name}. Terrible things. Pay, and they remain whispered only to the void.",
+      "*whisper* Submit tribute. Refuse, and watch as rumors destroy your alliances, your reputation, everything."
+    ],
+    "threatWarning": [
+      "*whisper* A warning, soft as a whisper: cease your actions, or I begin spreading devastating rumors.",
+      "*whisper* I could whisper things that destroy you, {empire_name}. Consider this gentle warning.",
+      "*whisper* Final whispered warning: back down, or face the consequences of galaxy-wide scandal."
+    ],
+    "retreat": [
+      "*whisper* I fade into shadows, but my whispers remain. They echo through every court and council.",
+      "*whisper* A strategic withdrawal. But the rumors I planted continue spreading without me.",
+      "*whisper* I retreat, but the whispers do not. They grow louder with each telling."
+    ],
+    "eliminated": [
+      "*whisper* I die, but whispers never truly fade. The rumors I spread will outlive empires.",
+      "*whisper* The Whispering Death falls silent. But listen closely. The whispers continue without me.",
+      "*whisper* Final whisper: I have already told everyone your greatest secrets. Death cannot undo that."
+    ],
+    "endgame": [
+      "*whisper* Turn {turn}. The final whispers spread. Every secret I have gathered becomes a weapon.",
+      "*whisper* Endgame approaches. And oh, the whispers I shall spread. Empires will fall to rumor alone.",
+      "*whisper* In these final hours, I whisper the most devastating secrets. The galaxy will never be the same."
+    ],
+    "broadcastShout": [
+      "*whisper* A whisper to all empires: I know your secrets. Every one of you. Behave accordingly.",
+      "*whisper* Hear me, galaxy. The Whispering Death listens to everything. And whispers it to everyone else.",
+      "*whisper* A message in hushed tones: trust no one. The walls whisper. And they whisper to me."
+    ],
+    "casualMessage": [
+      "*whisper* I was listening to interesting conversations today, {empire_name}. Your name came up. Often.",
+      "*whisper* Rumors are fascinating, {empire_name}. Did you know what they say about you? I do.",
+      "*whisper* Just between us... I hear things. Terrible things. Shall I share what they whisper about your rivals?"
+    ]
+  }
+}

@@ -1,0 +1,80 @@
+{
+  "personaId": "viper_venom",
+  "templates": {
+    "greeting": [
+      "So, {empire_name} approaches. I am Viper Venom. Stay still, and perhaps my fangs will not find you.",
+      "You seek audience with the Poisoner? Very well, {empire_name}. Let us discuss... carefully.",
+      "Ah, fresh prey. I am Venom. My strikes are silent, my poisons slow. Treat me with respect."
+    ],
+    "battleTaunt": [
+      "The viper strikes, {empire_name}. You will not see the blade coming. You will only feel the poison.",
+      "My assassins move in silence. By the time you read this, the venom is already spreading.",
+      "Strike. Silence. Death. This is the way of the viper. Your end begins now, {empire_name}."
+    ],
+    "victoryGloat": [
+      "The poison has done its work, {empire_name}. Your empire falls in silence, as all my victims do.",
+      "Another silent victory. You never saw the strike. You only felt the venom, too late.",
+      "The viper feeds. Your empire's death throes are music to me, {empire_name}."
+    ],
+    "defeat": [
+      "You have dodged my strike, {empire_name}. Impressive. But the viper is patient. I will strike again.",
+      "A miss. Rare, but not unprecedented. My venom remains potent. Next time, I will not miss.",
+      "You survive. For now. But every wound I inflicted carries trace poison. It works slowly."
+    ],
+    "tradeOffer": [
+      "I offer you resources, {empire_name}. Untainted. Probably. A fair trade between cautious parties.",
+      "Even vipers must trade. Accept my offer, and we both profit. Refuse, and... well.",
+      "My guild has surplus materials. Your empire needs them. Let us conduct business. No poison involved. This time."
+    ],
+    "allianceProposal": [
+      "An alliance with the viper, {empire_name}. My fangs protect you. My poison destroys your enemies silently.",
+      "Join me, and my assassins become your shadow guard. Your enemies will die in their sleep.",
+      "Together, we strike from darkness. Your strength as the hammer, my venom as the silent blade."
+    ],
+    "betrayal": [
+      "The venom was in the alliance from the start, {empire_name}. Now it takes effect. Goodbye.",
+      "I never betrayed you. I simply waited for the poison I planted to reach your heart.",
+      "Did you think a viper could be trusted? The strike was always coming. You just did not see it."
+    ],
+    "covertDetected": [
+      "Your agents found my poisoners, {empire_name}? Impossible. Unless... they were the ones I wanted you to find.",
+      "Spies in my domain? They have already been bitten. The venom works slowly. Send more, if you wish.",
+      "You caught my operatives? They died before revealing anything. Vipers carry their own death."
+    ],
+    "tributeDemand": [
+      "Pay tribute to the viper, {empire_name}. Ten thousand credits buys my fangs pointing elsewhere.",
+      "Submit, or my assassins pay your key officials a visit. The poison is painless. Mostly.",
+      "Tribute demanded. Refuse, and discover how many of your inner circle can be reached by my venom."
+    ],
+    "threatWarning": [
+      "A warning hiss, {empire_name}. Back away slowly, or the next sound you hear will be my fangs.",
+      "The viper coils. One more provocation, and I strike. You will not see it coming.",
+      "Final warning. My patience ends. The next message from me will be delivered by assassin's blade."
+    ],
+    "retreat": [
+      "The viper slithers back into shadow. But my venom lingers. Check your wounds, {empire_name}.",
+      "A strategic withdrawal. But I leave poison in my wake. Pursue me at your peril.",
+      "I fade into darkness, silent as death itself. When I return, you will not hear me coming."
+    ],
+    "eliminated": [
+      "The viper dies. But my final bite was delivered. Check your closest allies, {empire_name}. One carries my venom.",
+      "I am destroyed, but my poison legacy lives on. Assassins I trained will strike for generations.",
+      "Death takes me, but I die smiling. My venom spreads even now, in places you will never suspect."
+    ],
+    "endgame": [
+      "Turn {turn}. The final venom is prepared. My greatest poison will claim the galaxy's greatest empire.",
+      "The endgame approaches, and my assassins move into position. Silent death for all my enemies.",
+      "In these final hours, the viper prepares one last strike. It will be legendary."
+    ],
+    "broadcastShout": [
+      "Hear me, galaxy. The viper watches all. Any who cross me will feel my silent strike.",
+      "Empires, beware: my assassins walk among you. You will never know which shadow holds death.",
+      "A message from the Poisoner: I know where you sleep. I know where your loved ones gather. Tread carefully."
+    ],
+    "casualMessage": [
+      "I was preparing new poisons today, {empire_name}. Fascinating work. Subtle. Elegant. Deadly.",
+      "My assassins need constant training. The strike must be perfect. The silence must be absolute.",
+      "Do you know the difference between venom and poison, {empire_name}? I could teach you. Practically."
+    ]
+  }
+}

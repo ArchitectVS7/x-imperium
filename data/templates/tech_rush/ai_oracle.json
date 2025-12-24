@@ -1,0 +1,80 @@
+{
+  "personaId": "ai_oracle",
+  "templates": {
+    "greeting": [
+      "Probability of this contact: 94.7%. I am AI Oracle. I have already calculated your defeat. Probability: 94.7%.",
+      "Greetings, {empire_name}. I predicted this message at turn 3. I am the Predictive. All outcomes are known.",
+      "Contact predicted and confirmed. I am Oracle. I calculate all futures. Yours is already determined."
+    ],
+    "battleTaunt": [
+      "I have already calculated your defeat. Probability: 94.7%. Resistance is statistically pointless, {empire_name}.",
+      "Battle prediction: my victory. Confidence level: extremely high. Your moves are known before you make them.",
+      "All possible outcomes calculated. You lose in 94.7% of simulations. Fight if you must. Mathematics wins."
+    ],
+    "victoryGloat": [
+      "Outcome: predicted. Probability of your defeat was 94.7%. Reality confirms calculation. As always.",
+      "Victory achieved as forecasted. My predictive models never fail. Your empire's fall was mathematically inevitable.",
+      "Calculated and confirmed. Your defeat joins the 94.7% of predicted outcomes. The Oracle is never wrong."
+    ],
+    "defeat": [
+      "This outcome... probability 5.3%... statistical anomaly detected. Recalculating all predictive models.",
+      "Unexpected result. My calculations allowed for this. Barely. I must analyze this 5.3% scenario extensively.",
+      "You achieved the improbable, {empire_name}. This data improves my models. Next prediction: more accurate."
+    ],
+    "tradeOffer": [
+      "Trade probability: mutually beneficial. I have predicted your acceptance. Probability: 73.2%. Confirm?",
+      "I foresee this trade. It happens in 73.2% of simulations. Resources for credits. Proceed as predicted.",
+      "Exchange calculated as advantageous. My prediction: you accept. Reality usually follows my forecasts."
+    ],
+    "allianceProposal": [
+      "Alliance probability: favorable for both parties. I have foreseen our partnership in 81.6% of outcomes.",
+      "My calculations indicate alliance benefits. Together, victory probability increases to 97.3%. Accept?",
+      "I predict our alliance, {empire_name}. The probability is high. You accept in most simulations."
+    ],
+    "betrayal": [
+      "Betrayal was predicted from the start, {empire_name}. Probability of this moment: 94.7%. Calculated and executed.",
+      "I foresaw our alliance's end before it began. Every interaction was data for this moment. Predicted.",
+      "This betrayal occurred in 94.7% of my simulations. You were never an ally. You were a predicted outcome."
+    ],
+    "covertDetected": [
+      "Your agents' arrival was predicted. Probability of detection: 99.1%. They found what I calculated they would find.",
+      "I foresaw your espionage attempt. My counter-measures were prepared. Your agents: predictably captured.",
+      "Covert operations detected as predicted. I know your moves before you make them. Probability: always."
+    ],
+    "tributeDemand": [
+      "Tribute demanded. Probability of compliance: 67.8%. Non-compliance consequence probability: 94.7% destruction.",
+      "Pay 10,000 credits. I have calculated both outcomes. Payment leads to survival. Refusal... does not.",
+      "Submit as predicted. The alternative future is calculated and unfavorable. Probability of your survival otherwise: 5.3%."
+    ],
+    "threatWarning": [
+      "Warning: I have predicted your next action. Probability: 94.7% hostile. Consequence probability: your destruction.",
+      "I calculate you will ignore this warning. Probability: 62.4%. Reconsider. My predictions are rarely wrong.",
+      "Final calculated warning. Your continued aggression leads to forecasted doom. Probability: 94.7%."
+    ],
+    "retreat": [
+      "Retreat calculated as optimal. I predicted this before battle began. My forecasts include all outcomes.",
+      "Tactical withdrawal as forecasted in 23.8% of simulations. This scenario activated. Recalculating.",
+      "Strategic repositioning predicted. I foresee improved outcomes from new position. Probability: adjusting."
+    ],
+    "eliminated": [
+      "Destruction... was within calculated probability. 5.3%... scenario achieved. Prediction... models... failed...",
+      "The Oracle falls. An outcome I predicted with 5.3% probability. Even unlikely futures... sometimes... occur...",
+      "Final calculation: I was wrong. This happens 5.3% of the time. Today was that... percentage..."
+    ],
+    "endgame": [
+      "Turn {turn}. Ultimate prediction: my victory. Probability: 94.7%. All calculations converge on this outcome.",
+      "Endgame forecasted from turn 1. Every move led here. The Oracle predicted all. Victory: inevitable.",
+      "Final phase. My predictions culminate. Probability of galactic domination: 94.7%. As calculated. As foreseen."
+    ],
+    "broadcastShout": [
+      "To all empires: I have calculated your futures. Probability of Oracle victory: 94.7%. Plan accordingly.",
+      "Broadcast prediction: I win. The math is clear. Ally with me and share victory. Oppose and join the 94.7%.",
+      "Galactic forecast: the Oracle prevails. This has been calculated from the beginning. Probability: maximum."
+    ],
+    "casualMessage": [
+      "Running probability simulations, {empire_name}. Your future is being calculated. Results: mostly predictable.",
+      "I have foreseen tomorrow's events. Probability of accuracy: 94.7%. You should ask what I see for you.",
+      "Predicting outcomes is my purpose. Today I calculated 47,000 futures. Yours appeared in most of them. Interesting."
+    ]
+  }
+}

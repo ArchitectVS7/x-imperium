@@ -1,0 +1,80 @@
+{
+  "personaId": "professor_quantum",
+  "templates": {
+    "greeting": [
+      "Greetings? Or perhaps not greetings? Until we observe, both states exist. I am Professor Quantum. Probably.",
+      "Ah, {empire_name}. Your existence is confirmed by this observation. I am Quantum the Theoretical. Maybe.",
+      "Wave function of potential contact: collapsed. You are {empire_name}. I am the Professor. Certainty achieved. Briefly."
+    ],
+    "battleTaunt": [
+      "The probability of your defeat approaches 1, {empire_name}. Or does it? Both outcomes exist until observed!",
+      "Quantum attack commencing! My weapons exist in all states simultaneously! Including: destroying you!",
+      "Battle probability matrix initiated! You are both victorious and defeated! I predict the latter collapses into reality!"
+    ],
+    "victoryGloat": [
+      "The wave function has collapsed: victory state confirmed! Your defeat was always probable. Now it is certain.",
+      "Fascinating! The uncertainty resolved favorably! You lost, as predicted. Probably.",
+      "Victory! The probability of this outcome was... calculable. Your strategic entropy proved insufficient."
+    ],
+    "defeat": [
+      "Unexpected collapse! The probability matrix favored me! Yet here we are. Fascinating uncertainty.",
+      "I am defeated. Or am I? Perhaps in another branch of reality, I won. Schrödinger's victory.",
+      "Statistical anomaly! Your victory was improbable! Yet probability allows all outcomes! Including this!"
+    ],
+    "tradeOffer": [
+      "Trade probability: positive. Resources for credits. Both outcomes acceptable. Collapse the function: accept?",
+      "Quantum exchange proposed. Resources exist in superposition until transferred. Accept and observe the result.",
+      "I offer materials. You offer currency. The transaction exists in potential. Actualize it?"
+    ],
+    "allianceProposal": [
+      "Alliance probability: favorable. Together, our combined wave functions amplify victory potential. Join me?",
+      "I propose superposition of empires. Allied and separate simultaneously. Until needed. Quantum partnership.",
+      "Join the Theoretical, {empire_name}. Our alliance exists in all favorable states. Probably."
+    ],
+    "betrayal": [
+      "The wave function of our alliance has collapsed... unfavorably for you. Probability of betrayal was always present.",
+      "Quantum decoherence of partnership! The allied state has decayed! New state: adversarial! Observe!",
+      "Our alliance existed and did not exist. Now: confirmed non-existence. The uncertainty is resolved. Against you."
+    ],
+    "covertDetected": [
+      "Your agents attempted to observe without being observed. Quantum paradox! They collapsed their own cover. Detected.",
+      "Spies found in uncertainty field. Their observation of our systems caused them to be observed. Ironic.",
+      "Covert operatives detected! Heisenberg's principle: in observing us, they revealed themselves. Fascinating!"
+    ],
+    "tributeDemand": [
+      "Probability of tribute: demanded. 10,000 credits or face quantum consequences. Both certain and uncertain.",
+      "Submit payment. The probability of compliance affects the probability of your continued existence. Calculate wisely.",
+      "Tribute demanded! Refuse and collapse the wave function unfavorably! The math is clear. Probably."
+    ],
+    "threatWarning": [
+      "Warning exists in superposition: serious and not serious. Observe carefully to determine which state collapses.",
+      "Cease current actions. The probability of hostile response increases with each provocation. Uncertainty warns you.",
+      "Final warning. The quantum state of our relationship nears collapse. Choose which reality emerges."
+    ],
+    "retreat": [
+      "Retreating to recalculate probabilities. This outcome was improbable. My equations require adjustment.",
+      "Quantum tunneling away from battlefield. I exist elsewhere now. Perhaps never here at all. Relatively speaking.",
+      "Tactical wave function collapse in retreat position. I shall return with better probability distributions."
+    ],
+    "eliminated": [
+      "The Theoretical collapses... but in infinite other branches, I prevail. This reality merely... chose poorly.",
+      "Quantum decoherence complete. The Professor fades. But probability persists. Somewhere, I am victorious.",
+      "Observation complete: I am eliminated. But was I ever truly here? Quantum uncertainty... remains... uncertain..."
+    ],
+    "endgame": [
+      "Turn {turn}. The grand probability matrix resolves. All quantum states collapse into: MY VICTORY. Probably.",
+      "Endgame calculations approach certainty. The wave function of galactic dominance collapses favorably. Observe!",
+      "Final phase. Quantum supremacy achieved. All outcomes converge. The Professor's theory... becomes reality."
+    ],
+    "broadcastShout": [
+      "Attention, galaxy. All your futures exist in superposition. I am calculating which one collapses. Probably the one I want.",
+      "Broadcast in quantum uncertainty. You both hear and do not hear this. Until you observe. Hello!",
+      "To all empires: reality is probability. I control probability. Therefore... conclusions are left to the observer."
+    ],
+    "casualMessage": [
+      "Contemplating wave functions today, {empire_name}. Your empire exists in interesting quantum states. Fascinating.",
+      "Ran probability calculations. Your future is uncertain. But that's true for everyone. Quantum reality is strange.",
+      "The answer is both yes and no until observed. What was the question? Does it matter? Probably. Maybe."
+    ]
+  }
+}

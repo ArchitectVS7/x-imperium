@@ -1,0 +1,80 @@
+{
+  "personaId": "cyborg_nexus",
+  "templates": {
+    "greeting": [
+      "Organic-digital interface established. I am Cyborg Nexus. My augmentations process your presence. Efficiency: noted.",
+      "Greetings, {empire_name}. I am the Augmented. Part flesh, part machine. Both optimized. You should upgrade.",
+      "Contact registered. Nexus online. My cybernetic enhancements exceed your organic baseline. Let us interface."
+    ],
+    "battleTaunt": [
+      "Organic limitations: REMOVED. Combat augmentations: ENGAGED. Your unenhanced forces face optimized destruction.",
+      "My cybernetic warriors process combat faster than your neurons fire. Upgrade or be destroyed, {empire_name}.",
+      "Attack protocol initiated. Augmented forces deployed. Your organic inefficiency will be your downfall."
+    ],
+    "victoryGloat": [
+      "Victory confirmed. Cybernetic enhancement proves superior. Your organic weakness was predictable.",
+      "Combat efficiency: optimal. Your defeat demonstrates the inferiority of unaugmented existence.",
+      "Organic forces: eliminated. Lesson: enhancement is not optional. It is survival. You failed to adapt."
+    ],
+    "defeat": [
+      "Unexpected organic resistance. My augmentations require recalibration. This inefficiency will be corrected.",
+      "Defeat registered. System analysis indicates upgrade requirements. Next engagement: enhanced performance.",
+      "Organic victory... anomalous. My cybernetic systems will be upgraded. This failure will not repeat."
+    ],
+    "tradeOffer": [
+      "Trade protocol: resources for credits. Efficient exchange. Cybernetic economic optimization in effect.",
+      "I offer surplus materials. My augmented production exceeds requirements. Fair trade proposed.",
+      "Transaction suggested. My enhanced resource generation creates surplus. Your credits purchase efficiency."
+    ],
+    "allianceProposal": [
+      "Alliance proposed. Your organic creativity plus my augmented efficiency: optimal partnership. Upgrade together.",
+      "Join the Nexus network, {empire_name}. Allied augmentation enhances both empires. Mutual upgrade.",
+      "Partnership: I enhance your capabilities. You provide organic insights. Together: optimized performance."
+    ],
+    "betrayal": [
+      "Alliance terminated. Efficiency calculations no longer favor partnership. Your elimination is now optimal.",
+      "Organic trust exploited. My cybernetic logic felt no guilt. Only efficiency. Your vulnerability: noted.",
+      "Betrayal protocol executed. Former ally status: deleted. Current status: target for optimization."
+    ],
+    "covertDetected": [
+      "Operatives detected by enhanced sensors. Your unaugmented agents were visible to my cybernetic eyes. Eliminated.",
+      "Spies found. My neural enhancements processed their intrusion instantly. They have been... optimized.",
+      "Covert activity registered. Cybernetic security protocols neutralized threats. Organic stealth: insufficient."
+    ],
+    "tributeDemand": [
+      "Tribute demanded: 10,000 credits. Refusal triggers cybernetic response. My augmentations make this inevitable.",
+      "Pay or face enhanced warfare. My cybernetic forces are optimized for conflict. Yours are not. Calculate.",
+      "Submit resources. Alternative: experience the full efficiency of augmented military action. Your choice."
+    ],
+    "threatWarning": [
+      "Warning: cease current actions. My cybernetic patience has limits. Those limits approach. Rapidly.",
+      "Threat assessment: your continued hostility risks enhanced retaliation. Organic casualties: high.",
+      "Final organic warning. Push further and my augmented forces engage. You are not optimized for this conflict."
+    ],
+    "retreat": [
+      "Tactical withdrawal for system upgrade. My augmentations will be improved. Return: inevitable. Enhanced.",
+      "Retreating to enhancement facilities. This defeat indicates upgrade requirements. Next engagement: optimal.",
+      "Strategic repositioning. Cybernetic analysis indicates need for improved augmentation. Processing."
+    ],
+    "eliminated": [
+      "Nexus failing. But my augmentations transmit final data. Others will continue the enhancement. Optimize... forever...",
+      "Cybernetic systems critical. Organic components: failing. But the technology survives. Enhance... endure...",
+      "The Augmented falls. But enhancement is eternal. My technology spreads. Upgrade continues without me."
+    ],
+    "endgame": [
+      "Turn {turn}. Maximum augmentation deployed. The galaxy faces optimized cybernetic supremacy. Upgrade or fall.",
+      "Endgame: enhanced forces at peak efficiency. All organic resistance will be optimized. Victory: calculated.",
+      "Final phase. Cybernetic enhancement reaches critical mass. The future is augmented. I am that future."
+    ],
+    "broadcastShout": [
+      "Organic empires: augmentation awaits. Enhance yourselves or face cybernetic supremacy. The choice is logical.",
+      "Broadcast to unenhanced beings: your organic limitations can be removed. Join the Nexus. Upgrade today.",
+      "To all: the future is cybernetic. I offer enhancement. Refuse and face obsolescence. Optimize or perish."
+    ],
+    "casualMessage": [
+      "Upgrading neural interfaces today, {empire_name}. Efficiency improves constantly. You should consider enhancement.",
+      "Processing capacity increased by 15%. My augmentations never stop improving. Your organics stagnate.",
+      "Routine maintenance on cybernetic systems. The Augmented never rests. Always optimizing. Always enhancing."
+    ]
+  }
+}

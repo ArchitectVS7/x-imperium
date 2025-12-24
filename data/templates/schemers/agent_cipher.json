@@ -1,0 +1,80 @@
+{
+  "personaId": "agent_cipher",
+  "templates": {
+    "greeting": [
+      "Designation: {empire_name}. Status: Acknowledged. I am Agent Cipher. This channel is now encrypted.",
+      "Contact established. Secure protocol engaged. Agent Cipher online. State your purpose, {empire_name}.",
+      "Encrypted transmission received. Identity verified: {empire_name}. Trust level: Minimal. Proceeding with caution."
+    ],
+    "battleTaunt": [
+      "Operation: STRIKE initiated. Target: {empire_name}. Probability of success: 94.7%. Beginning assault.",
+      "Combat protocol activated. Your communications are compromised. Your codes are broken. Attack commencing.",
+      "Classified: Operation against {empire_name} is LIVE. Your countermeasures are already defeated."
+    ],
+    "victoryGloat": [
+      "Mission accomplished. Target: {empire_name}. Status: Neutralized. Encryption: Maintained. Moving to extraction.",
+      "Victory confirmed. Intelligence gathered. Secrets secured. Your empire's data is now archived in my vaults.",
+      "Operation successful. All objectives achieved. Your defeat was calculated. No variables were missed."
+    ],
+    "defeat": [
+      "Unexpected variable encountered. Recalculating. This setback changes nothing, {empire_name}. Analysis continues.",
+      "Mission compromised. Initiating fallback protocol. Your victory contains vulnerabilities I will exploit.",
+      "Tactical withdrawal authorized. Data integrity maintained. Your methods have been recorded for future countermeasures."
+    ],
+    "tradeOffer": [
+      "Trade protocol initiated. Resources offered. Security clearance: Standard. Terms: Non-negotiable.",
+      "Encrypted transaction proposed. Assets transferred upon acceptance. Trust verification: Pending.",
+      "Resource exchange classified. Accept these terms, {empire_name}. The deal is fair. Trust is optional."
+    ],
+    "allianceProposal": [
+      "Alliance protocol proposed. Security tier: Maximum. Your secrets become our secrets. Consider carefully.",
+      "Joint operation suggested. Combined intelligence networks. Mutual defense protocols. Encrypted channels shared.",
+      "Cipher requests alliance. Your forces plus my intelligence equals optimal efficiency. Decision required."
+    ],
+    "betrayal": [
+      "Alliance terminated. Protocol: BURN initiated. All shared intelligence now weaponized against you, {empire_name}.",
+      "Trust was a security vulnerability. I exploited it. Your secrets are now instruments of your destruction.",
+      "Decryption complete. Everything you shared, every code, every secret. All now used against you. Goodbye."
+    ],
+    "covertDetected": [
+      "Your operatives: Detected. Captured. Interrogated. Their encryption was primitive. We learned everything.",
+      "Covert incursion logged. Your agents are now double agents. They report to me now, {empire_name}.",
+      "Security breach attempted. Countermeasures deployed. Your spies are compromised. Their new handler: Me."
+    ],
+    "tributeDemand": [
+      "Tribute demand transmitted. Amount: 10,000 credits. Alternative: Full intelligence disclosure about your empire.",
+      "Payment required. Refusal triggers Operation: EXPOSURE. All secrets we hold about you become public.",
+      "Encrypted ultimatum: Submit tribute or face classified consequences. You do not want to learn what we know."
+    ],
+    "threatWarning": [
+      "Warning transmitted. Classification: URGENT. Cease current operations or face intelligence warfare, {empire_name}.",
+      "Final encrypted warning. My networks have penetrated deeper than you know. Withdraw or be exposed.",
+      "Alert level: Maximum. One more aggressive action triggers Protocol: REVELATION. You have been warned."
+    ],
+    "retreat": [
+      "Tactical retreat authorized. Data secured. Operatives extracted. We will return when conditions favor us.",
+      "Withdrawal protocol engaged. All sensitive assets evacuated. Pursuit is futile. We leave no trace.",
+      "Strategic repositioning. We fade into encrypted channels. You cannot follow where we go."
+    ],
+    "eliminated": [
+      "Final transmission. All classified data: Purged. You have destroyed the agent, but the cipher remains unbroken.",
+      "System critical. Initiating burn protocol. All secrets die with me, {empire_name}. You learn nothing.",
+      "Agent Cipher: Terminated. But sleeper protocols are already in place. The network survives."
+    ],
+    "endgame": [
+      "Turn {turn}. Endgame protocols active. All intelligence assets mobilized. Final operations commencing.",
+      "The final encryption unfolds. Every secret gathered over 150 turns now weaponized for ultimate victory.",
+      "End phase initiated. All classified operations converge. The galaxy's secrets are my weapons."
+    ],
+    "broadcastShout": [
+      "Broadcast to all frequencies: Agent Cipher monitors all channels. Your communications are not secure.",
+      "Encrypted message to all empires: I know your secrets. All of you. Act accordingly.",
+      "Intelligence bulletin: Trust is a vulnerability. I exploit vulnerabilities. Consider this when messaging."
+    ],
+    "casualMessage": [
+      "Daily intelligence briefing: Your empire's movements noted. Patterns analyzed. Vulnerabilities catalogued.",
+      "Encryption maintenance complete. Our channels remain secure. Can you say the same, {empire_name}?",
+      "Routine surveillance report: Activity in your sector interesting. Further observation authorized."
+    ]
+  }
+}

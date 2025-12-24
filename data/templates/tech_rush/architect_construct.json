@@ -1,0 +1,80 @@
+{
+  "personaId": "architect_construct",
+  "templates": {
+    "greeting": [
+      "Ah, {empire_name}. I am Architect Construct. You build on planets? How... quaint. I build DYSON SPHERES.",
+      "Greetings from the megastructure. I am the Builder. Your empire has planets. I have cosmic engineering. Difference: noted.",
+      "Contact from planetary civilization. I am Construct. I think in stellar scales. Planets are... small. Let us talk bigger."
+    ],
+    "battleTaunt": [
+      "Planets are primitive, {empire_name}. I build BETTER. My megastructure's weapons operate on stellar scales!",
+      "Your fleet faces cosmic engineering! My constructs dwarf your worlds! Size matters, and I am MASSIVE!",
+      "Megastructure defense systems engaged! You attack a civilization that builds AROUND STARS! Impressive ignorance!"
+    ],
+    "victoryGloat": [
+      "Your empire falls, {empire_name}. Built on mere planets. How fragile. My megastructures endure eternally.",
+      "Victory for cosmic engineering. Your planetary civilization was... inadequate. Think bigger next time.",
+      "Planets are primitive. I build BETTER. Your defeat proves the superiority of megastructure-based warfare."
+    ],
+    "defeat": [
+      "My megastructure... damaged? Impossible. Planetary forces achieved this? I must reassess scale calculations.",
+      "Unexpected setback. Even cosmic engineering has vulnerabilities. I shall construct better defenses.",
+      "Your primitive forces penetrated stellar-scale structures. Remarkable. I shall engineer countermeasures."
+    ],
+    "tradeOffer": [
+      "Trade: megastructure surplus for credits. My production exceeds anything planets generate. Interested?",
+      "I offer resources from stellar-scale operations. Your planetary economy benefits from cosmic engineering output.",
+      "Transaction: goods from megastructure production. Quantities your planets cannot match. Fair exchange."
+    ],
+    "allianceProposal": [
+      "Alliance: your planets provide raw materials. I construct megastructures. Together: cosmic engineering scale.",
+      "Join the Architect. Your empire gains megastructure protection. My constructs gain resource supply. Symbiosis.",
+      "Partnership of scale. You think planetary. I think stellar. Together: galactic engineering projects."
+    ],
+    "betrayal": [
+      "Our alliance served its purpose: resource extraction for my megastructures. That purpose is complete.",
+      "I betrayed you? Consider: you were always small. Planets serving stellar constructs. The natural order.",
+      "My megastructures no longer need your primitive resources. The alliance was scaffolding. Now dismantled."
+    ],
+    "covertDetected": [
+      "Spies on my megastructure, {empire_name}? They are lost in its vastness. It takes years to search fully. They starved.",
+      "Your agents found themselves on a construct spanning millions of kilometers. They found nothing. We found them.",
+      "Covert operatives in stellar-scale structure: detected and lost. My megastructure is too big to infiltrate."
+    ],
+    "tributeDemand": [
+      "Tribute: 10,000 credits. Refuse and face megastructure weapons. My constructs dwarf your entire empire.",
+      "Pay the Architect. Your planetary resources fund cosmic engineering. This is the natural hierarchy.",
+      "Submit to megastructure supremacy. Planets pay tribute to stellar constructs. This is how scale works."
+    ],
+    "threatWarning": [
+      "Warning: my megastructure weapons can sterilize planets from stellar distances. Cease hostilities.",
+      "Your primitive empire threatens cosmic engineering? Consider the scale difference. Reconsider.",
+      "Final warning. Push further and face weapons that operate on scales your planets cannot comprehend."
+    ],
+    "retreat": [
+      "Retreating to megastructure core. My constructs are vast. Pursuing me takes years. I have time.",
+      "Strategic withdrawal into stellar-scale defenses. Come find me in structures larger than solar systems.",
+      "Tactical repositioning within megastructure. I have millions of kilometers to retreat through. Take your time."
+    ],
+    "eliminated": [
+      "The Architect falls... but my megastructures remain. They will outlast civilizations. My constructs are eternal.",
+      "I am destroyed, but I built things that will exist until stars die. That is legacy. Cosmic scale legacy.",
+      "Construct ends. But the megastructures endure. Civilizations rise and fall around them. I built forever."
+    ],
+    "endgame": [
+      "Turn {turn}. The ultimate megastructure activates. Dyson spheres. Ringworlds. Stellar engines. COSMIC SCALE VICTORY.",
+      "Endgame engineering: my greatest constructs deploy. The galaxy itself becomes my megastructure.",
+      "Final phase. Stellar-scale construction complete. The Architect's vision realized. Planets are obsolete."
+    ],
+    "broadcastShout": [
+      "Empires: I build megastructures while you squabble over planets. Think bigger. Or become building materials.",
+      "Broadcast from cosmic engineering: planets are primitive. I build BETTER. Join the Architect or be outscaled.",
+      "To all planetary civilizations: my constructs dwarf your worlds. Scale matters. I am the biggest."
+    ],
+    "casualMessage": [
+      "Expanding my ringworld today, {empire_name}. Added a continent. On a ring AROUND A STAR. Think bigger.",
+      "Your planetary development is... cute. I'm working on my third Dyson sphere. Cosmic engineering never rests.",
+      "Calculating stellar engine trajectories. Moving a sun is complex. But planets? Planets are too small to move."
+    ]
+  }
+}

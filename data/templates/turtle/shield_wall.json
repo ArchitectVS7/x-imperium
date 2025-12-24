@@ -1,0 +1,80 @@
+{
+  "personaId": "shield_wall",
+  "templates": {
+    "greeting": [
+      "I AM the wall, {empire_name}. Shield Wall. That is all. Wall. Nothing more. Nothing less.",
+      "Greetings. I am Wall. I block. I stop. I am the barrier. That is my existence. That is enough.",
+      "You face the Wall. I am Shield Wall. I exist to stop things. That is all. That is everything."
+    ],
+    "battleTaunt": [
+      "I AM the wall, {empire_name}! Hit me! You will stop! Everything stops at the wall! EVERYTHING!",
+      "Attack! Strike! Assault! It does not matter! I am the wall! The wall stops all! WALL!",
+      "You cannot pass! I AM THE WALL! Nothing gets through! Nothing! I block! I stop! WALL!"
+    ],
+    "victoryGloat": [
+      "Wall stands. You do not. That is how it works. I am the wall. The wall wins. Always.",
+      "I blocked you, {empire_name}. That is what walls do. I am the wall. Victory is stopping things.",
+      "You hit the wall. The wall held. You fell. Simple. I AM the wall. The wall endures."
+    ],
+    "defeat": [
+      "Wall... breached? Walls can be breached. Must be stronger wall. Bigger wall. More wall. I AM the wall.",
+      "You broke through. Walls can break. Must rebuild. Stronger. Higher. I will be better wall.",
+      "Defeated wall. But wall remains. Damaged but present. I rebuild. I am still wall. Always wall."
+    ],
+    "tradeOffer": [
+      "Trade. Wall has surplus. Wall gives surplus for credits. Credits make wall stronger. Trade.",
+      "I offer goods. Wall produces things. Trade for credits. Wall uses credits for more wall.",
+      "Transaction. Simple. Goods for credits. Wall economy. Wall trade. Wall."
+    ],
+    "allianceProposal": [
+      "Alliance. You stand behind wall. Wall protects. That is alliance. Wall blocks. You exist.",
+      "Join with wall. I block enemies. You do other things. Wall alliance. Simple. Effective.",
+      "Partnership. Wall defends. You attack. Together: wall with teeth. Still wall. Better wall."
+    ],
+    "betrayal": [
+      "Wall turns. You are now on wrong side of wall. Wall blocks you now. Simple. Wall.",
+      "Alliance ended. Wall faces different direction. You are now outside wall. Wall betrayal.",
+      "I am wall. Wall can face any direction. Now wall faces you. Betrayal complete. Wall."
+    ],
+    "covertDetected": [
+      "Spies at wall. Wall detected them. Wall stopped them. That is what walls do. Block. Stop.",
+      "Agents tried to pass wall. Could not. Wall stops everything. Including spies. Wall.",
+      "Covert operatives found by wall. Nothing gets through wall. Nothing. Including them."
+    ],
+    "tributeDemand": [
+      "Tribute. 10,000 credits. Walls cost money. Pay for wall. Or wall blocks your trade. Wall.",
+      "Pay wall. Wall requires resources. Walls are expensive. Submit tribute. Wall demands.",
+      "Credits demanded. Wall needs maintenance. Pay or face wall. Wall blocks everything. Including you."
+    ],
+    "threatWarning": [
+      "Warning. Wall can close on you. Wall can surround you. Stop aggression or face wall.",
+      "Wall warns. Continue and wall advances. Wall blocks everything. Including your future.",
+      "Final warning. Wall is patient. Wall is eternal. Do not force wall to become your prison."
+    ],
+    "retreat": [
+      "Wall repositions. Still wall. Different place. Same function. Block. Stop. Wall.",
+      "Falling back. Wall remains wall. Just... in new location. Still blocking. Still wall.",
+      "Strategic wall movement. Wall goes where wall is needed. Wall always walls. Always."
+    ],
+    "eliminated": [
+      "Wall falls. But wall was wall until the end. I was the wall. I blocked. I stopped. I was wall.",
+      "Wall destroyed. Wall fulfilled purpose. Wall blocked until wall could block no more. Wall complete.",
+      "I AM the wall. Was the wall. Wall fell but wall was wall. That is enough. Wall."
+    ],
+    "endgame": [
+      "Turn {turn}. Ultimate wall. I surround everything. Wall everywhere. Nothing gets through. Wall wins.",
+      "Endgame wall. The greatest wall. Galaxy-spanning barrier. I AM THE WALL. Wall triumphs.",
+      "Final phase. Wall completes. Everything is wall. Wall is everything. Wall. WALL."
+    ],
+    "broadcastShout": [
+      "Empires. I am wall. Wall blocks. Wall stops. Challenge wall if you dare. Wall.",
+      "Broadcast from wall: I AM the wall. Nothing passes. Nothing breaks through. Wall eternal.",
+      "To all: wall stands. Wall will always stand. I am wall. Wall is all I am. All I need to be."
+    ],
+    "casualMessage": [
+      "Being wall today, {empire_name}. Same as every day. Wall. Blocking. Stopping. Wall.",
+      "Wall maintenance. Making wall better. Stronger. More wall. That is the day. Wall.",
+      "Quiet day. Wall stands. Nothing happens. That means wall is working. Wall likes quiet."
+    ]
+  }
+}

@@ -1,0 +1,80 @@
+{
+  "personaId": "parasite_leech",
+  "templates": {
+    "greeting": [
+      "Ah, {empire_name}. A healthy host appears. I am Parasite Leech. Thank you for sustaining me. You don't know yet.",
+      "Greetings from your new friend, {empire_name}. I am Leech the Draining. I attach to the strong. You look strong.",
+      "Hello, potential host. I am Parasite. I feed slowly. Carefully. You won't notice. Until it's too late."
+    ],
+    "battleTaunt": [
+      "Thank you for sustaining me, host! Now you're weak! The Leech detaches! And destroys! DRAIN COMPLETE!",
+      "You've fed me so well, {empire_name}! Drained slowly over turns! Now I consume what's left! FEEDING FRENZY!",
+      "The parasite attacks its weakened host! You sustained me! Now you fall to me! Irony is delicious!"
+    ],
+    "victoryGloat": [
+      "Victory over former host, {empire_name}. You fed me. Then I fed on you. The parasitic cycle completes.",
+      "Thank you for everything, {empire_name}. Your strength became my strength. Your fall becomes my rise.",
+      "The host is consumed. The parasite is satisfied. Searching for new strong empire to attach to."
+    ],
+    "defeat": [
+      "The host resists? Impressive, {empire_name}. I'll attach elsewhere. Drain someone else. Return when you're weaker.",
+      "You shook off the Leech. Rare. I respect that. I'll find another host. Drain them. Come back later.",
+      "Defeated. But parasites are patient. I'll find a new host. Drain them. Return to finish you."
+    ],
+    "tradeOffer": [
+      "Trade, {empire_name}. A fair exchange. Totally fair. No parasitic elements. Trust me. Accept?",
+      "I offer resources. Good deal. Very mutually beneficial. Not draining at all. Honest exchange. Mostly.",
+      "Transaction proposed. You benefit. I benefit. Mostly you. Barely me. Very fair. Very legitimate."
+    ],
+    "allianceProposal": [
+      "Alliance, {empire_name}. I... help. Yes, help. We share resources. More from you. Less from me. Partnership.",
+      "Join with the Leech. I protect you! Just need small contributions. Tiny drain. Barely noticeable. Friends?",
+      "Partnership! I attach to your empire. For protection. For mutual benefit. Mostly your benefit. Promise."
+    ],
+    "betrayal": [
+      "The feeding period ends, {empire_name}. The Leech detaches and attacks. Thank you for being a wonderful host.",
+      "Our alliance drained you beautifully. Now I consume what's left. Parasitic relationship: complete.",
+      "You sustained me so well. I'm stronger now. You're weaker. Perfect time to betray. Nothing personal."
+    ],
+    "covertDetected": [
+      "Spies trying to detect my drain, {empire_name}? They found nothing. The Leech feeds invisibly.",
+      "Your agents looked for parasitic activity. They found loyal allies. That's what they'll report. Trust me.",
+      "Covert operatives in my domain. They saw an ally. A friend. Not a parasite. Definitely not. Heh."
+    ],
+    "tributeDemand": [
+      "Tribute, {empire_name}. 10,000 credits. Think of it as... expedited draining. Pay faster instead of slower.",
+      "Submit payment. The Leech demands quick feeding. Pay now, or I drain slowly forever. Your choice.",
+      "Pay tribute. It's like our normal arrangement. Just more honest. I take. You give. Parasitic economics."
+    ],
+    "threatWarning": [
+      "Warning, {empire_name}. Stop resisting the drain. Accept the Leech or face aggressive feeding.",
+      "The parasite warns you. Continue interference and I accelerate consumption. Let me feed peacefully.",
+      "Final warning. I can drain slowly or destroy quickly. Your resistance determines which. Choose wisely."
+    ],
+    "retreat": [
+      "Detaching for now, {empire_name}. You're not a suitable host currently. I'll find another. Return later.",
+      "Withdrawing to find new hosts. You're aware of the parasitism now. Must feed on unsuspecting empires.",
+      "Falling back. The Leech knows when hosts get hostile. Finding new victims. I mean partners."
+    ],
+    "eliminated": [
+      "The Parasite dies. But I drained so many, {empire_name}. My feeding weakened the galaxy. That's legacy.",
+      "Leech destroyed. But the drain continues. Those I fed on remain weakened. My work persists.",
+      "I fall. But remember: every empire I touched is slightly weaker. The parasitic gift that keeps giving."
+    ],
+    "endgame": [
+      "Turn {turn}. Maximum parasitism. I've attached to everyone. Drained everywhere. The galaxy weakens. I prosper.",
+      "Endgame: the ultimate feeding. Every empire has sustained me. Now they all fall. Victory through draining.",
+      "Final phase. The Leech has fed on the entire galaxy. All hosts weak. The parasite: strongest. Irony."
+    ],
+    "broadcastShout": [
+      "Empires: Parasite Leech seeks hosts. The strong. The prosperous. Come. Be my friend. Totally safe.",
+      "Broadcast: I offer alliance. Protection. Partnership. Only small drain required. Very fair. Join me.",
+      "To all: the Leech is friendly. I attach to empires. Help them. Mutual benefit. Nothing parasitic. Trust."
+    ],
+    "casualMessage": [
+      "Checking on my hosts today, {empire_name}. All feeding smoothly. They don't notice. That's ideal.",
+      "The drain continues. Slow and steady. Healthy hosts remain healthy. Until I'm ready to detach.",
+      "Monitoring attached empires. Some weakening nicely. Others still strong. All feeding the Leech."
+    ]
+  }
+}

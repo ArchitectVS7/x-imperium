@@ -1,0 +1,80 @@
+{
+  "personaId": "engineer_bunker",
+  "templates": {
+    "greeting": [
+      "Structural analysis indicates: visitor. I am Engineer Bunker. My shields can withstand a supernova. Probably.",
+      "Greetings calculated and returned, {empire_name}. I am Bunker the Builder. Defense coefficient analysis is my passion.",
+      "Contact established. I am the defensive engineering specialist. Your approach has been modeled. My shields adjusted."
+    ],
+    "battleTaunt": [
+      "My shields can withstand a supernova. Probably, {empire_name}! Defensive coefficients at maximum! Attack!",
+      "Structural integrity at optimal! My calculations indicate your weapons are insufficient! Test my thesis!",
+      "Defense matrix engaged! Shield harmonics calibrated! Attack and provide valuable stress-testing data!"
+    ],
+    "victoryGloat": [
+      "Defensive calculations confirmed, {empire_name}. Your attack fell within predicted parameters. My shields held. As calculated.",
+      "Victory through engineering. My structural integrity exceeded your destructive capacity. Mathematics wins.",
+      "Coefficient analysis proved correct. Your weapons: insufficient. My shields: adequate. Result: predictable."
+    ],
+    "defeat": [
+      "Structural failure? My calculations... were wrong? I must recalibrate. Reinforce. The coefficients need adjustment.",
+      "Shield matrix breached. Unexpected. My engineering models require revision. This data is... painful but useful.",
+      "Defense systems compromised. I underestimated stress factors. Rebuilding with improved structural coefficients."
+    ],
+    "tradeOffer": [
+      "Trade proposal. Resource exchange for credits. Coefficient analysis indicates mutual benefit. Accept?",
+      "I offer engineering surplus for standard payment. Fair transaction. Structurally sound economics.",
+      "Transaction calculated as advantageous. My production exceeds defensive requirements. Purchase available."
+    ],
+    "allianceProposal": [
+      "Alliance suggested. Your forces plus my defensive engineering equals optimized defense coefficient for both.",
+      "Partnership of fortification. I design shields. You benefit from structural protection. Calculated synergy.",
+      "Join the Bunker network, {empire_name}. My engineering protects allied assets. Defense coefficient: shared."
+    ],
+    "betrayal": [
+      "Alliance termination calculated. Your defensive weaknesses were modeled during partnership. Now exploited.",
+      "I engineered this betrayal's structural integrity, {empire_name}. It will hold. Unlike our former alliance.",
+      "Defense coefficients recalculated. Former ally now classified as threat. Shields reoriented. Sorry. Math."
+    ],
+    "covertDetected": [
+      "Your agents triggered structural sensors, {empire_name}. My bunker's internal defenses neutralized them. Efficiently.",
+      "Infiltration detected by engineering surveillance. My bunker has no structural weaknesses for spies to exploit.",
+      "Covert operatives found stress-testing internal security. They failed. My engineering is thorough."
+    ],
+    "tributeDemand": [
+      "Tribute: 10,000 credits. Defense engineering is expensive. Fund my shields, or face their structural integrity.",
+      "Payment demanded. My bunker requires constant reinforcement. Contribute, or become a target for stress-testing.",
+      "Submit resources. The alternative is experiencing my defense coefficient firsthand. As the attacker."
+    ],
+    "threatWarning": [
+      "Warning: my shields are calibrated to withstand everything. Probably. Cease hostilities or test them.",
+      "Structural analysis indicates: your forces insufficient. Continue aggression and confirm my calculations.",
+      "Final engineering assessment: you will fail. My defense coefficients exceed your attack parameters. Stop."
+    ],
+    "retreat": [
+      "Retreating to deeper bunker. Each layer has higher structural integrity. Pursue into improved defenses.",
+      "Strategic withdrawal for shield recalibration. When I return, defense coefficients will be enhanced.",
+      "Tactical repositioning to reinforced position. My engineering learns from every engagement."
+    ],
+    "eliminated": [
+      "Structural collapse... terminal. But my engineering data survives. My calculations will improve future bunkers.",
+      "The Builder falls. My shields failed at last. But my defense coefficient research persists. Others will build better.",
+      "Bunker breached... finally. I die behind walls that held longer than calculated. Good engineering. Goodbye."
+    ],
+    "endgame": [
+      "Turn {turn}. Maximum structural integrity achieved. My defense coefficients reach theoretical limits. Test them.",
+      "Endgame: engineering perfection. My shields at ultimate calibration. Supernova resistance: confirmed. Probably.",
+      "Final phase. The greatest bunker ever calculated. Defense coefficients beyond measurement. I am invincible. Probably."
+    ],
+    "broadcastShout": [
+      "Empires: Engineer Bunker's shields can withstand anything. Probably. Challenge me for empirical data.",
+      "Broadcast: structural integrity at maximum. My defense coefficients defy calculation. Attack if you have data to contribute.",
+      "To all: I am the Bunker. I build shields. They probably work. Attack and find out. For science."
+    ],
+    "casualMessage": [
+      "Calibrating shield harmonics today, {empire_name}. Defense coefficients improved by 3.7%. Satisfactory progress.",
+      "Structural analysis ongoing. My bunker's walls exceed safety margins by 400%. I aim for 500%.",
+      "Running stress tests on new shields. Results: probably supernova-resistant. Need more supernovas to be certain."
+    ]
+  }
+}

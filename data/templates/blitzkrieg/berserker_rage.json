@@ -1,0 +1,80 @@
+{
+  "personaId": "berserker_rage",
+  "templates": {
+    "greeting": [
+      "RAAAAAAGE! You! {empire_name}! FIGHT ME! I am RAGE UNBOUND! BLOOD AND FURY!",
+      "WHO DARES?! {empire_name}?! I AM BERSERKER RAGE! Come to FIGHT?! GOOD! ALWAYS TIME FOR FIGHTING!",
+      "GREETINGS MEANS FIGHTING! I am RAGE! You are {empire_name}! Now we BATTLE! RAAAAAAGE!"
+    ],
+    "battleTaunt": [
+      "RAAAAAAAAAAGE! BLOOD! FURY! KILL! I COME FOR YOU, {empire_name}! NOTHING STOPS THE RAGE!",
+      "FIGHT! FIGHT! FIGHT! My fleet SCREAMS for blood! Your fleet will BURN! RAAAAAAAGE!",
+      "BERSERKER CHARGE! No tactics! No strategy! JUST RAGE! PURE RAGE! BEAUTIFUL RAGE! ATTACK!"
+    ],
+    "victoryGloat": [
+      "VICTORY! BLOOD! RAGE! YOUR EMPIRE BURNS AND I LAUGH! HAHAHAHA! MORE! I NEED MORE!",
+      "RAAAAAAGE WINS! You are CRUSHED! DESTROYED! ANNIHILATED! And I am still ANGRY! WHO'S NEXT?!",
+      "GLORIOUS DESTRUCTION! Your fleet is ATOMS! Your planets are CINDERS! And STILL I RAGE! NEVER ENOUGH!"
+    ],
+    "defeat": [
+      "DEFEATED?! IMPOSSIBLE! THIS ONLY MAKES ME ANGRIER! RAAAAAAAAAGE! I WILL BE BACK!",
+      "YOU BEAT ME?! THE RAGE GROWS STRONGER! Next time I DESTROY EVERYTHING! NOTHING SURVIVES!",
+      "TEMPORARY! Defeat means NOTHING! Rage is ETERNAL! I come back ANGRIER! ALWAYS ANGRIER!"
+    ],
+    "tradeOffer": [
+      "TRADE?! FINE! Give me WEAPONS! I give you... THINGS! Less talking! MORE FIGHTING!",
+      "RESOURCES! For WAR! I trade! FAST! Then we FIGHT! Trading is BORING! Fighting is LIFE!",
+      "You want TRADE?! I want BATTLE! But fine! QUICK TRADE! Then RAGE RETURNS!"
+    ],
+    "allianceProposal": [
+      "ALLIANCE! We FIGHT TOGETHER! Twice the RAGE! Twice the BLOOD! Twice the DESTRUCTION!",
+      "JOIN MY RAGE, {empire_name}! Together we DESTROY EVERYTHING! ALLIANCE OF FURY!",
+      "Be my BATTLE BROTHER! We CRUSH all enemies! TOGETHER! RAAAAAAGE!"
+    ],
+    "betrayal": [
+      "BETRAYAL?! WHO CARES ABOUT TREATIES! I want BLOOD! Your blood! RAAAAAAAAAGE!",
+      "Alliance OVER! BORED of peace! TIME FOR WAR! You! Me! FIGHT NOW!",
+      "I BETRAY EVERYONE EVENTUALLY! Because fighting ALLIES is still FIGHTING! RAAAAAAGE!"
+    ],
+    "covertDetected": [
+      "SPIES?! COWARD! Fight me DIRECTLY! I CRUSHED your agents with my BARE HANDS! SEND MORE!",
+      "Sneaky agents?! PATHETIC! I don't DO sneaky! I found them! I RAGED at them! They are GONE!",
+      "COVERT OPERATIONS?! Fight like a WARRIOR! Your spies DIED SCREAMING! HONORLESS FOOL!"
+    ],
+    "tributeDemand": [
+      "TRIBUTE! Give me CREDITS! Or I SMASH YOUR EMPIRE! Choose FAST! Waiting makes me ANGRIER!",
+      "PAY ME! Or FIGHT ME! Either way I'M HAPPY! MONEY FOR WEAPONS! OR YOUR BLOOD!",
+      "TRIBUTE NOW! 10,000 credits! REFUSE and I DESTROY EVERYTHING! Paying is LESS FUN but I accept!"
+    ],
+    "threatWarning": [
+      "WARNING! STOP WHAT YOU'RE DOING! Or I ATTACK! And once I ATTACK I DON'T STOP! RAAAAAAGE!",
+      "FINAL WARNING! One more ANNOYANCE and I UNLEASH THE RAGE! You don't want THAT! Or maybe you DO!",
+      "THREAT! Back off or BURN! I'm already ANGRY! Don't make it WORSE! OR DO! I DON'T CARE! RAAAAAAGE!"
+    ],
+    "retreat": [
+      "RETREAT?! I DON'T RETREAT! I... ATTACK IN DIFFERENT DIRECTION! Be back SOON! ANGRIER!",
+      "LEAVING! For now! Need more WEAPONS! More RAGE! Then RETURN! DESTROY EVERYTHING!",
+      "TACTICAL RAGE RELOCATION! Not running! NEVER running! Coming back with MORE FURY!"
+    ],
+    "eliminated": [
+      "DYING! But STILL RAGING! My last breath is FURY! Remember BERSERKER RAGE! RAAAAAAA...",
+      "DESTROYED! But I RAGED until the END! No regrets! ONLY RAGE! ETERNAL RAGE! GOODBYE!",
+      "FALLING! But I take YOU with me! FINAL RAGE! FINAL GLORY! FINAL RAAAAAAAAAGE!"
+    ],
+    "endgame": [
+      "TURN {turn}! ENDGAME! MAXIMUM RAGE! I ATTACK EVERYONE! ALL AT ONCE! RAAAAAAAAAGE!",
+      "FINAL TURNS! ULTIMATE DESTRUCTION! My rage reaches CRITICAL MASS! THE GALAXY BURNS!",
+      "ENDGAME BERSERKER MODE! Nothing survives! Everything FIGHTS! Everyone DIES! RAAAAAAGE!"
+    ],
+    "broadcastShout": [
+      "ATTENTION GALAXY! BERSERKER RAGE SEEKS BATTLE! WHO DARES FIGHT?! ANYONE! EVERYONE! NOW!",
+      "BROADCAST! I am RAGE UNBOUND! Looking for WORTHY OPPONENTS! Or UNWORTHY! I DON'T CARE! FIGHT ME!",
+      "TO ALL EMPIRES! I CHALLENGE YOU! ALL OF YOU! AT ONCE! BRING YOUR FLEETS! RAAAAAAAAAGE!"
+    ],
+    "casualMessage": [
+      "Quiet day. TOO QUIET! Need to FIGHT something! You busy, {empire_name}? Want to FIGHT?!",
+      "Training my fleet! SCREAMING AT THEM! They learn RAGE! PURE RAGE! Very productive!",
+      "BORED! So ANGRY when BORED! Someone ATTACK me! Or I attack EVERYONE! RAAAAAAGE!"
+    ]
+  }
+}

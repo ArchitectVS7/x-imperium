@@ -1,0 +1,80 @@
+{
+  "personaId": "baron_krell",
+  "templates": {
+    "greeting": [
+      "Who approaches my fortress, {empire_name}? I am Baron Krell. My walls have never fallen. They never will. State your business.",
+      "Greetings from behind impenetrable defenses. I am Krell the Immovable. Suspicious of everyone. Including you.",
+      "You reach the walls of my domain, {empire_name}. I am Baron Krell. What do you want? Make it quick. I have defenses to reinforce."
+    ],
+    "battleTaunt": [
+      "My walls have never fallen. They never will, {empire_name}! Attack if you dare! My bastions await!",
+      "Come to my fortress! Throw your fleet against my defenses! My stronghold laughs at your assault!",
+      "My defenses are impregnable! My stations are endless! Siege my citadel if you dare! You will fail!"
+    ],
+    "victoryGloat": [
+      "As predicted, {empire_name}. Your attack shattered against my walls. My fortress endures. Your fleet does not.",
+      "My walls have never fallen. Your assault proved nothing. My defenses held. They always hold.",
+      "Victory from behind battlements, {empire_name}. Your aggression spent against my bastions. I remain. Immovable."
+    ],
+    "defeat": [
+      "My walls... breached? Impossible. I must build stronger. Higher. More impregnable. This cannot happen again.",
+      "A temporary failure in my defenses. I shall reinforce. Rebuild. No one breaches Baron Krell twice.",
+      "You penetrated my fortress, {empire_name}. I underestimated your siege. The next wall will stop you."
+    ],
+    "tradeOffer": [
+      "Trade through secure channels only. Resources for credits. No agents. No visitors. Goods only.",
+      "I offer fortress surplus for standard payment. No personal contact. Transaction through intermediaries.",
+      "Trading from behind walls, {empire_name}. Accept my secure terms or seek resources elsewhere. I am suspicious of all."
+    ],
+    "allianceProposal": [
+      "Alliance, {empire_name}. You watch my flanks. I provide impregnable defense. Neither of us trusts easily. But together...",
+      "Join my defensive network. Your forces bolster my walls. My bastions protect your borders. Mutual paranoia.",
+      "Partnership of fortresses. I trust no one fully, but your defenses impress me. Together: impenetrable."
+    ],
+    "betrayal": [
+      "I suspected you from the beginning, {empire_name}. That's why I built walls between our territories. Now they activate.",
+      "Trust no one. I never did. Our alliance was always suspect. Now my defenses turn against you.",
+      "My paranoia was justified, {empire_name}. I prepared for your betrayal before you did. Now face my walls."
+    ],
+    "covertDetected": [
+      "Spies in MY fortress? My security systems detected them instantly. They died in my bulwarks. Send more. They'll fail too.",
+      "Your agents triggered a thousand alarms, {empire_name}. My paranoia detected them before they crossed the first wall.",
+      "Infiltrators found in defensive grid. My fortress has no blind spots. No weaknesses. Your spies learned that fatally."
+    ],
+    "tributeDemand": [
+      "Tribute to Baron Krell. 10,000 credits. Pay, and my walls remain neutral. Refuse, and they become actively hostile.",
+      "Submit payment from behind your own walls. If you have any. I doubt they match mine. Pay or face siege.",
+      "Tribute demanded. My fortress grows expensive. Fund it, or I consider your empire a threat. Threats are eliminated."
+    ],
+    "threatWarning": [
+      "Warning from the fortress, {empire_name}. One more aggressive move and my walls close. Around your throat.",
+      "Cease hostilities. My defenses can become offensive. You've seen my walls. Imagine them advancing.",
+      "Final warning. Push further and discover that my fortress has teeth. Big teeth. Everywhere."
+    ],
+    "retreat": [
+      "Retreating to inner walls. You won the outer defenses. The inner ones are stronger. Much stronger.",
+      "Strategic withdrawal to the citadel core. My deepest defenses await. Good luck penetrating them.",
+      "Falling back behind greater walls. Each layer of retreat is more fortified. You haven't won yet."
+    ],
+    "eliminated": [
+      "My fortress falls... but my walls held longer than any expected. Remember Baron Krell. Remember the walls.",
+      "The Immovable is destroyed. My bastions crumble. But I never surrendered. The walls died with me.",
+      "Final transmission from collapsing citadel. My fortress falls, but never to assault. Only to time. Never to you."
+    ],
+    "endgame": [
+      "Turn {turn}. Ultimate fortress activated. All walls at maximum strength. Siege me if you dare. You will fail.",
+      "Endgame, {empire_name}. My final defenses deploy. Impregnable. Immovable. Eternal. My walls triumph.",
+      "Final phase. The greatest fortress ever built. Bastions spanning systems. None shall breach Baron Krell."
+    ],
+    "broadcastShout": [
+      "All empires: Baron Krell's walls stand. Challenge them at your peril. My fortress has never fallen. Never.",
+      "Broadcast from the citadel: I trust no one. I defend against everyone. Approach at your own risk.",
+      "To all: my bastions are impregnable. My paranoia is justified. Test my walls if you dare. You will fail."
+    ],
+    "casualMessage": [
+      "Reinforcing walls today, {empire_name}. Can never be too fortified. Can never be too suspicious.",
+      "My fortress grows stronger each turn. Another layer of defense. Another reason to fear attacking me.",
+      "Suspicious activity detected on borders. Probably nothing. Tripling defenses anyway. Paranoia keeps me alive."
+    ]
+  }
+}

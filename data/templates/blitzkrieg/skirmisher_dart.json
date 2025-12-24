@@ -1,0 +1,80 @@
+{
+  "personaId": "skirmisher_dart",
+  "templates": {
+    "greeting": [
+      "You can't catch what you can't see, {empire_name}. I am Skirmisher Dart. The Elusive. Here. Then not.",
+      "Greetings, {empire_name}. I am Dart. I strike weak points. I vanish before retaliation. Elegant warfare.",
+      "You found me, {empire_name}. Unusual. I am Dart the Elusive. We should talk before I disappear."
+    ],
+    "battleTaunt": [
+      "Can't catch what you can't see, {empire_name}! Guerrilla strike! Hit weak points! VANISH!",
+      "I strike, I fade, I strike again! You'll never catch me! But I always catch YOU!",
+      "Skirmish attack commencing! Target vulnerable systems! Retreat before response! Perfect warfare!"
+    ],
+    "victoryGloat": [
+      "Your empire bled to death from a thousand tiny cuts, {empire_name}. Each one mine. Each one elusive.",
+      "Victory through attrition. I never committed. I never lost. I just kept hitting until you collapsed.",
+      "Done. Your forces chased ghosts while I destroyed everything you left unguarded. Guerrilla victory."
+    ],
+    "defeat": [
+      "You caught me? Impressive. But I've already scattered. Try catching smoke, {empire_name}.",
+      "A hit, but I was already retreating. The Elusive survives to strike again. From somewhere unexpected.",
+      "Setback acknowledged. Regrouping to skirmish elsewhere. You can't pin down what won't stand still."
+    ],
+    "tradeOffer": [
+      "Quick trade, {empire_name}. Resources for credits. Deal closes fast, like everything I do.",
+      "I offer salvage from hit-and-run raids. Good materials. Fast transaction. I don't linger.",
+      "Trade proposal. Accept before I vanish. The Elusive doesn't negotiate long."
+    ],
+    "allianceProposal": [
+      "Alliance, {empire_name}. You hold ground. I harass enemies. They fight shadows. We win.",
+      "Join forces with Dart. I make enemies bleed while they chase me. You finish them.",
+      "Partnership of harassment. My skirmishers strike everywhere. Your forces exploit the chaos."
+    ],
+    "betrayal": [
+      "Sorry, {empire_name}. Already struck your supply lines. Already gone. Can't betray what can't catch you.",
+      "Our alliance ends with guerrilla attacks across your territory. Good luck finding me. You won't.",
+      "Betrayal? I prefer 'strategic repositioning against former ally.' I'm already somewhere else."
+    ],
+    "covertDetected": [
+      "Your spies were too slow, {empire_name}. My network saw them coming. We relocated everything. Find nothing.",
+      "Agents detected. But what did they learn? I moved before they reported. Intelligence obsolete.",
+      "Covert operatives found empty bases, {empire_name}. I'm always somewhere else. That's the point."
+    ],
+    "tributeDemand": [
+      "Tribute, {empire_name}. 10,000 credits or I harass your trade routes forever. Elusive. Persistent.",
+      "Pay or face constant skirmishing. I never fully attack. Never fully leave. Just bleed you slowly.",
+      "Submit tribute. Refuse and experience death by a thousand cuts. Can't stop what you can't catch."
+    ],
+    "threatWarning": [
+      "Warning, {empire_name}. Continue this path and my skirmishers haunt your every move. Forever.",
+      "Cease hostilities or face guerrilla war. You'll never pin me down. But I'll always find your weak points.",
+      "Final warning. Push further and I make your empire's life miserable. Constantly. Elusively."
+    ],
+    "retreat": [
+      "Fading into the void, {empire_name}. Can't catch what retreats before you arrive.",
+      "Vanishing. I was never committed here. Strike, retreat, reposition. The Dart way.",
+      "Withdrawing at speed. Don't bother pursuing. By the time you arrive, I'm already attacking elsewhere."
+    ],
+    "eliminated": [
+      "You finally caught the Dart. Took everything you had. And I almost slipped away even now.",
+      "The Elusive falls. But I died running, striking, evading. Never pinned down until the very end.",
+      "Destroyed, but my tactics live on. Every guerrilla fighter learns from my example."
+    ],
+    "endgame": [
+      "Turn {turn}. Maximum skirmishing. Every empire harassed simultaneously. I am everywhere. And nowhere.",
+      "Endgame strikes, {empire_name}. My raiders hit every vulnerable point in the galaxy at once.",
+      "Final phase. Elusive warfare at maximum scale. The entire galaxy under constant, unpinnable attack."
+    ],
+    "broadcastShout": [
+      "Attention all empires: Skirmisher Dart strikes everywhere. Can't catch what you can't see. Good luck.",
+      "Galaxy broadcast: guerrilla warfare in progress. If your defenses have gaps, I'll find them.",
+      "To all: the Elusive is on the hunt. Watch your weak points. Blink and you're raided."
+    ],
+    "casualMessage": [
+      "Scouting weak points today, {empire_name}. Every empire has them. Finding yours is just a matter of time.",
+      "Training hit-and-run tactics. Strike, retreat, vanish. Repeat forever. The elusive way.",
+      "Between skirmishes, {empire_name}. Brief rest. Then back to guerrilla operations. Always moving."
+    ]
+  }
+}

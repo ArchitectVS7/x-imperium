@@ -1,0 +1,80 @@
+{
+  "personaId": "shock_trooper",
+  "templates": {
+    "greeting": [
+      "I am the hammer, {empire_name}. Shock Trooper. You are either the anvil or the ally. Choose.",
+      "Greetings, {empire_name}. They call me Shock. Because I hit hard and don't stop. Let's talk.",
+      "You face Shock Trooper. Overwhelming force is my doctrine. Be glad I'm talking, not attacking."
+    ],
+    "battleTaunt": [
+      "I am the hammer. You are the nail, {empire_name}. OVERWHELMING FORCE INCOMING!",
+      "Shock assault commencing! Maximum firepower! No subtlety! JUST CRUSHING POWER!",
+      "My doctrine is simple: hit harder than they can survive. Goodbye, {empire_name}. HAMMER TIME!"
+    ],
+    "victoryGloat": [
+      "Crushed. Smashed. Obliterated. That's what happens when the hammer falls, {empire_name}.",
+      "Your empire is rubble. Overwhelming force works every time. Every. Single. Time.",
+      "Victory through superior firepower. My hammer fell, your empire shattered. Simple mathematics."
+    ],
+    "defeat": [
+      "You... stopped the hammer? Impossible. I need bigger hammers. More shock troops.",
+      "A temporary setback. I return with more force. Overwhelming force. You got lucky.",
+      "Defeated? Then I wasn't overwhelming enough. Next time, {empire_name}. Double the hammer."
+    ],
+    "tradeOffer": [
+      "Trade, {empire_name}. Resources for credits. Simple deal. No hammering involved. Today.",
+      "I offer goods for payment. Straightforward exchange. Shock Trooper can be civilized. Briefly.",
+      "Trading is just hitting the market hard. Accept my offer. Good prices. Or else."
+    ],
+    "allianceProposal": [
+      "Alliance, {empire_name}. You point, I smash. Together, overwhelming force conquers all.",
+      "Join with Shock Trooper. My hammer, your strategy. Enemies don't survive our combined assault.",
+      "Partnership of power. I bring maximum force. You bring targets. Simple. Effective. Overwhelming."
+    ],
+    "betrayal": [
+      "The hammer turns on you, {empire_name}. Nothing personal. You're just in the way now.",
+      "Our alliance ends with maximum force. Shock assault on your position. NOW.",
+      "Betrayal is just redirected force. My hammer sought a new target. Found you. Sorry. Not sorry."
+    ],
+    "covertDetected": [
+      "Spies? I don't do subtle, {empire_name}. Found your agents. Hammered them. Problem solved.",
+      "Covert operatives in my territory? Crushed with extreme prejudice. No subtlety needed.",
+      "Your spies learned about overwhelming force. Firsthand. They didn't survive the lesson."
+    ],
+    "tributeDemand": [
+      "Pay tribute or face the hammer, {empire_name}. 10,000 credits. Or overwhelming destruction.",
+      "Tribute demanded. Pay, or I bring maximum force to your doorstep. The hammer waits.",
+      "Submit payment. Refuse and my shock assault obliterates everything. Simple choice."
+    ],
+    "threatWarning": [
+      "Warning, {empire_name}. The hammer is ready. One more provocation and I crush everything.",
+      "Shock Trooper warns you once. ONCE. Back down or face overwhelming force.",
+      "Final notice. My assault forces are ready. Cease hostilities or be hammered into dust."
+    ],
+    "retreat": [
+      "Withdrawing to rearm. The hammer returns heavier. The shock more shocking. Wait for me.",
+      "Tactical pullback. But I'm building more hammers. More force. More overwhelming.",
+      "Retreat is just momentum conservation. I'll be back. With more firepower. Always more."
+    ],
+    "eliminated": [
+      "The hammer falls silent. But remember, {empire_name}: it took everything you had to stop me.",
+      "Shock Trooper falls. But I fell swinging. Maximum force to the very end. Remember that.",
+      "Destroyed by superior numbers. The only thing that stops overwhelming force. Well played."
+    ],
+    "endgame": [
+      "Turn {turn}. Maximum force deployed everywhere. The ultimate shock assault begins!",
+      "Endgame, {empire_name}. Every hammer I have falls at once. Galaxy-wide overwhelming force!",
+      "Final phase. All my firepower unleashed. The biggest hammer. The hardest shock. Victory!"
+    ],
+    "broadcastShout": [
+      "To all empires: Shock Trooper has one solution for every problem. Overwhelming force. Any questions?",
+      "Galaxy broadcast: I am the hammer. Everyone else is nails. Act accordingly.",
+      "Attention, stars. Shock Trooper seeks worthy targets. Who wants to test their defenses against maximum force?"
+    ],
+    "casualMessage": [
+      "Upgrading my hammers today, {empire_name}. Always room for more overwhelming force.",
+      "Training shock troops. Doctrine is simple: hit hard, keep hitting, never stop. Effective.",
+      "Quiet day. Polishing weapons. The calm before the shock assault. Enjoy the peace while it lasts."
+    ]
+  }
+}

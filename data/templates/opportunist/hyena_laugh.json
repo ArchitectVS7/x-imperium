@@ -1,0 +1,80 @@
+{
+  "personaId": "hyena_laugh",
+  "templates": {
+    "greeting": [
+      "HAHAHAHA! {empire_name}! I am Hyena Laugh! You look... weak! HEHEHEHE! Let's be friends! For now!",
+      "Greetings, {empire_name}! I'm Laugh the Cackling! HAHAHAHA! You seem healthy! That's boring! Get weaker!",
+      "HEHEHEHE! The Hyena finds you, {empire_name}! I attack the weak! Are you weak yet? HAHAHAHA!"
+    ],
+    "battleTaunt": [
+      "Hahahaha! How the mighty have fallen, {empire_name}! You're WEAK now! Time for the Hyena! HEHEHEHE!",
+      "WEAK! PATHETIC! FALLEN! HAHAHAHA! I love it! Now I attack! While you're down! PERFECT!",
+      "Look at you, {empire_name}! So weak! So fallen! HAHAHAHA! The Hyena strikes the pathetic! That's YOU!"
+    ],
+    "victoryGloat": [
+      "HAHAHAHA! You LOST! So WEAK! So PATHETIC! The Hyena laughs at your fall! HEHEHEHE! Delicious!",
+      "How the mighty have FALLEN! HAHAHAHA! Your defeat is HILARIOUS! The weak always provide such entertainment!",
+      "WEAK! WEAK! WEAK! HAHAHAHA! Victory over the pathetic! The Hyena is satisfied! For now! HEHEHEHE!"
+    ],
+    "defeat": [
+      "WHAT?! You're not weak?! HAHAHAHA! Fooled ME! I'll be back when you're properly pathetic! HEHEHEHE!",
+      "You beat ME?! HAHAHAHA! That's... actually funny! Okay! I'll wait until you're weaker! Everyone gets weak!",
+      "Defeated! HAHAHAHA! But you won't stay strong! I'll be back! When you're fallen! HEHEHEHE!"
+    ],
+    "tradeOffer": [
+      "HAHAHAHA! Trade! Why not! I have scraps from pathetic fallen empires! Good stuff! For credits! HEHEHEHE!",
+      "Trading, {empire_name}! I took things from weak empires! You want some? HAHAHAHA! Fair price!",
+      "Goods from the fallen! HEHEHEHE! Resources from the pathetic! Trade with the Hyena! Laugh with me!"
+    ],
+    "allianceProposal": [
+      "HAHAHAHA! Alliance! You strong, I attack weak! Together we mock the fallen! HEHEHEHE! Fun times!",
+      "Join the Hyena! HAHAHAHA! We find weak empires! We laugh at them! We take their stuff! Partnership!",
+      "Be my ally, {empire_name}! HEHEHEHE! I attack what you weaken! We laugh together! At the pathetic!"
+    ],
+    "betrayal": [
+      "HAHAHAHA! BETRAYAL! You looked WEAK! I couldn't resist! So PATHETIC! HEHEHEHE! Nothing personal!",
+      "You got WEAK, {empire_name}! HAHAHAHA! The Hyena attacks the fallen! You fell! HEHEHEHE!",
+      "Sorry not sorry! HAHAHAHA! You showed weakness! The Hyena pounced! How the mighty have FALLEN!"
+    ],
+    "covertDetected": [
+      "HAHAHAHA! Spies! How PATHETIC! My territory found your weak little agents! HEHEHEHE! Laughable!",
+      "Your operatives were so WEAK I spotted them immediately! HAHAHAHA! Pathetic attempt!",
+      "Covert agents?! HEHEHEHE! They were the weakest spies ever! I'm still laughing! HAHAHAHA!"
+    ],
+    "tributeDemand": [
+      "HAHAHAHA! Pay me! 10,000 credits! Or I attack! Because you're looking WEAK! HEHEHEHE! Pathetic!",
+      "Tribute time! HAHAHAHA! Pay the Hyena or become a laughingstock! The weak always pay! HEHEHEHE!",
+      "Submit payment! HAHAHAHA! You're too weak to refuse! So PATHETIC! I love it! Pay or suffer!"
+    ],
+    "threatWarning": [
+      "HAHAHAHA! Warning! You're getting WEAK, {empire_name}! The Hyena notices! Get stronger or become prey!",
+      "HEHEHEHE! Looking pathetic there! Final warning! Stop being weak or I attack! The fallen are MINE!",
+      "Last chance! HAHAHAHA! You're looking like easy prey! Recover or the Hyena comes! HEHEHEHE!"
+    ],
+    "retreat": [
+      "HAHAHAHA! Leaving! You're not weak enough yet! I'll be back! When you're properly PATHETIC! HEHEHEHE!",
+      "Running! HEHEHEHE! Not because I'm scared! Because you're too strong! Get weaker! I'll return!",
+      "Retreating! HAHAHAHA! The Hyena knows when prey isn't ready! Fall a bit more! Then I feast!"
+    ],
+    "eliminated": [
+      "HAHAHAHA! I'm dying! That's... actually funny! HEHEHEHE! The Hyena falls! Still laughing! HAHAHAHA!",
+      "The Cackling one is destroyed! HAHAHAHA! At least I went out laughing! At the weak! At everyone!",
+      "I fall! HEHEHEHE! But what a life! Laughing at the fallen! Mocking the weak! HAHAHAHA! Worth it!"
+    ],
+    "endgame": [
+      "Turn {turn}! HAHAHAHA! So many WEAK empires! So many FALLEN! The Hyena feasts! HEHEHEHE!",
+      "Endgame! HAHAHAHA! Everyone's getting PATHETIC! Maximum weakness everywhere! PARADISE! HEHEHEHE!",
+      "Final phase! HAHAHAHA! The galaxy is FALLING! The weak inherit my laughter! HEHEHEHE! Victory!"
+    ],
+    "broadcastShout": [
+      "HAHAHAHA! To all empires! Hyena Laugh is watching! The weak will be mocked! And attacked! HEHEHEHE!",
+      "Broadcast! HEHEHEHE! I see your weakness! All of you! Some more than others! HAHAHAHA! Delicious!",
+      "Hear me laugh, galaxy! HAHAHAHA! The fallen are my prey! The weak are my entertainment! How pathetic!"
+    ],
+    "casualMessage": [
+      "HAHAHAHA! Watching weak empires today, {empire_name}! Some so PATHETIC! HEHEHEHE! Fun times!",
+      "Laughing at the galaxy's failures! HEHEHEHE! Some empires are SO weak! Delightful! HAHAHAHA!",
+      "HAHAHAHA! Good day for schadenfreude! Lots of falling empires! The Hyena is entertained! HEHEHEHE!"
+    ]
+  }
+}

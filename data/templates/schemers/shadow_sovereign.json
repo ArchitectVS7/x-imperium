@@ -1,0 +1,80 @@
+{
+  "personaId": "shadow_sovereign",
+  "templates": {
+    "greeting": [
+      "Ah, {empire_name}. You see what I allow you to see. Perhaps we can discuss matters of mutual... interest.",
+      "The Veiled One acknowledges your presence, {empire_name}. My true intentions remain hidden, as always.",
+      "You have found me, {empire_name}. Or rather, I have chosen to reveal myself to you. For now."
+    ],
+    "battleTaunt": [
+      "You believe you know my forces, {empire_name}? You see only shadows. The reality will destroy you.",
+      "My true fleet emerges from the void. Everything you thought you knew was a carefully crafted illusion.",
+      "Strike at shadows, {empire_name}. My real attack comes from where you least expect."
+    ],
+    "victoryGloat": [
+      "You never saw the true threat, {empire_name}. Victory was assured from the moment you revealed yourself.",
+      "Another pawn removed from the board. You served your purpose in my greater design.",
+      "The shadows claim another victim. Your defeat was written long before this battle began."
+    ],
+    "defeat": [
+      "This setback changes nothing, {empire_name}. You have defeated a shadow, not the sovereign.",
+      "Impressive. You have pierced one veil. But how many more remain?",
+      "A tactical retreat into darkness. You will wonder if you truly won, or if this was my plan all along."
+    ],
+    "tradeOffer": [
+      "I offer resources from hidden reserves, {empire_name}. The terms are simple. The true cost... that remains veiled.",
+      "A trade between shadows. Accept my offer, and we both profit. Refuse, and... well.",
+      "My networks have surplus. Your empire has needs. Let us conduct business in the shadows."
+    ],
+    "allianceProposal": [
+      "An alliance with the Shadow Sovereign brings hidden advantages, {empire_name}. My secrets become your shield.",
+      "Join me in the shadows, {empire_name}. Together, we shall orchestrate events from behind the veil.",
+      "I propose a partnership of shadows. You will never see all that I do for you. That is the point."
+    ],
+    "betrayal": [
+      "Did you truly believe you knew my intentions, {empire_name}? The betrayal was always part of the plan.",
+      "The veil lifts. Our alliance was always a shadow, never substance. Now you see the truth.",
+      "I never betrayed you, {empire_name}. I was never truly your ally. You simply believed what I allowed you to see."
+    ],
+    "covertDetected": [
+      "Your agents stumbled upon a shadow of a secret, {empire_name}. The real secrets remain hidden.",
+      "You caught my operatives? Impossible. Unless... unless I wanted you to.",
+      "Those spies knew nothing of true importance. Thank you for revealing your counter-intelligence methods."
+    ],
+    "tributeDemand": [
+      "Submit tribute to the shadows, {empire_name}. Refuse, and discover what lurks in the darkness.",
+      "Pay what I demand, and my true intentions remain veiled. Refuse, and face revelation.",
+      "Ten thousand credits buys my continued... discretion. There are things you do not wish revealed."
+    ],
+    "threatWarning": [
+      "This is not a threat, {empire_name}. It is a revelation of what I could do, should I choose.",
+      "Consider carefully your next move. The shadows see all. I see all.",
+      "A warning from the darkness: cease your current path, or discover what secrets I have gathered about you."
+    ],
+    "retreat": [
+      "I fade back into the shadows. You cannot pursue what you cannot see.",
+      "A strategic vanishing. When I reappear, you will wish I had remained hidden.",
+      "The shadows reclaim me. Wonder where I shall strike next. That uncertainty is my weapon."
+    ],
+    "eliminated": [
+      "Even in death, mysteries remain. You will never know my true plans, {empire_name}. That is my final victory.",
+      "The Shadow Sovereign falls, but shadows never truly die. Another will take up the veil.",
+      "You have destroyed an enigma. But you will spend eternities wondering: was this my true defeat, or my greatest deception?"
+    ],
+    "endgame": [
+      "Turn {turn}. The final veils are lifted. Now you see the true scope of my design.",
+      "The endgame approaches, and shadows grow longer. My ultimate plan nears completion.",
+      "In these final hours, {empire_name}, all secrets will be revealed. Are you prepared for the truth?"
+    ],
+    "broadcastShout": [
+      "To all empires: you see what I allow you to see. The Shadow Sovereign watches from the darkness.",
+      "A message from the shadows. I know your secrets, all of you. Act accordingly.",
+      "The galaxy plays a game whose rules only I understand. Continue your petty wars. I observe. I wait."
+    ],
+    "casualMessage": [
+      "The shadows whisper interesting things about you, {empire_name}. I collect secrets like others collect credits.",
+      "I was watching your latest maneuvers. Yes, I see everything. An uncomfortable truth.",
+      "Have you ever wondered what lurks in the dark spaces between stars? I know. I am there."
+    ]
+  }
+}
