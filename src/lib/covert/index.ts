@@ -45,3 +45,17 @@ export {
   executeOperation,
   previewOperation,
 } from "./success-rate";
+
+// Operation execution and effects
+export {
+  type CovertTargetState,
+  type CovertAttackerState,
+  type OperationEffect,
+  type OperationResult,
+  type SuccessResult,
+  calculateCovertSuccess,
+  executeCovertOp,
+  previewCovertOp,
+  getExecutableOperations,
+  previewAllOperations,
+} from "./operations";
