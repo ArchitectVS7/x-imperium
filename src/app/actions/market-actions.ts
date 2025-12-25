@@ -4,8 +4,10 @@
  * Market Server Actions (M7)
  *
  * Server actions for buying and selling resources on the global market.
+ * All inputs are validated with Zod schemas per reviewer checklist.
  */
 
+import { z } from "zod";
 import { db } from "@/lib/db";
 import { games } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
@@ -20,12 +22,44 @@ import {
 } from "@/lib/market";
 
 // =============================================================================
+// VALIDATION SCHEMAS
+// =============================================================================
+
+const UUIDSchema = z.string().uuid("Invalid UUID format");
+
+const ResourceTypeSchema = z.enum(["food", "ore", "petroleum"], {
+  errorMap: () => ({ message: "Invalid resource type" }),
+});
+
+const MarketStatusSchema = z.object({
+  gameId: UUIDSchema,
+  empireId: UUIDSchema,
+});
+
+const TradeOrderSchema = z.object({
+  gameId: UUIDSchema,
+  empireId: UUIDSchema,
+  resourceType: ResourceTypeSchema,
+  quantity: z.number().int().positive("Quantity must be a positive integer"),
+});
+
+const OrderHistorySchema = z.object({
+  empireId: UUIDSchema,
+});
+
+// =============================================================================
 // GET MARKET STATUS
 // =============================================================================
 
 export async function getMarketStatusAction(gameId: string, empireId: string) {
   try {
-    const status = await getMarketStatus(gameId, empireId);
+    // Validate inputs
+    const parsed = MarketStatusSchema.safeParse({ gameId, empireId });
+    if (!parsed.success) {
+      return { success: false as const, error: parsed.error.errors[0]?.message || "Invalid input" };
+    }
+
+    const status = await getMarketStatus(parsed.data.gameId, parsed.data.empireId);
     if (!status) {
       return { success: false as const, error: "Failed to fetch market status" };
     }
@@ -47,14 +81,15 @@ export async function buyResourceAction(
   quantity: number
 ) {
   try {
-    // Validate resource type
-    if (!["food", "ore", "petroleum"].includes(resourceType)) {
-      return { success: false as const, error: "Invalid resource type" };
+    // Validate inputs with Zod
+    const parsed = TradeOrderSchema.safeParse({ gameId, empireId, resourceType, quantity });
+    if (!parsed.success) {
+      return { success: false as const, error: parsed.error.errors[0]?.message || "Invalid input" };
     }
 
     // Get current turn
     const game = await db.query.games.findFirst({
-      where: eq(games.id, gameId),
+      where: eq(games.id, parsed.data.gameId),
     });
 
     if (!game) {
@@ -63,10 +98,10 @@ export async function buyResourceAction(
 
     // Execute buy order
     const result = await executeBuyOrder(
-      gameId,
-      empireId,
-      resourceType as TradableResource,
-      quantity,
+      parsed.data.gameId,
+      parsed.data.empireId,
+      parsed.data.resourceType as TradableResource,
+      parsed.data.quantity,
       game.currentTurn
     );
 
@@ -99,14 +134,15 @@ export async function sellResourceAction(
   quantity: number
 ) {
   try {
-    // Validate resource type
-    if (!["food", "ore", "petroleum"].includes(resourceType)) {
-      return { success: false as const, error: "Invalid resource type" };
+    // Validate inputs with Zod
+    const parsed = TradeOrderSchema.safeParse({ gameId, empireId, resourceType, quantity });
+    if (!parsed.success) {
+      return { success: false as const, error: parsed.error.errors[0]?.message || "Invalid input" };
     }
 
     // Get current turn
     const game = await db.query.games.findFirst({
-      where: eq(games.id, gameId),
+      where: eq(games.id, parsed.data.gameId),
     });
 
     if (!game) {
@@ -115,10 +151,10 @@ export async function sellResourceAction(
 
     // Execute sell order
     const result = await executeSellOrder(
-      gameId,
-      empireId,
-      resourceType as TradableResource,
-      quantity,
+      parsed.data.gameId,
+      parsed.data.empireId,
+      parsed.data.resourceType as TradableResource,
+      parsed.data.quantity,
       game.currentTurn
     );
 
@@ -151,15 +187,17 @@ export async function validateBuyOrderAction(
   quantity: number
 ) {
   try {
-    if (!["food", "ore", "petroleum"].includes(resourceType)) {
-      return { success: false as const, error: "Invalid resource type" };
+    // Validate inputs with Zod
+    const parsed = TradeOrderSchema.safeParse({ gameId, empireId, resourceType, quantity });
+    if (!parsed.success) {
+      return { success: false as const, error: parsed.error.errors[0]?.message || "Invalid input" };
     }
 
     const validation = await validateBuyOrder(
-      gameId,
-      empireId,
-      resourceType as TradableResource,
-      quantity
+      parsed.data.gameId,
+      parsed.data.empireId,
+      parsed.data.resourceType as TradableResource,
+      parsed.data.quantity
     );
 
     return {
@@ -179,15 +217,17 @@ export async function validateSellOrderAction(
   quantity: number
 ) {
   try {
-    if (!["food", "ore", "petroleum"].includes(resourceType)) {
-      return { success: false as const, error: "Invalid resource type" };
+    // Validate inputs with Zod
+    const parsed = TradeOrderSchema.safeParse({ gameId, empireId, resourceType, quantity });
+    if (!parsed.success) {
+      return { success: false as const, error: parsed.error.errors[0]?.message || "Invalid input" };
     }
 
     const validation = await validateSellOrder(
-      gameId,
-      empireId,
-      resourceType as TradableResource,
-      quantity
+      parsed.data.gameId,
+      parsed.data.empireId,
+      parsed.data.resourceType as TradableResource,
+      parsed.data.quantity
     );
 
     return {
@@ -206,7 +246,13 @@ export async function validateSellOrderAction(
 
 export async function getOrderHistoryAction(empireId: string) {
   try {
-    const orders = await getOrderHistory(empireId);
+    // Validate inputs with Zod
+    const parsed = OrderHistorySchema.safeParse({ empireId });
+    if (!parsed.success) {
+      return { success: false as const, error: parsed.error.errors[0]?.message || "Invalid input" };
+    }
+
+    const orders = await getOrderHistory(parsed.data.empireId);
     return { success: true as const, data: orders };
   } catch (error) {
     console.error("Error fetching order history:", error);

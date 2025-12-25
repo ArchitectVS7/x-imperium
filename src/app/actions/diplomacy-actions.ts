@@ -4,8 +4,10 @@
  * Diplomacy Server Actions (M7)
  *
  * Server actions for treaty management.
+ * All inputs are validated with Zod schemas per reviewer checklist.
  */
 
+import { z } from "zod";
 import { db } from "@/lib/db";
 import { games, empires } from "@/lib/db/schema";
 import { eq, and, ne } from "drizzle-orm";
@@ -22,6 +24,43 @@ import {
   getReputationHistory,
   getReputationLevel,
 } from "@/lib/diplomacy";
+
+// =============================================================================
+// VALIDATION SCHEMAS
+// =============================================================================
+
+const UUIDSchema = z.string().uuid("Invalid UUID format");
+
+const TreatyTypeSchema = z.enum(["nap", "alliance"], {
+  errorMap: () => ({ message: "Invalid treaty type" }),
+});
+
+const DiplomacyStatusSchema = z.object({
+  gameId: UUIDSchema,
+  empireId: UUIDSchema,
+});
+
+const ProposeTreatySchema = z.object({
+  gameId: UUIDSchema,
+  proposerId: UUIDSchema,
+  recipientId: UUIDSchema,
+  treatyType: TreatyTypeSchema,
+});
+
+const TreatyActionSchema = z.object({
+  gameId: UUIDSchema,
+  treatyId: UUIDSchema,
+  empireId: UUIDSchema,
+});
+
+const RejectTreatySchema = z.object({
+  treatyId: UUIDSchema,
+  recipientId: UUIDSchema,
+});
+
+const ReputationHistorySchema = z.object({
+  empireId: UUIDSchema,
+});
 
 // =============================================================================
 // TYPES
@@ -43,16 +82,22 @@ interface DiplomacyTarget {
 
 export async function getDiplomacyStatusAction(gameId: string, empireId: string) {
   try {
+    // Validate inputs with Zod
+    const parsed = DiplomacyStatusSchema.safeParse({ gameId, empireId });
+    if (!parsed.success) {
+      return { success: false as const, error: parsed.error.errors[0]?.message || "Invalid input" };
+    }
+
     const empire = await db.query.empires.findFirst({
-      where: eq(empires.id, empireId),
+      where: eq(empires.id, parsed.data.empireId),
     });
 
     if (!empire) {
       return { success: false as const, error: "Empire not found" };
     }
 
-    const activeTreaties = await getActiveTreaties(empireId);
-    const pendingProposals = await getPendingProposals(empireId);
+    const activeTreaties = await getActiveTreaties(parsed.data.empireId);
+    const pendingProposals = await getPendingProposals(parsed.data.empireId);
 
     return {
       success: true as const,
@@ -75,11 +120,17 @@ export async function getDiplomacyStatusAction(gameId: string, empireId: string)
 
 export async function getDiplomacyTargetsAction(gameId: string, empireId: string) {
   try {
+    // Validate inputs with Zod
+    const parsed = DiplomacyStatusSchema.safeParse({ gameId, empireId });
+    if (!parsed.success) {
+      return { success: false as const, error: parsed.error.errors[0]?.message || "Invalid input" };
+    }
+
     // Get all non-eliminated empires except the player
     const allEmpires = await db.query.empires.findMany({
       where: and(
-        eq(empires.gameId, gameId),
-        ne(empires.id, empireId),
+        eq(empires.gameId, parsed.data.gameId),
+        ne(empires.id, parsed.data.empireId),
         eq(empires.isEliminated, false)
       ),
     });
@@ -87,11 +138,11 @@ export async function getDiplomacyTargetsAction(gameId: string, empireId: string
     // Get treaty status for each
     const targets: DiplomacyTarget[] = await Promise.all(
       allEmpires.map(async (e) => {
-        const hasTreatyFlag = await hasActiveTreaty(empireId, e.id);
+        const hasTreatyFlag = await hasActiveTreaty(parsed.data.empireId, e.id);
         let treatyType: TreatyType | undefined;
 
         if (hasTreatyFlag) {
-          const treaties = await getActiveTreaties(empireId);
+          const treaties = await getActiveTreaties(parsed.data.empireId);
           const treaty = treaties.find((t) => t.partnerId === e.id);
           treatyType = treaty?.type;
         }
@@ -126,12 +177,14 @@ export async function proposeTreatyAction(
   treatyType: string
 ) {
   try {
-    if (!["nap", "alliance"].includes(treatyType)) {
-      return { success: false as const, error: "Invalid treaty type" };
+    // Validate inputs with Zod
+    const parsed = ProposeTreatySchema.safeParse({ gameId, proposerId, recipientId, treatyType });
+    if (!parsed.success) {
+      return { success: false as const, error: parsed.error.errors[0]?.message || "Invalid input" };
     }
 
     const game = await db.query.games.findFirst({
-      where: eq(games.id, gameId),
+      where: eq(games.id, parsed.data.gameId),
     });
 
     if (!game) {
@@ -139,9 +192,9 @@ export async function proposeTreatyAction(
     }
 
     const result = await proposeTreaty(
-      proposerId,
-      recipientId,
-      treatyType as TreatyType,
+      parsed.data.proposerId,
+      parsed.data.recipientId,
+      parsed.data.treatyType as TreatyType,
       game.currentTurn
     );
 
@@ -169,15 +222,21 @@ export async function acceptTreatyAction(
   recipientId: string
 ) {
   try {
+    // Validate inputs with Zod
+    const parsed = TreatyActionSchema.safeParse({ gameId, treatyId, empireId: recipientId });
+    if (!parsed.success) {
+      return { success: false as const, error: parsed.error.errors[0]?.message || "Invalid input" };
+    }
+
     const game = await db.query.games.findFirst({
-      where: eq(games.id, gameId),
+      where: eq(games.id, parsed.data.gameId),
     });
 
     if (!game) {
       return { success: false as const, error: "Game not found" };
     }
 
-    const result = await acceptTreaty(treatyId, recipientId, game.currentTurn);
+    const result = await acceptTreaty(parsed.data.treatyId, parsed.data.empireId, game.currentTurn);
 
     if (!result.success) {
       return { success: false as const, error: result.error };
@@ -202,7 +261,13 @@ export async function acceptTreatyAction(
 
 export async function rejectTreatyAction(treatyId: string, recipientId: string) {
   try {
-    const result = await rejectTreaty(treatyId, recipientId);
+    // Validate inputs with Zod
+    const parsed = RejectTreatySchema.safeParse({ treatyId, recipientId });
+    if (!parsed.success) {
+      return { success: false as const, error: parsed.error.errors[0]?.message || "Invalid input" };
+    }
+
+    const result = await rejectTreaty(parsed.data.treatyId, parsed.data.recipientId);
 
     if (!result.success) {
       return { success: false as const, error: result.error };
@@ -225,15 +290,21 @@ export async function breakTreatyAction(
   breakerId: string
 ) {
   try {
+    // Validate inputs with Zod
+    const parsed = TreatyActionSchema.safeParse({ gameId, treatyId, empireId: breakerId });
+    if (!parsed.success) {
+      return { success: false as const, error: parsed.error.errors[0]?.message || "Invalid input" };
+    }
+
     const game = await db.query.games.findFirst({
-      where: eq(games.id, gameId),
+      where: eq(games.id, parsed.data.gameId),
     });
 
     if (!game) {
       return { success: false as const, error: "Game not found" };
     }
 
-    const result = await breakTreaty(treatyId, breakerId, game.currentTurn);
+    const result = await breakTreaty(parsed.data.treatyId, parsed.data.empireId, game.currentTurn);
 
     if (!result.success) {
       return { success: false as const, error: result.error };
@@ -262,15 +333,21 @@ export async function endTreatyAction(
   requesterId: string
 ) {
   try {
+    // Validate inputs with Zod
+    const parsed = TreatyActionSchema.safeParse({ gameId, treatyId, empireId: requesterId });
+    if (!parsed.success) {
+      return { success: false as const, error: parsed.error.errors[0]?.message || "Invalid input" };
+    }
+
     const game = await db.query.games.findFirst({
-      where: eq(games.id, gameId),
+      where: eq(games.id, parsed.data.gameId),
     });
 
     if (!game) {
       return { success: false as const, error: "Game not found" };
     }
 
-    const result = await endTreatyPeacefully(treatyId, requesterId, game.currentTurn);
+    const result = await endTreatyPeacefully(parsed.data.treatyId, parsed.data.empireId, game.currentTurn);
 
     if (!result.success) {
       return { success: false as const, error: result.error };
@@ -289,7 +366,13 @@ export async function endTreatyAction(
 
 export async function getReputationHistoryAction(empireId: string) {
   try {
-    const history = await getReputationHistory(empireId);
+    // Validate inputs with Zod
+    const parsed = ReputationHistorySchema.safeParse({ empireId });
+    if (!parsed.success) {
+      return { success: false as const, error: parsed.error.errors[0]?.message || "Invalid input" };
+    }
+
+    const history = await getReputationHistory(parsed.data.empireId);
     return { success: true as const, data: history };
   } catch (error) {
     console.error("Error fetching reputation history:", error);
