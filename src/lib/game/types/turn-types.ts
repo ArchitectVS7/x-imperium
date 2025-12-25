@@ -98,6 +98,9 @@ export type TurnEvent = {
     | "maintenance"
     | "bankruptcy"
     | "starvation"
+    | "victory"
+    | "defeat"
+    | "revolt_consequences"
     | "other";
   /** Human-readable message */
   message: string;
@@ -147,6 +150,20 @@ export type TurnResult = {
   success: boolean;
   /** Error message (if failed) */
   error?: string;
+  /** Victory result if game ended in victory (M6) */
+  victoryResult?: {
+    type: "conquest" | "economic" | "survival";
+    winnerId: string;
+    winnerName: string;
+    message: string;
+  };
+  /** Defeat result if player was defeated (M6) */
+  defeatResult?: {
+    type: "bankruptcy" | "elimination" | "civil_collapse";
+    empireId: string;
+    empireName: string;
+    message: string;
+  };
 };
 
 // =============================================================================

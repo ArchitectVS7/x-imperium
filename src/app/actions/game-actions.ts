@@ -7,6 +7,8 @@ import {
   getDashboardData,
   type DashboardData,
 } from "@/lib/game/repositories/game-repository";
+import { getResumableGames, getLatestSave } from "@/lib/game/services/save-service";
+import { db } from "@/lib/db";
 import type { Difficulty } from "@/lib/bots/types";
 
 // =============================================================================
@@ -158,4 +160,199 @@ export async function getCurrentGameAction(): Promise<{
 export async function endGameAction(): Promise<void> {
   await clearGameCookies();
   redirect("/");
+}
+
+// =============================================================================
+// RESUME GAME ACTIONS
+// =============================================================================
+
+export interface ResumableGame {
+  gameId: string;
+  gameName: string;
+  empireName: string;
+  empireId: string;
+  turn: number;
+  savedAt: Date;
+  status: string;
+}
+
+/**
+ * Get list of games that can be resumed (have saves and are still active).
+ */
+export async function getResumableGamesAction(): Promise<ResumableGame[]> {
+  try {
+    return await getResumableGames();
+  } catch (error) {
+    console.error("Failed to get resumable games:", error);
+    return [];
+  }
+}
+
+export interface ResumeGameResult {
+  success: boolean;
+  error?: string;
+  gameId?: string;
+  empireId?: string;
+}
+
+/**
+ * Resume a saved game by setting cookies and returning game info.
+ */
+export async function resumeGameAction(gameId: string): Promise<ResumeGameResult> {
+  try {
+    // Get the latest save to verify it exists
+    const save = await getLatestSave(gameId);
+    if (!save) {
+      return { success: false, error: "No save found for this game" };
+    }
+
+    // Find the player empire for this game
+    const playerEmpire = await db.query.empires.findFirst({
+      where: (e, { and, eq }) => and(
+        eq(e.gameId, gameId),
+        eq(e.type, "player")
+      ),
+    });
+
+    if (!playerEmpire) {
+      return { success: false, error: "No player empire found for this game" };
+    }
+
+    // Set cookies for the resumed game
+    await setGameCookies(gameId, playerEmpire.id);
+
+    return {
+      success: true,
+      gameId,
+      empireId: playerEmpire.id,
+    };
+  } catch (error) {
+    console.error("Failed to resume game:", error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Failed to resume game",
+    };
+  }
+}
+
+/**
+ * Get the game result (victory/defeat status) for a completed game.
+ */
+export async function getGameResultAction(): Promise<{
+  success: boolean;
+  result?: {
+    status: string;
+    winnerId: string | null;
+    winnerName: string | null;
+    victoryType: string | null;
+    turn: number;
+    playerEmpireName: string;
+    playerDefeated: boolean;
+    defeatType: string | null;
+  };
+  error?: string;
+}> {
+  const { gameId, empireId } = await getGameCookies();
+
+  if (!gameId || !empireId) {
+    return { success: false, error: "No active game" };
+  }
+
+  try {
+    const game = await db.query.games.findFirst({
+      where: (g, { eq }) => eq(g.id, gameId),
+      with: {
+        empires: {
+          with: {
+            planets: true,
+          },
+        },
+      },
+    });
+
+    if (!game) {
+      return { success: false, error: "Game not found" };
+    }
+
+    const playerEmpire = game.empires.find((e) => e.id === empireId);
+
+    if (!playerEmpire) {
+      return { success: false, error: "Empire not found" };
+    }
+
+    // Find the winner (highest networth active empire) if game is completed
+    let winnerId: string | null = null;
+    let winnerName: string | null = null;
+    let victoryType: string | null = null;
+
+    if (game.status === "completed") {
+      // Find empires with planets (still alive)
+      const activeEmpires = game.empires.filter(
+        (e) => e.planets.length > 0
+      );
+
+      if (activeEmpires.length > 0) {
+        // Sort by networth (credits + planets as proxy)
+        const sorted = activeEmpires.sort(
+          (a, b) => b.credits - a.credits
+        );
+        const winner = sorted[0];
+        if (winner) {
+          winnerId = winner.id;
+          winnerName = winner.name;
+
+          // Determine victory type based on game state
+          const totalPlanets = game.empires.reduce(
+            (sum, e) => sum + e.planets.length,
+            0
+          );
+          const winnerPlanets = winner.planets.length;
+
+          if (winnerPlanets / totalPlanets >= 0.6) {
+            victoryType = "conquest";
+          } else if (game.currentTurn >= 200) {
+            victoryType = "survival";
+          } else {
+            victoryType = "economic";
+          }
+        }
+      }
+    }
+
+    // Determine if player was defeated based on game state
+    // Player is defeated if they have 0 planets or negative credits
+    const playerDefeated =
+      playerEmpire.planets.length === 0 || playerEmpire.credits < 0;
+    let defeatType: string | null = null;
+    if (playerDefeated) {
+      // Check defeat reason based on empire state
+      if (playerEmpire.planets.length === 0) {
+        defeatType = "elimination";
+      } else if (playerEmpire.credits < 0) {
+        defeatType = "bankruptcy";
+      } else {
+        defeatType = "civil_collapse";
+      }
+    }
+
+    return {
+      success: true,
+      result: {
+        status: game.status,
+        winnerId,
+        winnerName,
+        victoryType,
+        turn: game.currentTurn,
+        playerEmpireName: playerEmpire.name,
+        playerDefeated,
+        defeatType,
+      },
+    };
+  } catch (error) {
+    console.error("Failed to get game result:", error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Failed to get game result",
+    };
+  }
 }

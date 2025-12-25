@@ -39,6 +39,16 @@ import { processResearchProduction } from "./research-service";
 import { perfLogger } from "@/lib/performance/logger";
 import { processBotTurn, applyBotNightmareBonus } from "@/lib/bots";
 import type { Difficulty } from "@/lib/bots/types";
+import {
+  checkVictoryConditions,
+  getConsecutiveRevoltingTurns,
+  calculateRevoltConsequences,
+  applyRevoltConsequences,
+  completeGame,
+  checkStalemateWarning,
+} from "./victory-service";
+import { createAutoSave } from "./save-service";
+import { processCovertPointGeneration } from "./covert-service";
 
 // =============================================================================
 // TURN PROCESSOR
@@ -130,6 +140,45 @@ export async function processTurn(gameId: string): Promise<TurnResult> {
       });
     }
 
+    // ==========================================================================
+    // PHASE 8: VICTORY/DEFEAT CHECK (M6)
+    // ==========================================================================
+
+    // Check for stalemate warning at turn 180
+    const stalemateWarning = await checkStalemateWarning(gameId, nextTurn);
+    if (stalemateWarning?.isStalemate) {
+      globalEvents.push({
+        type: "other",
+        message: stalemateWarning.message,
+        severity: "warning",
+      });
+    }
+
+    // Check for victory conditions
+    const victoryResult = await checkVictoryConditions(gameId);
+    if (victoryResult) {
+      globalEvents.push({
+        type: "victory",
+        message: victoryResult.message,
+        severity: "info",
+      });
+
+      // Mark game as completed
+      await completeGame(gameId);
+
+      // Return early with victory info
+      const processingMs = Math.round(performance.now() - startTime);
+      return {
+        gameId,
+        turn: nextTurn,
+        processingMs,
+        empireResults,
+        globalEvents,
+        success: true,
+        victoryResult,
+      };
+    }
+
     // Update game turn counter and processing time
     const processingMs = Math.round(performance.now() - startTime);
     await db
@@ -150,6 +199,17 @@ export async function processTurn(gameId: string): Promise<TurnResult> {
         empireCount: game.empires.length,
       },
     });
+
+    // ==========================================================================
+    // PHASE 9: AUTO-SAVE (M6 - Ironman)
+    // ==========================================================================
+
+    // Create auto-save after turn processing (keeps only latest save)
+    const saveResult = await createAutoSave(gameId, nextTurn);
+    if (!saveResult.success) {
+      console.warn("Auto-save failed:", saveResult.error);
+      // Don't fail the turn, just log the warning
+    }
 
     return {
       gameId,
@@ -375,6 +435,13 @@ async function processEmpireTurn(
   }
 
   // ==========================================================================
+  // PHASE 4.5: COVERT POINT GENERATION (M6.5)
+  // ==========================================================================
+
+  // Generate covert points (5/turn, max 50)
+  await processCovertPointGeneration(empire.id);
+
+  // ==========================================================================
   // PHASES 5-6: STUBS FOR FUTURE MILESTONES
   // ==========================================================================
 
@@ -386,7 +453,7 @@ async function processEmpireTurn(
   // ==========================================================================
 
   // ==========================================================================
-  // PHASE 8: VICTORY/DEFEAT CHECK (stub for M6)
+  // PHASE 8: DEFEAT CHECK (M6)
   // ==========================================================================
 
   // Check for bankruptcy (can't pay maintenance)
@@ -400,23 +467,69 @@ async function processEmpireTurn(
     });
   }
 
-  // Check for civil collapse
+  // Check for revolting status with ramping consequences
   const isRevolting = statusUpdate.newStatus === "revolting";
+  let revoltUnitLosses = {
+    soldierLoss: 0,
+    fighterLoss: 0,
+    stationLoss: 0,
+    lightCruiserLoss: 0,
+    heavyCruiserLoss: 0,
+    carrierLoss: 0,
+    covertAgentLoss: 0,
+  };
+  let isCivilCollapse = false;
+
   if (isRevolting) {
+    // Get consecutive revolting turns from history
+    const consecutiveRevoltingTurns = await getConsecutiveRevoltingTurns(
+      empire.id,
+      gameId
+    );
+
+    // Calculate ramping consequences
+    const revoltConsequence = calculateRevoltConsequences(
+      empire,
+      planets.length,
+      consecutiveRevoltingTurns
+    );
+
     events.push({
-      type: "other",
-      message: "Empire is in revolt! Risk of civil collapse!",
-      severity: "error",
+      type: "revolt_consequences",
+      message: revoltConsequence.message,
+      severity: revoltConsequence.isDefeated ? "error" : "warning",
       empireId: empire.id,
     });
+
+    if (revoltConsequence.isDefeated) {
+      isCivilCollapse = true;
+      events.push({
+        type: "defeat",
+        message: "CIVIL WAR! Your empire has collapsed!",
+        severity: "error",
+        empireId: empire.id,
+      });
+    } else if (revoltConsequence.unitsLost > 0) {
+      // Apply military desertion
+      revoltUnitLosses = applyRevoltConsequences(empire, revoltConsequence);
+    }
   }
 
-  // Empire is alive if not bankrupt, has population, and has planets
-  const isAlive = !isBankrupt && populationUpdate.newPopulation > 0 && planets.length > 0;
+  // Empire is alive if not bankrupt, not collapsed, has population, and has planets
+  const isAlive = !isBankrupt && !isCivilCollapse && populationUpdate.newPopulation > 0 && planets.length > 0;
 
   // ==========================================================================
   // UPDATE DATABASE
   // ==========================================================================
+
+  // Apply revolt unit losses if any
+  const finalSoldiers = Math.max(0, empire.soldiers - revoltUnitLosses.soldierLoss);
+  const finalFighters = Math.max(0, empire.fighters - revoltUnitLosses.fighterLoss);
+  const finalStations = Math.max(0, empire.stations - revoltUnitLosses.stationLoss);
+  const finalLightCruisers = Math.max(0, empire.lightCruisers - revoltUnitLosses.lightCruiserLoss);
+  const finalHeavyCruisers = Math.max(0, empire.heavyCruisers - revoltUnitLosses.heavyCruiserLoss);
+  const finalCarriers = Math.max(0, empire.carriers - revoltUnitLosses.carrierLoss);
+  const finalCovertAgents = Math.max(0, empire.covertAgents - revoltUnitLosses.covertAgentLoss);
 
   await db
     .update(empires)
@@ -428,6 +541,14 @@ async function processEmpireTurn(
       researchPoints: newResearchPoints,
       population: populationUpdate.newPopulation,
       civilStatus: statusUpdate.newStatus,
+      // Apply revolt unit losses
+      soldiers: finalSoldiers,
+      fighters: finalFighters,
+      stations: finalStations,
+      lightCruisers: finalLightCruisers,
+      heavyCruisers: finalHeavyCruisers,
+      carriers: finalCarriers,
+      covertAgents: finalCovertAgents,
       updatedAt: new Date(),
     })
     .where(eq(empires.id, empire.id));

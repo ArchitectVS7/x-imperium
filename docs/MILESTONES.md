@@ -388,22 +388,23 @@ Each milestone delivers a **playable vertical slice** that can be tested end-to-
 **Dependency**: M5
 **Testable**: Yes
 **Gate**: v0.5 MVP Complete
+**Status**: ✅ COMPLETE (2024-12-24)
 
 ### Deliverables
-- 3 victory conditions:
+- ✅ 3 victory conditions:
   - Conquest: Control 60% of territory
   - Economic: 1.5× networth of 2nd place
   - Survival: Highest score at turn 200
-- Victory detection logic (uses Networth formula from M1)
-- **Defeat conditions**:
+- ✅ Victory detection logic (uses Networth formula from M1) — *`src/lib/game/services/victory-service.ts`*
+- ✅ **Defeat conditions** — *Ramping civil collapse with 3-turn escalation*:
   - Bankruptcy (can't pay maintenance)
   - Elimination (0 planets)
-  - Civil collapse (Revolting status)
-- Victory/defeat screens
-- Auto-save system (ironman)
-- Game resume from auto-save
-- Turn 200 endgame
-- **Stalemate prevention** (T180 check)
+  - Civil collapse (3 consecutive Revolting turns with escalating consequences)
+- ✅ Victory/defeat screens — *`src/components/game/victory/` + `/game/result` page*
+- ✅ Auto-save system (ironman) — *`src/lib/game/services/save-service.ts`*
+- ✅ Game resume from auto-save — *Resume game UI on home page*
+- ✅ Turn 200 endgame — *Survival victory at turn 200*
+- ✅ **Stalemate prevention** (T180 check) — *Warning event at turn 180*
 
 ### Test Criteria
 ```
@@ -431,7 +432,7 @@ Each milestone delivers a **playable vertical slice** that can be tested end-to-
 **Duration**: 2 days
 **Dependency**: M6
 **Testable**: Yes
-**Status**: 🔄 IN PROGRESS (Parallel Work 2024-12-24)
+**Status**: ✅ COMPLETE (2024-12-24)
 
 ### Deliverables
 - ✅ **Covert points system** — *`src/lib/covert/constants.ts`*:
@@ -451,8 +452,10 @@ Each milestone delivers a **playable vertical slice** that can be tested end-to-
   - ✅ Communications Spying (intercept messages) - Low risk
   - ✅ Setup Coup (overthrow government) - Very High
 - ✅ Success/failure resolution — *`src/lib/covert/success-rate.ts`*
-- 🔲 Agent caught consequences — *Needs game state integration*
-- 🔲 Covert operations UI — *Needs implementation*
+- ✅ Agent caught consequences — *`src/lib/game/services/covert-service.ts`*
+- ✅ Covert operations UI — *`src/components/game/covert/` + `/game/covert` page*
+- ✅ Covert point generation per turn — *Integrated in turn processor*
+- ✅ Server actions for operations — *`src/app/actions/covert-actions.ts`*
 
 ### Test Criteria
 ```
