@@ -10,6 +10,7 @@ import {
 import { getResumableGames, getLatestSave } from "@/lib/game/services/save-service";
 import { db } from "@/lib/db";
 import type { Difficulty } from "@/lib/bots/types";
+import { triggerGreetings, type TriggerContext } from "@/lib/messages";
 
 // =============================================================================
 // COOKIE HELPERS
@@ -100,6 +101,15 @@ export async function startGameAction(formData: FormData): Promise<StartGameResu
     );
 
     await setGameCookies(game.id, empire.id);
+
+    // Trigger greeting messages from bots (M8)
+    const msgCtx: TriggerContext = {
+      gameId: game.id,
+      currentTurn: 1,
+      playerId: empire.id,
+      playerEmpireName: empire.name,
+    };
+    await triggerGreetings(msgCtx);
 
     // Note: We don't redirect here because we want the client to handle it
     return {

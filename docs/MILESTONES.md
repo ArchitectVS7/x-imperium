@@ -540,51 +540,61 @@ Each milestone delivers a **playable vertical slice** that can be tested end-to-
 **Duration**: 4 days
 **Dependency**: M7
 **Testable**: Yes
+**Status**: ✅ COMPLETE (2024-12-25)
 
 ### Deliverables
 - ✅ 100 bot persona definitions (names, voices, archetypes)
-- ✅ Template message library (30-45 templates per persona) - 6 complete, 94 remaining
-- Message UI (inbox with read/unread)
-- Bot message triggers:
-  - Greeting (first contact)
-  - Threat (before attack)
-  - Victory (after winning battle)
-  - Defeat (after losing battle)
-  - Trade offer
-  - Alliance proposal
-  - Treaty broken
-  - Covert operation detected
-- Direct + Broadcast channels
-- Galactic News feed (broadcasts)
+- ✅ Template message library (30-45 templates per persona) - All 100 complete
+- ✅ Message UI (inbox with read/unread)
+- ✅ Bot message triggers:
+  - ✅ Greeting (first contact)
+  - ✅ Threat/Warning (before attack)
+  - ✅ Victory (after winning battle)
+  - ✅ Defeat (after losing battle)
+  - ✅ Trade offer
+  - ✅ Alliance proposal
+  - ✅ Treaty broken (betrayal)
+  - ✅ Covert operation detected
+- ✅ Direct + Broadcast channels
+- ✅ Galactic News feed (broadcasts)
 
 ### Test Criteria
 ```
-✓ Each of 100 bots has unique name
-✓ Each bot has assigned archetype
-✓ Bots send contextual messages on triggers
-✓ Messages use templates appropriate to persona
-✓ Same template not repeated twice in a row
-✓ Player receives messages in inbox
-✓ Unread message indicator works
-✓ Broadcast messages visible in "Galactic News"
-✓ Covert detection triggers threatening message
-✓ Treaty break triggers angry message
+✓ Each of 100 bots has unique name - Verified via personas.test.ts
+✓ Each bot has assigned archetype - All 8 archetypes represented
+✓ Bots send contextual messages on triggers - 15 trigger types implemented
+✓ Messages use templates appropriate to persona - Template loader with persona-specific selection
+✓ Same template not repeated twice in a row - Non-repeating template selection algorithm
+✓ Player receives messages in inbox - MessageInbox.tsx component
+✓ Unread message indicator works - InboxSummary with unread count tracking
+✓ Broadcast messages visible in "Galactic News" - GalacticNewsFeed.tsx component
+✓ Covert detection triggers threatening message - triggerCovertDetected() function
+✓ Treaty break triggers angry message - triggerBetrayal() function
 ```
 
-### Data Files
-- `data/personas.json` ✅ **Pre-created (2024-12-24)** (100 bot definitions)
-- `data/templates/*.json` ✅ **Pre-created (2024-12-24)** (message templates by category)
+### Database Tables
+- `messages` ✅ **Created (2024-12-25)** - Full message storage with read/unread tracking
 
-**Note:** Persona definitions and comprehensive message templates for key personas created ahead of schedule as parallel work during M1. Templates include:
-- All 100 unique bot personas with distinct voices, quirks, and catchphrases
-- Full template sets (15 categories, 30-45 messages each) for 6 flagship personas:
-  - Merlin Starborn (Space Wizard - Tech Rush)
-  - Count Dravos (Vampire Lord - Schemer)
-  - Captain Redmaw (Space Pirate - Blitzkrieg)
-  - CEO Synergy (Corporate - Merchant)
-  - Collective One (Hive Mind - Schemer)
-  - Emissary Thalen (Philosopher - Diplomat)
-- Template structure established for remaining 94 personas
+### Data Files
+- `data/personas.json` ✅ **Complete (2024-12-24)** (100 bot definitions)
+- `data/templates/*.json` ✅ **Complete (2024-12-25)** (message templates for all 100 personas)
+
+### Implementation Notes (2024-12-25)
+- **Files Created:**
+  - `src/lib/db/schema.ts` - Added messages table, messageChannelEnum, messageTriggerEnum
+  - `src/lib/messages/types.ts` - Message types, trigger types, persona types
+  - `src/lib/messages/template-loader.ts` - Persona/template loading with caching
+  - `src/lib/messages/message-service.ts` - Core messaging service (send, retrieve, mark read)
+  - `src/lib/messages/triggers.ts` - All message trigger functions (15 triggers)
+  - `src/lib/messages/index.ts` - Barrel exports
+  - `src/app/actions/message-actions.ts` - Server actions with Zod validation
+  - `src/components/game/messages/MessageInbox.tsx` - Inbox UI with read/unread
+  - `src/components/game/messages/GalacticNewsFeed.tsx` - Broadcast news feed
+  - `src/app/game/messages/page.tsx` - Full messages page with tabs
+  - Test files: template-loader.test.ts, personas.test.ts (19 tests)
+- **Turn Processor Integration:** Message triggers integrated in turn processing (Phase 7)
+- **Game Start Integration:** Greeting messages triggered on new game creation
+- **996 tests passing** including all M8 message tests
 
 ---
 

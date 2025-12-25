@@ -50,6 +50,12 @@ import {
 import { createAutoSave } from "./save-service";
 import { processCovertPointGeneration } from "./covert-service";
 import { updateMarketPrices } from "@/lib/market";
+import {
+  triggerCasualMessages,
+  triggerRandomBroadcast,
+  triggerEndgame,
+  type TriggerContext,
+} from "@/lib/messages";
 
 // =============================================================================
 // TURN PROCESSOR
@@ -147,6 +153,39 @@ export async function processTurn(gameId: string): Promise<TurnResult> {
 
     // Update market prices based on supply/demand from trades this turn
     await updateMarketPrices(gameId, nextTurn);
+
+    // ==========================================================================
+    // PHASE 7: BOT MESSAGES (M8)
+    // ==========================================================================
+
+    // Find player empire for message context
+    const playerEmpire = game.empires.find((e) => e.type === "player");
+    if (playerEmpire) {
+      const msgCtx: TriggerContext = {
+        gameId,
+        currentTurn: nextTurn,
+        playerId: playerEmpire.id,
+        playerEmpireName: playerEmpire.name,
+      };
+
+      // Trigger casual messages (low chance per bot)
+      const casualCount = await triggerCasualMessages(msgCtx);
+      if (casualCount > 0) {
+        globalEvents.push({
+          type: "other",
+          message: `Received ${casualCount} message${casualCount > 1 ? "s" : ""} from other empires`,
+          severity: "info",
+        });
+      }
+
+      // Trigger random broadcast (Galactic News)
+      await triggerRandomBroadcast(msgCtx);
+
+      // Trigger endgame messages in final turns (turn 180+)
+      if (nextTurn >= 180) {
+        await triggerEndgame(msgCtx);
+      }
+    }
 
     // ==========================================================================
     // PHASE 8: VICTORY/DEFEAT CHECK (M6)
