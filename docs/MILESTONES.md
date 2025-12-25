@@ -252,7 +252,7 @@ Each milestone delivers a **playable vertical slice** that can be tested end-to-
 **Duration**: 3 days
 **Dependency**: M3
 **Testable**: Yes
-**Status**: 🔄 IN PROGRESS (Parallel Work 2024-12-24)
+**Status**: ✅ COMPLETE (2024-12-24)
 
 ### Deliverables
 - ✅ Combat power calculation (PRD 6.2 formulas) — *`src/lib/formulas/combat-power.ts`*
@@ -270,32 +270,32 @@ Each milestone delivers a **playable vertical slice** that can be tested end-to-
   - ✅ `AttackInterface.tsx` - Force selection and attack launching
   - ✅ `CombatPreview.tsx` - Power comparison before attacking
   - ✅ `CasualtyReport.tsx` - Casualty display component
-- 🔲 Battle report display (phase by phase) — *UI shell complete, needs server integration*
-- 🔲 Fog of war (see power, not composition) — *Needs game state integration*
+- ✅ Battle report display (phase by phase) — *Full UI with server actions*
+- ✅ Fog of war (see power, not composition) — *Combat targets show networth only*
 - ✅ Army effectiveness system (0-100%) — *`src/lib/formulas/army-effectiveness.ts`*
 
 ### Test Criteria
 ```
-✓ Attack button launches combat
-✓ Combat resolves in 3 phases:
+✅ Attack button launches combat
+✅ Combat resolves in 3 phases:
   - Space: Cruisers fight first
   - Orbital: Fighters vs Stations
   - Ground: Soldiers capture if previous phases won
-✓ Unit effectiveness per phase:
+✅ Unit effectiveness per phase:
   - Soldiers: High ground, high guerilla
   - Fighters: High orbital, low space
   - Stations: Medium orbital (2× on defense)
   - Cruisers: High space
-✓ Combat power formula correct:
+✅ Combat power formula correct:
   - Diversity bonus: +15% for 4+ unit types
   - Defender advantage: × 1.2
-✓ Casualties in 15-35% range based on power ratio
-✓ Retreat option available (15% losses on retreat)
-✓ Battle report shows all 3 phases
-✓ Guerilla attack uses only soldiers
-✓ Army effectiveness affects damage
-✓ Victory increases effectiveness (+5-10%)
-✓ Defeat decreases effectiveness (-5%)
+✅ Casualties in 15-35% range based on power ratio
+✅ Retreat option available (15% losses on retreat)
+✅ Battle report shows all 3 phases
+✅ Guerilla attack uses only soldiers
+✅ Army effectiveness affects damage
+✅ Victory increases effectiveness (+5-10%)
+✅ Defeat decreases effectiveness (-5%)
 ```
 
 ### Database Tables
@@ -323,46 +323,62 @@ Each milestone delivers a **playable vertical slice** that can be tested end-to-
 **Dependency**: M4
 **Testable**: Yes
 **Gate**: First Playable Demo
+**Status**: ✅ COMPLETE (2024-12-24)
 
 ### Deliverables
-- Bot empire generation (25 bots)
-- Random decision engine (weighted actions)
-- Parallel bot processing
-- Bot turn execution
-- Starmap showing all empires
-- **Difficulty selector** (PRD 10.4):
-  - Easy: Bots make suboptimal choices
-  - Normal: Balanced bot intelligence
-  - Hard: Bots play optimally
-  - Nightmare: Bots get resource bonuses
-- 20-turn protection period enforcement
+- ✅ Bot empire generation (25 bots) — *`src/lib/bots/bot-generator.ts`*
+- ✅ Random decision engine (weighted actions) — *`src/lib/bots/decision-engine.ts`*
+- ✅ Parallel bot processing — *`src/lib/bots/bot-processor.ts` with Promise.all()*
+- ✅ Bot turn execution — *Integrated in `turn-processor.ts`*
+- ✅ Starmap showing all empires — *`src/components/game/starmap/` with d3-force*
+- ✅ **Difficulty selector** (PRD 10.4) — *`src/components/start-game/DifficultySelector.tsx`*:
+  - ✅ Easy: Bots make suboptimal choices (50% chance)
+  - ✅ Normal: Balanced bot intelligence
+  - ✅ Hard: Bots target weakest enemies
+  - ✅ Nightmare: Bots get +25% resource bonus
+- ✅ 20-turn protection period enforcement — *`getAdjustedWeights()` sets attack to 0*
 
 ### Test Criteria
 ```
-✓ 25 bot empires created at game start
-✓ Each bot has placeholder name (e.g., "Empire Alpha", "Empire Beta")
-✓ Bots take random actions each turn:
+✅ 25 bot empires created at game start
+✅ Each bot has placeholder name (e.g., "Empire Alpha", "Empire Beta")
+✅ Bots take random actions each turn:
   - 35% build units
   - 20% buy planets
   - 15% attack neighbor (after turn 20)
-  - 10% diplomacy
-  - 10% trade
+  - 10% diplomacy (stub → do_nothing until M7)
+  - 10% trade (stub → do_nothing until M7)
   - 10% do nothing
-✓ Bot processing completes in <1.5s (parallel)
-✓ Bots respect 20-turn protection (don't attack player)
-✓ Bots CAN attack player after turn 20
-✓ Starmap displays all 26 empires with territory
-✓ Difficulty affects bot behavior:
+✅ Bot processing completes in <1.5s (parallel)
+✅ Bots respect 20-turn protection (don't attack player)
+✅ Bots CAN attack player after turn 20
+✅ Starmap displays all 26 empires with territory
+✅ Difficulty affects bot behavior:
   - Easy: 50% chance of suboptimal choice
   - Hard: Bots target weakest enemies
   - Nightmare: Bots get +25% resources
 ```
 
 ### Technical Notes
-- Use `Promise.all()` for parallel bot processing
-- Bots are silent (no messages) in this milestone
-- Bot decisions are purely random, no strategy
-- Difficulty stored in game settings
+- ✅ Use `Promise.all()` for parallel bot processing
+- ✅ Bots are silent (no messages) in this milestone
+- ✅ Bot decisions are purely random, no strategy
+- ✅ Difficulty stored in game settings
+
+### Implementation Notes (2024-12-24)
+- **Files Created:**
+  - `src/lib/bots/types.ts` — Bot type definitions
+  - `src/lib/bots/bot-names.ts` — 25 placeholder names (Alpha through Nexus)
+  - `src/lib/bots/difficulty.ts` — Difficulty modifiers and helpers
+  - `src/lib/bots/bot-generator.ts` — Bot empire creation
+  - `src/lib/bots/decision-engine.ts` — Weighted random decisions
+  - `src/lib/bots/bot-actions.ts` — Decision execution
+  - `src/lib/bots/bot-processor.ts` — Parallel turn processing
+  - `src/components/game/starmap/` — Force-directed graph visualization
+  - `src/components/start-game/DifficultySelector.tsx` — UI component
+  - `src/app/game/starmap/page.tsx` — Starmap page
+  - `src/app/actions/starmap-actions.ts` — Starmap server actions
+  - 6 test files with 75 unit tests + E2E tests
 
 ---
 
