@@ -8,8 +8,8 @@
  */
 
 import { db } from "@/lib/db";
-import { messages, empires, type Message, type NewMessage } from "@/lib/db/schema";
-import { eq, and, desc, isNull, or, sql } from "drizzle-orm";
+import { messages, empires } from "@/lib/db/schema";
+import { eq, and, desc, sql } from "drizzle-orm";
 import type {
   MessageTrigger,
   MessageChannel,

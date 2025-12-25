@@ -9,10 +9,10 @@
 
 import { db } from "@/lib/db";
 import { empires, type Empire } from "@/lib/db/schema";
-import { eq, and, ne } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 import { sendBotMessage, sendBroadcastMessage } from "./message-service";
 import { getPersona } from "./template-loader";
-import type { MessageTrigger, MessageContext, BotArchetype } from "./types";
+import type { MessageContext, BotArchetype } from "./types";
 
 // =============================================================================
 // TYPES

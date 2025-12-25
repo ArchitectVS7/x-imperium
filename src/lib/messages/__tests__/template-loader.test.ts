@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from "vitest";
+import { describe, it, expect } from "vitest";
 import {
   TRIGGER_TO_TEMPLATE_KEY,
   type MessageTrigger,
@@ -67,7 +67,7 @@ describe("Fallback Templates", () => {
   });
 
   it("should have at least 2 templates per trigger for variety", () => {
-    Object.entries(FALLBACK_TEMPLATES).forEach(([trigger, templates]) => {
+    Object.entries(FALLBACK_TEMPLATES).forEach(([, templates]) => {
       expect(templates.length).toBeGreaterThanOrEqual(2);
     });
   });

@@ -770,6 +770,96 @@ export const messageTriggerEnum = pgEnum("message_trigger", [
 ]);
 
 // ============================================
+// M10: EMOTIONAL STATES ENUMS
+// ============================================
+
+export const emotionalStateEnum = pgEnum("emotional_state", [
+  "confident",
+  "arrogant",
+  "desperate",
+  "vengeful",
+  "fearful",
+  "triumphant",
+  "neutral",
+]);
+
+export const memoryTypeEnum = pgEnum("memory_type", [
+  "planet_captured",
+  "planet_lost",
+  "ally_saved",
+  "ally_betrayed",
+  "trade_completed",
+  "treaty_formed",
+  "treaty_broken",
+  "war_declared",
+  "war_ended",
+  "covert_detected",
+  "tribute_paid",
+  "tribute_received",
+  "battle_won",
+  "battle_lost",
+  "message_received",
+]);
+
+// ============================================
+// M11: MID-GAME SYSTEM ENUMS
+// ============================================
+
+export const galacticEventTypeEnum = pgEnum("galactic_event_type", [
+  "economic",
+  "political",
+  "military",
+  "narrative",
+]);
+
+export const galacticEventSubtypeEnum = pgEnum("galactic_event_subtype", [
+  // Economic events
+  "market_crash",
+  "resource_boom",
+  "trade_embargo",
+  "economic_miracle",
+  // Political events
+  "coup_attempt",
+  "assassination",
+  "rebellion",
+  "political_scandal",
+  // Military events
+  "pirate_armada",
+  "arms_race",
+  "mercenary_influx",
+  "military_parade",
+  // Narrative events
+  "ancient_discovery",
+  "prophecy_revealed",
+  "mysterious_signal",
+  "cultural_renaissance",
+]);
+
+export const coalitionStatusEnum = pgEnum("coalition_status", [
+  "forming",
+  "active",
+  "dissolved",
+]);
+
+// ============================================
+// M12: LLM BOT ENUMS
+// ============================================
+
+export const llmProviderEnum = pgEnum("llm_provider", [
+  "groq",
+  "together",
+  "openai",
+  "anthropic",
+]);
+
+export const llmCallStatusEnum = pgEnum("llm_call_status", [
+  "pending",
+  "completed",
+  "failed",
+  "rate_limited",
+]);
+
+// ============================================
 // M7: MARKET PRICES TABLE
 // ============================================
 
@@ -988,6 +1078,279 @@ export const messages = pgTable(
 );
 
 // ============================================
+// M10: BOT MEMORIES TABLE
+// ============================================
+
+export const botMemories = pgTable(
+  "bot_memories",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    gameId: uuid("game_id")
+      .notNull()
+      .references(() => games.id, { onDelete: "cascade" }),
+
+    // The bot that holds this memory
+    empireId: uuid("empire_id")
+      .notNull()
+      .references(() => empires.id, { onDelete: "cascade" }),
+
+    // The other empire this memory is about
+    targetEmpireId: uuid("target_empire_id")
+      .notNull()
+      .references(() => empires.id, { onDelete: "cascade" }),
+
+    // Memory details
+    memoryType: memoryTypeEnum("memory_type").notNull(),
+    weight: integer("weight").notNull().default(50), // 1-100, higher = more significant
+    description: varchar("description", { length: 500 }),
+
+    // Decay tracking
+    turn: integer("turn").notNull(),
+    decayResistance: decimal("decay_resistance", { precision: 3, scale: 2 })
+      .notNull()
+      .default("1.00"), // 0.0-1.0, higher = slower decay
+    isPermanentScar: boolean("is_permanent_scar").notNull().default(false), // 20% of negative events
+
+    // Context data (JSON for flexibility)
+    context: json("context"), // { planetName, creditsAmount, unitType, etc. }
+
+    // Timestamps
+    createdAt: timestamp("created_at").notNull().defaultNow(),
+    lastAccessedAt: timestamp("last_accessed_at"),
+  },
+  (table) => [
+    index("bot_memories_game_idx").on(table.gameId),
+    index("bot_memories_empire_idx").on(table.empireId),
+    index("bot_memories_target_idx").on(table.targetEmpireId),
+    index("bot_memories_type_idx").on(table.memoryType),
+    index("bot_memories_weight_idx").on(table.weight),
+    index("bot_memories_turn_idx").on(table.turn),
+  ]
+);
+
+// ============================================
+// M10: BOT EMOTIONAL STATES TABLE
+// ============================================
+
+export const botEmotionalStates = pgTable(
+  "bot_emotional_states",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    gameId: uuid("game_id")
+      .notNull()
+      .references(() => games.id, { onDelete: "cascade" }),
+    empireId: uuid("empire_id")
+      .notNull()
+      .references(() => empires.id, { onDelete: "cascade" }),
+
+    // Current emotional state
+    state: emotionalStateEnum("state").notNull().default("neutral"),
+    intensity: decimal("intensity", { precision: 3, scale: 2 })
+      .notNull()
+      .default("0.50"), // 0.0-1.0
+
+    // Previous state (for tracking transitions)
+    previousState: emotionalStateEnum("previous_state"),
+    stateChangedAtTurn: integer("state_changed_at_turn"),
+
+    // Emotional triggers tracking
+    recentVictories: integer("recent_victories").notNull().default(0),
+    recentDefeats: integer("recent_defeats").notNull().default(0),
+    recentBetrayals: integer("recent_betrayals").notNull().default(0),
+    recentAlliances: integer("recent_alliances").notNull().default(0),
+
+    // Timestamps
+    createdAt: timestamp("created_at").notNull().defaultNow(),
+    updatedAt: timestamp("updated_at").notNull().defaultNow(),
+  },
+  (table) => [
+    index("bot_emotional_game_idx").on(table.gameId),
+    index("bot_emotional_empire_idx").on(table.empireId),
+    index("bot_emotional_state_idx").on(table.state),
+  ]
+);
+
+// ============================================
+// M11: GALACTIC EVENTS TABLE
+// ============================================
+
+export const galacticEvents = pgTable(
+  "galactic_events",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    gameId: uuid("game_id")
+      .notNull()
+      .references(() => games.id, { onDelete: "cascade" }),
+
+    // Event classification
+    eventType: galacticEventTypeEnum("event_type").notNull(),
+    eventSubtype: galacticEventSubtypeEnum("event_subtype").notNull(),
+
+    // Event details
+    title: varchar("title", { length: 200 }).notNull(),
+    description: varchar("description", { length: 1000 }).notNull(),
+    severity: integer("severity").notNull().default(50), // 1-100
+
+    // Affected entities (null = affects all)
+    affectedEmpireId: uuid("affected_empire_id").references(() => empires.id, {
+      onDelete: "set null",
+    }),
+
+    // Effects (JSON for flexibility)
+    effects: json("effects").notNull(), // { resourceType: 'credits', modifier: -0.2, duration: 5 }
+
+    // Timing
+    turn: integer("turn").notNull(),
+    durationTurns: integer("duration_turns").notNull().default(1),
+    expiresAtTurn: integer("expires_at_turn"),
+    isActive: boolean("is_active").notNull().default(true),
+
+    // Timestamps
+    createdAt: timestamp("created_at").notNull().defaultNow(),
+  },
+  (table) => [
+    index("galactic_events_game_idx").on(table.gameId),
+    index("galactic_events_type_idx").on(table.eventType),
+    index("galactic_events_turn_idx").on(table.turn),
+    index("galactic_events_active_idx").on(table.isActive),
+  ]
+);
+
+// ============================================
+// M11: COALITIONS TABLE
+// ============================================
+
+export const coalitions = pgTable(
+  "coalitions",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    gameId: uuid("game_id")
+      .notNull()
+      .references(() => games.id, { onDelete: "cascade" }),
+
+    // Coalition identity
+    name: varchar("name", { length: 200 }).notNull(),
+    leaderId: uuid("leader_id")
+      .notNull()
+      .references(() => empires.id, { onDelete: "cascade" }),
+
+    // Status
+    status: coalitionStatusEnum("status").notNull().default("forming"),
+
+    // Timeline
+    formedAtTurn: integer("formed_at_turn").notNull(),
+    dissolvedAtTurn: integer("dissolved_at_turn"),
+
+    // Coalition stats (denormalized for performance)
+    memberCount: integer("member_count").notNull().default(1),
+    totalNetworth: bigint("total_networth", { mode: "number" }).notNull().default(0),
+    territoryPercent: decimal("territory_percent", { precision: 5, scale: 2 })
+      .notNull()
+      .default("0.00"),
+
+    // Timestamps
+    createdAt: timestamp("created_at").notNull().defaultNow(),
+    updatedAt: timestamp("updated_at").notNull().defaultNow(),
+  },
+  (table) => [
+    index("coalitions_game_idx").on(table.gameId),
+    index("coalitions_leader_idx").on(table.leaderId),
+    index("coalitions_status_idx").on(table.status),
+  ]
+);
+
+// ============================================
+// M11: COALITION MEMBERS TABLE
+// ============================================
+
+export const coalitionMembers = pgTable(
+  "coalition_members",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    coalitionId: uuid("coalition_id")
+      .notNull()
+      .references(() => coalitions.id, { onDelete: "cascade" }),
+    empireId: uuid("empire_id")
+      .notNull()
+      .references(() => empires.id, { onDelete: "cascade" }),
+    gameId: uuid("game_id")
+      .notNull()
+      .references(() => games.id, { onDelete: "cascade" }),
+
+    // Membership details
+    joinedAtTurn: integer("joined_at_turn").notNull(),
+    leftAtTurn: integer("left_at_turn"),
+    isActive: boolean("is_active").notNull().default(true),
+
+    // Timestamps
+    createdAt: timestamp("created_at").notNull().defaultNow(),
+  },
+  (table) => [
+    index("coalition_members_coalition_idx").on(table.coalitionId),
+    index("coalition_members_empire_idx").on(table.empireId),
+    index("coalition_members_game_idx").on(table.gameId),
+    index("coalition_members_active_idx").on(table.isActive),
+  ]
+);
+
+// ============================================
+// M12: LLM USAGE LOGS TABLE
+// ============================================
+
+export const llmUsageLogs = pgTable(
+  "llm_usage_logs",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    gameId: uuid("game_id")
+      .notNull()
+      .references(() => games.id, { onDelete: "cascade" }),
+
+    // The bot making the LLM call
+    empireId: uuid("empire_id").references(() => empires.id, {
+      onDelete: "set null",
+    }),
+
+    // Provider info
+    provider: llmProviderEnum("provider").notNull(),
+    model: varchar("model", { length: 100 }).notNull(),
+    status: llmCallStatusEnum("status").notNull().default("pending"),
+
+    // Request details
+    purpose: varchar("purpose", { length: 100 }).notNull(), // 'decision', 'message', 'strategy'
+    promptTokens: integer("prompt_tokens").notNull().default(0),
+    completionTokens: integer("completion_tokens").notNull().default(0),
+    totalTokens: integer("total_tokens").notNull().default(0),
+
+    // Cost tracking
+    costUsd: decimal("cost_usd", { precision: 10, scale: 6 }).notNull().default("0.000000"),
+
+    // Performance
+    latencyMs: integer("latency_ms"),
+    turn: integer("turn").notNull(),
+
+    // Fallback tracking
+    didFallback: boolean("did_fallback").notNull().default(false),
+    fallbackReason: varchar("fallback_reason", { length: 200 }),
+    fallbackProvider: llmProviderEnum("fallback_provider"),
+
+    // Error info (if failed)
+    errorMessage: varchar("error_message", { length: 500 }),
+
+    // Timestamps
+    createdAt: timestamp("created_at").notNull().defaultNow(),
+    completedAt: timestamp("completed_at"),
+  },
+  (table) => [
+    index("llm_usage_game_idx").on(table.gameId),
+    index("llm_usage_empire_idx").on(table.empireId),
+    index("llm_usage_provider_idx").on(table.provider),
+    index("llm_usage_status_idx").on(table.status),
+    index("llm_usage_turn_idx").on(table.turn),
+    index("llm_usage_created_idx").on(table.createdAt),
+  ]
+);
+
+// ============================================
 // M7: MARKET & DIPLOMACY RELATIONS
 // ============================================
 
@@ -1074,6 +1437,96 @@ export const messagesRelations = relations(messages, ({ one }) => ({
 }));
 
 // ============================================
+// M10: BOT MEMORY & EMOTIONAL RELATIONS
+// ============================================
+
+export const botMemoriesRelations = relations(botMemories, ({ one }) => ({
+  game: one(games, {
+    fields: [botMemories.gameId],
+    references: [games.id],
+  }),
+  empire: one(empires, {
+    fields: [botMemories.empireId],
+    references: [empires.id],
+    relationName: "memoryHolder",
+  }),
+  targetEmpire: one(empires, {
+    fields: [botMemories.targetEmpireId],
+    references: [empires.id],
+    relationName: "memoryTarget",
+  }),
+}));
+
+export const botEmotionalStatesRelations = relations(botEmotionalStates, ({ one }) => ({
+  game: one(games, {
+    fields: [botEmotionalStates.gameId],
+    references: [games.id],
+  }),
+  empire: one(empires, {
+    fields: [botEmotionalStates.empireId],
+    references: [empires.id],
+  }),
+}));
+
+// ============================================
+// M11: GALACTIC EVENTS & COALITION RELATIONS
+// ============================================
+
+export const galacticEventsRelations = relations(galacticEvents, ({ one }) => ({
+  game: one(games, {
+    fields: [galacticEvents.gameId],
+    references: [games.id],
+  }),
+  affectedEmpire: one(empires, {
+    fields: [galacticEvents.affectedEmpireId],
+    references: [empires.id],
+  }),
+}));
+
+export const coalitionsRelations = relations(coalitions, ({ one, many }) => ({
+  game: one(games, {
+    fields: [coalitions.gameId],
+    references: [games.id],
+  }),
+  leader: one(empires, {
+    fields: [coalitions.leaderId],
+    references: [empires.id],
+    relationName: "coalitionLeader",
+  }),
+  members: many(coalitionMembers),
+}));
+
+export const coalitionMembersRelations = relations(coalitionMembers, ({ one }) => ({
+  coalition: one(coalitions, {
+    fields: [coalitionMembers.coalitionId],
+    references: [coalitions.id],
+  }),
+  empire: one(empires, {
+    fields: [coalitionMembers.empireId],
+    references: [empires.id],
+  }),
+  game: one(games, {
+    fields: [coalitionMembers.gameId],
+    references: [games.id],
+  }),
+}));
+
+// ============================================
+// M12: LLM USAGE RELATIONS
+// ============================================
+
+export const llmUsageLogsRelations = relations(llmUsageLogs, ({ one }) => ({
+  game: one(games, {
+    fields: [llmUsageLogs.gameId],
+    references: [games.id],
+  }),
+  empire: one(empires, {
+    fields: [llmUsageLogs.empireId],
+    references: [empires.id],
+  }),
+}));
+
+// ============================================
 // TYPE EXPORTS
 // ============================================
 
@@ -1124,3 +1577,21 @@ export type NewReputationLog = typeof reputationLog.$inferInsert;
 
 export type Message = typeof messages.$inferSelect;
 export type NewMessage = typeof messages.$inferInsert;
+
+export type BotMemory = typeof botMemories.$inferSelect;
+export type NewBotMemory = typeof botMemories.$inferInsert;
+
+export type BotEmotionalState = typeof botEmotionalStates.$inferSelect;
+export type NewBotEmotionalState = typeof botEmotionalStates.$inferInsert;
+
+export type GalacticEvent = typeof galacticEvents.$inferSelect;
+export type NewGalacticEvent = typeof galacticEvents.$inferInsert;
+
+export type Coalition = typeof coalitions.$inferSelect;
+export type NewCoalition = typeof coalitions.$inferInsert;
+
+export type CoalitionMember = typeof coalitionMembers.$inferSelect;
+export type NewCoalitionMember = typeof coalitionMembers.$inferInsert;
+
+export type LlmUsageLog = typeof llmUsageLogs.$inferSelect;
+export type NewLlmUsageLog = typeof llmUsageLogs.$inferInsert;
