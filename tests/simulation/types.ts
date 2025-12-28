@@ -176,12 +176,26 @@ export interface BalanceStats {
 }
 
 // =============================================================================
+// CUSTOM BOT CONFIG
+// =============================================================================
+
+export interface CustomBotConfig {
+  name: string;
+  emperorName: string;
+  archetype: BotArchetype;
+  startPosition: number;
+}
+
+// =============================================================================
 // SIMULATION CONFIG
 // =============================================================================
 
 export interface SimulationConfig {
   /** Number of empires (including player if simulated) */
-  empireCount: number;
+  empireCount?: number;
+
+  /** Alias for empireCount (for battle framework compatibility) */
+  botCount?: number;
 
   /** Maximum turns to run */
   turnLimit: number;
@@ -190,7 +204,10 @@ export interface SimulationConfig {
   protectionTurns: number;
 
   /** Whether to include a simulated player */
-  includePlayer: boolean;
+  includePlayer?: boolean;
+
+  /** Bot difficulty level */
+  difficulty?: "easy" | "normal" | "hard" | "nightmare";
 
   /** Random seed for reproducibility */
   seed?: number;
@@ -200,6 +217,9 @@ export interface SimulationConfig {
 
   /** Archetype distribution (optional, defaults to random) */
   archetypeDistribution?: Partial<Record<BotArchetype, number>>;
+
+  /** Custom bot configurations (for battle framework) */
+  customBots?: CustomBotConfig[];
 }
 
 export interface SimulationResult {

@@ -59,10 +59,11 @@ function createStartingPlanets(empireId: string): SimulatedPlanet[] {
 export function createSimulatedEmpire(
   index: number,
   archetype: BotArchetype,
-  isPlayer: boolean = false
+  isPlayer: boolean = false,
+  customName?: string
 ): SimulatedEmpire {
   const id = `empire-${index}`;
-  const name = isPlayer ? "Player Empire" : `Empire ${BOT_NAMES[index] ?? index}`;
+  const name = customName ?? (isPlayer ? "Player Empire" : `Empire ${BOT_NAMES[index] ?? index}`);
   const planets = createStartingPlanets(id);
 
   const empire: SimulatedEmpire = {
@@ -169,7 +170,20 @@ export function createEmpires(config: SimulationConfig): SimulatedEmpire[] {
   // Create seeded RNG if seed provided
   const rng = config.seed !== undefined ? seededRandom(config.seed) : Math.random;
 
-  for (let i = 0; i < config.empireCount; i++) {
+  // Determine empire count (support both empireCount and botCount)
+  const empireCount = config.empireCount ?? config.botCount ?? 4;
+
+  // Use custom bots if provided
+  if (config.customBots && config.customBots.length > 0) {
+    for (let i = 0; i < config.customBots.length; i++) {
+      const customBot = config.customBots[i]!;
+      empires.push(createSimulatedEmpire(i, customBot.archetype, false, customBot.name));
+    }
+    return empires;
+  }
+
+  // Default behavior: random archetypes
+  for (let i = 0; i < empireCount; i++) {
     const isPlayer = config.includePlayer && i === 0;
     const archetype = selectArchetype(i, config.archetypeDistribution, rng);
 
