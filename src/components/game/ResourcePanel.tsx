@@ -1,3 +1,7 @@
+"use client";
+
+import { AnimatedCounter } from "@/components/ui";
+
 interface ResourcePanelProps {
   credits: number;
   food: number;
@@ -21,33 +25,38 @@ export function ResourcePanel({
       <div className="space-y-2 text-gray-300">
         <div className="flex justify-between" data-testid="credits">
           <span>Credits:</span>
-          <span className="font-mono text-lcars-amber">
-            {credits.toLocaleString()}
-          </span>
+          <AnimatedCounter
+            value={credits}
+            className="font-mono text-lcars-amber"
+          />
         </div>
         <div className="flex justify-between" data-testid="food">
           <span>Food:</span>
-          <span className="font-mono text-green-400">
-            {food.toLocaleString()}
-          </span>
+          <AnimatedCounter
+            value={food}
+            className="font-mono text-green-400"
+          />
         </div>
         <div className="flex justify-between" data-testid="ore">
           <span>Ore:</span>
-          <span className="font-mono text-gray-400">
-            {ore.toLocaleString()}
-          </span>
+          <AnimatedCounter
+            value={ore}
+            className="font-mono text-gray-400"
+          />
         </div>
         <div className="flex justify-between" data-testid="petroleum">
           <span>Petroleum:</span>
-          <span className="font-mono text-yellow-500">
-            {petroleum.toLocaleString()}
-          </span>
+          <AnimatedCounter
+            value={petroleum}
+            className="font-mono text-yellow-500"
+          />
         </div>
         <div className="flex justify-between" data-testid="research-points">
           <span>Research:</span>
-          <span className="font-mono text-lcars-blue">
-            {researchPoints.toLocaleString()}
-          </span>
+          <AnimatedCounter
+            value={researchPoints}
+            className="font-mono text-lcars-blue"
+          />
         </div>
       </div>
     </div>

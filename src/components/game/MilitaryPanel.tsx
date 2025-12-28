@@ -1,3 +1,7 @@
+"use client";
+
+import { AnimatedCounter } from "@/components/ui";
+
 interface MilitaryPanelProps {
   soldiers: number;
   fighters: number;
@@ -38,16 +42,18 @@ export function MilitaryPanel({
         {units.map(({ label, value, color }) => (
           <div key={label} className="flex justify-between">
             <span>{label}:</span>
-            <span className={`font-mono ${value > 0 ? color : "text-gray-600"}`}>
-              {value.toLocaleString()}
-            </span>
+            <AnimatedCounter
+              value={value}
+              className={`font-mono ${value > 0 ? color : "text-gray-600"}`}
+            />
           </div>
         ))}
         <div className="border-t border-gray-700 pt-2 mt-2 flex justify-between font-semibold">
           <span>Total:</span>
-          <span className="font-mono text-lcars-amber">
-            {totalUnits.toLocaleString()}
-          </span>
+          <AnimatedCounter
+            value={totalUnits}
+            className="font-mono text-lcars-amber"
+          />
         </div>
       </div>
     </div>

@@ -1,3 +1,7 @@
+"use client";
+
+import { AnimatedCounter } from "@/components/ui";
+
 interface NetworthPanelProps {
   networth: number;
   rank?: number;
@@ -12,15 +16,22 @@ export function NetworthPanel({ networth, rank }: NetworthPanelProps) {
       <div className="space-y-2 text-gray-300">
         <div className="flex justify-between" data-testid="networth-value">
           <span>Total:</span>
-          <span className="font-mono text-lcars-amber text-xl">
-            {networth.toFixed(2)}
-          </span>
+          <AnimatedCounter
+            value={networth}
+            className="font-mono text-lcars-amber text-xl"
+            formatFn={(val) => val.toFixed(2)}
+          />
         </div>
         <div className="flex justify-between" data-testid="rank">
           <span>Rank:</span>
-          <span className="font-mono text-lcars-mint">
-            {rank ?? "--"}
-          </span>
+          {rank !== undefined ? (
+            <AnimatedCounter
+              value={rank}
+              className="font-mono text-lcars-mint"
+            />
+          ) : (
+            <span className="font-mono text-lcars-mint">--</span>
+          )}
         </div>
       </div>
     </div>
