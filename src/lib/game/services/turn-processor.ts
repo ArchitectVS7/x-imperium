@@ -31,7 +31,6 @@ import {
   craftingQueue,
   type Empire,
   type Planet,
-  type ResourceInventory,
   type CraftingQueue,
 } from "@/lib/db/schema";
 import { eq, and } from "drizzle-orm";
@@ -65,10 +64,7 @@ import { processCovertPointGeneration } from "./covert-service";
 import { updateMarketPrices } from "@/lib/market";
 import {
   calculateTier1AutoProduction,
-  inventoryToMap,
-  addResources,
   TIER_TO_ENUM,
-  type ResourceInventoryMap,
 } from "./resource-tier-service";
 import {
   processCraftingQueue as processCraftingQueueItems,

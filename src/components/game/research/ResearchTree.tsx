@@ -5,7 +5,7 @@ import { RESEARCH_LEVELS, RESEARCH_UNLOCKS_BY_LEVEL } from "@/lib/game/constants
 
 interface ResearchTreeProps {
   currentLevel: number;
-  currentPoints: number;
+  currentPoints?: number; // Reserved for future use (progress display)
 }
 
 interface TreeNodeProps {
@@ -117,7 +117,7 @@ function formatUnlockName(unlock: string): string {
     .replace(/\s+/g, " ");
 }
 
-export function ResearchTree({ currentLevel, currentPoints }: ResearchTreeProps) {
+export function ResearchTree({ currentLevel }: ResearchTreeProps) {
   const [expandedLevels, setExpandedLevels] = useState<Set<number>>(
     new Set([currentLevel, currentLevel + 1].filter(l => l >= 0 && l <= 8))
   );

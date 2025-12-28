@@ -18,20 +18,6 @@ const TIER_COLORS = {
   3: "text-purple-400",
 } as const;
 
-const STATUS_COLORS = {
-  queued: "bg-gray-600",
-  in_progress: "bg-lcars-amber",
-  completed: "bg-green-600",
-  cancelled: "bg-red-600",
-} as const;
-
-const STATUS_LABELS = {
-  queued: "Queued",
-  in_progress: "Building",
-  completed: "Complete",
-  cancelled: "Cancelled",
-} as const;
-
 export function CraftingQueue({ refreshTrigger, onQueueUpdated }: CraftingQueueProps) {
   const [queue, setQueue] = useState<{
     items: QueueItemDisplay[];

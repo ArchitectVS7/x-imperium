@@ -9,13 +9,11 @@
  * Based on docs/crafting-system.md Part 1: Resource Tiers
  */
 
-import type { Planet, Empire, ResourceInventory } from "@/lib/db/schema";
+import type { Planet, ResourceInventory } from "@/lib/db/schema";
 import {
   TIER_1_RECIPES,
   RESOURCE_TIERS,
   type Tier1Resource,
-  type Tier2Resource,
-  type Tier3Resource,
   type CraftedResource,
 } from "../constants/crafting";
 

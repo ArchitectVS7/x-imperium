@@ -5,7 +5,7 @@
  * Part of Phase 5: Bot crafting/syndicate integration.
  */
 
-import type { ArchetypeName } from "./types";
+import type { BotArchetype } from "../types";
 import type { CraftedResource } from "@/lib/game/constants/crafting";
 import type { ContractType } from "@/lib/game/constants/syndicate";
 
@@ -15,7 +15,7 @@ import type { ContractType } from "@/lib/game/constants/syndicate";
 
 export interface CraftingProfile {
   /** Archetype name */
-  archetype: ArchetypeName;
+  archetype: BotArchetype;
 
   /** Priority order for crafting resources (first = highest priority) */
   craftingPriority: CraftedResource[];
@@ -47,7 +47,7 @@ export interface CraftingProfile {
 // ARCHETYPE CRAFTING PROFILES
 // =============================================================================
 
-export const ARCHETYPE_CRAFTING_PROFILES: Record<ArchetypeName, CraftingProfile> = {
+export const ARCHETYPE_CRAFTING_PROFILES: Record<BotArchetype, CraftingProfile> = {
   /**
    * Warlord: Military-focused crafting
    * - Prioritizes weapons and armor components
@@ -254,8 +254,8 @@ export const ARCHETYPE_CRAFTING_PROFILES: Record<ArchetypeName, CraftingProfile>
    * - Low-moderate Syndicate (prefers research path)
    * - Prefers tech-related contracts
    */
-  techRush: {
-    archetype: "techRush",
+  tech_rush: {
+    archetype: "tech_rush",
     craftingPriority: [
       "electronics",
       "quantum_processors",
@@ -321,7 +321,7 @@ export const ARCHETYPE_CRAFTING_PROFILES: Record<ArchetypeName, CraftingProfile>
 /**
  * Get the crafting profile for an archetype
  */
-export function getCraftingProfile(archetype: ArchetypeName): CraftingProfile {
+export function getCraftingProfile(archetype: BotArchetype): CraftingProfile {
   return ARCHETYPE_CRAFTING_PROFILES[archetype];
 }
 
@@ -330,7 +330,7 @@ export function getCraftingProfile(archetype: ArchetypeName): CraftingProfile {
  * Returns the highest priority resource that's not already in queue
  */
 export function getNextCraftingPriority(
-  archetype: ArchetypeName,
+  archetype: BotArchetype,
   alreadyQueued: CraftedResource[]
 ): CraftedResource | null {
   const profile = ARCHETYPE_CRAFTING_PROFILES[archetype];
@@ -348,7 +348,7 @@ export function getNextCraftingPriority(
  * Check if bot should engage with Syndicate based on willingness
  */
 export function shouldEngageSyndicate(
-  archetype: ArchetypeName,
+  archetype: BotArchetype,
   random: number = Math.random()
 ): boolean {
   const profile = ARCHETYPE_CRAFTING_PROFILES[archetype];
@@ -359,7 +359,7 @@ export function shouldEngageSyndicate(
  * Get preferred contract type from profile
  */
 export function getPreferredContract(
-  archetype: ArchetypeName,
+  archetype: BotArchetype,
   availableContracts: ContractType[]
 ): ContractType | null {
   const profile = ARCHETYPE_CRAFTING_PROFILES[archetype];
@@ -382,7 +382,7 @@ export function getPreferredContract(
 /**
  * Calculate adjusted decision weights including crafting
  */
-export function getExtendedWeights(archetype: ArchetypeName): {
+export function getExtendedWeights(archetype: BotArchetype): {
   craftingWeight: number;
   blackMarketWeight: number;
 } {

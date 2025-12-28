@@ -17,9 +17,8 @@ import {
   getResourcesByTier,
   calculateInventoryValue,
   createEmptyInventory,
-  type ResourceInventoryMap,
 } from "../resource-tier-service";
-import type { Planet } from "@/lib/db/schema";
+import type { Planet, ResourceInventory } from "@/lib/db/schema";
 
 // =============================================================================
 // HELPER: Create mock planet
@@ -203,12 +202,12 @@ describe("inventoryToMap", () => {
   });
 
   it("should convert inventory records to map", () => {
-    const inventory = [
+    const inventory: ResourceInventory[] = [
       { id: "1", empireId: "e1", gameId: "g1", resourceType: "refined_metals", tier: "tier1", quantity: 50, createdAt: new Date(), updatedAt: new Date() },
       { id: "2", empireId: "e1", gameId: "g1", resourceType: "electronics", tier: "tier2", quantity: 25, createdAt: new Date(), updatedAt: new Date() },
     ];
 
-    const result = inventoryToMap(inventory as any);
+    const result = inventoryToMap(inventory);
 
     expect(result.refined_metals).toBe(50);
     expect(result.electronics).toBe(25);

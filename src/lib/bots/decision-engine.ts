@@ -33,18 +33,30 @@ import {
   calculateAffordableUnits,
 } from "@/lib/game/unit-config";
 import { PLANET_COSTS } from "@/lib/game/constants";
+import {
+  ARCHETYPE_CRAFTING_PROFILES,
+  getNextCraftingPriority,
+  shouldEngageSyndicate,
+  getPreferredContract,
+} from "./archetypes/crafting-profiles";
+import type { CraftedResource } from "@/lib/game/constants/crafting";
+import { CONTRACT_CONFIGS, type ContractType } from "@/lib/game/constants/syndicate";
 
 // =============================================================================
 // BASE DECISION WEIGHTS
 // =============================================================================
 
 export const BASE_WEIGHTS: BotDecisionWeights = {
-  build_units: 0.35,
-  buy_planet: 0.20,
-  attack: 0.15,
-  diplomacy: 0.10, // Stub: resolves to do_nothing until M7
-  trade: 0.10, // Stub: resolves to do_nothing until M7
-  do_nothing: 0.10,
+  build_units: 0.30,
+  buy_planet: 0.15,
+  attack: 0.12,
+  diplomacy: 0.08, // Stub: resolves to do_nothing until M7
+  trade: 0.08, // Stub: resolves to do_nothing until M7
+  do_nothing: 0.07,
+  // Crafting system weights
+  craft_component: 0.10,
+  accept_contract: 0.05,
+  purchase_black_market: 0.05,
 };
 
 // =============================================================================
@@ -65,68 +77,100 @@ export const BASE_WEIGHTS: BotDecisionWeights = {
  */
 export const ARCHETYPE_WEIGHTS: Record<BotArchetype, BotDecisionWeights> = {
   warlord: {
-    build_units: 0.35,
-    buy_planet: 0.10,
-    attack: 0.40,      // Highly aggressive
-    diplomacy: 0.05,
-    trade: 0.05,
-    do_nothing: 0.05,
+    build_units: 0.28,
+    buy_planet: 0.08,
+    attack: 0.32,      // Highly aggressive
+    diplomacy: 0.04,
+    trade: 0.04,
+    do_nothing: 0.04,
+    // Crafting: military focus, moderate Syndicate
+    craft_component: 0.10,
+    accept_contract: 0.06,
+    purchase_black_market: 0.04,
   },
   diplomat: {
-    build_units: 0.25,
-    buy_planet: 0.25,
-    attack: 0.05,      // Very peaceful
-    diplomacy: 0.25,   // High diplomacy (still stub)
-    trade: 0.15,
-    do_nothing: 0.05,
+    build_units: 0.22,
+    buy_planet: 0.22,
+    attack: 0.04,      // Very peaceful
+    diplomacy: 0.22,   // High diplomacy (still stub)
+    trade: 0.12,
+    do_nothing: 0.04,
+    // Crafting: minimal Syndicate engagement
+    craft_component: 0.08,
+    accept_contract: 0.02,
+    purchase_black_market: 0.04,
   },
   merchant: {
-    build_units: 0.20,
-    buy_planet: 0.35,  // Economy expansion
-    attack: 0.10,
-    diplomacy: 0.10,
-    trade: 0.20,       // High trade (still stub)
-    do_nothing: 0.05,
+    build_units: 0.15,
+    buy_planet: 0.27,  // Economy expansion
+    attack: 0.08,
+    diplomacy: 0.08,
+    trade: 0.15,       // High trade (still stub)
+    do_nothing: 0.04,
+    // Crafting: economy focus, moderate Syndicate
+    craft_component: 0.15,
+    accept_contract: 0.04,
+    purchase_black_market: 0.04,
   },
   schemer: {
-    build_units: 0.30,
-    buy_planet: 0.15,
-    attack: 0.30,      // Opportunistic strikes
-    diplomacy: 0.10,
-    trade: 0.10,
-    do_nothing: 0.05,
+    build_units: 0.20,
+    buy_planet: 0.10,
+    attack: 0.22,      // Opportunistic strikes
+    diplomacy: 0.06,
+    trade: 0.06,
+    do_nothing: 0.03,
+    // Crafting: stealth focus, high Syndicate engagement
+    craft_component: 0.12,
+    accept_contract: 0.09,
+    purchase_black_market: 0.12,
   },
   turtle: {
-    build_units: 0.45, // Heavy defense building (stations)
-    buy_planet: 0.25,
-    attack: 0.05,      // Very defensive
-    diplomacy: 0.10,
-    trade: 0.10,
-    do_nothing: 0.05,
+    build_units: 0.35, // Heavy defense building (stations)
+    buy_planet: 0.20,
+    attack: 0.04,      // Very defensive
+    diplomacy: 0.08,
+    trade: 0.08,
+    do_nothing: 0.04,
+    // Crafting: defense focus, low Syndicate
+    craft_component: 0.12,
+    accept_contract: 0.03,
+    purchase_black_market: 0.06,
   },
   blitzkrieg: {
-    build_units: 0.25,
-    buy_planet: 0.10,
-    attack: 0.50,      // Maximum aggression
-    diplomacy: 0.05,
-    trade: 0.05,
-    do_nothing: 0.05,
+    build_units: 0.20,
+    buy_planet: 0.08,
+    attack: 0.40,      // Maximum aggression
+    diplomacy: 0.04,
+    trade: 0.04,
+    do_nothing: 0.04,
+    // Crafting: speed/attack focus, high Syndicate
+    craft_component: 0.08,
+    accept_contract: 0.07,
+    purchase_black_market: 0.05,
   },
   tech_rush: {
-    build_units: 0.25,
-    buy_planet: 0.35,  // Research planets
-    attack: 0.10,
-    diplomacy: 0.10,
-    trade: 0.15,
-    do_nothing: 0.05,
+    build_units: 0.18,
+    buy_planet: 0.27,  // Research planets
+    attack: 0.08,
+    diplomacy: 0.08,
+    trade: 0.10,
+    do_nothing: 0.04,
+    // Crafting: tech focus, moderate Syndicate
+    craft_component: 0.15,
+    accept_contract: 0.05,
+    purchase_black_market: 0.05,
   },
   opportunist: {
-    build_units: 0.25,
-    buy_planet: 0.20,
-    attack: 0.35,      // Attacks when advantage
-    diplomacy: 0.10,
-    trade: 0.05,
-    do_nothing: 0.05,
+    build_units: 0.20,
+    buy_planet: 0.15,
+    attack: 0.28,      // Attacks when advantage
+    diplomacy: 0.08,
+    trade: 0.04,
+    do_nothing: 0.04,
+    // Crafting: balanced, moderate Syndicate
+    craft_component: 0.10,
+    accept_contract: 0.05,
+    purchase_black_market: 0.06,
   },
 };
 
@@ -187,7 +231,10 @@ export function getAdjustedWeights(
     baseWeights.buy_planet +
     baseWeights.diplomacy +
     baseWeights.trade +
-    baseWeights.do_nothing;
+    baseWeights.do_nothing +
+    baseWeights.craft_component +
+    baseWeights.accept_contract +
+    baseWeights.purchase_black_market;
 
   // Redistribute proportionally
   const redistributionFactor = 1 + attackWeight / otherWeightSum;
@@ -199,6 +246,9 @@ export function getAdjustedWeights(
     diplomacy: baseWeights.diplomacy * redistributionFactor,
     trade: baseWeights.trade * redistributionFactor,
     do_nothing: baseWeights.do_nothing * redistributionFactor,
+    craft_component: baseWeights.craft_component * redistributionFactor,
+    accept_contract: baseWeights.accept_contract * redistributionFactor,
+    purchase_black_market: baseWeights.purchase_black_market * redistributionFactor,
   };
 }
 
@@ -227,6 +277,10 @@ export function selectDecisionType(
     ["diplomacy", weights.diplomacy],
     ["trade", weights.trade],
     ["do_nothing", weights.do_nothing],
+    // Crafting system decision types
+    ["craft_component", weights.craft_component],
+    ["accept_contract", weights.accept_contract],
+    ["purchase_black_market", weights.purchase_black_market],
   ];
 
   for (const [type, weight] of entries) {
@@ -271,6 +325,9 @@ export function generateBotDecision(
       "diplomacy",
       "trade",
       "do_nothing",
+      "craft_component",
+      "accept_contract",
+      "purchase_black_market",
     ];
     const validTypes = allTypes.filter((t) => {
       if (t === "attack" && context.currentTurn <= context.protectionTurns) {
@@ -296,6 +353,13 @@ export function generateBotDecision(
       return generateDiplomacyDecision();
     case "trade":
       return generateTradeDecision();
+    // Crafting system decisions
+    case "craft_component":
+      return generateCraftComponentDecision(context, randomDecision);
+    case "accept_contract":
+      return generateAcceptContractDecision(context, randomDecision);
+    case "purchase_black_market":
+      return generatePurchaseBlackMarketDecision(context, randomDecision);
     case "do_nothing":
     default:
       return { type: "do_nothing" };
@@ -453,6 +517,144 @@ function generateTradeDecision(): BotDecision {
 }
 
 // =============================================================================
+// CRAFTING SYSTEM DECISION GENERATORS
+// =============================================================================
+
+/**
+ * Generate a craft_component decision.
+ * Uses archetype crafting profile to select resource to craft.
+ */
+function generateCraftComponentDecision(
+  context: BotDecisionContext,
+  random?: number
+): BotDecision {
+  const { empire } = context;
+  const archetype = empire.botArchetype;
+
+  // If no archetype, fall back to do_nothing
+  if (!archetype) {
+    return { type: "do_nothing" };
+  }
+
+  // Get the crafting profile for this archetype
+  const profile = ARCHETYPE_CRAFTING_PROFILES[archetype];
+  if (!profile) {
+    return { type: "do_nothing" };
+  }
+
+  // Get the next resource to craft based on priority
+  // In a full implementation, we'd check the crafting queue to avoid duplicates
+  const alreadyQueued: CraftedResource[] = []; // TODO: Get from context when available
+  const resourceType = getNextCraftingPriority(archetype, alreadyQueued);
+
+  if (!resourceType) {
+    return { type: "do_nothing" };
+  }
+
+  // Determine quantity (1-3 based on economy strength)
+  const baseQuantity = 1;
+  const economyMultiplier = Math.min(3, Math.floor(empire.credits / 50000) + 1);
+  const quantity = Math.max(1, Math.floor(
+    baseQuantity * economyMultiplier * ((random ?? Math.random()) * 0.5 + 0.5)
+  ));
+
+  return { type: "craft_component", resourceType, quantity };
+}
+
+/**
+ * Generate an accept_contract decision.
+ * Uses archetype Syndicate profile to select contract.
+ */
+function generateAcceptContractDecision(
+  context: BotDecisionContext,
+  random?: number
+): BotDecision {
+  const { empire, availableTargets } = context;
+  const archetype = empire.botArchetype;
+
+  // If no archetype, fall back to do_nothing
+  if (!archetype) {
+    return { type: "do_nothing" };
+  }
+
+  // Check if bot should engage with Syndicate
+  if (!shouldEngageSyndicate(archetype, random ?? Math.random())) {
+    return { type: "do_nothing" };
+  }
+
+  // Get available contract types (simplified - full implementation would check trust level)
+  const availableContracts: ContractType[] = Object.keys(CONTRACT_CONFIGS) as ContractType[];
+
+  // Get preferred contract based on archetype
+  const contractType = getPreferredContract(archetype, availableContracts);
+  if (!contractType) {
+    return { type: "do_nothing" };
+  }
+
+  // For targeted contracts, select a target
+  const contractConfig = CONTRACT_CONFIGS[contractType];
+  let targetId: string | undefined;
+
+  // Check if this is a player-targeted contract
+  const isPlayerTargeted = contractConfig.targetType === "random_player" ||
+    contractConfig.targetType === "specific_player" ||
+    contractConfig.targetType === "top_players";
+
+  if (isPlayerTargeted) {
+    // Select a random valid target (non-eliminated, not self)
+    const validTargets = availableTargets.filter(
+      (t) => !t.isEliminated && t.id !== empire.id && !t.isBot
+    );
+    if (validTargets.length > 0) {
+      const targetIndex = Math.floor((random ?? Math.random()) * validTargets.length);
+      targetId = validTargets[targetIndex]?.id;
+    }
+  }
+
+  return { type: "accept_contract", contractType, targetId };
+}
+
+/**
+ * Generate a purchase_black_market decision.
+ * Uses archetype Syndicate profile to determine what to purchase.
+ */
+function generatePurchaseBlackMarketDecision(
+  context: BotDecisionContext,
+  random?: number
+): BotDecision {
+  const { empire } = context;
+  const archetype = empire.botArchetype;
+
+  // If no archetype, fall back to do_nothing
+  if (!archetype) {
+    return { type: "do_nothing" };
+  }
+
+  // Check if bot should engage with Syndicate (uses willingness)
+  if (!shouldEngageSyndicate(archetype, random ?? Math.random())) {
+    return { type: "do_nothing" };
+  }
+
+  // Get the crafting profile for purchase preferences
+  const profile = ARCHETYPE_CRAFTING_PROFILES[archetype];
+  if (!profile) {
+    return { type: "do_nothing" };
+  }
+
+  // Select an item based on crafting priority (Black Market sells components)
+  // In full implementation, we'd check available Black Market catalog
+  const itemId = profile.craftingPriority[0]; // First priority resource
+  if (!itemId) {
+    return { type: "do_nothing" };
+  }
+
+  // Purchase quantity based on economy (1-2 units)
+  const quantity = empire.credits > 100000 ? 2 : 1;
+
+  return { type: "purchase_black_market", itemId, quantity };
+}
+
+// =============================================================================
 // UTILITY FUNCTIONS
 // =============================================================================
 
@@ -466,7 +668,10 @@ export function getWeightSum(weights: BotDecisionWeights): number {
     weights.attack +
     weights.diplomacy +
     weights.trade +
-    weights.do_nothing
+    weights.do_nothing +
+    weights.craft_component +
+    weights.accept_contract +
+    weights.purchase_black_market
   );
 }
 

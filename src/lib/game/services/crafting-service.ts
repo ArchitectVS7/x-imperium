@@ -7,15 +7,12 @@
  * Based on docs/crafting-system.md
  */
 
-import type { CraftingQueue } from "@/lib/db/schema";
 import {
   TIER_1_RECIPES,
   TIER_2_RECIPES,
   TIER_2_EXTENDED_RECIPES,
   TIER_3_RECIPES,
   TIER_3_EXTENDED_RECIPES,
-  RESEARCH_LEVELS,
-  RESOURCE_TIERS,
   INDUSTRIAL_PLANET,
   type Tier1Resource,
   type Tier2Resource,
@@ -24,9 +21,7 @@ import {
 } from "../constants/crafting";
 import {
   type ResourceInventoryMap,
-  checkResourceRequirements,
   deductResources,
-  addResources,
   getResourceTier,
 } from "./resource-tier-service";
 

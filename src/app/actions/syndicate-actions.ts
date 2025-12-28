@@ -12,8 +12,6 @@ import {
 import { eq, and, or, desc } from "drizzle-orm";
 import {
   getSyndicateTrustStatus,
-  awardContractTrust,
-  penalizeContractFailure,
   generateContractOffers,
   validateContractAcceptance,
   getBlackMarketCatalog,
@@ -27,7 +25,6 @@ import {
 import {
   TRUST_LEVELS,
   CONTRACT_CONFIGS,
-  type SyndicateTrustLevel,
   type ContractType,
 } from "@/lib/game/constants/syndicate";
 import { RESOURCE_TIERS, type CraftedResource } from "@/lib/game/constants/crafting";
@@ -687,7 +684,7 @@ export async function acceptSyndicateInvitationAction(): Promise<{
     }
 
     // Get or create trust record
-    let trust = await db.query.syndicateTrust.findFirst({
+    const trust = await db.query.syndicateTrust.findFirst({
       where: and(
         eq(syndicateTrust.empireId, empireId),
         eq(syndicateTrust.gameId, gameId)

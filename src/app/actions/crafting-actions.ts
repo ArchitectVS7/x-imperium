@@ -11,11 +11,8 @@ import {
 } from "@/lib/db/schema";
 import { eq, and } from "drizzle-orm";
 import {
-  validateCraftingOrder,
   executeCraftingOrder,
-  getQueueState,
   getAvailableRecipes,
-  cancelQueueItem,
   type CraftingOrder,
   type QueuedItem,
 } from "@/lib/game/services/crafting-service";

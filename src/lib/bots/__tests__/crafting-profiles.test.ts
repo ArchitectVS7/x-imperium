@@ -13,8 +13,21 @@ import {
   getPreferredContract,
   getExtendedWeights,
 } from "../archetypes/crafting-profiles";
-import { ARCHETYPE_NAMES } from "../archetypes/types";
+import type { BotArchetype } from "../types";
 import type { CraftedResource } from "@/lib/game/constants/crafting";
+import type { ContractType } from "@/lib/game/constants/syndicate";
+
+// Use BotArchetype values (matches the main type definition)
+const BOT_ARCHETYPES: BotArchetype[] = [
+  "warlord",
+  "diplomat",
+  "merchant",
+  "schemer",
+  "turtle",
+  "blitzkrieg",
+  "tech_rush",
+  "opportunist",
+];
 
 // =============================================================================
 // PROFILE STRUCTURE TESTS
@@ -22,20 +35,20 @@ import type { CraftedResource } from "@/lib/game/constants/crafting";
 
 describe("Crafting Profile Structure", () => {
   it("should have profiles for all archetypes", () => {
-    for (const archetype of ARCHETYPE_NAMES) {
+    for (const archetype of BOT_ARCHETYPES) {
       expect(ARCHETYPE_CRAFTING_PROFILES[archetype]).toBeDefined();
     }
   });
 
   it("should have valid crafting priorities", () => {
-    for (const archetype of ARCHETYPE_NAMES) {
+    for (const archetype of BOT_ARCHETYPES) {
       const profile = ARCHETYPE_CRAFTING_PROFILES[archetype];
       expect(profile.craftingPriority.length).toBeGreaterThan(0);
     }
   });
 
   it("should have research focus weights that sum to 100", () => {
-    for (const archetype of ARCHETYPE_NAMES) {
+    for (const archetype of BOT_ARCHETYPES) {
       const profile = ARCHETYPE_CRAFTING_PROFILES[archetype];
       const sum =
         profile.researchFocus.military +
@@ -49,7 +62,7 @@ describe("Crafting Profile Structure", () => {
   });
 
   it("should have syndicate willingness between 0 and 1", () => {
-    for (const archetype of ARCHETYPE_NAMES) {
+    for (const archetype of BOT_ARCHETYPES) {
       const profile = ARCHETYPE_CRAFTING_PROFILES[archetype];
       expect(profile.syndicateWillingness).toBeGreaterThanOrEqual(0);
       expect(profile.syndicateWillingness).toBeLessThanOrEqual(1);
@@ -57,7 +70,7 @@ describe("Crafting Profile Structure", () => {
   });
 
   it("should have valid crafting weights", () => {
-    for (const archetype of ARCHETYPE_NAMES) {
+    for (const archetype of BOT_ARCHETYPES) {
       const profile = ARCHETYPE_CRAFTING_PROFILES[archetype];
       expect(profile.craftingWeight).toBeGreaterThan(0);
       expect(profile.craftingWeight).toBeLessThanOrEqual(0.5);
@@ -107,8 +120,8 @@ describe("Archetype Characteristics", () => {
     expect(profile.researchFocus.propulsion).toBeGreaterThanOrEqual(35);
   });
 
-  it("techRush should prioritize advanced tech", () => {
-    const profile = ARCHETYPE_CRAFTING_PROFILES.techRush;
+  it("tech_rush should prioritize advanced tech", () => {
+    const profile = ARCHETYPE_CRAFTING_PROFILES.tech_rush;
     expect(profile.craftingPriority).toContain("quantum_processors");
     expect(profile.craftingPriority).toContain("neural_interfaces");
   });
@@ -132,7 +145,7 @@ describe("Archetype Characteristics", () => {
 
 describe("getCraftingProfile", () => {
   it("should return correct profile for each archetype", () => {
-    for (const archetype of ARCHETYPE_NAMES) {
+    for (const archetype of BOT_ARCHETYPES) {
       const profile = getCraftingProfile(archetype);
       expect(profile.archetype).toBe(archetype);
     }
@@ -181,20 +194,20 @@ describe("shouldEngageSyndicate", () => {
 
 describe("getPreferredContract", () => {
   it("should return first preferred contract if available", () => {
-    const available = ["supply_run", "military_probe", "hostile_takeover"];
-    const preferred = getPreferredContract("warlord", available as any);
+    const available: ContractType[] = ["supply_run", "military_probe", "hostile_takeover"];
+    const preferred = getPreferredContract("warlord", available);
     expect(preferred).toBe("military_probe"); // First in warlord's preferences
   });
 
   it("should return null if no preferred contracts available", () => {
-    const available = ["supply_run"];
-    const preferred = getPreferredContract("diplomat", available as any);
+    const available: ContractType[] = ["supply_run"];
+    const preferred = getPreferredContract("diplomat", available);
     expect(preferred).toBeNull();
   });
 
   it("should return any available contract for opportunist", () => {
-    const available = ["intimidation"];
-    const preferred = getPreferredContract("opportunist", available as any);
+    const available: ContractType[] = ["intimidation"];
+    const preferred = getPreferredContract("opportunist", available);
     expect(preferred).toBe("intimidation");
   });
 
