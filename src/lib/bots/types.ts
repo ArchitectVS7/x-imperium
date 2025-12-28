@@ -131,6 +131,23 @@ export interface BotDecisionWeights {
 // EMPIRE TARGET (for attack selection)
 // =============================================================================
 
+/**
+ * Information about a potential target empire.
+ *
+ * TODO (Fog of War - Gate 2/3):
+ * Currently bots have "god mode" knowledge - exact networth, planetCount,
+ * and militaryPower for all empires. This should be replaced with:
+ * - estimatedNetworth: Based on leaderboard position (with uncertainty)
+ * - estimatedPower: Based on covert ops intelligence (spy missions)
+ * - visiblePlanets: Only planets revealed through espionage
+ * - publicInfo: Major battles, official rankings, treaty announcements
+ *
+ * Bots should only get accurate info through:
+ * 1. Public leaderboards (approximate networth rankings)
+ * 2. Successful spy missions (reveal specific details)
+ * 3. Combat encounters (observe enemy forces)
+ * 4. Treaty negotiations (voluntary information sharing)
+ */
 export interface EmpireTarget {
   id: string;
   name: string;

@@ -75,13 +75,14 @@ describe("Space Combat (PRD 6.7 Phase 1)", () => {
     expect(cruiserPower).toBeGreaterThan(fighterPower);
   });
 
-  it("should apply defender advantage (1.2×)", () => {
+  it("should apply defender advantage (1.1×)", () => {
     const fleet: Forces = { ...emptyForces, lightCruisers: 50 };
 
     const attackPower = calculateSpacePhasePower(fleet, false);
     const defensePower = calculateSpacePhasePower(fleet, true);
 
-    expect(defensePower).toBeCloseTo(attackPower * 1.2, 1);
+    // Reduced from 1.2× to 1.1× for better combat balance
+    expect(defensePower).toBeCloseTo(attackPower * 1.1, 1);
   });
 
   it("should determine winner based on power ratio", () => {
@@ -132,9 +133,10 @@ describe("Orbital Combat (PRD 6.7 Phase 2)", () => {
     const attackPower = calculateOrbitalPhasePower(stationFleet, false);
     const defensePower = calculateOrbitalPhasePower(stationFleet, true);
 
-    // Defense power includes station 2× bonus AND 1.2× defender advantage
-    // Station base: 50 power, MEDIUM effectiveness (0.5), so 10 * 50 * 0.5 = 250 attack
-    // Defense: 10 * 50 * 1.0 (2× on stations) * 1.2 = 600
+    // Defense power includes station 2× bonus AND 1.1× defender advantage
+    // Station base: 30 power (reduced from 50), MEDIUM effectiveness (0.5)
+    // Attack: 10 * 30 * 0.5 = 150
+    // Defense: 10 * 30 * 1.0 (2× on stations) * 1.1 = 330
     expect(defensePower).toBeGreaterThan(attackPower * 2);
   });
 
@@ -173,7 +175,8 @@ describe("Ground Combat (PRD 6.7 Phase 3)", () => {
     const attackPower = calculateGroundPhasePower(force, false);
     const defensePower = calculateGroundPhasePower(force, true);
 
-    expect(defensePower).toBeCloseTo(attackPower * 1.2, 1);
+    // Reduced from 1.2× to 1.1× for better combat balance
+    expect(defensePower).toBeCloseTo(attackPower * 1.1, 1);
   });
 
   it("should calculate soldier casualties", () => {

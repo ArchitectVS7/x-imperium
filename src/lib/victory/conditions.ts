@@ -232,8 +232,9 @@ export function checkMilitaryVictory(
 
 /**
  * Check if an empire wins Survival Victory.
- * Must have highest networth at turn limit.
- * Tie-breaker: empire name (alphabetical), then ID.
+ * Must reach turn limit AND meet economic threshold (1.5× second place).
+ * Simply surviving doesn't win - you need economic dominance too.
+ * This prevents pure turtling strategies from winning.
  *
  * @param empire - The empire to check
  * @param allEmpires - All empires in the game
@@ -252,26 +253,28 @@ export function checkSurvivalVictory(
   const activeEmpires = allEmpires.filter((e) => !e.isEliminated);
   if (activeEmpires.length === 0) return false;
 
-  const highestNetworth = Math.max(...activeEmpires.map((e) => e.networth));
-
-  // Find all empires tied for highest networth
-  const tiedEmpires = activeEmpires.filter(
-    (e) => e.networth === highestNetworth
+  // Sort by networth to find first and second place
+  const sortedByNetworth = [...activeEmpires].sort(
+    (a, b) => b.networth - a.networth
   );
 
-  if (tiedEmpires.length === 1) {
-    return empire.networth === highestNetworth;
-  }
+  const firstPlace = sortedByNetworth[0];
+  const secondPlace = sortedByNetworth[1];
 
-  // Tie-breaker: sort by name (alphabetical), then by ID
-  tiedEmpires.sort((a, b) => {
-    const nameCompare = a.name.localeCompare(b.name);
-    return nameCompare !== 0 ? nameCompare : a.id.localeCompare(b.id);
-  });
+  if (!firstPlace) return false;
 
-  // Winner is the first in sorted order
-  const winner = tiedEmpires[0];
-  return winner !== undefined && empire.id === winner.id;
+  // Must be first place
+  if (empire.id !== firstPlace.id) return false;
+
+  // If only one empire remains, they win
+  if (!secondPlace) return true;
+
+  // Must meet economic threshold (1.5× second place) to win by survival
+  // This prevents pure turtling - you need to actually dominate economically
+  const meetsEconomicThreshold =
+    firstPlace.networth >= secondPlace.networth * ECONOMIC_MULTIPLIER;
+
+  return meetsEconomicThreshold;
 }
 
 // =============================================================================

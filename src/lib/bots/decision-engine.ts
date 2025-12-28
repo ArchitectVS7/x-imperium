@@ -14,6 +14,7 @@
  */
 
 import type {
+  BotArchetype,
   BotDecision,
   BotDecisionContext,
   BotDecisionType,
@@ -46,6 +47,89 @@ export const BASE_WEIGHTS: BotDecisionWeights = {
   do_nothing: 0.10,
 };
 
+// =============================================================================
+// ARCHETYPE-SPECIFIC WEIGHTS (M9 Preview)
+// =============================================================================
+
+/**
+ * Archetype-specific decision weight modifiers.
+ * These capture each archetype's playstyle:
+ * - warlord: Aggressive military focus
+ * - diplomat: Peaceful, economy-focused
+ * - merchant: Trade and expansion focused
+ * - schemer: Opportunistic, waits then strikes
+ * - turtle: Defensive, builds stations
+ * - blitzkrieg: Rush attacks, early aggression
+ * - tech_rush: Research and development focus
+ * - opportunist: Attacks weakened targets
+ */
+export const ARCHETYPE_WEIGHTS: Record<BotArchetype, BotDecisionWeights> = {
+  warlord: {
+    build_units: 0.35,
+    buy_planet: 0.10,
+    attack: 0.40,      // Highly aggressive
+    diplomacy: 0.05,
+    trade: 0.05,
+    do_nothing: 0.05,
+  },
+  diplomat: {
+    build_units: 0.25,
+    buy_planet: 0.25,
+    attack: 0.05,      // Very peaceful
+    diplomacy: 0.25,   // High diplomacy (still stub)
+    trade: 0.15,
+    do_nothing: 0.05,
+  },
+  merchant: {
+    build_units: 0.20,
+    buy_planet: 0.35,  // Economy expansion
+    attack: 0.10,
+    diplomacy: 0.10,
+    trade: 0.20,       // High trade (still stub)
+    do_nothing: 0.05,
+  },
+  schemer: {
+    build_units: 0.30,
+    buy_planet: 0.15,
+    attack: 0.30,      // Opportunistic strikes
+    diplomacy: 0.10,
+    trade: 0.10,
+    do_nothing: 0.05,
+  },
+  turtle: {
+    build_units: 0.45, // Heavy defense building (stations)
+    buy_planet: 0.25,
+    attack: 0.05,      // Very defensive
+    diplomacy: 0.10,
+    trade: 0.10,
+    do_nothing: 0.05,
+  },
+  blitzkrieg: {
+    build_units: 0.25,
+    buy_planet: 0.10,
+    attack: 0.50,      // Maximum aggression
+    diplomacy: 0.05,
+    trade: 0.05,
+    do_nothing: 0.05,
+  },
+  tech_rush: {
+    build_units: 0.25,
+    buy_planet: 0.35,  // Research planets
+    attack: 0.10,
+    diplomacy: 0.10,
+    trade: 0.15,
+    do_nothing: 0.05,
+  },
+  opportunist: {
+    build_units: 0.25,
+    buy_planet: 0.20,
+    attack: 0.35,      // Attacks when advantage
+    diplomacy: 0.10,
+    trade: 0.05,
+    do_nothing: 0.05,
+  },
+};
+
 // Planet types that bots can purchase (excludes special types)
 const PURCHASABLE_PLANET_TYPES: PlanetType[] = [
   "food",
@@ -72,7 +156,8 @@ const COMBAT_UNIT_TYPES: UnitType[] = [
 // =============================================================================
 
 /**
- * Get adjusted weights based on game state.
+ * Get adjusted weights based on game state and archetype.
+ * - Uses archetype-specific weights for differentiated playstyles
  * - Attack weight is 0 during protection period (turn <= protectionTurns)
  * - Redistributes attack weight proportionally to other actions
  *
@@ -82,32 +167,38 @@ const COMBAT_UNIT_TYPES: UnitType[] = [
 export function getAdjustedWeights(
   context: BotDecisionContext
 ): BotDecisionWeights {
+  // Get archetype-specific weights (default to BASE_WEIGHTS if archetype unknown)
+  const archetype = context.empire.botArchetype;
+  const baseWeights = archetype && ARCHETYPE_WEIGHTS[archetype]
+    ? ARCHETYPE_WEIGHTS[archetype]
+    : BASE_WEIGHTS;
+
   const isProtected = context.currentTurn <= context.protectionTurns;
 
   if (!isProtected) {
-    // After protection period, use base weights
-    return { ...BASE_WEIGHTS };
+    // After protection period, use archetype weights
+    return { ...baseWeights };
   }
 
   // During protection: redistribute attack weight to other actions
-  const attackWeight = BASE_WEIGHTS.attack;
+  const attackWeight = baseWeights.attack;
   const otherWeightSum =
-    BASE_WEIGHTS.build_units +
-    BASE_WEIGHTS.buy_planet +
-    BASE_WEIGHTS.diplomacy +
-    BASE_WEIGHTS.trade +
-    BASE_WEIGHTS.do_nothing;
+    baseWeights.build_units +
+    baseWeights.buy_planet +
+    baseWeights.diplomacy +
+    baseWeights.trade +
+    baseWeights.do_nothing;
 
   // Redistribute proportionally
   const redistributionFactor = 1 + attackWeight / otherWeightSum;
 
   return {
-    build_units: BASE_WEIGHTS.build_units * redistributionFactor,
-    buy_planet: BASE_WEIGHTS.buy_planet * redistributionFactor,
+    build_units: baseWeights.build_units * redistributionFactor,
+    buy_planet: baseWeights.buy_planet * redistributionFactor,
     attack: 0, // No attacks during protection
-    diplomacy: BASE_WEIGHTS.diplomacy * redistributionFactor,
-    trade: BASE_WEIGHTS.trade * redistributionFactor,
-    do_nothing: BASE_WEIGHTS.do_nothing * redistributionFactor,
+    diplomacy: baseWeights.diplomacy * redistributionFactor,
+    trade: baseWeights.trade * redistributionFactor,
+    do_nothing: baseWeights.do_nothing * redistributionFactor,
   };
 }
 

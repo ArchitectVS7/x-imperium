@@ -348,14 +348,27 @@ describe("checkMilitaryVictory", () => {
 // =============================================================================
 
 describe("checkSurvivalVictory", () => {
-  it("should return true at turn limit with highest networth", () => {
-    const empire = createTestEmpire({ id: "e1", networth: 500 });
+  it("should return true at turn limit with 1.5× networth of second place", () => {
+    // Must meet economic threshold (1.5×) to win by survival
+    const empire = createTestEmpire({ id: "e1", networth: 600 });
     const allEmpires = [
       empire,
       createTestEmpire({ id: "e2", networth: 300 }),
       createTestEmpire({ id: "e3", networth: 400 }),
     ];
+    // 600 >= 400 * 1.5 = true
     expect(checkSurvivalVictory(empire, allEmpires, 200, 200)).toBe(true);
+  });
+
+  it("should return false at turn limit without economic threshold", () => {
+    // Highest networth but doesn't meet 1.5× threshold
+    const empire = createTestEmpire({ id: "e1", networth: 500 });
+    const allEmpires = [
+      empire,
+      createTestEmpire({ id: "e2", networth: 400 }),
+    ];
+    // 500 < 400 * 1.5 = false (prevents pure turtling)
+    expect(checkSurvivalVictory(empire, allEmpires, 200, 200)).toBe(false);
   });
 
   it("should return false before turn limit", () => {
@@ -373,7 +386,7 @@ describe("checkSurvivalVictory", () => {
     expect(checkSurvivalVictory(empire, allEmpires, 200, 200)).toBe(false);
   });
 
-  it("should exclude eliminated empires", () => {
+  it("should return true when only one empire remains", () => {
     const empire = createTestEmpire({ id: "e1", networth: 300 });
     const allEmpires = [
       empire,
@@ -382,23 +395,24 @@ describe("checkSurvivalVictory", () => {
     expect(checkSurvivalVictory(empire, allEmpires, 200, 200)).toBe(true);
   });
 
-  it("should break ties by empire name (alphabetical)", () => {
+  it("should return false when tied - neither meets threshold", () => {
+    // Equal networth means neither has 1.5× advantage
     const empireA = createTestEmpire({ id: "e1", name: "Alpha Empire", networth: 500 });
     const empireZ = createTestEmpire({ id: "e2", name: "Zeta Empire", networth: 500 });
     const allEmpires = [empireA, empireZ];
 
-    // Alpha should win (comes first alphabetically)
-    expect(checkSurvivalVictory(empireA, allEmpires, 200, 200)).toBe(true);
+    // Neither wins because 500 < 500 * 1.5
+    expect(checkSurvivalVictory(empireA, allEmpires, 200, 200)).toBe(false);
     expect(checkSurvivalVictory(empireZ, allEmpires, 200, 200)).toBe(false);
   });
 
-  it("should use ID as secondary tie-breaker", () => {
-    const empire1 = createTestEmpire({ id: "aaa-1", name: "Same Name", networth: 500 });
-    const empire2 = createTestEmpire({ id: "zzz-2", name: "Same Name", networth: 500 });
+  it("should require economic dominance even with slight lead", () => {
+    const empire1 = createTestEmpire({ id: "aaa-1", name: "Leader", networth: 600 });
+    const empire2 = createTestEmpire({ id: "zzz-2", name: "Second", networth: 500 });
     const allEmpires = [empire1, empire2];
 
-    // aaa-1 should win (comes first by ID)
-    expect(checkSurvivalVictory(empire1, allEmpires, 200, 200)).toBe(true);
+    // 600 < 500 * 1.5 = 750, so no winner
+    expect(checkSurvivalVictory(empire1, allEmpires, 200, 200)).toBe(false);
     expect(checkSurvivalVictory(empire2, allEmpires, 200, 200)).toBe(false);
   });
 });
