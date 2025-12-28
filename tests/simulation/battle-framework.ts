@@ -12,7 +12,7 @@
  */
 
 import { runSimulation } from "./simulator";
-import type { SimulationConfig, SimulationResult } from "./types";
+import type { SimulationConfig, SimulationResult, BotTier } from "./types";
 import type { BotArchetype } from "@/lib/bots/types";
 import personas from "../../data/personas.json";
 
@@ -49,7 +49,7 @@ export const BATTLE_CONFIGS: Record<BattleConfigType, BattleConfig> = {
     name: "Classic Four",
     type: "classic_four",
     botCount: 4,
-    turnLimit: 150,
+    turnLimit: 200,       // Increased from 150
     protectionTurns: 7,
     description: "Classic SRE-style 4-player match",
   },
@@ -57,7 +57,7 @@ export const BATTLE_CONFIGS: Record<BattleConfigType, BattleConfig> = {
     name: "Standard Match",
     type: "standard_match",
     botCount: 10,
-    turnLimit: 175,
+    turnLimit: 250,       // Increased from 175
     protectionTurns: 10,
     description: "Standard 10-player match",
   },
@@ -65,7 +65,7 @@ export const BATTLE_CONFIGS: Record<BattleConfigType, BattleConfig> = {
     name: "Grand Melee",
     type: "grand_melee",
     botCount: 20,
-    turnLimit: 200,
+    turnLimit: 300,       // Increased from 200
     protectionTurns: 15,
     description: "Large-scale 20-player battle royale",
   },
@@ -73,7 +73,7 @@ export const BATTLE_CONFIGS: Record<BattleConfigType, BattleConfig> = {
     name: "Custom",
     type: "custom",
     botCount: 10,
-    turnLimit: 175,
+    turnLimit: 250,
     protectionTurns: 10,
     description: "Custom configuration",
   },
@@ -82,32 +82,8 @@ export const BATTLE_CONFIGS: Record<BattleConfigType, BattleConfig> = {
 // =============================================================================
 // BOT TIER SYSTEM
 // =============================================================================
-
-export type BotTier = "overpowered" | "normal" | "underpowered";
-
-export interface TierModifiers {
-  resourceMultiplier: number; // Starting resource bonus
-  unitMultiplier: number; // Starting unit bonus
-  productionBonus: number; // Production rate bonus
-}
-
-export const TIER_MODIFIERS: Record<BotTier, TierModifiers> = {
-  overpowered: {
-    resourceMultiplier: 1.5,
-    unitMultiplier: 1.25,
-    productionBonus: 1.2,
-  },
-  normal: {
-    resourceMultiplier: 1.0,
-    unitMultiplier: 1.0,
-    productionBonus: 1.0,
-  },
-  underpowered: {
-    resourceMultiplier: 0.75,
-    unitMultiplier: 0.8,
-    productionBonus: 0.9,
-  },
-};
+// Tier modifiers are defined in empire-factory.ts and applied during empire creation
+// BotTier type is imported from types.ts
 
 // =============================================================================
 // PERSONA MANAGEMENT
@@ -131,10 +107,46 @@ export interface Persona {
 const ALL_PERSONAS: Persona[] = personas as Persona[];
 
 /**
+ * Determine bot tier based on tellRate
+ * - tellRate < 0.4: Overpowered (scheming, dangerous)
+ * - tellRate 0.4-0.7: Normal
+ * - tellRate > 0.7: Underpowered (naive, reveals intentions)
+ */
+export function getBotTier(persona: Persona): BotTier {
+  if (persona.tellRate < 0.4) return "overpowered";
+  if (persona.tellRate > 0.7) return "underpowered";
+  return "normal";
+}
+
+/**
+ * Get tier distribution across all personas
+ */
+export function getTierDistribution(): Record<BotTier, number> {
+  const distribution: Record<BotTier, number> = {
+    overpowered: 0,
+    normal: 0,
+    underpowered: 0,
+  };
+
+  for (const persona of ALL_PERSONAS) {
+    distribution[getBotTier(persona)]++;
+  }
+
+  return distribution;
+}
+
+/**
  * Get all personas by archetype
  */
 export function getPersonasByArchetype(archetype: BotArchetype): Persona[] {
   return ALL_PERSONAS.filter((p) => p.archetype === archetype);
+}
+
+/**
+ * Get personas by tier
+ */
+export function getPersonasByTier(tier: BotTier): Persona[] {
+  return ALL_PERSONAS.filter((p) => getBotTier(p) === tier);
 }
 
 /**
@@ -284,12 +296,13 @@ export function runSingleGame(
     protectionTurns: config.protectionTurns,
     difficulty: "normal",
     verbose,
-    // Pass persona info to the simulator
+    // Pass persona info to the simulator (including tier from tellRate)
     customBots: selectedPersonas.map((p, index) => ({
       name: p.name,
       emperorName: p.emperorName,
       archetype: p.archetype,
       startPosition: index,
+      tier: getBotTier(p),
     })),
   };
 

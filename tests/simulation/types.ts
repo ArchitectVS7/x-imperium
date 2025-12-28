@@ -179,11 +179,14 @@ export interface BalanceStats {
 // CUSTOM BOT CONFIG
 // =============================================================================
 
+export type BotTier = "overpowered" | "normal" | "underpowered";
+
 export interface CustomBotConfig {
   name: string;
   emperorName: string;
   archetype: BotArchetype;
   startPosition: number;
+  tier?: BotTier;
 }
 
 // =============================================================================

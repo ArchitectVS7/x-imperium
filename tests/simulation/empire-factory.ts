@@ -5,10 +5,37 @@
  * Mirrors the real game's starting configuration.
  */
 
-import type { SimulatedEmpire, SimulatedPlanet, SimulationConfig } from "./types";
+import type { SimulatedEmpire, SimulatedPlanet, SimulationConfig, BotTier } from "./types";
 import type { BotArchetype, PlanetType } from "@/lib/bots/types";
 import { PLANET_PRODUCTION, STARTING_CREDITS, STARTING_POPULATION } from "@/lib/game/constants";
 import { calculateNetworth } from "@/lib/game/networth";
+
+// =============================================================================
+// TIER SYSTEM
+// =============================================================================
+
+export interface TierModifiers {
+  resourceMultiplier: number; // Starting resource bonus
+  unitMultiplier: number; // Starting unit bonus
+}
+
+export const TIER_MODIFIERS: Record<BotTier, TierModifiers> = {
+  overpowered: {
+    resourceMultiplier: 2.0,  // 2× starting credits/resources
+    unitMultiplier: 3.0,      // 3× starting military (300 soldiers, 60 fighters, etc.)
+  },
+  normal: {
+    resourceMultiplier: 1.0,
+    unitMultiplier: 1.0,
+  },
+  underpowered: {
+    resourceMultiplier: 0.5,  // Half starting resources
+    unitMultiplier: 0.4,      // 40% starting military (40 soldiers, 8 fighters)
+  },
+};
+
+// Re-export BotTier for convenience
+export type { BotTier };
 
 // Bot names for variety
 const BOT_NAMES = [
@@ -60,22 +87,28 @@ export function createSimulatedEmpire(
   index: number,
   archetype: BotArchetype,
   isPlayer: boolean = false,
-  customName?: string
+  customName?: string,
+  tier: BotTier = "normal"
 ): SimulatedEmpire {
   const id = `empire-${index}`;
   const name = customName ?? (isPlayer ? "Player Empire" : `Empire ${BOT_NAMES[index] ?? index}`);
   const planets = createStartingPlanets(id);
+
+  // Get tier modifiers
+  const modifiers = TIER_MODIFIERS[tier];
+  const resourceMult = modifiers.resourceMultiplier;
+  const unitMult = modifiers.unitMultiplier;
 
   const empire: SimulatedEmpire = {
     id,
     name,
     archetype,
 
-    // Starting resources (from constants)
-    credits: STARTING_CREDITS ?? 50000,
-    food: 1000,
-    ore: 500,
-    petroleum: 200,
+    // Starting resources (scaled by tier)
+    credits: Math.floor((STARTING_CREDITS ?? 50000) * resourceMult),
+    food: Math.floor(1000 * resourceMult),
+    ore: Math.floor(500 * resourceMult),
+    petroleum: Math.floor(200 * resourceMult),
     researchPoints: 0,
 
     // Population
@@ -83,14 +116,14 @@ export function createSimulatedEmpire(
     populationCap: 100000,
     civilStatus: "content",
 
-    // Starting military (modest defensive force)
-    soldiers: 100,
-    fighters: 20,
-    stations: 2,
+    // Starting military (scaled by tier)
+    soldiers: Math.floor(100 * unitMult),
+    fighters: Math.floor(20 * unitMult),
+    stations: Math.floor(2 * unitMult),
     lightCruisers: 0,
     heavyCruisers: 0,
-    carriers: 5,
-    covertAgents: 10,
+    carriers: Math.floor(5 * unitMult),
+    covertAgents: Math.floor(10 * unitMult),
     armyEffectiveness: 100,
 
     // Planets
@@ -177,7 +210,15 @@ export function createEmpires(config: SimulationConfig): SimulatedEmpire[] {
   if (config.customBots && config.customBots.length > 0) {
     for (let i = 0; i < config.customBots.length; i++) {
       const customBot = config.customBots[i]!;
-      empires.push(createSimulatedEmpire(i, customBot.archetype, false, customBot.name));
+      empires.push(
+        createSimulatedEmpire(
+          i,
+          customBot.archetype,
+          false,
+          customBot.name,
+          customBot.tier ?? "normal"
+        )
+      );
     }
     return empires;
   }

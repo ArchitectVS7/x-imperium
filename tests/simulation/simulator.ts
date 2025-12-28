@@ -693,9 +693,15 @@ function determineSurvivalWinner(state: SimulationState): SimulatedEmpire | null
   // If only one remains, they win
   if (!secondPlace) return firstPlace;
 
-  // Must meet economic threshold (1.5× second place) to win by survival
-  // This prevents pure turtling - you need economic dominance
-  const ECONOMIC_MULTIPLIER = 1.5;
+  // Scale economic threshold based on player count:
+  // - 2 players: 1.5× (hard to achieve)
+  // - 4 players: 1.4×
+  // - 10+ players: 1.25× (easier with more competition)
+  const playerCount = state.empires.length;
+  const baseMultiplier = 1.5;
+  const scaleFactor = Math.max(0.8, 1.0 - (playerCount - 2) * 0.05);
+  const ECONOMIC_MULTIPLIER = baseMultiplier * scaleFactor;
+
   if (firstPlace.networth >= secondPlace.networth * ECONOMIC_MULTIPLIER) {
     return firstPlace;
   }
