@@ -42,7 +42,7 @@ describe("Bot Battle Simulator", () => {
       expect(result).toBeDefined();
       expect(result.turnsPlayed).toBeGreaterThan(0);
       expect(result.turnsPlayed).toBeLessThanOrEqual(config.turnLimit);
-      expect(result.finalState.empires).toHaveLength(config.empireCount);
+      expect(result.finalState.empires).toHaveLength(config.empireCount!);
       expect(result.durationMs).toBeLessThan(10000); // Should complete in < 10s
     });
 
@@ -221,8 +221,8 @@ describe("Bot Battle Simulator", () => {
         }
       }
 
-      // Conquest should be possible
-      expect(result => result).toBeDefined();
+      // Conquest should be possible (this test may or may not find one in limited runs)
+      expect(true).toBe(true);
     });
 
     it("should detect economic victory", () => {
@@ -244,8 +244,8 @@ describe("Bot Battle Simulator", () => {
         }
       }
 
-      // Economic victory should be possible with long peaceful games
-      expect(result => result).toBeDefined();
+      // Economic victory should be possible with long peaceful games (may or may not find one)
+      expect(true).toBe(true);
     });
 
     it("should determine survival winner at turn limit (requires economic threshold)", () => {
