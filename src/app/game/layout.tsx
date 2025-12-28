@@ -5,6 +5,8 @@ const navItems = [
   { href: "/game/planets", label: "Planets" },
   { href: "/game/military", label: "Military" },
   { href: "/game/research", label: "Research" },
+  { href: "/game/combat", label: "Combat" },
+  { href: "/game/starmap", label: "Starmap" },
   { href: "/game/diplomacy", label: "Diplomacy" },
   { href: "/game/market", label: "Market" },
   { href: "/game/covert", label: "Covert" },

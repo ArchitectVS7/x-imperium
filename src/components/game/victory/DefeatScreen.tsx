@@ -40,13 +40,13 @@ export function DefeatScreen({
   onTryAgain,
 }: DefeatScreenProps) {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-gray-900 via-red-900/20 to-gray-900">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-gray-900 via-red-900/20 to-gray-900" data-testid="defeat-screen">
       <div className="max-w-2xl mx-auto text-center p-8">
         {/* Defeat Icon */}
         <div className="text-8xl mb-6 opacity-60">\u2620\ufe0f</div>
 
         {/* Defeat Title */}
-        <h1 className="text-5xl font-display text-red-500 mb-4">
+        <h1 className="text-5xl font-display text-red-500 mb-4" data-testid="defeat-title">
           {DEFEAT_TITLES[defeatType]}
         </h1>
 
@@ -102,6 +102,7 @@ export function DefeatScreen({
           <button
             onClick={onTryAgain}
             className="px-8 py-3 bg-lcars-orange hover:bg-lcars-orange/80 text-black font-medium rounded transition-colors text-lg"
+            data-testid="try-again-button"
           >
             Try Again
           </button>

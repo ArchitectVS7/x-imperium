@@ -6,6 +6,8 @@
  */
 
 import type { Empire, Planet } from "@/lib/db/schema";
+import type { CraftedResource } from "@/lib/game/constants/crafting";
+import type { ContractType } from "@/lib/game/constants/syndicate";
 
 // Re-export for convenience
 export type { Empire, Planet };
@@ -104,7 +106,11 @@ export type BotDecision =
       quantity: number;
       action: "buy" | "sell";
     }
-  | { type: "do_nothing" };
+  | { type: "do_nothing" }
+  // Crafting system decisions
+  | { type: "craft_component"; resourceType: CraftedResource; quantity: number }
+  | { type: "accept_contract"; contractType: ContractType; targetId?: string }
+  | { type: "purchase_black_market"; itemId: string; quantity: number };
 
 export type BotDecisionType =
   | "build_units"
@@ -112,25 +118,50 @@ export type BotDecisionType =
   | "attack"
   | "diplomacy"
   | "trade"
-  | "do_nothing";
+  | "do_nothing"
+  // Crafting system decision types
+  | "craft_component"
+  | "accept_contract"
+  | "purchase_black_market";
 
 // =============================================================================
 // DECISION WEIGHTS
 // =============================================================================
 
 export interface BotDecisionWeights {
-  build_units: number; // 35%
-  buy_planet: number; // 20%
-  attack: number; // 15% (0% before protection ends)
-  diplomacy: number; // 10% (stub: resolves to do_nothing)
-  trade: number; // 10% (stub: resolves to do_nothing)
-  do_nothing: number; // 10%
+  build_units: number; // 30%
+  buy_planet: number; // 15%
+  attack: number; // 12% (0% before protection ends)
+  diplomacy: number; // 8% (stub: resolves to do_nothing)
+  trade: number; // 8% (stub: resolves to do_nothing)
+  do_nothing: number; // 7%
+  // Crafting system weights
+  craft_component: number; // 10%
+  accept_contract: number; // 5%
+  purchase_black_market: number; // 5%
 }
 
 // =============================================================================
 // EMPIRE TARGET (for attack selection)
 // =============================================================================
 
+/**
+ * Information about a potential target empire.
+ *
+ * TODO (Fog of War - Gate 2/3):
+ * Currently bots have "god mode" knowledge - exact networth, planetCount,
+ * and militaryPower for all empires. This should be replaced with:
+ * - estimatedNetworth: Based on leaderboard position (with uncertainty)
+ * - estimatedPower: Based on covert ops intelligence (spy missions)
+ * - visiblePlanets: Only planets revealed through espionage
+ * - publicInfo: Major battles, official rankings, treaty announcements
+ *
+ * Bots should only get accurate info through:
+ * 1. Public leaderboards (approximate networth rankings)
+ * 2. Successful spy missions (reveal specific details)
+ * 3. Combat encounters (observe enemy forces)
+ * 4. Treaty negotiations (voluntary information sharing)
+ */
 export interface EmpireTarget {
   id: string;
   name: string;

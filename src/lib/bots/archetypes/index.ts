@@ -33,6 +33,21 @@ export {
 } from "./types";
 
 // =============================================================================
+// CRAFTING PROFILE EXPORTS
+// =============================================================================
+
+export type { CraftingProfile } from "./crafting-profiles";
+
+export {
+  ARCHETYPE_CRAFTING_PROFILES,
+  getCraftingProfile,
+  getNextCraftingPriority,
+  shouldEngageSyndicate,
+  getPreferredContract,
+  getExtendedWeights,
+} from "./crafting-profiles";
+
+// =============================================================================
 // INDIVIDUAL ARCHETYPE EXPORTS
 // =============================================================================
 

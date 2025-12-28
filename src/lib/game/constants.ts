@@ -58,6 +58,7 @@ export const PLANET_PRODUCTION = {
   research: 100, // research points per turn (base)
   supply: 0, // military cost reduction (special effect)
   anti_pollution: 0, // pollution offset (special effect)
+  industrial: 0, // Tier 0 → Tier 1 processing (special effect)
 } as const;
 
 // =============================================================================
@@ -75,6 +76,7 @@ export const PLANET_COSTS = {
   research: 23_000,
   supply: 11_500,
   anti_pollution: 10_500,
+  industrial: 15_000, // Crafting system: processes Tier 0 → Tier 1
 } as const;
 
 // =============================================================================
@@ -113,6 +115,7 @@ export const PLANET_TYPE_LABELS: Record<PlanetType, string> = {
   research: "Research",
   supply: "Supply",
   anti_pollution: "Anti-Pollution",
+  industrial: "Industrial",
 };
 
 // =============================================================================

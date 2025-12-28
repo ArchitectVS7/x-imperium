@@ -1,8 +1,8 @@
 /**
  * Turn Processor Service
  *
- * Orchestrates the 6-phase turn processing pipeline for all empires in a game.
- * Handles resource production, population mechanics, civil status, and maintenance.
+ * Orchestrates the multi-phase turn processing pipeline for all empires in a game.
+ * Handles resource production, population mechanics, civil status, crafting, and maintenance.
  *
  * PRD References:
  * - PRD 3: Turn Processing Order
@@ -10,18 +10,30 @@
  *
  * Turn Processing Order:
  * 1. Income collection (with civil status multiplier)
+ * 1.5. Tier 1 auto-production (crafting system)
  * 2. Population update (growth/starvation)
  * 3. Civil status evaluation
- * 4. Market processing (stub for M3)
- * 5. Bot decisions (stub for M3)
- * 6. Actions (stub for M3)
+ * 3.5. Research production
+ * 4. Build queue processing
+ * 4.5. Covert point generation
+ * 4.6. Crafting queue processing
+ * 5. Bot decisions
+ * 6. Actions (covert, diplomatic, movement, combat)
  * 7. Maintenance (applied in Phase 1 via resource engine)
- * 8. Victory check (stub for M6)
+ * 8. Victory/Defeat check
  */
 
 import { db } from "@/lib/db";
-import { games, empires, type Empire, type Planet } from "@/lib/db/schema";
-import { eq } from "drizzle-orm";
+import {
+  games,
+  empires,
+  resourceInventory,
+  craftingQueue,
+  type Empire,
+  type Planet,
+  type CraftingQueue,
+} from "@/lib/db/schema";
+import { eq, and } from "drizzle-orm";
 import type {
   TurnResult,
   EmpireResult,
@@ -50,6 +62,15 @@ import {
 import { createAutoSave } from "./save-service";
 import { processCovertPointGeneration } from "./covert-service";
 import { updateMarketPrices } from "@/lib/market";
+import {
+  calculateTier1AutoProduction,
+  TIER_TO_ENUM,
+} from "./resource-tier-service";
+import {
+  processCraftingQueue as processCraftingQueueItems,
+  type CompletedCrafting,
+} from "./crafting-service";
+import { RESOURCE_TIERS, type CraftedResource } from "../constants/crafting";
 import {
   triggerCasualMessages,
   triggerRandomBroadcast,
@@ -366,6 +387,40 @@ async function processEmpireTurn(
   });
 
   // ==========================================================================
+  // PHASE 1.5: TIER 1 AUTO-PRODUCTION (Crafting System)
+  // ==========================================================================
+
+  // Calculate auto-production from specialized planets
+  // Ore → Refined Metals (10%), Petroleum → Fuel Cells (10%), Food → Processed Food (5%)
+  const tier1Production = calculateTier1AutoProduction(
+    planets,
+    {
+      food: resourceProduction.final.food,
+      ore: resourceProduction.final.ore,
+      petroleum: resourceProduction.final.petroleum,
+    }
+  );
+
+  // Update resource inventory with auto-produced Tier 1 resources
+  if (tier1Production.productions.length > 0) {
+    await updateResourceInventory(
+      empire.id,
+      gameId,
+      tier1Production.totalByResource as Partial<Record<CraftedResource, number>>
+    );
+
+    // Log production events
+    for (const prod of tier1Production.productions) {
+      events.push({
+        type: "other",
+        message: `Auto-produced ${prod.quantity} ${prod.resourceType.replace(/_/g, " ")} from ${prod.sourcePlanets} ${prod.sourceType} planet(s)`,
+        severity: "info",
+        empireId: empire.id,
+      });
+    }
+  }
+
+  // ==========================================================================
   // PHASE 2: POPULATION UPDATE
   // ==========================================================================
 
@@ -487,6 +542,23 @@ async function processEmpireTurn(
 
   // Generate covert points (5/turn, max 50)
   await processCovertPointGeneration(empire.id);
+
+  // ==========================================================================
+  // PHASE 4.6: CRAFTING QUEUE PROCESSING (Crafting System)
+  // ==========================================================================
+
+  // Process crafting queue - complete items that are ready
+  const craftingResult = await processCraftingQueueForEmpire(empire.id, gameId, turn);
+  if (craftingResult.completed.length > 0) {
+    for (const item of craftingResult.completed) {
+      events.push({
+        type: "other",
+        message: `Crafting complete: ${item.quantity} ${item.resourceType.replace(/_/g, " ")}`,
+        severity: "info",
+        empireId: empire.id,
+      });
+    }
+  }
 
   // ==========================================================================
   // PHASES 5-6: STUBS FOR FUTURE MILESTONES
@@ -750,4 +822,181 @@ export async function processPhase7_Maintenance(): Promise<void> {
  */
 export async function processPhase8_VictoryCheck(): Promise<void> {
   // Stub: Victory conditions will be implemented in M6
+}
+
+// =============================================================================
+// CRAFTING SYSTEM HELPERS
+// =============================================================================
+
+/**
+ * Update resource inventory for an empire
+ *
+ * Adds the specified resources to the empire's inventory.
+ * Creates new inventory records if they don't exist.
+ *
+ * @param empireId - Empire UUID
+ * @param gameId - Game UUID
+ * @param resources - Resources to add (keyed by resource type)
+ */
+async function updateResourceInventory(
+  empireId: string,
+  gameId: string,
+  resources: Partial<Record<CraftedResource, number>>
+): Promise<void> {
+  for (const [resourceType, quantity] of Object.entries(resources)) {
+    if (quantity <= 0) continue;
+
+    const tier = RESOURCE_TIERS[resourceType as CraftedResource];
+    const tierValue = TIER_TO_ENUM[tier];
+
+    // Try to find existing inventory record
+    const existing = await db.query.resourceInventory.findFirst({
+      where: and(
+        eq(resourceInventory.empireId, empireId),
+        eq(resourceInventory.resourceType, resourceType as CraftedResource)
+      ),
+    });
+
+    if (existing) {
+      // Update existing record
+      await db
+        .update(resourceInventory)
+        .set({
+          quantity: existing.quantity + quantity,
+          updatedAt: new Date(),
+        })
+        .where(eq(resourceInventory.id, existing.id));
+    } else {
+      // Create new record
+      await db.insert(resourceInventory).values({
+        empireId,
+        gameId,
+        resourceType: resourceType as CraftedResource,
+        tier: tierValue,
+        quantity,
+      });
+    }
+  }
+}
+
+/**
+ * Process crafting queue for an empire
+ *
+ * Completes items that are ready and updates the database.
+ *
+ * @param empireId - Empire UUID
+ * @param gameId - Game UUID
+ * @param currentTurn - Current game turn
+ * @returns Completed items
+ */
+async function processCraftingQueueForEmpire(
+  empireId: string,
+  gameId: string,
+  currentTurn: number
+): Promise<{ completed: CompletedCrafting[] }> {
+  // Load current queue
+  const queue: CraftingQueue[] = await db.query.craftingQueue.findMany({
+    where: and(
+      eq(craftingQueue.empireId, empireId),
+      eq(craftingQueue.gameId, gameId)
+    ),
+  });
+
+  // Sort by startTurn
+  queue.sort((a, b) => a.startTurn - b.startTurn);
+
+  if (queue.length === 0) {
+    return { completed: [] };
+  }
+
+  // Convert to the format expected by processCraftingQueueItems
+  const queueItems = queue.map((item: CraftingQueue) => ({
+    id: item.id,
+    resourceType: item.resourceType as CraftedResource,
+    quantity: item.quantity,
+    status: item.status as "queued" | "in_progress" | "completed" | "cancelled",
+    startTurn: item.startTurn,
+    completionTurn: item.completionTurn,
+    componentsReserved: (item.componentsReserved as Record<string, number>) || {},
+  }));
+
+  // Process the queue
+  const result = processCraftingQueueItems(queueItems, currentTurn);
+
+  // Update database for completed items
+  for (const completed of result.completed) {
+    // Add completed resources to inventory
+    await updateResourceInventory(empireId, gameId, {
+      [completed.resourceType]: completed.quantity,
+    });
+
+    // Find and update the queue item status
+    const queueItem = queue.find(
+      (q: CraftingQueue) => q.resourceType === completed.resourceType && q.status !== "completed"
+    );
+    if (queueItem) {
+      await db
+        .update(craftingQueue)
+        .set({
+          status: "completed",
+          updatedAt: new Date(),
+        })
+        .where(eq(craftingQueue.id, queueItem.id));
+    }
+  }
+
+  // Update in_progress status for next item
+  for (const item of result.updatedQueue) {
+    if (item.status === "in_progress") {
+      const queueItem = queue.find((q: CraftingQueue) => q.id === item.id);
+      if (queueItem && queueItem.status !== "in_progress") {
+        await db
+          .update(craftingQueue)
+          .set({
+            status: "in_progress",
+            updatedAt: new Date(),
+          })
+          .where(eq(craftingQueue.id, queueItem.id));
+      }
+    }
+  }
+
+  return { completed: result.completed };
+}
+
+/**
+ * Phase 1.5: Process Tier 1 auto-production
+ *
+ * Exported for testing purposes.
+ */
+export async function processPhase1_5_Tier1AutoProduction(
+  empireId: string,
+  gameId: string,
+  planets: Planet[],
+  baseProduction: { food: number; ore: number; petroleum: number }
+): Promise<{ productions: Array<{ resourceType: string; quantity: number }> }> {
+  const tier1Production = calculateTier1AutoProduction(planets, baseProduction);
+
+  if (tier1Production.productions.length > 0) {
+    await updateResourceInventory(
+      empireId,
+      gameId,
+      tier1Production.totalByResource as Partial<Record<CraftedResource, number>>
+    );
+  }
+
+  return { productions: tier1Production.productions };
+}
+
+/**
+ * Phase 4.6: Process crafting queue
+ *
+ * Exported for testing purposes.
+ */
+export async function processPhase4_6_CraftingQueue(
+  empireId: string,
+  gameId: string,
+  currentTurn: number
+): Promise<{ completed: CompletedCrafting[] }> {
+  return processCraftingQueueForEmpire(empireId, gameId, currentTurn);
 }

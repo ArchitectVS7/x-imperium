@@ -6,13 +6,20 @@
  */
 
 import { db } from "@/lib/db";
-import { empires, buildQueue, planets, type NewPlanet } from "@/lib/db/schema";
+import { empires, buildQueue, planets, type NewPlanet, craftingQueue, syndicateContracts } from "@/lib/db/schema";
 import { eq, sql } from "drizzle-orm";
 import type { BotDecision, BotDecisionContext, Forces, UnitType } from "./types";
 import { calculateUnitPurchaseCost } from "@/lib/game/unit-config";
 import { UNIT_BUILD_TIMES, toDbUnitType } from "@/lib/game/build-config";
 import { PLANET_COSTS, PLANET_PRODUCTION } from "@/lib/game/constants";
 import { calculatePlanetCost } from "@/lib/formulas/planet-costs";
+import { TIER_1_RECIPES, TIER_2_RECIPES, TIER_3_RECIPES, RESOURCE_TIERS } from "@/lib/game/constants/crafting";
+import type { CraftedResource, Tier1Resource, Tier2Resource, Tier3Resource } from "@/lib/game/constants/crafting";
+import { CONTRACT_CONFIGS } from "@/lib/game/constants/syndicate";
+import { executeAttack as executeCombatAttack } from "@/lib/game/services/combat-service";
+import type { Forces as CombatForces } from "@/lib/combat/phases";
+import { proposeTreaty, type TreatyType } from "@/lib/diplomacy";
+import { executeBuyOrder, executeSellOrder, type TradableResource } from "@/lib/market/market-service";
 
 // =============================================================================
 // MAIN EXECUTOR
@@ -45,10 +52,18 @@ export async function executeBotDecision(
       case "attack":
         return await executeAttack(decision, context);
       case "diplomacy":
+        return await executeDiplomacy(decision, context);
       case "trade":
+        return await executeTrade(decision, context);
       case "do_nothing":
-        // These are no-ops for M5
         return { success: true, details: "No action taken" };
+      // Crafting system handlers
+      case "craft_component":
+        return await executeCraftComponent(decision, context);
+      case "accept_contract":
+        return await executeAcceptContract(decision, context);
+      case "purchase_black_market":
+        return await executePurchaseBlackMarket(decision, context);
       default:
         return { success: false, error: "Unknown decision type" };
     }
@@ -198,13 +213,13 @@ async function executeBuyPlanet(
 
 /**
  * Execute an attack decision.
- * For M5, this is a simplified attack that uses existing combat service.
+ * Uses the full combat service to resolve attacks properly.
  */
 async function executeAttack(
   decision: Extract<BotDecision, { type: "attack" }>,
   context: BotDecisionContext
 ): Promise<ExecutionResult> {
-  const { empire, currentTurn, protectionTurns } = context;
+  const { empire, gameId, currentTurn, protectionTurns } = context;
   const { targetId, forces } = decision;
 
   // Verify protection period has ended
@@ -218,7 +233,7 @@ async function executeAttack(
     return { success: false, error: "No forces allocated" };
   }
 
-  // Verify bot has enough units
+  // Verify bot has enough units (early check to avoid unnecessary combat service call)
   if (
     forces.soldiers > empire.soldiers ||
     forces.fighters > empire.fighters ||
@@ -229,33 +244,37 @@ async function executeAttack(
     return { success: false, error: "Insufficient forces" };
   }
 
-  // For M5, we'll just deduct the forces without full combat resolution
-  // Full combat integration will use the combat-service in turn processing
-  // This marks the intent to attack, actual resolution happens in combat phase
+  // Convert bot Forces to combat Forces (add stations field)
+  const combatForces: CombatForces = {
+    soldiers: forces.soldiers,
+    fighters: forces.fighters,
+    stations: 0, // Bots don't use stations in attacks
+    lightCruisers: forces.lightCruisers,
+    heavyCruisers: forces.heavyCruisers,
+    carriers: forces.carriers,
+  };
 
-  // Deduct forces from attacker (they're committed to the attack)
-  await db
-    .update(empires)
-    .set({
-      soldiers: sql`${empires.soldiers} - ${forces.soldiers}`,
-      fighters: sql`${empires.fighters} - ${forces.fighters}`,
-      lightCruisers: sql`${empires.lightCruisers} - ${forces.lightCruisers}`,
-      heavyCruisers: sql`${empires.heavyCruisers} - ${forces.heavyCruisers}`,
-      carriers: sql`${empires.carriers} - ${forces.carriers}`,
-      updatedAt: new Date(),
-    })
-    .where(eq(empires.id, empire.id));
+  // Execute attack using combat service
+  // This handles: validation, combat resolution, saving attack record, applying casualties
+  const result = await executeCombatAttack({
+    gameId,
+    attackerId: empire.id,
+    defenderId: targetId,
+    attackType: "invasion", // Default to invasion for bot attacks
+    forces: combatForces,
+  });
 
-  // Note: In a full implementation, we would:
-  // 1. Create an attack record
-  // 2. Resolve combat using combat-service
-  // 3. Apply casualties to both sides
-  // 4. Transfer planets if attacker wins
-  // For M5, we simplify by just committing forces
+  if (!result.success) {
+    return { success: false, error: result.error ?? "Attack failed" };
+  }
+
+  // Build details message
+  const outcome = result.result?.outcome ?? "unknown";
+  const planetCaptured = result.result?.planetCaptured ? " (captured planet!)" : "";
 
   return {
     success: true,
-    details: `Launched attack on ${targetId} with ${totalForces} units`,
+    details: `Attack on ${targetId}: ${outcome}${planetCaptured} (${totalForces} units deployed)`,
   };
 }
 
@@ -270,4 +289,238 @@ function getTotalForces(forces: Forces): number {
     forces.heavyCruisers +
     forces.carriers
   );
+}
+
+// =============================================================================
+// DIPLOMACY EXECUTOR
+// =============================================================================
+
+/**
+ * Execute a diplomacy decision.
+ * Proposes a treaty to another empire.
+ */
+async function executeDiplomacy(
+  decision: Extract<BotDecision, { type: "diplomacy" }>,
+  context: BotDecisionContext
+): Promise<ExecutionResult> {
+  const { empire, currentTurn } = context;
+  const { action, targetId } = decision;
+
+  // Map decision action to treaty type
+  const treatyType: TreatyType = action === "propose_alliance" ? "alliance" : "nap";
+
+  // Propose the treaty using the diplomacy service
+  const result = await proposeTreaty(empire.id, targetId, treatyType, currentTurn);
+
+  if (!result.success) {
+    return { success: false, error: result.error ?? "Failed to propose treaty" };
+  }
+
+  return {
+    success: true,
+    details: `Proposed ${treatyType.toUpperCase()} treaty to ${targetId}`,
+  };
+}
+
+// =============================================================================
+// TRADE EXECUTOR
+// =============================================================================
+
+/**
+ * Execute a trade decision.
+ * Buys or sells resources on the market.
+ */
+async function executeTrade(
+  decision: Extract<BotDecision, { type: "trade" }>,
+  context: BotDecisionContext
+): Promise<ExecutionResult> {
+  const { empire, gameId, currentTurn } = context;
+  const { resource, quantity, action } = decision;
+
+  // Only trade food, ore, petroleum (not credits)
+  if (resource === "credits") {
+    return { success: false, error: "Cannot trade credits on the market" };
+  }
+
+  const tradableResource = resource as TradableResource;
+
+  if (action === "buy") {
+    const result = await executeBuyOrder(gameId, empire.id, tradableResource, quantity, currentTurn);
+    if (!result.success) {
+      return { success: false, error: result.error ?? "Buy order failed" };
+    }
+    return {
+      success: true,
+      details: `Bought ${quantity} ${resource} for ${result.newCredits !== undefined ? empire.credits - result.newCredits : "?"} credits`,
+    };
+  } else {
+    const result = await executeSellOrder(gameId, empire.id, tradableResource, quantity, currentTurn);
+    if (!result.success) {
+      return { success: false, error: result.error ?? "Sell order failed" };
+    }
+    return {
+      success: true,
+      details: `Sold ${quantity} ${resource} for ${result.newCredits !== undefined ? result.newCredits - empire.credits : "?"} credits`,
+    };
+  }
+}
+
+// =============================================================================
+// CRAFTING SYSTEM EXECUTORS
+// =============================================================================
+
+/**
+ * Execute a craft_component decision.
+ * Adds a crafting order to the queue.
+ */
+async function executeCraftComponent(
+  decision: Extract<BotDecision, { type: "craft_component" }>,
+  context: BotDecisionContext
+): Promise<ExecutionResult> {
+  const { empire, gameId, currentTurn } = context;
+  const { resourceType, quantity } = decision;
+
+  // Validate quantity
+  if (quantity <= 0) {
+    return { success: false, error: "Invalid quantity" };
+  }
+
+  // Get tier for this resource
+  const tier = RESOURCE_TIERS[resourceType];
+  if (!tier) {
+    return { success: false, error: `Unknown resource type: ${resourceType}` };
+  }
+
+  // Get recipe from appropriate tier
+  let craftingTime = 1;
+  if (tier === 1 && resourceType in TIER_1_RECIPES) {
+    craftingTime = TIER_1_RECIPES[resourceType as Tier1Resource].craftingTime;
+  } else if (tier === 2 && resourceType in TIER_2_RECIPES) {
+    craftingTime = TIER_2_RECIPES[resourceType as Tier2Resource].craftingTime;
+  } else if (tier === 3 && resourceType in TIER_3_RECIPES) {
+    craftingTime = TIER_3_RECIPES[resourceType as Tier3Resource].craftingTime;
+  }
+
+  // Calculate total crafting time
+  const totalTime = craftingTime * quantity;
+
+  // Get current queue size for position
+  const currentQueue = await db.query.craftingQueue.findMany({
+    where: eq(craftingQueue.empireId, empire.id),
+  });
+  const queuePosition = currentQueue.length + 1;
+
+  // Add to crafting queue
+  await db.insert(craftingQueue).values({
+    empireId: empire.id,
+    gameId,
+    resourceType,
+    quantity,
+    status: "queued",
+    componentsReserved: {}, // TODO: Calculate and reserve actual components
+    startTurn: currentTurn,
+    completionTurn: currentTurn + totalTime,
+    queuePosition,
+  });
+
+  return {
+    success: true,
+    details: `Queued ${quantity}x ${resourceType} (${totalTime} turns)`,
+  };
+}
+
+/**
+ * Execute an accept_contract decision.
+ * Accepts a Syndicate contract.
+ */
+async function executeAcceptContract(
+  decision: Extract<BotDecision, { type: "accept_contract" }>,
+  context: BotDecisionContext
+): Promise<ExecutionResult> {
+  const { empire, gameId, currentTurn } = context;
+  const { contractType, targetId } = decision;
+
+  // Get contract configuration
+  const contractConfig = CONTRACT_CONFIGS[contractType];
+  if (!contractConfig) {
+    return { success: false, error: `Unknown contract type: ${contractType}` };
+  }
+
+  // Calculate deadline using turnsToComplete from config
+  const deadline = currentTurn + contractConfig.turnsToComplete;
+
+  // Determine reward (handle "varies" and "special" cases)
+  const creditReward = typeof contractConfig.creditReward === "number"
+    ? contractConfig.creditReward
+    : 10000; // Default for non-numeric rewards
+
+  // Create the contract
+  await db.insert(syndicateContracts).values({
+    empireId: empire.id,
+    gameId,
+    contractType,
+    targetEmpireId: targetId || null,
+    minTrustLevel: contractConfig.minTrustLevel,
+    creditReward,
+    trustReward: contractConfig.trustReward,
+    deadlineTurn: deadline,
+    status: "accepted",
+    createdAtTurn: currentTurn,
+    acceptedAtTurn: currentTurn,
+  });
+
+  return {
+    success: true,
+    details: `Accepted contract: ${contractType}${targetId ? ` targeting ${targetId}` : ""}`,
+  };
+}
+
+/**
+ * Execute a purchase_black_market decision.
+ * Purchases an item from the Black Market.
+ */
+async function executePurchaseBlackMarket(
+  decision: Extract<BotDecision, { type: "purchase_black_market" }>,
+  context: BotDecisionContext
+): Promise<ExecutionResult> {
+  const { empire } = context;
+  const { itemId, quantity } = decision;
+
+  // Validate quantity
+  if (quantity <= 0) {
+    return { success: false, error: "Invalid quantity" };
+  }
+
+  // Black Market prices are 2x normal crafting value
+  // For now, use a simplified cost calculation
+  const resourceType = itemId as CraftedResource;
+  const tier = RESOURCE_TIERS[resourceType];
+  const baseCost = tier === 1 ? 1000 : tier === 2 ? 5000 : 20000;
+  const totalCost = baseCost * quantity * 2; // 2x markup
+
+  // Check if bot can afford it
+  if (empire.credits < totalCost) {
+    return {
+      success: false,
+      error: `Insufficient credits (need ${totalCost}, have ${empire.credits})`,
+    };
+  }
+
+  // Deduct credits
+  await db
+    .update(empires)
+    .set({
+      credits: sql`${empires.credits} - ${totalCost}`,
+      updatedAt: new Date(),
+    })
+    .where(eq(empires.id, empire.id));
+
+  // Note: In a full implementation, we would add the purchased resources
+  // to the empire's inventory. This requires the resource_inventory table update.
+  // For now, we just deduct the credits.
+
+  return {
+    success: true,
+    details: `Purchased ${quantity}x ${itemId} from Black Market (${totalCost} credits)`,
+  };
 }

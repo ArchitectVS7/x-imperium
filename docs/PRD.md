@@ -1,9 +1,9 @@
 # X-Imperium: Product Requirements Document
 
-**Version:** 1.2
+**Version:** 1.3
 **Date:** December 2024
-**Status:** Draft (Post-Review Revision)
-**Last Updated:** December 23, 2024
+**Status:** Draft (Crafting System Integration)
+**Last Updated:** December 28, 2024
 
 ---
 
@@ -26,6 +26,8 @@
 15. [Development Phases](#15-development-phases)
 16. [Success Metrics](#16-success-metrics)
 17. [Out of Scope](#17-out-of-scope)
+18. [Manufacturing & Crafting System](#18-manufacturing--crafting-system)
+19. [The Galactic Syndicate](#19-the-galactic-syndicate)
 
 ---
 
@@ -315,15 +317,40 @@ Players begin with **9 planets**:
 
 ### 6.1 Unit Types (Rebalanced)
 
+**Basic Units (Credits Only):**
+
 | Unit | Role | Cost | Pop | Attack | Defense |
 |------|------|------|-----|--------|---------|
 | **Soldiers** | Ground combat | 50 | 0.2 | 1 | 1 |
 | **Fighters** | Orbital combat | 200 | 0.4 | 3 | 2 |
-| **Stations** | Orbital defense | 5,000 | 0.5 | 50 | 50 (2× on defense) |
-| **Light Cruisers** | Space combat | 500 | 1.0 | 5 | 4 |
-| **Heavy Cruisers** | Heavy space | 1,000 | 2.0 | 8 | 6 |
 | **Carriers** | Troop transport | 2,500 | 3.0 | 12 | 10 |
-| **Covert Agents** | Espionage | 4,090 | 1.0 | — | — |
+| **Generals** | Command soldiers | 1,000 | 1.0 | — | — |
+| **Covert Agents** | Espionage | 500 | 1.0 | — | — |
+
+**Tier 2 Units (Require Crafting, Research 2+):**
+
+| Unit | Credits | Components | Research | Attack | Defense |
+|------|---------|------------|----------|--------|---------|
+| **Marines** | 150 | 1 Armor Plating | 2 | 2 | 2 |
+| **Interceptors** | 400 | 1 Propulsion, 1 Electronics | 2 | 2 | 2 |
+| **Light Cruisers** | 5,000 | 2 Armor Plating, 2 Propulsion | 2 | 10 | 20 |
+| **Defense Stations** | 3,000 | 1 Armor Plating, 1 Electronics | 3 | 50 | 50 (2× on defense) |
+
+**Tier 3 Units (Advanced Crafting, Research 4+):**
+
+| Unit | Credits | Components | Research | Attack | Defense |
+|------|---------|------------|----------|--------|---------|
+| **Heavy Cruisers** | 15,000 | 3 Armor Plating, 2 Propulsion, 1 Reactor Core | 4 | 25 | 50 |
+| **Battlecruisers** | 35,000 | 3 WG Alloy, 2 Reactor Cores, 2 Shield Generators | 5 | 40 | 80 |
+
+**Tier 4 Units (Capital Assets, Research 6+):**
+
+| Unit | Credits | Components | Research | Attack | Defense |
+|------|---------|------------|----------|--------|---------|
+| **Dreadnought** | 80,000 | 3 Reactor Cores, 2 Shield Generators, 1 Ion Cannon Core | 6 | 80 | 150 |
+| **Stealth Cruiser** | 50,000 | 2 Cloaking Devices, 1 Reactor Core, 1 Neural Interface | 6 | 30 | 40 |
+
+*See Section 18 for full crafting system details.*
 
 ### 6.2 Combat Mechanics
 
@@ -649,14 +676,47 @@ Bots form and break alliances based on:
 
 ## 9. Research System
 
-### 9.1 Fundamental Research
+### 9.1 Research Levels
 
-8 levels of basic research:
-- Each level unlocks unit upgrades
-- Completing all 8 = Tech Ascension victory (if enabled)
-- Costs increase exponentially
+Research planets generate Research Points (RP) each turn. Points accumulate toward level unlocks.
 
-### 9.2 Unit Upgrades
+| Level | RP Required | Cumulative | Key Unlocks |
+|-------|-------------|------------|-------------|
+| 1 | 0 | 0 | Basic military (Soldiers, Fighters) |
+| 2 | 500 | 500 | Tier 2 components, Light Cruisers |
+| 3 | 1,500 | 2,000 | Advanced Tier 2, Defense Stations |
+| 4 | 3,000 | 5,000 | Heavy Cruisers, Stealth tech |
+| 5 | 5,000 | 10,000 | Tier 3 systems, Capital ships |
+| 6 | 8,000 | 18,000 | WMD research, Warp drives |
+| 7 | 12,000 | 30,000 | Neural interfaces, Bioweapons |
+| 8 | 20,000 | 50,000 | Singularity tech, Superweapons |
+
+**RP Generation:**
+- Each Research Planet produces 50-150 RP/turn (based on funding)
+- Bonus: +10% RP per Education Planet (trained researchers)
+- Penalty: -5% RP per active war (distraction)
+
+### 9.2 Research Branches
+
+Players can focus RP into branches for bonuses:
+
+| Branch | Focus | Bonus at 20% Investment |
+|--------|-------|-------------------------|
+| **Military** | Weapons, targeting | +10% attack damage |
+| **Defense** | Shields, armor | +10% defensive HP |
+| **Propulsion** | Speed, evasion | +15% fleet evasion |
+| **Stealth** | Cloaking, ECM | Covert ops +20% success |
+| **Economy** | Production efficiency | -10% crafting costs |
+| **Biotech** | Population, food | +10% population growth |
+
+### 9.3 Research Victory
+
+**Completing Research Level 8** (Singularity tech) triggers Research Victory:
+- Requires 50,000 cumulative RP
+- With 3 Research Planets: ~167 turns
+- With 6 Research Planets + Education bonus: ~80 turns
+
+### 9.4 Unit Upgrades (Legacy)
 
 Each unit has 3 levels (0, 1, 2):
 
@@ -674,11 +734,11 @@ Each unit has 3 levels (0, 1, 2):
 | 1 | 2x | 2x | 0.5x |
 | 2 | 4x | 4x | 0.25x |
 
-### 9.3 Light Cruisers
+### 9.5 Light Cruisers
 
-- Not purchasable directly
-- Unlocked through research
-- Powerful space combat units
+- Unlocked at Research Level 2
+- Requires crafted components (see Section 18)
+- Powerful space combat units with 5 bonus first-strike rounds
 
 ---
 
@@ -691,7 +751,7 @@ Each unit has 3 levels (0, 1, 2):
 | **Conquest** | Control 60% of territory | Aggressive expansion |
 | **Economic** | 1.5× networth of 2nd place | Builder/trader |
 | **Diplomatic** | Coalition controls 50% territory | Alliance politics |
-| **Research** | Complete all 8 research levels | Turtle/tech rush |
+| **Research** | Complete Research Level 8 (50,000 RP) | Turtle/tech rush |
 | **Military** | 2× military of all others combined | Domination |
 | **Survival** | Highest score at turn 200 | Balanced play |
 
@@ -1072,6 +1132,200 @@ The following are explicitly **not** included in version 1:
 
 ---
 
+## 18. Manufacturing & Crafting System
+
+X-Imperium introduces a 4-tier resource system that gates advanced military behind strategic resource management. This transforms the original "credits buy everything" model into a more strategic progression.
+
+*Full details: See `docs/crafting-system.md`*
+
+### 18.1 Tier 0: Base Resources (Original SRE)
+
+| Resource | Source | Description |
+|----------|--------|-------------|
+| **Credits** | Taxes, Trade, Tourism, Urban | Universal currency |
+| **Food** | Food Planets, Market | Feeds population & military |
+| **Ore** | Ore Planets | Raw minerals, stable income |
+| **Petroleum** | Petroleum Planets | Fuel, causes pollution |
+| **Population** | Urban, Education | Labor force, tax base |
+| **Research Points** | Research Planets | Tech progression |
+
+### 18.2 Tier 1: Refined Resources
+
+Basic processing of Tier 0 resources. Produced automatically by specialized planets or purchased at premium.
+
+| Resource | Recipe | Auto-Production |
+|----------|--------|-----------------|
+| **Refined Metals** | 100 Ore | Ore Planets: 10% of output |
+| **Fuel Cells** | 50 Petroleum + 20 Credits | Petroleum Planets: 10% |
+| **Polymers** | 30 Petroleum + 20 Ore | Industrial Planets only |
+| **Processed Food** | 200 Food | Food Planets: 5% |
+| **Labor Units** | 1,000 Population + 50 Credits | Urban Planets: 5% |
+
+### 18.3 Tier 2: Manufactured Components (Research 2+)
+
+Combining Tier 1 resources with Research requirements. These are building blocks for advanced military.
+
+| Component | Recipe | Research Req |
+|-----------|--------|--------------|
+| **Electronics** | 2 Refined Metals + 1 Polymers | Level 2 |
+| **Armor Plating** | 3 Refined Metals + 1 Polymers | Level 2 |
+| **Propulsion Units** | 2 Fuel Cells + 1 Refined Metals | Level 2 |
+| **Life Support** | 1 Processed Food + 1 Polymers + 1 Electronics | Level 3 |
+| **Weapons Grade Alloy** | 4 Refined Metals + 2 Fuel Cells | Level 3 |
+| **Targeting Arrays** | 2 Electronics + 1 Refined Metals | Level 3 |
+| **Stealth Composites** | 3 Polymers + 1 Electronics | Level 4 |
+| **Quantum Processors** | 3 Electronics + 1 Weapons Grade Alloy | Level 5 |
+
+### 18.4 Tier 3: Advanced Systems (Research 5+)
+
+Strategic resources for capital ships and superweapons.
+
+| System | Recipe | Research Req |
+|--------|--------|--------------|
+| **Reactor Cores** | 3 Propulsion Units + 2 Electronics + 1 Quantum Processor | Level 5 |
+| **Shield Generators** | 2 Armor Plating + 2 Electronics + 1 Quantum Processor | Level 5 |
+| **Warp Drives** | 2 Reactor Cores + 1 Stealth Composites + 1 Targeting Array | Level 6 |
+| **Cloaking Devices** | 3 Stealth Composites + 2 Quantum Processors | Level 6 |
+| **Ion Cannon Cores** | 2 Weapons Grade Alloy + 2 Reactor Cores + 1 Targeting Array | Level 6 |
+| **Neural Interfaces** | 2 Quantum Processors + 1 Life Support | Level 7 |
+| **Singularity Containment** | 3 Reactor Cores + 2 Shield Generators | Level 8 |
+
+### 18.5 Industrial Planets (New Planet Type)
+
+| Property | Value |
+|----------|-------|
+| **Cost** | 15,000 credits |
+| **Production** | Processes Tier 0 → Tier 1 (configurable) |
+| **Bonus** | Research level reduces crafting time by 5% per level |
+
+### 18.6 Crafting Queue
+
+- Players queue crafting orders at Industrial Planets
+- Each order reserves required components
+- Completion time based on complexity and research level
+- Maximum 5 concurrent crafting orders per empire
+- Orders process at turn end
+
+---
+
+## 19. The Galactic Syndicate
+
+The **Galactic Syndicate** is a criminal organization operating outside Coordinator jurisdiction, providing an alternative progression path for struggling empires.
+
+### 19.1 Overview
+
+The Syndicate offers:
+- Banned technologies (WMDs)
+- Premium components (skip crafting requirements)
+- Contract work (trust building)
+- Intelligence services
+
+### 19.2 Trust Levels (0-8)
+
+Trust is earned through contracts and purchases. Higher trust unlocks better goods.
+
+| Level | Points | Title | Unlocks |
+|-------|--------|-------|---------|
+| 0 | 0 | Unknown | Must complete intro contract |
+| 1 | 100 | Associate | Components at 2x, basic intel |
+| 2 | 500 | Runner | Pirate raid contracts, 1.75x prices |
+| 3 | 1,500 | Soldier | Player contracts, Tier 2 at 1.5x |
+| 4 | 3,500 | Captain | Targeted contracts, kingslayer |
+| 5 | 7,000 | Lieutenant | Tier 3 systems (non-WMD), 1.5x |
+| 6 | 12,000 | Underboss | Chemical weapons, EMP, 1.25x |
+| 7 | 20,000 | Consigliere | Nuclear weapons |
+| 8 | 35,000 | Syndicate Lord | Bioweapons, exclusive contracts, 1.0x |
+
+### 19.3 Contract System
+
+Contracts are the primary way to build trust. They come in tiers:
+
+**Tier 1: Pirate Raids (Trust 1+)**
+| Contract | Target | Reward | Trust |
+|----------|--------|--------|-------|
+| Supply Run | Any pirate team | 5,000 Credits | +10 |
+| Disruption | Specific pirate base | 8,000 Credits | +15 |
+| Salvage Op | Destroy pirate ships, keep 50% | Varies | +20 |
+
+**Tier 2: Standard Contracts (Trust 2+)**
+| Contract | Target | Reward | Trust |
+|----------|--------|--------|-------|
+| Intimidation | Any player (insurgent aid) | 15,000 Credits | +30 |
+| Economic Warfare | Any player (bomb food) | 25,000 Credits | +40 |
+| Military Probe | Any player (guerilla attack) | 35,000 Credits | +50 |
+| Hostile Takeover | Capture 1 planet from anyone | 50,000 Credits | +75 |
+
+**Tier 3: Targeted Contracts (Trust 4+)**
+| Contract | Target | Reward | Trust |
+|----------|--------|--------|-------|
+| Kingslayer | Top 3 player | 100,000 Credits | +100 |
+| Market Manipulation | Top 10 player | 75,000 Credits | +80 |
+| Regime Change | Top 25% player | 60,000 Credits | +60 |
+
+**Tier 4: Syndicate Operations (Trust 6+)**
+| Contract | Target | Reward | Trust |
+|----------|--------|--------|-------|
+| Proxy War | Two specific players | 150,000 Credits | +120 |
+| Scorched Earth | Specific empire (WMD) | Exclusive tech | +100 |
+| The Equalizer | All Top 10% | Special item | +200 |
+
+### 19.4 Recruitment Mechanic
+
+**The Syndicate reaches out to struggling players.**
+
+When a player falls into the **bottom 50%** of empires:
+- They receive a **Syndicate Invitation** message
+- First contract offered at 50% bonus trust rewards
+- One-time offer of 10,000 credits "startup funds"
+- Access to "Equalizer" contracts targeting top players
+
+*This creates comeback mechanics — struggling players can acquire WMDs faster while top players must consider threats from below.*
+
+### 19.5 Black Market Catalog
+
+**Components (Trust 1+):**
+| Item | Price | Trust Req |
+|------|-------|-----------|
+| Electronics | 2,000 | 1 |
+| Armor Plating | 2,500 | 1 |
+| Propulsion Units | 2,200 | 1 |
+| Targeting Arrays | 4,000 | 3 |
+| Stealth Composites | 5,000 | 3 |
+| Quantum Processors | 8,000 | 4 |
+
+**Advanced Systems (Trust 5+):**
+| Item | Price | Trust Req |
+|------|-------|-----------|
+| Reactor Cores | 15,000 | 5 |
+| Shield Generators | 18,000 | 5 |
+| Cloaking Devices | 25,000 | 5 |
+| Warp Drives | 30,000 | 6 |
+
+**Restricted Items (Trust 6+):**
+| Item | Price | Trust Req | Notes |
+|------|-------|-----------|-------|
+| Chemical Weapons (1 use) | 50,000 | 6 | Coordinator penalty if caught |
+| EMP Device (1 use) | 75,000 | 6 | Disables defenses temporarily |
+| Nuclear Warhead (1 use) | 100,000 | 7 | Severe Coordinator response |
+| Bioweapon Canister (1 use) | 150,000 | 8 | Most devastating |
+
+### 19.6 Trust Decay & Betrayal
+
+| Action | Consequence |
+|--------|-------------|
+| No interaction for 10 turns | -5% trust decay |
+| Failing contract deadline | -50% reward trust, lose 1 Trust Level |
+| Reporting to Coordinator | Reset to Trust 0, +10% funding, Syndicate becomes hostile |
+
+### 19.7 Coordinator Response (Betrayal Consequence)
+
+If a player reports to the Coordinator:
+- Trust permanently reset to 0
+- +10% Coordinator funding bonus
+- Syndicate becomes **hostile**: random assassination attempts on generals/agents each turn
+
+---
+
 ## Appendix A: Related Documents
 
 | Document | Location | Purpose |
@@ -1082,6 +1336,7 @@ The following are explicitly **not** included in version 1:
 | Game Developer Review | `docs/reviews/03-game-developer-review.md` | Mechanics & balance |
 | Narrative Designer Review | `docs/reviews/04-narrative-designer-review.md` | Bot personalities |
 | Project Manager Synthesis | `docs/reviews/05-project-manager-synthesis.md` | Sprint plan |
+| **Crafting System Design** | `docs/crafting-system.md` | Full crafting, syndicate, and WMD specifications |
 
 ---
 
@@ -1089,15 +1344,21 @@ The following are explicitly **not** included in version 1:
 
 | Term | Definition |
 |------|------------|
+| **4X** | eXplore, eXpand, eXploit, eXterminate strategy genre |
 | **BBS** | Bulletin Board System - pre-internet online communities |
+| **Black Market** | Syndicate-operated shop for restricted items and components |
+| **Crafting** | System for manufacturing advanced components from base resources |
 | **Door Game** | BBS-hosted multiplayer games |
+| **Ironman Mode** | Auto-save only, no manual saves or reloading |
 | **LCARS** | Library Computer Access/Retrieval System (Star Trek UI) |
 | **Networth** | Empire ranking metric |
+| **Resource Tier** | Classification of resources (0=Base, 1=Refined, 2=Components, 3=Advanced) |
 | **SRE** | Solar Realms Elite (original 1990 game) |
-| **4X** | eXplore, eXpand, eXploit, eXterminate strategy genre |
-| **Ironman Mode** | Auto-save only, no manual saves or reloading |
+| **Syndicate** | The Galactic Syndicate - criminal organization offering contracts and WMDs |
 | **Tell** | Behavioral indicator that hints at bot's true archetype |
+| **Trust Level** | Player's standing with the Galactic Syndicate (0-8) |
 | **Unified Actor Model** | Architecture where bots and players use same turn pipeline |
+| **WMD** | Weapons of Mass Destruction - banned technologies available via Syndicate |
 
 ---
 
@@ -1208,6 +1469,6 @@ Explicit anti-patterns to avoid scope creep:
 
 ---
 
-*Document Version: 1.2*
-*Last Updated: December 23, 2024*
-*Status: Post-Review Revision (Design Docs Integrated)*
+*Document Version: 1.3*
+*Last Updated: December 28, 2024*
+*Status: Crafting System Integration*

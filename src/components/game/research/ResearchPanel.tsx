@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { getResearchInfoAction } from "@/app/actions/research-actions";
 import type { ResearchStatus } from "@/lib/game/services/research-service";
+import { ResearchTree } from "./ResearchTree";
 
 interface ResearchPanelProps {
   refreshTrigger?: number;
@@ -18,6 +19,7 @@ export function ResearchPanel({ refreshTrigger }: ResearchPanelProps) {
   } | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [showTechTree, setShowTechTree] = useState(false);
 
   useEffect(() => {
     const loadInfo = async () => {
@@ -147,14 +149,31 @@ export function ResearchPanel({ refreshTrigger }: ResearchPanelProps) {
         </div>
       )}
 
-      {/* Research levels guide */}
-      <div className="mt-4 text-xs text-gray-500">
-        <div className="flex justify-between">
-          <span>Level 2:</span>
-          <span className={status.level >= 2 ? "text-green-400" : "text-gray-500"}>
-            {status.level >= 2 ? "Unlocked" : "Light Cruisers"}
-          </span>
-        </div>
+      {/* Tech Tree Toggle */}
+      <div className="mt-4">
+        <button
+          onClick={() => setShowTechTree(!showTechTree)}
+          className="w-full p-3 bg-lcars-purple/10 border border-lcars-purple/30 rounded hover:bg-lcars-purple/20 transition-colors text-left flex items-center justify-between"
+        >
+          <span className="text-lcars-purple font-semibold">Tech Tree</span>
+          <svg
+            className={`w-4 h-4 text-lcars-purple transition-transform ${showTechTree ? "rotate-180" : ""}`}
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+
+        {showTechTree && (
+          <div className="mt-3 p-3 bg-black/30 rounded border border-gray-700/50">
+            <ResearchTree
+              currentLevel={status.level}
+              currentPoints={status.currentPoints}
+            />
+          </div>
+        )}
       </div>
     </div>
   );

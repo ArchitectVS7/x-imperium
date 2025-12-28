@@ -13,37 +13,27 @@
       "Bash(npm run typecheck)",
       "Bash(git status)",
       "Bash(git diff)",
-      "Bash(git add *)",
-      "Bash(git commit *)",
-      "Bash(npx tsx *)"
+      "Bash(git add :*)",
+      "Bash(git commit :*)",
+      "Bash(npx tsx :*)"
     ]
   },
-  "hooks": [
-    {
-      "name": "ValidateTypeScript",
-      "matcher": {
-        "event": "PostToolUse",
-        "tools": ["Edit", "Write"]
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit",
+        "hooks": [
+          { "type": "command", "command": "npm run typecheck 2>&1 | head -20" },
+          { "type": "command", "command": "npm run lint -- --max-warnings 0 2>&1 | head -10" }
+        ]
       },
-      "hooks": [
-        {
-          "type": "command",
-          "command": "npm run typecheck 2>&1 | head -20"
-        }
-      ]
-    },
-    {
-      "name": "LintOnSave",
-      "matcher": {
-        "event": "PostToolUse",
-        "tools": ["Edit", "Write"]
-      },
-      "hooks": [
-        {
-          "type": "command",
-          "command": "npm run lint -- --max-warnings 10"
-        }
-      ]
-    }
-  ]
+      {
+        "matcher": "Write",
+        "hooks": [
+          { "type": "command", "command": "npm run typecheck 2>&1 | head -20" },
+          { "type": "command", "command": "npm run lint -- --max-warnings 0 2>&1 | head -10" }
+        ]
+      }
+    ]
+  }
 }

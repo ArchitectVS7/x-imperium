@@ -46,13 +46,13 @@ export function VictoryScreen({
   onPlayAgain,
 }: VictoryScreenProps) {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-gray-900 via-green-900/20 to-gray-900">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-gray-900 via-green-900/20 to-gray-900" data-testid="victory-screen">
       <div className="max-w-2xl mx-auto text-center p-8">
         {/* Victory Icon */}
         <div className="text-8xl mb-6">{VICTORY_ICONS[victoryType]}</div>
 
         {/* Victory Title */}
-        <h1 className="text-5xl font-display text-green-400 mb-4 animate-pulse">
+        <h1 className="text-5xl font-display text-green-400 mb-4 animate-pulse" data-testid="victory-title">
           {VICTORY_TITLES[victoryType]}
         </h1>
 
@@ -106,6 +106,7 @@ export function VictoryScreen({
           <button
             onClick={onPlayAgain}
             className="px-8 py-3 bg-lcars-orange hover:bg-lcars-orange/80 text-black font-medium rounded transition-colors text-lg"
+            data-testid="play-again-button"
           >
             Play Again
           </button>

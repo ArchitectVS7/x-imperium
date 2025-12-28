@@ -43,7 +43,7 @@ export function TargetSelector({
   }
 
   return (
-    <div className="lcars-panel">
+    <div className="lcars-panel" data-testid="target-selector-panel">
       <h2 className="text-xl font-display text-lcars-amber mb-4">
         Select Target
       </h2>
@@ -55,6 +55,7 @@ export function TargetSelector({
           onSelectTarget(target || null);
         }}
         className="w-full p-3 bg-gray-900 border border-lcars-orange/50 rounded text-gray-200 focus:border-lcars-orange focus:outline-none"
+        data-testid="covert-target-select"
       >
         <option value="">-- Select an empire --</option>
         {targets.map((target) => (

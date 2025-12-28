@@ -58,7 +58,7 @@ export function CovertStatusPanel() {
       : 0;
 
   return (
-    <div className="lcars-panel">
+    <div className="lcars-panel" data-testid="covert-status-panel">
       <h2 className="text-xl font-display text-lcars-amber mb-4">
         Covert Status
       </h2>

@@ -61,6 +61,7 @@ export function OperationCard({
       className={`lcars-panel p-4 ${
         !canExecute ? "opacity-60" : ""
       } transition-opacity`}
+      data-testid={`operation-card-${operation.id}`}
     >
       <div className="flex justify-between items-start mb-2">
         <h3 className="font-display text-lcars-amber">{operation.name}</h3>
@@ -122,6 +123,7 @@ export function OperationCard({
             ? "bg-lcars-orange hover:bg-lcars-orange/80 text-black font-medium"
             : "bg-gray-700 text-gray-500 cursor-not-allowed"
         }`}
+        data-testid={`execute-${operation.id}`}
       >
         {executing ? "Executing..." : canExecute ? "Execute" : "Cannot Execute"}
       </button>

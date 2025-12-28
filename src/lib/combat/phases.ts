@@ -99,6 +99,47 @@ export const PLANET_CAPTURE_MAX_PERCENT = 0.15;
 /** Minimum carriers required per soldier for invasions */
 export const SOLDIERS_PER_CARRIER = 100;
 
+/**
+ * D20-style combat variance.
+ * Even underdogs have a chance (like a natural 20) and favorites can fail (natural 1).
+ *
+ * @param powerRatio - Ratio of attacker/defender power
+ * @param randomValue - Optional fixed random value for testing (0-1)
+ * @returns Winner: "attacker" | "defender" | "draw"
+ */
+export function determinePhaseWinnerWithVariance(
+  powerRatio: number,
+  randomValue?: number
+): "attacker" | "defender" | "draw" {
+  const roll = randomValue ?? Math.random();
+
+  // Calculate attacker's base win probability
+  // powerRatio 1.0 = 50%, 2.0 = 75%, 0.5 = 25%
+  let attackerWinChance = powerRatio / (powerRatio + 1);
+
+  // Apply floors and ceilings (nat 1 and nat 20 effect)
+  // Minimum 5% chance for underdog, maximum 95% for favorite
+  const MIN_CHANCE = 0.05;
+  const MAX_CHANCE = 0.95;
+  attackerWinChance = Math.max(MIN_CHANCE, Math.min(MAX_CHANCE, attackerWinChance));
+
+  // Narrow band for draws (very evenly matched: 45-55% win chance)
+  const drawBand = 0.05;
+  if (attackerWinChance >= 0.5 - drawBand && attackerWinChance <= 0.5 + drawBand) {
+    // In draw band, small chance of actual draw
+    if (roll > 0.45 && roll < 0.55) {
+      return "draw";
+    }
+  }
+
+  // Roll for outcome
+  if (roll < attackerWinChance) {
+    return "attacker";
+  } else {
+    return "defender";
+  }
+}
+
 // =============================================================================
 // PHASE POWER CALCULATIONS
 // =============================================================================
@@ -121,9 +162,9 @@ export function calculateSpacePhasePower(forces: Forces, isDefender: boolean): n
 
   let total = lightCruiserPower + heavyCruiserPower + fighterPower;
 
-  // Defender advantage
+  // Defender advantage (reduced from 1.2× to keep combat viable)
   if (isDefender) {
-    total *= 1.2;
+    total *= 1.1;
   }
 
   return total;
@@ -139,8 +180,8 @@ export function calculateOrbitalPhasePower(forces: Forces, isDefender: boolean):
   // Fighters: High effectiveness in orbital
   const fighterPower = forces.fighters * 3 * getUnitEffectiveness("fighters", phase, isDefender);
 
-  // Stations: Medium effectiveness, but 2× on defense
-  const stationPower = forces.stations * 50 * getUnitEffectiveness("stations", phase, isDefender);
+  // Stations: Medium effectiveness, but 2× on defense (reduced from 50 to 30 for balance)
+  const stationPower = forces.stations * 30 * getUnitEffectiveness("stations", phase, isDefender);
 
   // Light cruisers provide high support
   const lightCruiserPower = forces.lightCruisers * 5 * getUnitEffectiveness("lightCruisers", phase, isDefender);
@@ -150,9 +191,9 @@ export function calculateOrbitalPhasePower(forces: Forces, isDefender: boolean):
 
   let total = fighterPower + stationPower + lightCruiserPower + heavyCruiserPower;
 
-  // Defender advantage
+  // Defender advantage (reduced from 1.2× to keep combat viable)
   if (isDefender) {
-    total *= 1.2;
+    total *= 1.1;
   }
 
   return total;
@@ -171,14 +212,14 @@ export function calculateGroundPhasePower(forces: Forces, isDefender: boolean): 
   // Fighters provide low support
   const fighterPower = forces.fighters * 3 * getUnitEffectiveness("fighters", phase, isDefender);
 
-  // Stations provide medium defensive support
-  const stationPower = forces.stations * 50 * getUnitEffectiveness("stations", phase, isDefender);
+  // Stations provide medium defensive support (reduced from 50 to 30 for balance)
+  const stationPower = forces.stations * 30 * getUnitEffectiveness("stations", phase, isDefender);
 
   let total = soldierPower + fighterPower + stationPower;
 
-  // Defender advantage (defending own territory)
+  // Defender advantage (defending own territory, reduced from 1.2×)
   if (isDefender) {
-    total *= 1.2;
+    total *= 1.1;
   }
 
   return total;
@@ -250,17 +291,9 @@ export function resolveSpaceCombat(
   const attackerPower = calculateSpacePhasePower(attackerForces, false);
   const defenderPower = calculateSpacePhasePower(defenderForces, true);
 
-  // Determine winner
+  // Determine winner with d20-style variance
   const powerRatio = defenderPower > 0 ? attackerPower / defenderPower : Infinity;
-  let winner: "attacker" | "defender" | "draw";
-
-  if (powerRatio > 1.0) {
-    winner = "attacker";
-  } else if (powerRatio < 1.0) {
-    winner = "defender";
-  } else {
-    winner = "draw";
-  }
+  const winner = determinePhaseWinnerWithVariance(powerRatio, randomValue);
 
   // Calculate casualties (loser takes more)
   const attackerCasualties = calculatePhaseCasualties(
@@ -312,16 +345,9 @@ export function resolveOrbitalCombat(
   const attackerPower = calculateOrbitalPhasePower(attackerForces, false);
   const defenderPower = calculateOrbitalPhasePower(defenderForces, true);
 
+  // Determine winner with d20-style variance
   const powerRatio = defenderPower > 0 ? attackerPower / defenderPower : Infinity;
-  let winner: "attacker" | "defender" | "draw";
-
-  if (powerRatio > 1.0) {
-    winner = "attacker";
-  } else if (powerRatio < 1.0) {
-    winner = "defender";
-  } else {
-    winner = "draw";
-  }
+  const winner = determinePhaseWinnerWithVariance(powerRatio, randomValue);
 
   const attackerCasualties = calculatePhaseCasualties(
     attackerForces,
@@ -372,16 +398,9 @@ export function resolveGroundCombat(
   const attackerPower = calculateGroundPhasePower(attackerForces, false);
   const defenderPower = calculateGroundPhasePower(defenderForces, true);
 
+  // Determine winner with d20-style variance
   const powerRatio = defenderPower > 0 ? attackerPower / defenderPower : Infinity;
-  let winner: "attacker" | "defender" | "draw";
-
-  if (powerRatio > 1.0) {
-    winner = "attacker";
-  } else if (powerRatio < 1.0) {
-    winner = "defender";
-  } else {
-    winner = "draw";
-  }
+  const winner = determinePhaseWinnerWithVariance(powerRatio, randomValue);
 
   const attackerCasualties = calculatePhaseCasualties(
     attackerForces,
