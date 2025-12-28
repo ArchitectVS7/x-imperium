@@ -6,6 +6,7 @@ import {
 } from "@/app/actions/game-actions";
 import { PLANET_TYPE_LABELS, PLANET_PRODUCTION } from "@/lib/game/constants";
 import type { Planet } from "@/lib/db/schema";
+import { BuyPlanetPanel } from "@/components/game/planets/BuyPlanetPanel";
 
 const PLANET_TYPE_COLORS: Record<string, string> = {
   food: "border-green-500",
@@ -147,6 +148,11 @@ async function PlanetsContent() {
             );
           })}
         </div>
+      </div>
+
+      {/* Buy Planet Section */}
+      <div className="mb-6">
+        <BuyPlanetPanel credits={data.resources.credits} />
       </div>
 
       {/* Detailed Planet Cards */}

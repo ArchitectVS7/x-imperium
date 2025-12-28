@@ -2,6 +2,7 @@ import Link from "next/link";
 
 const navItems = [
   { href: "/game", label: "Dashboard" },
+  { href: "/game/starmap", label: "Starmap" },
   { href: "/game/planets", label: "Planets" },
   { href: "/game/military", label: "Military" },
   { href: "/game/research", label: "Research" },
