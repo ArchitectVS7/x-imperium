@@ -400,6 +400,69 @@ export const RESEARCH_LEVELS = {
   8: { rpRequired: 20_000, cumulative: 50_000 },
 } as const;
 
+/**
+ * Research unlocks by level
+ * Defines what technologies, units, and crafting recipes are unlocked at each research level.
+ */
+export const RESEARCH_UNLOCKS_BY_LEVEL: Record<number, string[]> = {
+  1: [
+    "Basic Military (Soldiers, Fighters)",
+    "Basic Crafting (Tier 1 Resources)",
+    "Trade Access",
+  ],
+  2: [
+    "Tier 2 Components",
+    "Light Cruisers",
+    "Marines",
+    "Interceptors",
+    "Defense Stations",
+    "Electronics Crafting",
+    "Armor Plating Crafting",
+    "Propulsion Units Crafting",
+  ],
+  3: [
+    "Bombers",
+    "Life Support Crafting",
+    "Weapons Grade Alloy Crafting",
+    "Targeting Arrays Crafting",
+    "Advanced Covert Operations",
+  ],
+  4: [
+    "Heavy Cruisers",
+    "Stealth Composites Crafting",
+    "Advanced Defense Systems",
+    "Military Doctrine: Attack Bonus +5%",
+  ],
+  5: [
+    "Tier 3 Components",
+    "Battlecruisers",
+    "Quantum Processors Crafting",
+    "Reactor Cores Crafting",
+    "Shield Generators Crafting",
+    "Research Victory Path Begins",
+  ],
+  6: [
+    "Dreadnoughts",
+    "Stealth Cruisers",
+    "Warp Drives Crafting",
+    "Cloaking Devices Crafting",
+    "Ion Cannon Cores Crafting",
+    "WMD Research (with Syndicate)",
+  ],
+  7: [
+    "Neural Interfaces Crafting",
+    "Psionic Tech",
+    "Advanced AI Systems",
+    "Military Doctrine: Defense Bonus +10%",
+  ],
+  8: [
+    "Singularity Containment Crafting",
+    "Superweapons",
+    "Research Victory Achievement",
+    "Ultimate Technology Mastery",
+  ],
+};
+
 export const MAX_RESEARCH_LEVEL = 8;
 
 // =============================================================================

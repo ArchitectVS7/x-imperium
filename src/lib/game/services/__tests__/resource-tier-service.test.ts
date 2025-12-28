@@ -32,9 +32,10 @@ function createMockPlanet(type: string, id = "planet-1"): Planet {
     gameId: "game-1",
     name: `Test ${type} Planet`,
     type: type as Planet["type"],
-    infrastructureLevel: 0,
+    productionRate: "100.00",
+    purchasePrice: 1000,
+    acquiredAtTurn: 1,
     createdAt: new Date(),
-    updatedAt: new Date(),
   };
 }
 
