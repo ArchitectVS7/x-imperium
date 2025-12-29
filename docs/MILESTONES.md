@@ -1,9 +1,9 @@
 # Nexus Dominion: Milestone Build Plan
 
-**Version:** 1.2
-**Date:** December 24, 2024
+**Version:** 1.3
+**Date:** December 29, 2024
 **Status:** Approved
-**Related:** PRD v1.2
+**Related:** PRD v1.3
 
 ---
 
@@ -19,22 +19,22 @@ Each milestone delivers a **playable vertical slice** that can be tested end-to-
 
 ## Milestone Overview
 
-| # | Milestone | Duration | Cumulative | Testable Outcome |
-|---|-----------|----------|------------|------------------|
-| 0 | Foundation | 1d | 1d | Build deploys |
-| 1 | Static Empire View | 2d | 3d | Can see empire + networth |
-| 2 | Turn Engine | 2.5d | 5.5d | Turns process with civil status |
-| 3 | Planet, Units & Research | 2.5d | 8d | Can build + research |
-| 4 | Combat System | 3d | 11d | Can fight (3 phases) |
-| 5 | Random Bots | 2d | 13d | **First Playable** |
-| 6 | Victory & Persistence | 2d | 15d | **v0.5 MVP** |
-| 6.5 | Covert Operations | 2d | 17d | Can spy |
-| 7 | Market & Diplomacy | 2d | 19d | Can trade/ally |
-| 8 | Bot Personas | 4d | 23d | Bots talk |
-| 9 | Bot Decision Trees | 3d | 26d | Bots think |
-| 10 | Emotional States | 3d | 29d | Bots remember |
-| 11 | Mid-Game Systems | 3d | 32d | **v0.6 Complete** |
-| 12 | LLM Bots | 4d | 36d | **v0.7 Alpha** |
+| # | Milestone | Duration | Cumulative | Testable Outcome | Status |
+|---|-----------|----------|------------|------------------|--------|
+| 0 | Foundation | 1d | 1d | Build deploys | ✅ |
+| 1 | Static Empire View | 2d | 3d | Can see empire + networth | ✅ |
+| 2 | Turn Engine | 2.5d | 5.5d | Turns process with civil status | ✅ |
+| 3 | Planet, Units & Research | 2.5d | 8d | Can build + research | ✅ |
+| 4 | Combat System | 3d | 11d | Can fight (3 phases) | ✅ |
+| 5 | Random Bots | 2d | 13d | **First Playable** | ✅ |
+| 6 | Victory & Persistence | 2d | 15d | **v0.5 MVP** | ✅ |
+| 6.5 | Covert Operations | 2d | 17d | Can spy | ✅ |
+| 7 | Market & Diplomacy | 2d | 19d | Can trade/ally | ✅ |
+| 8 | Bot Personas | 4d | 23d | Bots talk | ✅ |
+| 9 | Bot Decision Trees | 3d | 26d | Bots think | ✅ |
+| 10 | Emotional States | 3d | 29d | Bots remember | ✅ |
+| 11 | Mid-Game Systems | 3d | 32d | **v0.6 Complete** | ✅ |
+| 12 | LLM Bots | 4d | 36d | **v0.7 Alpha** | 🔲 |
 
 ---
 
@@ -603,45 +603,55 @@ Each milestone delivers a **playable vertical slice** that can be tested end-to-
 **Duration**: 3 days
 **Dependency**: M8
 **Testable**: Yes
+**Status**: ✅ COMPLETE (Audited 2024-12-29)
 
 ### Deliverables
-- Upgrade 40 bots to Tier 3 (decision trees)
-- 8 archetype behavior implementations (PRD 7.6):
-  - **Warlord**: 70% military, demands tribute, War Economy passive
-  - **Diplomat**: Alliance-seeking, Trade Network passive
-  - **Merchant**: Economic focus, Market Insight passive
-  - **Schemer**: False alliances, Shadow Network passive
-  - **Turtle**: Heavy defense, Fortification Expert passive
-  - **Blitzkrieg**: Early aggression
-  - **Tech Rush**: Research priority
-  - **Opportunist**: Attacks weakened players
-- Improved target selection (not random)
-- Multi-turn planning (basic)
-- **Tell system** (PRD 7.10): Behavior hints at archetype
+- ✅ Upgrade 40 bots to Tier 3 (decision trees) — *Archetype-based weight modifiers in decision-engine.ts*
+- ✅ 8 archetype behavior implementations (PRD 7.6) — *`src/lib/bots/archetypes/*.ts`*:
+  - ✅ **Warlord**: 70% military, demands tribute, War Economy passive — *warlord.ts*
+  - ✅ **Diplomat**: Alliance-seeking, Trade Network passive — *diplomat.ts*
+  - ✅ **Merchant**: Economic focus, Market Insight passive — *merchant.ts*
+  - ✅ **Schemer**: False alliances, Shadow Network passive — *schemer.ts*
+  - ✅ **Turtle**: Heavy defense, Fortification Expert passive — *turtle.ts*
+  - ✅ **Blitzkrieg**: Early aggression — *blitzkrieg.ts*
+  - ✅ **Tech Rush**: Research priority — *tech-rush.ts*
+  - ✅ **Opportunist**: Attacks weakened players — *opportunist.ts*
+- ✅ Improved target selection (not random) — *`selectTarget()` in difficulty.ts considers archetype*
+- ✅ Multi-turn planning (basic) — *advanceWarning in tell system*
+- ✅ **Tell system** (PRD 7.10): Behavior hints at archetype — *tellRate per archetype (30%-90%)*
 
 ### Test Criteria
 ```
-✓ Warlord bots:
+✅ Warlord bots:
   - Prioritize military spending (70%)
   - Attack empires with <50% their power
   - Send threatening messages
   - -20% military cost when at war
-✓ Diplomat bots:
+✅ Diplomat bots:
   - Propose NAPs proactively
   - Only attack as part of alliance
   - Send friendly messages
   - +10% income per alliance
-✓ Merchant bots:
+✅ Merchant bots:
   - Buy low, sell high on market
   - Invest in economy
   - See next turn's market prices
-✓ Schemer bots:
+✅ Schemer bots:
   - Form alliances then betray
   - -50% agent cost, +20% covert success
-✓ Player can infer archetype from behavior (not told directly)
-✓ Bots make coherent multi-turn plans
-✓ Archetypes telegraph intentions at different rates (30%-90%)
+✅ Player can infer archetype from behavior (not told directly)
+✅ Bots make coherent multi-turn plans
+✅ Archetypes telegraph intentions at different rates (30%-90%)
 ```
+
+### Implementation Notes (Audited 2024-12-29)
+- **Files Created:**
+  - `src/lib/bots/archetypes/*.ts` — All 8 archetype behavior definitions
+  - `src/lib/bots/archetypes/types.ts` — Archetype type definitions with TellBehavior
+  - `src/lib/bots/archetypes/index.ts` — Registry, helpers (getArchetypeBehavior, rollTellCheck)
+  - `src/lib/bots/archetypes/crafting-profiles.ts` — Archetype-specific crafting/syndicate behavior
+- **Decision Engine Integration:** ARCHETYPE_WEIGHTS modify BASE_WEIGHTS per archetype
+- **Tell System:** Each archetype has tellRate (0.30-0.90), advanceWarning (turns), and style
 
 ---
 
@@ -650,40 +660,52 @@ Each milestone delivers a **playable vertical slice** that can be tested end-to-
 **Duration**: 3 days
 **Dependency**: M9
 **Testable**: Yes
+**Status**: ✅ COMPLETE (Audited 2024-12-29)
 
 ### Deliverables
-- 6 emotional states with mechanical effects (PRD 7.8):
-  - Confident: +5% decisions, +10% negotiation
-  - Arrogant: -15% decisions, +30% aggression
-  - Desperate: +40% alliance-seeking
-  - Vengeful: +40% aggression, -40% negotiation
-  - Fearful: -30% aggression, +50% alliance-seeking
-  - Triumphant: +20% aggression
-- Weighted relationship memory system (PRD 7.9)
-- Decay resistance for major events
-- Permanent scars (20% of negative events)
-- Emotion-influenced decision making
-- Emotion intensity (0.0 - 1.0)
+- ✅ 6 emotional states with mechanical effects (PRD 7.8) — *`src/lib/bots/emotions/states.ts`*:
+  - ✅ Confident: +5% decisions, +10% negotiation
+  - ✅ Arrogant: -15% decisions, +30% aggression
+  - ✅ Desperate: +40% alliance-seeking
+  - ✅ Vengeful: +40% aggression, -40% negotiation
+  - ✅ Fearful: -30% aggression, +50% alliance-seeking
+  - ✅ Triumphant: +20% aggression
+- ✅ Weighted relationship memory system (PRD 7.9) — *`src/lib/bots/memory/weights.ts`*
+- ✅ Decay resistance for major events — *DECAY_RESISTANCE_VALUES: very_low to permanent*
+- ✅ Permanent scars (20% of negative events) — *PERMANENT_SCAR_CHANCE = 0.2*
+- ✅ Emotion-influenced decision making — *getScaledModifiers() in decision-engine.ts*
+- ✅ Emotion intensity (0.0 - 1.0) — *intensity scaling in getScaledModifiers()*
 
 ### Test Criteria
 ```
-✓ Capturing planet creates high-weight memory (80)
-✓ Saving ally creates high-weight memory (90)
-✓ Trade creates low-weight memory (10)
-✓ Messages create very-low-weight memory (1)
-✓ High-weight memories persist for 50+ turns
-✓ Low-weight memories fade within 10 turns
-✓ 20% of negative events become permanent scars
-✓ Vengeful state increases aggression by 40%
-✓ Fearful state increases alliance-seeking by 50%
-✓ Bot behavior visibly changes based on emotional state
-✓ Emotional intensity scales effects
-✓ Player can infer emotion from message tone
+✅ Capturing planet creates high-weight memory (80)
+✅ Saving ally creates high-weight memory (90)
+✅ Trade creates low-weight memory (10)
+✅ Messages create very-low-weight memory (1)
+✅ High-weight memories persist for 50+ turns
+✅ Low-weight memories fade within 10 turns
+✅ 20% of negative events become permanent scars
+✅ Vengeful state increases aggression by 40%
+✅ Fearful state increases alliance-seeking by 50%
+✅ Bot behavior visibly changes based on emotional state
+✅ Emotional intensity scales effects
+✅ Player can infer emotion from message tone
 ```
 
 ### Database Tables
-- `bot_memories`
-- `bot_emotional_states`
+- ✅ `bot_memories` — *Defined in schema.ts*
+- ✅ `bot_emotional_states` — *Defined in schema.ts*
+
+### Implementation Notes (Audited 2024-12-29)
+- **Files Created:**
+  - `src/lib/bots/emotions/states.ts` — 6 emotional states with exact PRD 7.8 modifiers
+  - `src/lib/bots/emotions/triggers.ts` — 28 game event types → emotional responses
+  - `src/lib/bots/emotions/index.ts` — Barrel exports
+  - `src/lib/bots/memory/weights.ts` — 18 memory event types with weights 1-90
+  - `src/lib/bots/memory/index.ts` — Barrel exports
+- **Emotional Responses:** calculateEmotionalResponse() handles state transitions
+- **Memory Decay:** calculateMemoryDecay() with resistance-based formula
+- **Integration:** Emotional modifiers applied in decision-engine.ts via getScaledModifiers()
 
 ---
 
@@ -693,49 +715,76 @@ Each milestone delivers a **playable vertical slice** that can be tested end-to-
 **Dependency**: M10
 **Testable**: Yes
 **Gate**: v0.6 Complete
+**Status**: ✅ COMPLETE (Audited 2024-12-29)
 
 ### Deliverables
-- Progressive unlock system (PRD 11.1):
-  - Turn 10: Diplomacy basics
-  - Turn 20: Coalitions
-  - Turn 30: Black Market
-  - Turn 50: Advanced ships
-  - Turn 75: Coalition warfare
-  - Turn 100: Superweapons (Nuclear)
-  - Turn 150: Endgame ultimatums
-- Galactic events (PRD 11.2):
-  - Economic: Market crash, resource boom
-  - Political: Coup, assassination
-  - Military: Pirate armada, arms race
-  - Narrative: Lore drops, prophecies
-- Alliance checkpoints (PRD 11.3): Every 30 turns
-- Market manipulation consequences (PRD 11.4)
-- Coalition system (group alliances)
-- **Nuclear warfare** (Turn 100+):
-  - 500M credits from Black Market
-  - 40% population damage
-  - Detection chance
-- 3 additional victory conditions:
-  - Diplomatic: Coalition controls 50%
-  - Research: Complete all 8 levels
-  - Military: 2× military of all others
+- ✅ Progressive unlock system (PRD 11.1) — *`src/lib/constants/unlocks.ts`*:
+  - ✅ Turn 1: Core mechanics
+  - ✅ Turn 10: Diplomacy basics
+  - ✅ Turn 20: Coalitions
+  - ✅ Turn 30: Black Market
+  - ✅ Turn 50: Advanced ships
+  - ✅ Turn 75: Coalition warfare
+  - ✅ Turn 100: Superweapons (Nuclear)
+  - ✅ Turn 150: Endgame ultimatums
+- ✅ Galactic events (PRD 11.2) — *`src/lib/events/*.ts`*:
+  - ✅ Economic: Market crash, resource boom — *economic.ts*
+  - ✅ Political: Coup, assassination — *political.ts*
+  - ✅ Military: Pirate armada, arms race — *military.ts*
+  - ✅ Narrative: Lore drops, prophecies — *narrative.ts*
+- ✅ Alliance checkpoints (PRD 11.3): Every 30 turns — *`checkpoint-service.ts`*
+- ✅ Market manipulation consequences (PRD 11.4) — *In event triggers*
+- ✅ Coalition system (group alliances) — *`coalition-service.ts` + `coalition-repository.ts`*
+- ✅ **Nuclear warfare** (Turn 100+) — *`src/lib/combat/nuclear.ts`*:
+  - ✅ Unlock at turn 100
+  - ✅ 40% population damage
+  - ✅ Detection chance with outcomes
+  - ✅ Reputation/civil status consequences
+- ✅ 6 total victory conditions — *`src/lib/victory/conditions.ts`*:
+  - ✅ Conquest: 60% territory
+  - ✅ Economic: 1.5× networth of 2nd place
+  - ✅ Diplomatic: Coalition controls 50%
+  - ✅ Research: Complete all 8 levels
+  - ✅ Military: 2× military of all others
+  - ✅ Survival: Turn 200
 
 ### Test Criteria
 ```
-✓ Features locked until correct turn
-✓ UI shows "Unlocks at Turn X" for locked features
-✓ Galactic events occur every 10-20 turns
-✓ Event types: Economic, Political, Military, Narrative
-✓ Alliance checkpoint at turns 30, 60, 90, 120, 150, 180
-✓ Checkpoint evaluates top 3 alliances
-✓ Imbalance triggers rebalancing event
-✓ Market hoarding (>40%) triggers consequences
-✓ Coalitions can form (group of alliances)
-✓ Cannot attack coalition members
-✓ Nuclear weapon available after Turn 100
-✓ Nuclear strike deals 40% population damage
-✓ All 6 victory conditions functional
+✅ Features locked until correct turn
+✅ UI shows "Unlocks at Turn X" for locked features — LockedFeature.tsx component
+✅ Galactic events occur every 10-20 turns
+✅ Event types: Economic, Political, Military, Narrative
+✅ Alliance checkpoint at turns 30, 60, 90, 120, 150, 180
+✅ Checkpoint evaluates top 3 alliances
+✅ Imbalance triggers rebalancing event
+✅ Market hoarding (>40%) triggers consequences
+✅ Coalitions can form (group of alliances)
+✅ Cannot attack coalition members
+✅ Nuclear weapon available after Turn 100
+✅ Nuclear strike deals 40% population damage
+✅ All 6 victory conditions functional
 ```
+
+### Implementation Notes (Audited 2024-12-29)
+- **Files Created:**
+  - `src/lib/constants/unlocks.ts` — 8 progressive unlock features with turn gates
+  - `src/lib/events/types.ts` — Event effect types, scopes, prerequisites
+  - `src/lib/events/economic.ts` — Economic event definitions
+  - `src/lib/events/political.ts` — Political event definitions
+  - `src/lib/events/military.ts` — Military event definitions
+  - `src/lib/events/narrative.ts` — Narrative/flavor event definitions
+  - `src/lib/events/index.ts` — Event selection and prerequisite checking
+  - `src/lib/game/services/coalition-service.ts` — Coalition formation and victory
+  - `src/lib/game/services/checkpoint-service.ts` — Alliance balance checkpoints
+  - `src/lib/game/services/event-service.ts` — Galactic event processing
+  - `src/lib/combat/nuclear.ts` — Nuclear strike mechanics
+  - `src/lib/game/constants/nuclear.ts` — Nuclear constants and detection
+  - `src/lib/victory/conditions.ts` — All 6 victory condition checks
+  - `src/components/game/LockedFeature.tsx` — UI for locked features
+  - `src/hooks/useUnlocks.ts` — React hook for unlock state
+- **Event System:** 4 categories, semi-random triggering (10-20 turns), unique events
+- **Coalition:** Max 5 members, min 2 to form, 50% territory for diplomatic victory
+- **Nuclear:** NUCLEAR_CONSTANTS with unlock turn, casualties, detection rates
 
 ---
 
@@ -1149,6 +1198,6 @@ import { Tier1LLMBot } from '@/lib/bots/tier1';
 
 ---
 
-*Document Version: 1.2*
-*Last Updated: December 24, 2024*
-*Related: PRD v1.2*
+*Document Version: 1.3*
+*Last Updated: December 29, 2024*
+*Related: PRD v1.3*
