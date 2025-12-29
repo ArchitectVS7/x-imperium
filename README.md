@@ -2,14 +2,6 @@
 
 A turn-based 4X space empire strategy game with AI-controlled bot opponents. Built with Next.js 14, TypeScript, and PostgreSQL.
 
-## Heritage
-
-Nexus Dominion modernizes the classic BBS game lineage:
-- **Solar Imperium** (2010, Yanick Bourbeau) - PHP modernization
-- **Solar Realms Elite** (1990, Amit Patel) - The iconic BBS classic
-- **Space Empire Elite** (1986, Jon Radoff)
-- **Kingdom/Hammurabi** (1964+) - The original resource management games
-
 ## Quick Start
 
 ```bash
