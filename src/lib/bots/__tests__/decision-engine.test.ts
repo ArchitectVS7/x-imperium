@@ -615,7 +615,7 @@ describe("Decision Engine", () => {
     it("should return do_nothing for crafting when no archetype", () => {
       const noArchetypeContext: BotDecisionContext = {
         ...mockContext,
-        empire: { ...mockEmpire, botArchetype: undefined },
+        empire: { ...mockEmpire, botArchetype: null },
       };
       const decision = generateBotDecision(noArchetypeContext, 0.81);
       expect(decision.type).toBe("do_nothing");

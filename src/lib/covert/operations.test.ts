@@ -138,7 +138,7 @@ describe("executeCovertOp", () => {
       expect(result.success).toBe(true);
       expect(result.pointsConsumed).toBe(operation.cost);
       expect(result.effects.length).toBeGreaterThan(0);
-      expect(result.effects[0].type).toBe("intelligence_revealed");
+      expect(result.effects[0]?.type).toBe("intelligence_revealed");
     });
 
     it("should execute insurgent_aid successfully", () => {
@@ -146,7 +146,7 @@ describe("executeCovertOp", () => {
       const result = executeCovertOp(operation, attacker, defender, 0.01, 0.99);
 
       expect(result.success).toBe(true);
-      expect(result.effects[0].type).toBe("civil_status_reduced");
+      expect(result.effects[0]?.type).toBe("civil_status_reduced");
     });
 
     it("should execute support_dissension successfully", () => {
@@ -154,7 +154,7 @@ describe("executeCovertOp", () => {
       const result = executeCovertOp(operation, attacker, defender, 0.01, 0.99);
 
       expect(result.success).toBe(true);
-      expect(result.effects[0].type).toBe("civil_status_reduced");
+      expect(result.effects[0]?.type).toBe("civil_status_reduced");
     });
 
     it("should execute demoralize_troops with effectiveness reduction", () => {
@@ -162,10 +162,10 @@ describe("executeCovertOp", () => {
       const result = executeCovertOp(operation, attacker, defender, 0.01, 0.99);
 
       expect(result.success).toBe(true);
-      expect(result.effects[0].type).toBe("army_effectiveness_reduced");
-      expect(result.effects[0].value).toBeGreaterThanOrEqual(10);
-      expect(result.effects[0].value).toBeLessThanOrEqual(15);
-      expect(result.effects[0].duration).toBe(3);
+      expect(result.effects[0]?.type).toBe("army_effectiveness_reduced");
+      expect(result.effects[0]?.value).toBeGreaterThanOrEqual(10);
+      expect(result.effects[0]?.value).toBeLessThanOrEqual(15);
+      expect(result.effects[0]?.duration).toBe(3);
     });
 
     it("should execute bombing_operations with resource destruction", () => {
@@ -173,8 +173,8 @@ describe("executeCovertOp", () => {
       const result = executeCovertOp(operation, attacker, defender, 0.01, 0.99);
 
       expect(result.success).toBe(true);
-      expect(result.effects[0].type).toBe("resources_destroyed");
-      expect(result.effects[0].value).toBeGreaterThan(0);
+      expect(result.effects[0]?.type).toBe("resources_destroyed");
+      expect(result.effects[0]?.value).toBeGreaterThan(0);
     });
 
     it("should execute relations_spying successfully", () => {
@@ -182,7 +182,7 @@ describe("executeCovertOp", () => {
       const result = executeCovertOp(operation, attacker, defender, 0.01, 0.99);
 
       expect(result.success).toBe(true);
-      expect(result.effects[0].type).toBe("diplomacy_revealed");
+      expect(result.effects[0]?.type).toBe("diplomacy_revealed");
     });
 
     it("should execute take_hostages with credit gain", () => {
@@ -190,9 +190,9 @@ describe("executeCovertOp", () => {
       const result = executeCovertOp(operation, attacker, defender, 0.01, 0.99);
 
       expect(result.success).toBe(true);
-      expect(result.effects[0].type).toBe("credits_gained");
-      expect(result.effects[0].value).toBeGreaterThanOrEqual(50000);
-      expect(result.effects[0].value).toBeLessThanOrEqual(100000);
+      expect(result.effects[0]?.type).toBe("credits_gained");
+      expect(result.effects[0]?.value).toBeGreaterThanOrEqual(50000);
+      expect(result.effects[0]?.value).toBeLessThanOrEqual(100000);
     });
 
     it("should execute carriers_sabotage with carrier destruction", () => {
@@ -201,9 +201,9 @@ describe("executeCovertOp", () => {
       const result = executeCovertOp(operation, attacker, defender, 0.01, 0.99);
 
       expect(result.success).toBe(true);
-      expect(result.effects[0].type).toBe("carriers_destroyed");
-      expect(result.effects[0].value).toBeGreaterThanOrEqual(2); // 10% of 20
-      expect(result.effects[0].value).toBeLessThanOrEqual(5); // 25% of 20
+      expect(result.effects[0]?.type).toBe("carriers_destroyed");
+      expect(result.effects[0]?.value).toBeGreaterThanOrEqual(2); // 10% of 20
+      expect(result.effects[0]?.value).toBeLessThanOrEqual(5); // 25% of 20
     });
 
     it("should execute communications_spying successfully", () => {
@@ -211,8 +211,8 @@ describe("executeCovertOp", () => {
       const result = executeCovertOp(operation, attacker, defender, 0.01, 0.99);
 
       expect(result.success).toBe(true);
-      expect(result.effects[0].type).toBe("messages_intercepted");
-      expect(result.effects[0].duration).toBe(10);
+      expect(result.effects[0]?.type).toBe("messages_intercepted");
+      expect(result.effects[0]?.duration).toBe(10);
     });
 
     it("should execute setup_coup with planet loss", () => {
@@ -223,8 +223,8 @@ describe("executeCovertOp", () => {
       const result = executeCovertOp(operation, attacker, defender, 0.01, 0.99);
 
       expect(result.success).toBe(true);
-      expect(result.effects[0].type).toBe("planets_lost");
-      expect(result.effects[0].value).toBe(6); // 30% of 20
+      expect(result.effects[0]?.type).toBe("planets_lost");
+      expect(result.effects[0]?.value).toBe(6); // 30% of 20
     });
   });
 
@@ -460,7 +460,7 @@ describe("Edge Cases", () => {
     const result = executeCovertOp(operation, attacker, defender, 0.01, 0.99);
 
     expect(result.success).toBe(true);
-    expect(result.effects[0].value).toBe(0);
+    expect(result.effects[0]?.value).toBe(0);
   });
 
   it("should handle zero carriers for sabotage", () => {
@@ -470,7 +470,7 @@ describe("Edge Cases", () => {
     const result = executeCovertOp(operation, attacker, defender, 0.01, 0.99);
 
     expect(result.success).toBe(true);
-    expect(result.effects[0].value).toBe(0);
+    expect(result.effects[0]?.value).toBe(0);
   });
 
   it("should handle low planet count for coup", () => {
@@ -480,7 +480,7 @@ describe("Edge Cases", () => {
     const result = executeCovertOp(operation, attacker, defender, 0.01, 0.99);
 
     expect(result.success).toBe(true);
-    expect(result.effects[0].value).toBe(0); // 30% of 2 = 0.6 -> 0
+    expect(result.effects[0]?.value).toBe(0); // 30% of 2 = 0.6 -> 0
   });
 
   it("should handle very high agent counts", () => {
