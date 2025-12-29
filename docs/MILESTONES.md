@@ -1,4 +1,4 @@
-# X-Imperium: Milestone Build Plan
+# Nexus Dominion: Milestone Build Plan
 
 **Version:** 1.2
 **Date:** December 24, 2024
@@ -749,7 +749,7 @@ Each milestone delivers a **playable vertical slice** that can be tested end-to-
 
 ### Overview
 
-Tier 1 bots are the "main characters" of X-Imperium - 10 LLM-powered opponents that feel genuinely intelligent, unpredictable, and memorable. While the other 90 bots provide variety and challenge, these 10 are designed to be the rivals players remember.
+Tier 1 bots are the "main characters" of Nexus Dominion - 10 LLM-powered opponents that feel genuinely intelligent, unpredictable, and memorable. While the other 90 bots provide variety and challenge, these 10 are designed to be the rivals players remember.
 
 ### Architecture Decisions
 

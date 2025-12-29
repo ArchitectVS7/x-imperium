@@ -1,4 +1,4 @@
-# X-Imperium 
+# Nexus Dominion
 Forked from:
  **Solar Imperium** (Yanick Bourbeau) which was a modernization of...
    **Solar Realms Elite** (1990 by Amit Patel) which was inspired by...
@@ -29,8 +29,8 @@ Before I get into gameplay, balance, social features, etc, I opted to get the ga
 
 ```bash
 # Clone and start with Docker
-git clone https://github.com/ArchitectVS7/x-imperium.git
-cd x-imperium
+git clone https://github.com/ArchitectVS7/nexus-dominion.git
+cd nexus-dominion
 cp .env.example .env
 # Edit .env with secure passwords
 docker-compose up -d --build

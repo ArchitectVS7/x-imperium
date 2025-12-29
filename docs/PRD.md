@@ -1,4 +1,4 @@
-# X-Imperium: Product Requirements Document
+# Nexus Dominion: Product Requirements Document
 
 **Version:** 1.3
 **Date:** December 2024
@@ -35,7 +35,7 @@
 
 ### Product Vision
 
-**X-Imperium** is a single-player turn-based space empire strategy game that revives the classic **Solar Realms Elite** (1990) BBS door game. Players compete against AI-controlled bot opponents to build the most powerful galactic empire through economic development, military conquest, research advancement, and diplomatic maneuvering.
+**Nexus Dominion** is a single-player turn-based space empire strategy game that revives the classic **Solar Realms Elite** (1990) BBS door game. Players compete against AI-controlled bot opponents to build the most powerful galactic empire through economic development, military conquest, research advancement, and diplomatic maneuvering.
 
 ### Target Audience
 
@@ -45,7 +45,7 @@
 
 ### Core Differentiator
 
-X-Imperium transforms the original weeks-long multiplayer experience into a **1-2 hour single-player session** with:
+Nexus Dominion transforms the original weeks-long multiplayer experience into a **1-2 hour single-player session** with:
 - AI opponents with distinct personalities and strategies
 - Instant turn processing (no waiting)
 - Scenario-based victory conditions for replayability
@@ -1134,7 +1134,7 @@ The following are explicitly **not** included in version 1:
 
 ## 18. Manufacturing & Crafting System
 
-X-Imperium introduces a 4-tier resource system that gates advanced military behind strategic resource management. This transforms the original "credits buy everything" model into a more strategic progression.
+Nexus Dominion introduces a 4-tier resource system that gates advanced military behind strategic resource management. This transforms the original "credits buy everything" model into a more strategic progression.
 
 *Full details: See `docs/crafting-system.md`*
 

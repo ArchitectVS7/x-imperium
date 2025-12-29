@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-X-Imperium is a modernization of Solar Imperium/Solar Realms Elite - a turn-based space empire strategy game with AI-controlled bot opponents. Built with Next.js 14 (App Router), TypeScript, Tailwind CSS, Drizzle ORM, and PostgreSQL (Neon). The game features tiered AI bots with archetypes, emotional states, and memory systems.
+Nexus Dominion is a modernization of Solar Imperium/Solar Realms Elite - a turn-based space empire strategy game with AI-controlled bot opponents. Built with Next.js 14 (App Router), TypeScript, Tailwind CSS, Drizzle ORM, and PostgreSQL (Neon). The game features tiered AI bots with archetypes, emotional states, and memory systems.
 
 ## Commands
 

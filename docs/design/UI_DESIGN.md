@@ -1,8 +1,8 @@
-# X-Imperium: UI Design Guide
+# Nexus Dominion: UI Design Guide
 
 ## Design Philosophy
 
-X-Imperium's interface draws inspiration from **Star Trek's LCARS** (Library Computer Access/Retrieval System) - the iconic futuristic UI seen throughout the franchise. This creates an immersive "command center" experience where players feel like they're running a galactic empire from a starship bridge.
+Nexus Dominion's interface draws inspiration from **Star Trek's LCARS** (Library Computer Access/Retrieval System) - the iconic futuristic UI seen throughout the franchise. This creates an immersive "command center" experience where players feel like they're running a galactic empire from a starship bridge.
 
 ### Key Principles
 

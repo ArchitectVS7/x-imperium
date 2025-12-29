@@ -16,7 +16,7 @@ const exo2 = Exo_2({
 });
 
 export const metadata: Metadata = {
-  title: "X-Imperium",
+  title: "Nexus Dominion",
   description: "Build your galactic empire",
 };
 

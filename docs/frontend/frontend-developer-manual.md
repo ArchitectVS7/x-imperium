@@ -1,10 +1,10 @@
-# X-Imperium Frontend Developer Manual
+# Nexus Dominion Frontend Developer Manual
 
 > **Version:** 1.0
 > **Created:** 2024-12-28
 > **Last Updated:** 2024-12-28
 
-A comprehensive reference for frontend development on X-Imperium, covering architecture, data flow, component patterns, styling, and best practices.
+A comprehensive reference for frontend development on Nexus Dominion, covering architecture, data flow, component patterns, styling, and best practices.
 
 ---
 
@@ -27,7 +27,7 @@ A comprehensive reference for frontend development on X-Imperium, covering archi
 
 ## 1. Architecture Overview
 
-X-Imperium uses a **server-first architecture** with Next.js 14 App Router. The frontend is tightly integrated with the backend through Server Actions.
+Nexus Dominion uses a **server-first architecture** with Next.js 14 App Router. The frontend is tightly integrated with the backend through Server Actions.
 
 ### High-Level Architecture
 
@@ -882,7 +882,7 @@ const UNIT_TYPE_COLORS: Record<UnitType, string> = {
 
 ### 7.1 LCARS Design System
 
-X-Imperium uses a Star Trek LCARS-inspired design language.
+Nexus Dominion uses a Star Trek LCARS-inspired design language.
 
 #### Core Principles
 

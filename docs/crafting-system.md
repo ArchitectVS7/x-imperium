@@ -1,4 +1,4 @@
-# X-Imperium: Strategic Depth Systems
+# Nexus Dominion: Strategic Depth Systems
 ## Crafting, Research, Black Market & Enhanced Military
 
 *Design Document v1.0 - Modernizing Solar Realms Elite*
@@ -693,4 +693,4 @@ Bots need strategies for:
 
 ---
 
-*This document is a living design spec for X-Imperium. Balance numbers are initial estimates and should be tuned through playtesting.*
+*This document is a living design spec for Nexus Dominion. Balance numbers are initial estimates and should be tuned through playtesting.*

@@ -177,7 +177,7 @@ npm run test:e2e -- -g "test name" --repeat-each=3
 
 If it fails even once, investigate further.
 
-## Common Patterns in X-Imperium
+## Common Patterns in Nexus Dominion
 
 ### Turn Processing Issues
 ```

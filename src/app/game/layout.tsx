@@ -33,7 +33,7 @@ export default async function GameLayout({
       <header className="bg-gray-900 border-b border-lcars-amber/30 px-4 py-2">
         <div className="flex items-center justify-between">
           <Link href="/game" className="text-xl font-display text-lcars-amber">
-            X-IMPERIUM
+            NEXUS DOMINION
           </Link>
           <nav className="hidden lg:flex gap-2">
             {navItems.map((item) => (

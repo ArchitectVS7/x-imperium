@@ -257,7 +257,7 @@ export default function HomePage() {
         <div className="relative z-10 text-center max-w-4xl">
           {/* Logo */}
           <h1 className="text-6xl md:text-8xl lg:text-9xl font-display text-lcars-amber mb-4 tracking-wider animate-pulse-slow">
-            X-IMPERIUM
+            NEXUS DOMINION
           </h1>
 
           {/* Tagline */}
@@ -390,7 +390,7 @@ export default function HomePage() {
       <footer className="py-8 px-8 bg-gray-950 border-t border-gray-800">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-gray-500">
           <div className="flex gap-4">
-            <span>X-Imperium v0.7.0</span>
+            <span>Nexus Dominion v0.7.0</span>
             <span>•</span>
             <span>Milestone 7: Landing Page & UX</span>
           </div>

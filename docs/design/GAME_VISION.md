@@ -1,8 +1,8 @@
-# X-Imperium: Game Vision
+# Nexus Dominion: Game Vision
 
 ## The Legacy
 
-X-Imperium revives **Solar Realms Elite** (SRE), the beloved 1990 BBS door game created by Amit Patel. SRE itself descended from a legendary lineage:
+Nexus Dominion revives **Solar Realms Elite** (SRE), the beloved 1990 BBS door game created by Amit Patel. SRE itself descended from a legendary lineage:
 
 ```
 The Sumerian Game (1964) - Mabel Addis
@@ -13,7 +13,7 @@ Space Empire Elite (1986) - Jon Radoff
   ↓
 Solar Realms Elite (1990-1994) - Amit Patel
   ↓
-X-Imperium (2026) - The Revival
+Nexus Dominion (2026) - The Revival
 ```
 
 This heritage matters. **Hammurabi fit in 4KB of memory** because it was designed with elegant constraints. The best strategy games achieve depth through interaction, not feature bloat.
@@ -39,7 +39,7 @@ The original Solar Imperium developer himself wrote in 2010: *"The game must be 
 
 ## Our Vision
 
-**X-Imperium transforms a weeks-long multiplayer experience into a 1-2 hour single-player strategy game** while preserving what made SRE special.
+**Nexus Dominion transforms a weeks-long multiplayer experience into a 1-2 hour single-player strategy game** while preserving what made SRE special.
 
 ### Core Philosophy
 
@@ -79,7 +79,7 @@ The original Solar Imperium developer himself wrote in 2010: *"The game must be 
 
 ## What We Simplify
 
-| Original | X-Imperium | Reason |
+| Original | Nexus Dominion | Reason |
 |----------|------------|--------|
 | 24 starting planets | 9 starting planets | Manageable scale |
 | Convoy travel time | Instant combat | No waiting |
@@ -156,9 +156,9 @@ A complete game should be playable in 1-2 hours. No mobile-game manipulation. No
 
 ## The Name
 
-**X-Imperium** honors the lineage:
-- "Imperium" = Latin for "empire" (SRE heritage)
-- "X" = The unknown, the frontier, the variable
+**Nexus Dominion** honors the lineage:
+- "Dominion" = Sovereign territory, domain of control (SRE heritage)
+- "Nexus" = Connection point, hub of the galaxy
 - Works as spiritual successor without trademark concerns
 
 ---

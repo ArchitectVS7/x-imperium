@@ -290,7 +290,7 @@ export function getGameTerm(key: keyof typeof GAME_TERMS): string {
 // =============================================================================
 
 export const THEME_INFO = {
-  name: "X-Imperium",
+  name: "Nexus Dominion",
   tagline: "Dominate the Realm",
   version: "1.0",
   genre: "sci-fi",

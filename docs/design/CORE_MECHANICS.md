@@ -1,4 +1,4 @@
-# X-Imperium: Core Mechanics
+# Nexus Dominion: Core Mechanics
 
 ## Game Structure
 

@@ -1,4 +1,4 @@
-# X-Imperium: Future Visions
+# Nexus Dominion: Future Visions
 
 **Status:** Deferred Features for Post-Playtesting
 **Last Updated:** December 28, 2024
