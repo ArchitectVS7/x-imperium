@@ -105,6 +105,7 @@ export function TurnSummaryModal({
       document.addEventListener("keydown", handleKeyDown);
       return () => document.removeEventListener("keydown", handleKeyDown);
     }
+    return undefined;
   }, [isOpen, handleKeyDown]);
 
   if (!isOpen) return null;

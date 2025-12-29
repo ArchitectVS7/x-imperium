@@ -39,7 +39,7 @@ function getDismissedHints(): Set<string> {
 function dismissHint(hintId: string) {
   const dismissed = getDismissedHints();
   dismissed.add(hintId);
-  localStorage.setItem(STORAGE_KEY, JSON.stringify([...dismissed]));
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(Array.from(dismissed)));
 }
 
 export function OnboardingHint({
@@ -66,6 +66,7 @@ export function OnboardingHint({
       const timer = setTimeout(() => setIsVisible(true), 300);
       return () => clearTimeout(timer);
     }
+    return undefined;
   }, [currentTurn, turnToShow, hintId]);
 
   const handleDismiss = () => {

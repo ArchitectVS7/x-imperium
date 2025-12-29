@@ -81,7 +81,7 @@ export function TurnOrderPanel({
   useEffect(() => {
     const actionId = ACTIONS.find((a) => pathname.startsWith(a.href))?.id;
     if (actionId) {
-      setVisitedActions((prev) => new Set([...prev, actionId]));
+      setVisitedActions((prev) => new Set([...Array.from(prev), actionId]));
     }
   }, [pathname]);
 
