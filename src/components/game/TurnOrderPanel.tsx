@@ -224,6 +224,15 @@ export function TurnOrderPanel({
         </div>
       </div>
 
+      {/* Contextual Suggestions */}
+      <SuggestionsPanel
+        foodStatus={foodStatus}
+        armyStrength={armyStrength}
+        threatCount={threatCount}
+        protectionTurnsLeft={protectionTurnsLeft}
+        currentTurn={currentTurn}
+      />
+
       {/* End Turn Button */}
       <div className="p-4 border-t border-gray-800">
         <button
@@ -246,6 +255,119 @@ export function TurnOrderPanel({
             ← Back to {UI_LABELS.dashboard}
           </Link>
         </div>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Suggestions Panel
+ *
+ * Shows contextual suggestions based on game state.
+ * Helps players know what to focus on.
+ */
+function SuggestionsPanel({
+  foodStatus,
+  armyStrength,
+  threatCount,
+  protectionTurnsLeft,
+  currentTurn,
+}: {
+  foodStatus: "surplus" | "stable" | "deficit" | "critical";
+  armyStrength: "strong" | "moderate" | "weak" | "critical";
+  threatCount: number;
+  protectionTurnsLeft?: number;
+  currentTurn: number;
+}) {
+  const suggestions: Array<{ icon: string; message: string; priority: "high" | "medium" | "low" }> = [];
+
+  // High priority: Critical issues
+  if (foodStatus === "critical") {
+    suggestions.push({
+      icon: "🚨",
+      message: "Food critical! Buy Agriculture sectors",
+      priority: "high",
+    });
+  } else if (foodStatus === "deficit") {
+    suggestions.push({
+      icon: "⚠️",
+      message: "Food deficit - expand Agriculture",
+      priority: "medium",
+    });
+  }
+
+  if (armyStrength === "critical") {
+    suggestions.push({
+      icon: "🚨",
+      message: "Military critical! Build units now",
+      priority: "high",
+    });
+  } else if (armyStrength === "weak") {
+    suggestions.push({
+      icon: "⚠️",
+      message: "Military weak - consider building units",
+      priority: "medium",
+    });
+  }
+
+  // Protection ending warning
+  if (protectionTurnsLeft && protectionTurnsLeft > 0 && protectionTurnsLeft <= 5) {
+    suggestions.push({
+      icon: "🛡️",
+      message: `Protection ends in ${protectionTurnsLeft} turns!`,
+      priority: "high",
+    });
+  }
+
+  // Threat warnings
+  if (threatCount >= 5) {
+    suggestions.push({
+      icon: "👁️",
+      message: "Many threats - consider diplomacy",
+      priority: "medium",
+    });
+  }
+
+  // Early game tips
+  if (currentTurn <= 5) {
+    suggestions.push({
+      icon: "💡",
+      message: "Early game: focus on expansion",
+      priority: "low",
+    });
+  }
+
+  // Don't show if no suggestions
+  if (suggestions.length === 0) {
+    return null;
+  }
+
+  // Sort by priority
+  const priorityOrder = { high: 0, medium: 1, low: 2 };
+  suggestions.sort((a, b) => priorityOrder[a.priority] - priorityOrder[b.priority]);
+
+  // Only show top 3
+  const topSuggestions = suggestions.slice(0, 3);
+
+  return (
+    <div className="px-4 py-3 border-t border-yellow-600/30 bg-yellow-900/10">
+      <div className="text-xs text-yellow-400 uppercase tracking-wider mb-2">Suggested</div>
+      <div className="space-y-1">
+        {topSuggestions.map((suggestion, i) => (
+          <div
+            key={i}
+            className={`text-xs flex items-start gap-2 ${
+              suggestion.priority === "high"
+                ? "text-red-400"
+                : suggestion.priority === "medium"
+                ? "text-yellow-400"
+                : "text-gray-400"
+            }`}
+          >
+            <span>{suggestion.icon}</span>
+            <span>{suggestion.message}</span>
+          </div>
+        ))}
       </div>
     </div>
   );

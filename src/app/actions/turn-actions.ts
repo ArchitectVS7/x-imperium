@@ -278,6 +278,163 @@ export async function getTurnOrderPanelDataAction(): Promise<TurnOrderPanelData 
 }
 
 // =============================================================================
+// GAME LAYOUT DATA (combined for header, sidebar, and status bar)
+// =============================================================================
+
+export interface GameLayoutData extends TurnOrderPanelData {
+  // Resources for header/status bar
+  credits: number;
+  food: number;
+  ore: number;
+  petroleum: number;
+  researchPoints: number;
+  // Empire stats
+  population: number;
+  sectorCount: number;
+  militaryPower: number;
+  networth: number;
+  rank: number;
+  civilStatus: string;
+}
+
+/**
+ * Get all data needed for the game layout (header + sidebar + status bar)
+ */
+export async function getGameLayoutDataAction(): Promise<GameLayoutData | null> {
+  try {
+    const cookieStore = await cookies();
+    const gameId = cookieStore.get(GAME_ID_COOKIE)?.value;
+    const empireId = cookieStore.get("empireId")?.value;
+
+    if (!gameId || !empireId) {
+      return null;
+    }
+
+    // Get game
+    const game = await db.query.games.findFirst({
+      where: eq(games.id, gameId),
+    });
+
+    if (!game) return null;
+
+    // Get player empire with planets
+    const playerEmpire = await db.query.empires.findFirst({
+      where: eq(empires.id, empireId),
+      with: {
+        planets: true,
+      },
+    });
+
+    if (!playerEmpire) return null;
+
+    // Calculate food status
+    const foodPlanets = playerEmpire.planets.filter(p => p.type === "food").length;
+    const foodProduction = foodPlanets * 160;
+    const foodConsumption = playerEmpire.population * 0.05;
+    const foodBalance = foodProduction - foodConsumption;
+
+    let foodStatus: FoodStatus = "stable";
+    if (foodBalance > foodConsumption * 0.5) {
+      foodStatus = "surplus";
+    } else if (foodBalance < 0) {
+      foodStatus = foodBalance < -foodConsumption * 0.5 ? "critical" : "deficit";
+    }
+
+    // Calculate military power
+    const militaryPower =
+      playerEmpire.soldiers +
+      playerEmpire.fighters * 3 +
+      (playerEmpire.stations ?? 0) * 50 +
+      (playerEmpire.lightCruisers ?? 0) * 10 +
+      (playerEmpire.heavyCruisers ?? 0) * 25 +
+      (playerEmpire.carriers ?? 0) * 12;
+
+    // Get bot empires for comparison
+    const botEmpires = await db.query.empires.findMany({
+      where: and(
+        eq(empires.gameId, gameId),
+        eq(empires.type, "bot")
+      ),
+    });
+
+    // Calculate army strength relative to bots
+    const avgBotPower = botEmpires.reduce((sum, bot) => {
+      return sum + bot.soldiers + bot.fighters * 3 +
+        (bot.stations ?? 0) * 50 +
+        (bot.lightCruisers ?? 0) * 10 +
+        (bot.heavyCruisers ?? 0) * 25 +
+        (bot.carriers ?? 0) * 12;
+    }, 0) / (botEmpires.length || 1);
+
+    let armyStrength: ArmyStrength = "moderate";
+    if (militaryPower > avgBotPower * 1.5) {
+      armyStrength = "strong";
+    } else if (militaryPower < avgBotPower * 0.5) {
+      armyStrength = militaryPower < avgBotPower * 0.25 ? "critical" : "weak";
+    }
+
+    // Count threats
+    const threatCount = botEmpires.filter(bot => {
+      const botPower = bot.soldiers + bot.fighters * 3 +
+        (bot.stations ?? 0) * 50 +
+        (bot.lightCruisers ?? 0) * 10 +
+        (bot.heavyCruisers ?? 0) * 25 +
+        (bot.carriers ?? 0) * 12;
+      return botPower > militaryPower * 1.2;
+    }).length;
+
+    // Count unread messages
+    const unreadCount = await db
+      .select({ count: sql<number>`count(*)` })
+      .from(messages)
+      .where(
+        and(
+          eq(messages.recipientId, empireId),
+          eq(messages.isRead, false)
+        )
+      );
+    const unreadMessages = Number(unreadCount[0]?.count ?? 0);
+
+    // Calculate rank (by networth)
+    const allEmpires = await db.query.empires.findMany({
+      where: eq(empires.gameId, gameId),
+      columns: { id: true, networth: true },
+    });
+    const sortedByNetworth = allEmpires.sort((a, b) => b.networth - a.networth);
+    const rank = sortedByNetworth.findIndex(e => e.id === empireId) + 1;
+
+    const protectionTurnsLeft = Math.max(0, GAME_SETTINGS.protectionTurns - game.currentTurn + 1);
+
+    return {
+      // Turn order panel data
+      currentTurn: game.currentTurn,
+      turnLimit: game.turnLimit,
+      foodStatus,
+      armyStrength,
+      threatCount,
+      unreadMessages,
+      protectionTurnsLeft,
+      // Resources
+      credits: playerEmpire.credits,
+      food: playerEmpire.food,
+      ore: playerEmpire.ore,
+      petroleum: playerEmpire.petroleum,
+      researchPoints: playerEmpire.researchPoints,
+      // Empire stats
+      population: playerEmpire.population,
+      sectorCount: playerEmpire.planets.length,
+      militaryPower,
+      networth: playerEmpire.networth,
+      rank,
+      civilStatus: playerEmpire.civilStatus,
+    };
+  } catch (error) {
+    console.error("Get game layout data failed:", error);
+    return null;
+  }
+}
+
+// =============================================================================
 // ENHANCED END TURN (with full result for modal)
 // =============================================================================
 
