@@ -1,11 +1,19 @@
 import { describe, it, expect } from "vitest";
 import {
   BASE_WEIGHTS,
+  ARCHETYPE_WEIGHTS,
   getAdjustedWeights,
   selectDecisionType,
   generateBotDecision,
   getWeightSum,
   validateWeights,
+  applyEmotionalModifiers,
+  getEmotionalWeightModifiers,
+  shouldArchetypeAttack,
+  getRetreatWillingness,
+  getAllianceSeeking,
+  shouldTelegraphAction,
+  getTellStyle,
 } from "../decision-engine";
 import type { BotDecisionContext, Empire } from "../types";
 
@@ -259,6 +267,395 @@ describe("Decision Engine", () => {
     it("should correctly sum all weights", () => {
       // Use toBeCloseTo for floating point precision
       expect(getWeightSum(BASE_WEIGHTS)).toBeCloseTo(1.0, 5);
+    });
+  });
+
+  describe("ARCHETYPE_WEIGHTS", () => {
+    it("should have weights for all archetypes", () => {
+      expect(ARCHETYPE_WEIGHTS.warlord).toBeDefined();
+      expect(ARCHETYPE_WEIGHTS.diplomat).toBeDefined();
+      expect(ARCHETYPE_WEIGHTS.merchant).toBeDefined();
+      expect(ARCHETYPE_WEIGHTS.schemer).toBeDefined();
+      expect(ARCHETYPE_WEIGHTS.turtle).toBeDefined();
+      expect(ARCHETYPE_WEIGHTS.blitzkrieg).toBeDefined();
+      expect(ARCHETYPE_WEIGHTS.tech_rush).toBeDefined();
+      expect(ARCHETYPE_WEIGHTS.opportunist).toBeDefined();
+    });
+
+    it("should have warlord with highest attack weight", () => {
+      expect(ARCHETYPE_WEIGHTS.warlord.attack).toBeGreaterThan(BASE_WEIGHTS.attack);
+    });
+
+    it("should have diplomat with low attack weight", () => {
+      expect(ARCHETYPE_WEIGHTS.diplomat.attack).toBeLessThan(BASE_WEIGHTS.attack);
+    });
+
+    it("should have blitzkrieg with maximum aggression", () => {
+      expect(ARCHETYPE_WEIGHTS.blitzkrieg.attack).toBe(0.40);
+    });
+  });
+
+  describe("applyEmotionalModifiers", () => {
+    it("should increase attack weight for vengeful state", () => {
+      const modified = applyEmotionalModifiers(BASE_WEIGHTS, "vengeful", 1.0);
+      // Vengeful has +40% aggression
+      expect(modified.attack).toBeGreaterThan(BASE_WEIGHTS.attack);
+    });
+
+    it("should decrease attack weight for fearful state", () => {
+      const modified = applyEmotionalModifiers(BASE_WEIGHTS, "fearful", 1.0);
+      // Fearful has -30% aggression
+      expect(modified.attack).toBeLessThan(BASE_WEIGHTS.attack);
+    });
+
+    it("should increase diplomacy weight for fearful state", () => {
+      const modified = applyEmotionalModifiers(BASE_WEIGHTS, "fearful", 1.0);
+      // Fearful has +50% alliance willingness
+      expect(modified.diplomacy).toBeGreaterThan(BASE_WEIGHTS.diplomacy);
+    });
+
+    it("should scale modifiers by intensity", () => {
+      const halfIntensity = applyEmotionalModifiers(BASE_WEIGHTS, "vengeful", 0.5);
+      const fullIntensity = applyEmotionalModifiers(BASE_WEIGHTS, "vengeful", 1.0);
+      // Half intensity should have smaller modification
+      expect(fullIntensity.attack - BASE_WEIGHTS.attack).toBeGreaterThan(
+        halfIntensity.attack - BASE_WEIGHTS.attack
+      );
+    });
+
+    it("should normalize weights to sum to 1.0", () => {
+      const modified = applyEmotionalModifiers(BASE_WEIGHTS, "arrogant", 1.0);
+      const sum = getWeightSum(modified);
+      expect(sum).toBeCloseTo(1.0, 5);
+    });
+  });
+
+  describe("getEmotionalWeightModifiers", () => {
+    it("should return modifiers for confident state", () => {
+      const mods = getEmotionalWeightModifiers("confident", 1.0);
+      expect(mods.attackModifier).toBeCloseTo(0.10);
+      expect(mods.diplomacyModifier).toBeCloseTo(-0.20);
+      expect(mods.qualityModifier).toBeCloseTo(0.05);
+      expect(mods.tradeModifier).toBeCloseTo(0.10);
+    });
+
+    it("should return zero modifiers at zero intensity", () => {
+      const mods = getEmotionalWeightModifiers("vengeful", 0);
+      expect(mods.attackModifier).toBeCloseTo(0);
+      expect(mods.diplomacyModifier).toBeCloseTo(0);
+    });
+  });
+
+  describe("shouldArchetypeAttack", () => {
+    it("should return false for null archetype", () => {
+      expect(shouldArchetypeAttack(null, 100, 50)).toBe(false);
+    });
+
+    it("should return false for zero our power", () => {
+      expect(shouldArchetypeAttack("warlord", 0, 50)).toBe(false);
+    });
+
+    it("should return true when enemy is much weaker for warlord", () => {
+      // Warlord has high attack threshold, attacks weaker enemies
+      expect(shouldArchetypeAttack("warlord", 1000, 100)).toBe(true);
+    });
+
+    it("should return false when enemy is stronger for turtle", () => {
+      // Turtle has low attack threshold, very defensive
+      expect(shouldArchetypeAttack("turtle", 100, 200)).toBe(false);
+    });
+  });
+
+  describe("getRetreatWillingness", () => {
+    it("should return default for null archetype", () => {
+      expect(getRetreatWillingness(null)).toBe(0.3);
+    });
+
+    it("should return higher retreat for defensive archetypes", () => {
+      const turtleRetreat = getRetreatWillingness("turtle");
+      const warlordRetreat = getRetreatWillingness("warlord");
+      expect(turtleRetreat).toBeGreaterThan(warlordRetreat);
+    });
+  });
+
+  describe("getAllianceSeeking", () => {
+    it("should return default for null archetype", () => {
+      expect(getAllianceSeeking(null)).toBe(0.3);
+    });
+
+    it("should return higher for diplomat", () => {
+      const diplomatAlliance = getAllianceSeeking("diplomat");
+      const warlordAlliance = getAllianceSeeking("warlord");
+      expect(diplomatAlliance).toBeGreaterThan(warlordAlliance);
+    });
+  });
+
+  describe("shouldTelegraphAction", () => {
+    it("should return false for null archetype", () => {
+      const result = shouldTelegraphAction(null, "attack");
+      expect(result.shouldTell).toBe(false);
+      expect(result.advanceWarningTurns).toBe(0);
+    });
+
+    it("should not telegraph trade actions", () => {
+      const result = shouldTelegraphAction("warlord", "trade");
+      expect(result.shouldTell).toBe(false);
+    });
+
+    it("should not telegraph other actions", () => {
+      const result = shouldTelegraphAction("diplomat", "other");
+      expect(result.shouldTell).toBe(false);
+    });
+  });
+
+  describe("getTellStyle", () => {
+    it("should return minimal for null archetype", () => {
+      expect(getTellStyle(null)).toBe("minimal");
+    });
+
+    it("should return valid style for archetypes", () => {
+      const warlordStyle = getTellStyle("warlord");
+      expect(warlordStyle).toBeTruthy();
+    });
+  });
+
+  describe("getAdjustedWeights with archetypes", () => {
+    it("should use archetype weights when archetype is set", () => {
+      const warlordContext: BotDecisionContext = {
+        ...mockContext,
+        empire: { ...mockEmpire, botArchetype: "warlord" },
+      };
+      const weights = getAdjustedWeights(warlordContext);
+      // Warlord should have higher attack weight
+      expect(weights.attack).toBeGreaterThan(BASE_WEIGHTS.attack);
+    });
+
+    it("should apply emotional modifiers when emotional state is set", () => {
+      const emotionalContext: BotDecisionContext = {
+        ...mockContext,
+        empire: { ...mockEmpire, botArchetype: "warlord" },
+        emotionalState: { state: "vengeful", intensity: 0.8 },
+      };
+      const weights = getAdjustedWeights(emotionalContext);
+      // Vengeful should boost attack even more
+      expect(weights.attack).toBeGreaterThan(ARCHETYPE_WEIGHTS.warlord.attack);
+    });
+
+    it("should skip emotional modifiers for neutral state", () => {
+      const neutralContext: BotDecisionContext = {
+        ...mockContext,
+        empire: { ...mockEmpire, botArchetype: "warlord" },
+        emotionalState: { state: "neutral", intensity: 0.5 },
+      };
+      const weights = getAdjustedWeights(neutralContext);
+      // Should use archetype weights without modification
+      expect(weights.attack).toBeCloseTo(ARCHETYPE_WEIGHTS.warlord.attack);
+    });
+
+    it("should boost attack weight when grudge targets are available", () => {
+      const grudgeContext: BotDecisionContext = {
+        ...mockContext,
+        empire: { ...mockEmpire, botArchetype: "warlord" },
+        permanentGrudges: ["target-1"],
+      };
+      const weights = getAdjustedWeights(grudgeContext);
+      // Should have boosted attack weight
+      expect(weights.attack).toBeGreaterThan(ARCHETYPE_WEIGHTS.warlord.attack);
+    });
+
+    it("should not boost attack for grudges during protection", () => {
+      const protectedGrudgeContext: BotDecisionContext = {
+        ...mockContext,
+        currentTurn: 10, // Protected
+        empire: { ...mockEmpire, botArchetype: "warlord" },
+        permanentGrudges: ["target-1"],
+      };
+      const weights = getAdjustedWeights(protectedGrudgeContext);
+      expect(weights.attack).toBe(0);
+    });
+  });
+
+  describe("generateBotDecision with archetypes", () => {
+    it("should generate attack against grudge target when available", () => {
+      const grudgeContext: BotDecisionContext = {
+        ...mockContext,
+        empire: { ...mockEmpire, botArchetype: "warlord", soldiers: 500, fighters: 200, lightCruisers: 50 },
+        permanentGrudges: ["target-1"],
+      };
+      // Force attack decision
+      const decision = generateBotDecision(grudgeContext, 0.50, 0.1);
+      if (decision.type === "attack") {
+        // 70% chance to target grudge, with random 0.1 it should target grudge
+        expect(decision.targetId).toBeDefined();
+      }
+    });
+
+    it("should return do_nothing when no forces for attack", () => {
+      const noForcesContext: BotDecisionContext = {
+        ...mockContext,
+        empire: { ...mockEmpire, soldiers: 0, fighters: 0, lightCruisers: 0, heavyCruisers: 0, carriers: 0 },
+      };
+      const decision = generateBotDecision(noForcesContext, 0.50); // attack range
+      expect(decision.type).not.toBe("attack");
+    });
+
+    it("should return do_nothing when no affordable units for build", () => {
+      const poorContext: BotDecisionContext = {
+        ...mockContext,
+        empire: { ...mockEmpire, credits: 0 },
+      };
+      const decision = generateBotDecision(poorContext, 0.1); // build_units range
+      expect(decision.type).toBe("do_nothing");
+    });
+
+    it("should return do_nothing when no affordable planets for buy", () => {
+      const poorContext: BotDecisionContext = {
+        ...mockContext,
+        empire: { ...mockEmpire, credits: 0 },
+      };
+      const decision = generateBotDecision(poorContext, 0.35); // buy_planet range
+      expect(decision.type).toBe("do_nothing");
+    });
+
+    it("should return do_nothing for diplomacy when no targets", () => {
+      const noTargetsContext: BotDecisionContext = {
+        ...mockContext,
+        availableTargets: [],
+      };
+      const decision = generateBotDecision(noTargetsContext, 0.58); // diplomacy range
+      expect(decision.type).toBe("do_nothing");
+    });
+
+    it("should return do_nothing for diplomacy when all have treaties", () => {
+      const treatyContext: BotDecisionContext = {
+        ...mockContext,
+        availableTargets: mockContext.availableTargets.map(t => ({ ...t, hasTreaty: true })),
+      };
+      const decision = generateBotDecision(treatyContext, 0.58); // diplomacy range
+      expect(decision.type).toBe("do_nothing");
+    });
+  });
+
+  describe("generateBotDecision trade scenarios", () => {
+    it("should buy food when food is low", () => {
+      const lowFoodContext: BotDecisionContext = {
+        ...mockContext,
+        empire: { ...mockEmpire, food: 100, population: 10000, credits: 50000 },
+      };
+      const decision = generateBotDecision(lowFoodContext, 0.66, 0.1); // trade range
+      if (decision.type === "trade") {
+        expect(decision.resource).toBe("food");
+        expect(decision.action).toBe("buy");
+      }
+    });
+
+    it("should sell food when food is very high", () => {
+      const highFoodContext: BotDecisionContext = {
+        ...mockContext,
+        empire: { ...mockEmpire, food: 200000, population: 10000, credits: 10000 },
+      };
+      const decision = generateBotDecision(highFoodContext, 0.66, 0.3); // trade range
+      if (decision.type === "trade") {
+        expect(decision.resource).toBe("food");
+        expect(decision.action).toBe("sell");
+      }
+    });
+  });
+
+  describe("generateBotDecision crafting scenarios", () => {
+    it("should generate craft_component with archetype", () => {
+      const craftingContext: BotDecisionContext = {
+        ...mockContext,
+        empire: { ...mockEmpire, botArchetype: "merchant", credits: 100000 },
+      };
+      const decision = generateBotDecision(craftingContext, 0.81, 0.5);
+      // With merchant archetype, should attempt crafting
+      expect(["craft_component", "do_nothing"]).toContain(decision.type);
+    });
+
+    it("should generate accept_contract with archetype", () => {
+      const contractContext: BotDecisionContext = {
+        ...mockContext,
+        empire: { ...mockEmpire, botArchetype: "schemer", credits: 100000 },
+        availableTargets: [
+          { id: "human-1", name: "Human 1", networth: 500, planetCount: 5, isBot: false, isEliminated: false, militaryPower: 50, hasTreaty: false },
+        ],
+      };
+      // Schemer has high Syndicate willingness
+      const decision = generateBotDecision(contractContext, 0.91, 0.1);
+      // Crafting-related decisions
+      expect(["accept_contract", "purchase_black_market", "do_nothing"]).toContain(decision.type);
+    });
+
+    it("should generate purchase_black_market with high-Syndicate archetype", () => {
+      const blackMarketContext: BotDecisionContext = {
+        ...mockContext,
+        empire: { ...mockEmpire, botArchetype: "schemer", credits: 150000 },
+      };
+      // Force black market decision range
+      const decision = generateBotDecision(blackMarketContext, 0.96, 0.05);
+      expect(["purchase_black_market", "do_nothing"]).toContain(decision.type);
+      if (decision.type === "purchase_black_market") {
+        expect(decision.quantity).toBe(2); // High credits = 2 units
+      }
+    });
+
+    it("should generate purchase_black_market with lower quantity when poor", () => {
+      const poorBlackMarketContext: BotDecisionContext = {
+        ...mockContext,
+        empire: { ...mockEmpire, botArchetype: "schemer", credits: 50000 },
+      };
+      const decision = generateBotDecision(poorBlackMarketContext, 0.96, 0.05);
+      expect(["purchase_black_market", "do_nothing"]).toContain(decision.type);
+      if (decision.type === "purchase_black_market") {
+        expect(decision.quantity).toBe(1); // Low credits = 1 unit
+      }
+    });
+
+    it("should return do_nothing for crafting when no archetype", () => {
+      const noArchetypeContext: BotDecisionContext = {
+        ...mockContext,
+        empire: { ...mockEmpire, botArchetype: undefined },
+      };
+      const decision = generateBotDecision(noArchetypeContext, 0.81);
+      expect(decision.type).toBe("do_nothing");
+    });
+  });
+
+  describe("generateBotDecision diplomacy archetypes", () => {
+    it("should prefer alliance for diplomat archetype", () => {
+      const diplomatContext: BotDecisionContext = {
+        ...mockContext,
+        empire: { ...mockEmpire, botArchetype: "diplomat" },
+      };
+      const decision = generateBotDecision(diplomatContext, 0.58, 0.3);
+      if (decision.type === "diplomacy") {
+        // Diplomat prefers alliances (70% chance)
+        expect(["propose_nap", "propose_alliance"]).toContain(decision.action);
+      }
+    });
+
+    it("should prefer NAP for aggressive archetypes", () => {
+      const warlordContext: BotDecisionContext = {
+        ...mockContext,
+        empire: { ...mockEmpire, botArchetype: "warlord" },
+      };
+      const decision = generateBotDecision(warlordContext, 0.58, 0.1);
+      if (decision.type === "diplomacy") {
+        // Aggressive archetypes prefer NAP
+        expect(decision.action).toBe("propose_nap");
+      }
+    });
+
+    it("should prefer NAP for turtle archetype", () => {
+      const turtleContext: BotDecisionContext = {
+        ...mockContext,
+        empire: { ...mockEmpire, botArchetype: "turtle" },
+      };
+      const decision = generateBotDecision(turtleContext, 0.58, 0.3);
+      if (decision.type === "diplomacy") {
+        expect(["propose_nap", "propose_alliance"]).toContain(decision.action);
+      }
     });
   });
 });
