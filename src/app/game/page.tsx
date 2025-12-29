@@ -20,6 +20,7 @@ import {
   endGameAction,
 } from "@/app/actions/game-actions";
 import { DifficultySelector } from "@/components/start-game/DifficultySelector";
+import { BotCountSelector } from "@/components/start-game/BotCountSelector";
 
 async function DashboardContent({ errorFromUrl }: { errorFromUrl?: string }) {
   const hasGame = await hasActiveGameAction();
@@ -161,8 +162,7 @@ function NewGamePrompt({ error }: { error?: string }) {
         <p className="text-red-400 mb-4">{error}</p>
       )}
       <p className="text-gray-300 mb-6">
-        Begin your galactic conquest. Name your empire and prepare for domination.
-        You will face 25 AI-controlled empires.
+        Begin your galactic conquest. Name your empire and configure your galaxy.
       </p>
       <form action={handleStartGame} className="space-y-4">
         <input
@@ -174,6 +174,7 @@ function NewGamePrompt({ error }: { error?: string }) {
           maxLength={100}
           data-testid="empire-name-input"
         />
+        <BotCountSelector defaultValue={25} />
         <DifficultySelector defaultValue="normal" />
         <button
           type="submit"

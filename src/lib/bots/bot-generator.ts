@@ -2,9 +2,8 @@
  * Bot Empire Generator
  *
  * Creates bot empires for a game. Each bot gets:
- * - Unique name from BOT_EMPIRE_NAMES
- * - Random archetype from 8 options
- * - tier4_random tier (pure random decisions)
+ * - Unique persona from personas.json with name, archetype, and tier
+ * - Tier-based selection (LLM Elite, Strategic, Simple, Random)
  * - Same starting resources/planets as player (9 planets)
  * - Initialized research & upgrades
  */
@@ -25,9 +24,117 @@ import { initializeResearch } from "@/lib/game/services/research-service";
 import { initializeUnitUpgrades } from "@/lib/game/services/upgrade-service";
 import { getBotEmpireName, getBotEmperorName } from "./bot-names";
 import type { BotArchetype, BotTier } from "./types";
+import personasData from "../../../data/personas.json";
 
 // =============================================================================
-// ARCHETYPES
+// PERSONA TYPES
+// =============================================================================
+
+interface Persona {
+  id: string;
+  name: string;
+  emperorName: string;
+  archetype: BotArchetype;
+  tier: number;
+  voice: {
+    tone: string;
+    quirks: string[];
+    vocabulary: string[];
+    catchphrase: string;
+  };
+  tellRate: number;
+}
+
+// Type assertion for imported JSON
+const personas = personasData as Persona[];
+
+// =============================================================================
+// TIER DISTRIBUTION
+// =============================================================================
+
+/**
+ * Tier distribution for different bot counts.
+ * Maps tier numbers (1-4) to how many bots should be created.
+ */
+interface TierDistribution {
+  tier1: number;
+  tier2: number;
+  tier3: number;
+  tier4: number;
+}
+
+/**
+ * Get the tier distribution for a given bot count.
+ * Distribution:
+ * - 10 bots: 2 T1, 2 T2, 3 T3, 3 T4
+ * - 25 bots: 5 T1, 6 T2, 7 T3, 7 T4
+ * - 50 bots: 10 T1, 12 T2, 14 T3, 14 T4
+ */
+export function getTierDistribution(botCount: number): TierDistribution {
+  switch (botCount) {
+    case 10:
+      return { tier1: 2, tier2: 2, tier3: 3, tier4: 3 };
+    case 50:
+      return { tier1: 10, tier2: 12, tier3: 14, tier4: 14 };
+    case 25:
+    default:
+      return { tier1: 5, tier2: 6, tier3: 7, tier4: 7 };
+  }
+}
+
+/**
+ * Convert tier number (1-4) to BotTier enum value.
+ */
+function tierNumberToBotTier(tier: number): BotTier {
+  switch (tier) {
+    case 1:
+      return "tier1_llm";
+    case 2:
+      return "tier2_strategic";
+    case 3:
+      return "tier3_simple";
+    case 4:
+    default:
+      return "tier4_random";
+  }
+}
+
+/**
+ * Select personas based on tier distribution.
+ * Shuffles within each tier to randomize selection.
+ */
+export function selectPersonasForGame(botCount: number): Persona[] {
+  const distribution = getTierDistribution(botCount);
+  const selected: Persona[] = [];
+
+  // Group personas by tier
+  const tier1 = personas.filter((p) => p.tier === 1);
+  const tier2 = personas.filter((p) => p.tier === 2);
+  const tier3 = personas.filter((p) => p.tier === 3);
+  const tier4 = personas.filter((p) => p.tier === 4);
+
+  // Shuffle function
+  const shuffle = <T>(arr: T[]): T[] => {
+    const shuffled = [...arr];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j]!, shuffled[i]!];
+    }
+    return shuffled;
+  };
+
+  // Select from each tier
+  selected.push(...shuffle(tier1).slice(0, distribution.tier1));
+  selected.push(...shuffle(tier2).slice(0, distribution.tier2));
+  selected.push(...shuffle(tier3).slice(0, distribution.tier3));
+  selected.push(...shuffle(tier4).slice(0, distribution.tier4));
+
+  // Final shuffle to mix tiers
+  return shuffle(selected);
+}
+
+// =============================================================================
+// ARCHETYPES (for fallback)
 // =============================================================================
 
 const BOT_ARCHETYPES: BotArchetype[] = [
@@ -43,7 +150,7 @@ const BOT_ARCHETYPES: BotArchetype[] = [
 
 /**
  * Get a random archetype for a bot.
- * Each archetype has equal probability in M5 (random bots).
+ * Used as fallback when persona data is not available.
  */
 export function getRandomArchetype(): BotArchetype {
   const index = Math.floor(Math.random() * BOT_ARCHETYPES.length);
@@ -137,8 +244,8 @@ async function createBotStartingPlanets(
 // =============================================================================
 
 /**
- * Create all bot empires for a game.
- * Creates the specified number of bots (default 25) with unique names.
+ * Create all bot empires for a game using persona-based selection.
+ * Selects personas based on tier distribution for variety.
  *
  * @param gameId - Game to create bots for
  * @param count - Number of bots to create (default 25)
@@ -150,17 +257,24 @@ export async function createBotEmpires(
 ): Promise<Empire[]> {
   const bots: Empire[] = [];
 
+  // Select personas with tier-based distribution
+  const selectedPersonas = selectPersonasForGame(count);
+
   for (let i = 0; i < count; i++) {
-    const name = getBotEmpireName(i);
-    const emperorName = getBotEmperorName(i);
-    const archetype = getRandomArchetype();
+    const persona = selectedPersonas[i];
+
+    // Use persona data if available, otherwise fall back to generic names
+    const name = persona?.name ?? getBotEmpireName(i);
+    const emperorName = persona?.emperorName ?? getBotEmperorName(i);
+    const archetype = (persona?.archetype as BotArchetype) ?? getRandomArchetype();
+    const tier = persona ? tierNumberToBotTier(persona.tier) : "tier4_random";
 
     const bot = await createBotEmpire(
       gameId,
       name,
       emperorName,
       archetype,
-      "tier4_random"
+      tier
     );
 
     bots.push(bot);
@@ -171,7 +285,7 @@ export async function createBotEmpires(
 
 /**
  * Create bot empires in parallel for better performance.
- * Uses Promise.all to create bots concurrently.
+ * Uses Promise.all to create bots concurrently with persona-based selection.
  *
  * Note: This may cause database connection issues with too many concurrent inserts.
  * Use createBotEmpires for safer sequential creation.
@@ -186,15 +300,35 @@ export async function createBotEmpiresParallel(
 ): Promise<Empire[]> {
   const promises: Promise<Empire>[] = [];
 
+  // Select personas with tier-based distribution
+  const selectedPersonas = selectPersonasForGame(count);
+
   for (let i = 0; i < count; i++) {
-    const name = getBotEmpireName(i);
-    const emperorName = getBotEmperorName(i);
-    const archetype = getRandomArchetype();
+    const persona = selectedPersonas[i];
+
+    const name = persona?.name ?? getBotEmpireName(i);
+    const emperorName = persona?.emperorName ?? getBotEmperorName(i);
+    const archetype = (persona?.archetype as BotArchetype) ?? getRandomArchetype();
+    const tier = persona ? tierNumberToBotTier(persona.tier) : "tier4_random";
 
     promises.push(
-      createBotEmpire(gameId, name, emperorName, archetype, "tier4_random")
+      createBotEmpire(gameId, name, emperorName, archetype, tier)
     );
   }
 
   return Promise.all(promises);
+}
+
+/**
+ * Get all available personas (for debugging/testing).
+ */
+export function getAllPersonas(): Persona[] {
+  return personas;
+}
+
+/**
+ * Get persona by ID.
+ */
+export function getPersonaById(id: string): Persona | undefined {
+  return personas.find((p) => p.id === id);
 }

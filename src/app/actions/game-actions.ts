@@ -76,12 +76,18 @@ export interface StartGameResult {
 export async function startGameAction(formData: FormData): Promise<StartGameResult> {
   const empireName = formData.get("empireName") as string;
   const difficultyRaw = formData.get("difficulty") as string | null;
+  const botCountRaw = formData.get("botCount") as string | null;
 
   // Validate difficulty
   const validDifficulties: Difficulty[] = ["easy", "normal", "hard", "nightmare"];
   const difficulty: Difficulty = validDifficulties.includes(difficultyRaw as Difficulty)
     ? (difficultyRaw as Difficulty)
     : "normal";
+
+  // Validate bot count
+  const validBotCounts = [10, 25, 50];
+  const botCountNum = parseInt(botCountRaw ?? "25", 10);
+  const botCount = validBotCounts.includes(botCountNum) ? botCountNum : 25;
 
   if (!empireName || empireName.trim().length === 0) {
     return { success: false, error: "Empire name is required" };
@@ -97,7 +103,7 @@ export async function startGameAction(formData: FormData): Promise<StartGameResu
       empireName.trim(),
       undefined,
       difficulty,
-      25 // Default bot count
+      botCount
     );
 
     await setGameCookies(game.id, empire.id);

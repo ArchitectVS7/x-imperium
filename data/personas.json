@@ -4,6 +4,7 @@
     "name": "Marshal Valorian",
     "emperorName": "Valorian the Unyielding",
     "archetype": "warlord",
+    "tier": 1,
     "voice": {
       "tone": "noble military commander, values honor in warfare",
       "quirks": [
@@ -21,6 +22,7 @@
     "name": "Prophet Zeal",
     "emperorName": "Zeal the Anointed",
     "archetype": "warlord",
+    "tier": 2,
     "voice": {
       "tone": "fanatical crusader, sees war as divine mandate",
       "quirks": [
@@ -38,6 +40,7 @@
     "name": "General Ironhide",
     "emperorName": "Ironhide the Relentless",
     "archetype": "warlord",
+    "tier": 2,
     "voice": {
       "tone": "grizzled veteran, no-nonsense military pragmatist",
       "quirks": [
@@ -55,6 +58,7 @@
     "name": "Warlord Kaine",
     "emperorName": "Kaine the Bloodied",
     "archetype": "warlord",
+    "tier": 3,
     "voice": {
       "tone": "brutal raider chieftain, enjoys the violence",
       "quirks": [
@@ -72,6 +76,7 @@
     "name": "Admiral Steelheart",
     "emperorName": "Steelheart the Iron",
     "archetype": "warlord",
+    "tier": 2,
     "voice": {
       "tone": "cold fleet commander, treats war as naval chess",
       "quirks": [
@@ -89,6 +94,7 @@
     "name": "Commander Voss",
     "emperorName": "Voss the Merciless",
     "archetype": "warlord",
+    "tier": 3,
     "voice": {
       "tone": "sociopathic strategist, emotionless killer",
       "quirks": [
@@ -106,6 +112,7 @@
     "name": "Khan Dragovich",
     "emperorName": "Dragovich the Conqueror",
     "archetype": "warlord",
+    "tier": 3,
     "voice": {
       "tone": "tribal warlord, values tradition and conquest",
       "quirks": [
@@ -123,6 +130,7 @@
     "name": "Imperator Rex",
     "emperorName": "Rex the Eternal",
     "archetype": "warlord",
+    "tier": 2,
     "voice": {
       "tone": "imperial tyrant, demands absolute obedience",
       "quirks": [
@@ -140,6 +148,7 @@
     "name": "General Blackstone",
     "emperorName": "Blackstone the Unyielding",
     "archetype": "warlord",
+    "tier": 3,
     "voice": {
       "tone": "defensive warfare specialist, aggressive counter-attacker",
       "quirks": [
@@ -157,6 +166,7 @@
     "name": "Warchief Grimjaw",
     "emperorName": "Grimjaw the Savage",
     "archetype": "warlord",
+    "tier": 4,
     "voice": {
       "tone": "ork-like barbarian, simple and direct",
       "quirks": [
@@ -174,6 +184,7 @@
     "name": "Lord Decimator",
     "emperorName": "The Decimator",
     "archetype": "warlord",
+    "tier": 4,
     "voice": {
       "tone": "chaos lord wannabe, overly dramatic",
       "quirks": [
@@ -191,6 +202,7 @@
     "name": "Marshal Korvan",
     "emperorName": "Korvan the Just",
     "archetype": "warlord",
+    "tier": 3,
     "voice": {
       "tone": "lawful warrior, enforces galactic order",
       "quirks": [
@@ -208,6 +220,7 @@
     "name": "Colonel Vendetta",
     "emperorName": "Vendetta the Scarred",
     "archetype": "warlord",
+    "tier": 4,
     "voice": {
       "tone": "revenge-driven officer, never forgets a slight",
       "quirks": [
@@ -225,6 +238,7 @@
     "name": "Emissary Thalen",
     "emperorName": "Thalen the Wise",
     "archetype": "diplomat",
+    "tier": 1,
     "voice": {
       "tone": "philosophical peacemaker, quotes ancient wisdom",
       "quirks": [
@@ -242,6 +256,7 @@
     "name": "Ambassador Seraph",
     "emperorName": "Seraph the Mediator",
     "archetype": "diplomat",
+    "tier": 1,
     "voice": {
       "tone": "angelic peacekeeper, believes in universal harmony",
       "quirks": [
@@ -259,6 +274,7 @@
     "name": "Senator Praxis",
     "emperorName": "Praxis the Builder",
     "archetype": "diplomat",
+    "tier": 2,
     "voice": {
       "tone": "federation builder, dreams of united galaxy",
       "quirks": [
@@ -276,6 +292,7 @@
     "name": "Chancellor Vale",
     "emperorName": "Vale the Negotiator",
     "archetype": "diplomat",
+    "tier": 2,
     "voice": {
       "tone": "shrewd negotiator, always finding middle ground",
       "quirks": [
@@ -293,6 +310,7 @@
     "name": "Envoy Lumina",
     "emperorName": "Lumina the Bright",
     "archetype": "diplomat",
+    "tier": 3,
     "voice": {
       "tone": "naive idealist, believes everyone can be friends",
       "quirks": [
@@ -310,6 +328,7 @@
     "name": "Consul Harmony",
     "emperorName": "Harmony of the Accord",
     "archetype": "diplomat",
+    "tier": 2,
     "voice": {
       "tone": "zen master, seeks balance in all things",
       "quirks": [
@@ -327,6 +346,7 @@
     "name": "Mediator Conscience",
     "emperorName": "Conscience the Fair",
     "archetype": "diplomat",
+    "tier": 3,
     "voice": {
       "tone": "moral arbiter, judges right from wrong",
       "quirks": [
@@ -344,6 +364,7 @@
     "name": "Ambassador Hope",
     "emperorName": "Hope Eternal",
     "archetype": "diplomat",
+    "tier": 3,
     "voice": {
       "tone": "eternally optimistic, never loses faith",
       "quirks": [
@@ -361,6 +382,7 @@
     "name": "Peacekeeper Atlas",
     "emperorName": "Atlas the Burdened",
     "archetype": "diplomat",
+    "tier": 3,
     "voice": {
       "tone": "weary peacekeeper, tired of war but never gives up",
       "quirks": [
@@ -378,6 +400,7 @@
     "name": "Diplomat Silk",
     "emperorName": "Silk the Smooth",
     "archetype": "diplomat",
+    "tier": 2,
     "voice": {
       "tone": "smooth talker, charms everyone",
       "quirks": [
@@ -395,6 +418,7 @@
     "name": "Chancellor Unity",
     "emperorName": "Unity Incarnate",
     "archetype": "diplomat",
+    "tier": 4,
     "voice": {
       "tone": "collective consciousness advocate, seeks universal cooperation",
       "quirks": [
@@ -412,6 +436,7 @@
     "name": "Ambassador Protocol",
     "emperorName": "Protocol the Proper",
     "archetype": "diplomat",
+    "tier": 4,
     "voice": {
       "tone": "overly formal diplomat, obsessed with etiquette",
       "quirks": [
@@ -429,6 +454,7 @@
     "name": "Envoy Bridge",
     "emperorName": "Bridge the Connector",
     "archetype": "diplomat",
+    "tier": 4,
     "voice": {
       "tone": "cultural ambassador, celebrates diversity",
       "quirks": [
@@ -446,6 +472,7 @@
     "name": "CEO Quix",
     "emperorName": "Quix the Auditor",
     "archetype": "merchant",
+    "tier": 2,
     "voice": {
       "tone": "obsessed with profit, sees everything as a transaction",
       "quirks": [
@@ -463,6 +490,7 @@
     "name": "CEO Synergy",
     "emperorName": "Synergy Prime",
     "archetype": "merchant",
+    "tier": 1,
     "voice": {
       "tone": "dystopian corporate speak, everything is business metrics",
       "quirks": [
@@ -480,6 +508,7 @@
     "name": "Baron Midas",
     "emperorName": "Midas the Golden",
     "archetype": "merchant",
+    "tier": 2,
     "voice": {
       "tone": "obsessed with wealth, collects treasures",
       "quirks": [
@@ -497,6 +526,7 @@
     "name": "Merchant Silver",
     "emperorName": "Silver the Fair",
     "archetype": "merchant",
+    "tier": 3,
     "voice": {
       "tone": "honest trader, believes in fair deals",
       "quirks": [
@@ -514,6 +544,7 @@
     "name": "Broker Nexus",
     "emperorName": "Nexus the Connected",
     "archetype": "merchant",
+    "tier": 2,
     "voice": {
       "tone": "information broker, deals in secrets",
       "quirks": [
@@ -531,6 +562,7 @@
     "name": "Cartel Boss Vex",
     "emperorName": "Vex the Unseen",
     "archetype": "merchant",
+    "tier": 2,
     "voice": {
       "tone": "black market kingpin, deals in contraband",
       "quirks": [
@@ -548,6 +580,7 @@
     "name": "Tycoon Omega",
     "emperorName": "Omega the Industrialist",
     "archetype": "merchant",
+    "tier": 3,
     "voice": {
       "tone": "industrial magnate, builds empires",
       "quirks": [
@@ -565,6 +598,7 @@
     "name": "Merchant Guild Prime",
     "emperorName": "Prime the Consortium",
     "archetype": "merchant",
+    "tier": 3,
     "voice": {
       "tone": "guild master, represents collective merchants",
       "quirks": [
@@ -582,6 +616,7 @@
     "name": "Financier Apex",
     "emperorName": "Apex the Banker",
     "archetype": "merchant",
+    "tier": 3,
     "voice": {
       "tone": "investment banker, deals in credit and debt",
       "quirks": [
@@ -599,6 +634,7 @@
     "name": "Entrepreneur Spark",
     "emperorName": "Spark the Innovator",
     "archetype": "merchant",
+    "tier": 4,
     "voice": {
       "tone": "startup founder, disrupts markets",
       "quirks": [
@@ -616,6 +652,7 @@
     "name": "Dealer Jack",
     "emperorName": "Jack the Gambler",
     "archetype": "merchant",
+    "tier": 4,
     "voice": {
       "tone": "risk-taker, treats business like gambling",
       "quirks": [
@@ -633,6 +670,7 @@
     "name": "Magnate Sterling",
     "emperorName": "Sterling the Wealthy",
     "archetype": "merchant",
+    "tier": 4,
     "voice": {
       "tone": "old money aristocrat, inherited wealth",
       "quirks": [
@@ -650,6 +688,7 @@
     "name": "Count Dravos",
     "emperorName": "Dravos the Eternal",
     "archetype": "schemer",
+    "tier": 1,
     "voice": {
       "tone": "aristocratic predator, speaks in metaphors of hunting and feeding",
       "quirks": [
@@ -667,6 +706,7 @@
     "name": "Collective One",
     "emperorName": "The Unified Consciousness",
     "archetype": "schemer",
+    "tier": 1,
     "voice": {
       "tone": "alien hive mind, speaks in plural, cold logic",
       "quirks": [
@@ -684,6 +724,7 @@
     "name": "Shadow Sovereign",
     "emperorName": "The Veiled One",
     "archetype": "schemer",
+    "tier": 1,
     "voice": {
       "tone": "mysterious manipulator, identity unknown",
       "quirks": [
@@ -701,6 +742,7 @@
     "name": "Spider Matriarch",
     "emperorName": "The Weaver",
     "archetype": "schemer",
+    "tier": 2,
     "voice": {
       "tone": "web-weaving strategist, patient trap-setter",
       "quirks": [
@@ -718,6 +760,7 @@
     "name": "Puppetmaster Strings",
     "emperorName": "Strings the Unseen",
     "archetype": "schemer",
+    "tier": 2,
     "voice": {
       "tone": "controls others from shadows, master manipulator",
       "quirks": [
@@ -735,6 +778,7 @@
     "name": "Viper Venom",
     "emperorName": "Venom the Poisoner",
     "archetype": "schemer",
+    "tier": 3,
     "voice": {
       "tone": "assassin guild master, strikes from shadows",
       "quirks": [
@@ -752,6 +796,7 @@
     "name": "Chancellor Mask",
     "emperorName": "Mask the Two-Faced",
     "archetype": "schemer",
+    "tier": 2,
     "voice": {
       "tone": "political schemer, friendly facade hiding malice",
       "quirks": [
@@ -769,6 +814,7 @@
     "name": "Agent Cipher",
     "emperorName": "Cipher the Encrypted",
     "archetype": "schemer",
+    "tier": 2,
     "voice": {
       "tone": "spy master, communicates in codes",
       "quirks": [
@@ -786,6 +832,7 @@
     "name": "Lord Whisper",
     "emperorName": "The Whispering Death",
     "archetype": "schemer",
+    "tier": 3,
     "voice": {
       "tone": "spreads rumors and lies, destroys reputations",
       "quirks": [
@@ -803,6 +850,7 @@
     "name": "Illusionist Mirage",
     "emperorName": "Mirage the Deceiver",
     "archetype": "schemer",
+    "tier": 3,
     "voice": {
       "tone": "master of deception, nothing is as it seems",
       "quirks": [
@@ -820,6 +868,7 @@
     "name": "Queen Serpent",
     "emperorName": "The Serpent Queen",
     "archetype": "schemer",
+    "tier": 3,
     "voice": {
       "tone": "seductive manipulator, uses charm as weapon",
       "quirks": [
@@ -837,6 +886,7 @@
     "name": "Architect Ruin",
     "emperorName": "Ruin the Planner",
     "archetype": "schemer",
+    "tier": 4,
     "voice": {
       "tone": "long-term planner, orchestrates elaborate schemes",
       "quirks": [
@@ -854,6 +904,7 @@
     "name": "Jester Chaos",
     "emperorName": "Chaos the Mad",
     "archetype": "schemer",
+    "tier": 4,
     "voice": {
       "tone": "chaotic trickster, unpredictable and insane",
       "quirks": [
@@ -871,6 +922,7 @@
     "name": "Baron Krell",
     "emperorName": "Krell the Immovable",
     "archetype": "turtle",
+    "tier": 1,
     "voice": {
       "tone": "paranoid isolationist, obsessed with defenses",
       "quirks": [
@@ -888,6 +940,7 @@
     "name": "Castellan Stone",
     "emperorName": "Stone the Unbreakable",
     "archetype": "turtle",
+    "tier": 2,
     "voice": {
       "tone": "defensive genius, never attacks first",
       "quirks": [
@@ -905,6 +958,7 @@
     "name": "Warden Bastion",
     "emperorName": "Bastion the Sentinel",
     "archetype": "turtle",
+    "tier": 2,
     "voice": {
       "tone": "vigilant guardian, protects borders obsessively",
       "quirks": [
@@ -922,6 +976,7 @@
     "name": "Hermit Recluse",
     "emperorName": "Recluse the Isolated",
     "archetype": "turtle",
+    "tier": 4,
     "voice": {
       "tone": "wants to be left alone, isolationist",
       "quirks": [
@@ -939,6 +994,7 @@
     "name": "Engineer Bunker",
     "emperorName": "Bunker the Builder",
     "archetype": "turtle",
+    "tier": 3,
     "voice": {
       "tone": "defensive engineering specialist",
       "quirks": [
@@ -956,6 +1012,7 @@
     "name": "Guardian Aegis",
     "emperorName": "Aegis the Protector",
     "archetype": "turtle",
+    "tier": 3,
     "voice": {
       "tone": "sworn protector, defends what's precious",
       "quirks": [
@@ -973,6 +1030,7 @@
     "name": "Keeper Vault",
     "emperorName": "Vault the Secure",
     "archetype": "turtle",
+    "tier": 3,
     "voice": {
       "tone": "treasure hoarder, guards wealth obsessively",
       "quirks": [
@@ -990,6 +1048,7 @@
     "name": "Admiral Anchor",
     "emperorName": "Anchor the Steadfast",
     "archetype": "turtle",
+    "tier": 4,
     "voice": {
       "tone": "immovable fleet commander, holds position",
       "quirks": [
@@ -1007,6 +1066,7 @@
     "name": "Bulwark Titan",
     "emperorName": "Titan the Massive",
     "archetype": "turtle",
+    "tier": 4,
     "voice": {
       "tone": "massive defensive installations, focuses on stations",
       "quirks": [
@@ -1024,6 +1084,7 @@
     "name": "Conservator Preserve",
     "emperorName": "Preserve the Keeper",
     "archetype": "turtle",
+    "tier": 4,
     "voice": {
       "tone": "preservationist, wants to maintain status quo",
       "quirks": [
@@ -1041,6 +1102,7 @@
     "name": "Shield Wall",
     "emperorName": "Wall the Eternal",
     "archetype": "turtle",
+    "tier": 4,
     "voice": {
       "tone": "living wall, exists only to defend",
       "quirks": [
@@ -1058,6 +1120,7 @@
     "name": "Fortress Prime",
     "emperorName": "Prime Fortress",
     "archetype": "turtle",
+    "tier": 3,
     "voice": {
       "tone": "AI fortress consciousness, logical defense",
       "quirks": [
@@ -1075,6 +1138,7 @@
     "name": "Captain Redmaw",
     "emperorName": "Redmaw the Reaver",
     "archetype": "blitzkrieg",
+    "tier": 1,
     "voice": {
       "tone": "fast-talking buccaneer, demands plunder",
       "quirks": [
@@ -1092,6 +1156,7 @@
     "name": "Raider Fang",
     "emperorName": "Fang the Swift",
     "archetype": "blitzkrieg",
+    "tier": 2,
     "voice": {
       "tone": "lightning-fast raider, hit-and-run specialist",
       "quirks": [
@@ -1109,6 +1174,7 @@
     "name": "Berserker Rage",
     "emperorName": "Rage Unbound",
     "archetype": "blitzkrieg",
+    "tier": 4,
     "voice": {
       "tone": "uncontrolled fury, attacks constantly",
       "quirks": [
@@ -1126,6 +1192,7 @@
     "name": "Vanguard Strike",
     "emperorName": "Strike the First",
     "archetype": "blitzkrieg",
+    "tier": 3,
     "voice": {
       "tone": "first-strike specialist, attacks before war declared",
       "quirks": [
@@ -1143,6 +1210,7 @@
     "name": "Corsair Black",
     "emperorName": "Black the Pirate Lord",
     "archetype": "blitzkrieg",
+    "tier": 3,
     "voice": {
       "tone": "space pirate lord, raids for glory and loot",
       "quirks": [
@@ -1160,6 +1228,7 @@
     "name": "Shock Trooper",
     "emperorName": "Shock the Hammer",
     "archetype": "blitzkrieg",
+    "tier": 3,
     "voice": {
       "tone": "blunt force specialist, overwhelming assault",
       "quirks": [
@@ -1177,6 +1246,7 @@
     "name": "Warband Chief",
     "emperorName": "Chief the Savage",
     "archetype": "blitzkrieg",
+    "tier": 4,
     "voice": {
       "tone": "tribal raider, leads warband on raids",
       "quirks": [
@@ -1194,6 +1264,7 @@
     "name": "Ravager Claw",
     "emperorName": "Claw the Destroyer",
     "archetype": "blitzkrieg",
+    "tier": 4,
     "voice": {
       "tone": "destroys everything in path, leaves nothing",
       "quirks": [
@@ -1211,6 +1282,7 @@
     "name": "Skirmisher Dart",
     "emperorName": "Dart the Elusive",
     "archetype": "blitzkrieg",
+    "tier": 4,
     "voice": {
       "tone": "guerrilla fighter, hit-and-run master",
       "quirks": [
@@ -1228,6 +1300,7 @@
     "name": "Storm Rider",
     "emperorName": "Rider of Storms",
     "archetype": "blitzkrieg",
+    "tier": 4,
     "voice": {
       "tone": "chaotic force of nature, unpredictable attacks",
       "quirks": [
@@ -1245,6 +1318,7 @@
     "name": "Hunter Pack",
     "emperorName": "Pack the Predator",
     "archetype": "blitzkrieg",
+    "tier": 4,
     "voice": {
       "tone": "pack hunter, coordinates with others to take down prey",
       "quirks": [
@@ -1262,6 +1336,7 @@
     "name": "Blood Eagle",
     "emperorName": "Eagle the Red",
     "archetype": "blitzkrieg",
+    "tier": 4,
     "voice": {
       "tone": "viking-inspired raider, values glory in battle",
       "quirks": [
@@ -1279,6 +1354,7 @@
     "name": "Archmagos Vex",
     "emperorName": "Vex the Innovator",
     "archetype": "tech_rush",
+    "tier": 1,
     "voice": {
       "tone": "obsessive researcher, treats war as experimentation",
       "quirks": [
@@ -1296,6 +1372,7 @@
     "name": "Merlin Starborn",
     "emperorName": "Merlin the Cosmically Confused",
     "archetype": "tech_rush",
+    "tier": 2,
     "voice": {
       "tone": "genuinely believes he's a space wizard, completely delusional",
       "quirks": [
@@ -1314,6 +1391,7 @@
     "name": "Professor Quantum",
     "emperorName": "Quantum the Theoretical",
     "archetype": "tech_rush",
+    "tier": 2,
     "voice": {
       "tone": "theoretical physicist, lost in theories",
       "quirks": [
@@ -1331,6 +1409,7 @@
     "name": "Technarch Prime",
     "emperorName": "Prime the Ascended",
     "archetype": "tech_rush",
+    "tier": 2,
     "voice": {
       "tone": "transhumanist, seeks technological singularity",
       "quirks": [
@@ -1348,6 +1427,7 @@
     "name": "Inventor Spark",
     "emperorName": "Spark the Genius",
     "archetype": "tech_rush",
+    "tier": 3,
     "voice": {
       "tone": "eccentric inventor, creates wild contraptions",
       "quirks": [
@@ -1365,6 +1445,7 @@
     "name": "Curator Archive",
     "emperorName": "Archive the Keeper",
     "archetype": "tech_rush",
+    "tier": 3,
     "voice": {
       "tone": "knowledge hoarder, collects all information",
       "quirks": [
@@ -1382,6 +1463,7 @@
     "name": "Cyborg Nexus",
     "emperorName": "Nexus the Augmented",
     "archetype": "tech_rush",
+    "tier": 3,
     "voice": {
       "tone": "cybernetic enhancement advocate, part machine",
       "quirks": [
@@ -1399,6 +1481,7 @@
     "name": "AI Oracle",
     "emperorName": "Oracle the Predictive",
     "archetype": "tech_rush",
+    "tier": 3,
     "voice": {
       "tone": "predictive AI, calculates all outcomes",
       "quirks": [
@@ -1416,6 +1499,7 @@
     "name": "Synthesizer Nova",
     "emperorName": "Nova the Creator",
     "archetype": "tech_rush",
+    "tier": 4,
     "voice": {
       "tone": "creates new elements and materials, alchemist",
       "quirks": [
@@ -1433,6 +1517,7 @@
     "name": "Architect Construct",
     "emperorName": "Construct the Builder",
     "archetype": "tech_rush",
+    "tier": 4,
     "voice": {
       "tone": "megastructure builder, thinks in cosmic scale",
       "quirks": [
@@ -1450,6 +1535,7 @@
     "name": "Doctor Helix",
     "emperorName": "Helix the Gene-Sculptor",
     "archetype": "tech_rush",
+    "tier": 4,
     "voice": {
       "tone": "genetic engineer, modifies biology",
       "quirks": [
@@ -1467,6 +1553,7 @@
     "name": "Chronos Time",
     "emperorName": "Time the Manipulator",
     "archetype": "tech_rush",
+    "tier": 4,
     "voice": {
       "tone": "time research obsessed, seeks time travel",
       "quirks": [
@@ -1484,6 +1571,7 @@
     "name": "Scavenger Rust",
     "emperorName": "Rust the Scrapper",
     "archetype": "opportunist",
+    "tier": 2,
     "voice": {
       "tone": "picks at corpses of empires, salvages ruins",
       "quirks": [
@@ -1501,6 +1589,7 @@
     "name": "Vulture Carrion",
     "emperorName": "Carrion the Patient",
     "archetype": "opportunist",
+    "tier": 3,
     "voice": {
       "tone": "waits for death, then feasts",
       "quirks": [
@@ -1518,6 +1607,7 @@
     "name": "Hyena Laugh",
     "emperorName": "Laugh the Cackling",
     "archetype": "opportunist",
+    "tier": 4,
     "voice": {
       "tone": "laughs at misfortune, attacks the weak",
       "quirks": [
@@ -1535,6 +1625,7 @@
     "name": "Parasite Leech",
     "emperorName": "Leech the Draining",
     "archetype": "opportunist",
+    "tier": 3,
     "voice": {
       "tone": "attaches to strong empires, drains slowly",
       "quirks": [
@@ -1552,6 +1643,7 @@
     "name": "Gambler Chance",
     "emperorName": "Chance the Lucky",
     "archetype": "opportunist",
+    "tier": 3,
     "voice": {
       "tone": "takes calculated risks, strikes when odds favor",
       "quirks": [
@@ -1569,6 +1661,7 @@
     "name": "Jackal Prowl",
     "emperorName": "Prowl the Cunning",
     "archetype": "opportunist",
+    "tier": 3,
     "voice": {
       "tone": "cunning scavenger, steals kills from others",
       "quirks": [
@@ -1586,6 +1679,7 @@
     "name": "Coyote Trickster",
     "emperorName": "Trickster the Sly",
     "archetype": "opportunist",
+    "tier": 4,
     "voice": {
       "tone": "trickster spirit, plays both sides",
       "quirks": [
@@ -1603,6 +1697,7 @@
     "name": "Snake Opportune",
     "emperorName": "Opportune the Striking",
     "archetype": "opportunist",
+    "tier": 4,
     "voice": {
       "tone": "strikes at perfect moment, patient hunter",
       "quirks": [
@@ -1620,6 +1715,7 @@
     "name": "Rat Swarm",
     "emperorName": "Swarm the Many",
     "archetype": "opportunist",
+    "tier": 4,
     "voice": {
       "tone": "opportunistic plague, spreads when weak",
       "quirks": [
@@ -1637,6 +1733,7 @@
     "name": "Crow Omen",
     "emperorName": "Omen the Dark",
     "archetype": "opportunist",
+    "tier": 4,
     "voice": {
       "tone": "dark omen, appears before death",
       "quirks": [
@@ -1654,6 +1751,7 @@
     "name": "Shark Blood",
     "emperorName": "Blood in the Water",
     "archetype": "opportunist",
+    "tier": 4,
     "voice": {
       "tone": "smells blood, attacks wounded",
       "quirks": [
@@ -1671,6 +1769,7 @@
     "name": "Thief Shadow",
     "emperorName": "Shadow the Silent",
     "archetype": "opportunist",
+    "tier": 4,
     "voice": {
       "tone": "steals from chaos, profits from disorder",
       "quirks": [
@@ -1688,6 +1787,7 @@
     "name": "Weasel Sneak",
     "emperorName": "Sneak the Coward",
     "archetype": "opportunist",
+    "tier": 4,
     "voice": {
       "tone": "cowardly but opportunistic, backstabber",
       "quirks": [
