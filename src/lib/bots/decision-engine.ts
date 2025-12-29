@@ -1,16 +1,23 @@
 /**
  * Bot Decision Engine
  *
- * Implements weighted random decision-making for M5 Random Bots.
- * Generates decisions based on game state and difficulty settings.
+ * Implements weighted decision-making for M5-M10 Bot AI.
+ * Generates decisions based on game state, difficulty, emotions, and archetypes.
  *
- * Decision Weights (PRD M5):
- * - 35% build units
- * - 20% buy planets
- * - 15% attack (0% during protection period)
- * - 10% diplomacy (stub: resolves to do_nothing until M7)
- * - 10% trade (stub: resolves to do_nothing until M7)
- * - 10% do nothing
+ * M5: Base weighted random decisions
+ * M9: Archetype-based decision trees
+ * M10: Emotional state modifiers
+ *
+ * Decision Weights (PRD M5, modified by archetype/emotion):
+ * - 30% build units
+ * - 15% buy planets
+ * - 12% attack (0% during protection period)
+ * - 8% diplomacy
+ * - 8% trade
+ * - 7% do nothing
+ * - 10% craft component
+ * - 5% accept contract
+ * - 5% purchase black market
  */
 
 import type {
@@ -41,6 +48,21 @@ import {
 } from "./archetypes/crafting-profiles";
 import type { CraftedResource } from "@/lib/game/constants/crafting";
 import { CONTRACT_CONFIGS, type ContractType } from "@/lib/game/constants/syndicate";
+// M10: Emotional state imports
+import {
+  type EmotionalStateName,
+  type EmotionalModifiers,
+  getScaledModifiers,
+  EMOTIONAL_STATES,
+} from "./emotions";
+// M9: Archetype behavior imports
+import {
+  ARCHETYPE_BEHAVIORS,
+  type ArchetypeBehavior,
+  wouldArchetypeAttack,
+  rollTellCheck,
+  rollAdvanceWarning,
+} from "./archetypes";
 
 // =============================================================================
 // BASE DECISION WEIGHTS
@@ -174,6 +196,238 @@ export const ARCHETYPE_WEIGHTS: Record<BotArchetype, BotDecisionWeights> = {
   },
 };
 
+// =============================================================================
+// M10: EMOTIONAL STATE MODIFIERS (PRD 7.8)
+// =============================================================================
+
+/**
+ * Emotional state modifiers interface for decision weights.
+ * Maps emotional effects to decision weight adjustments.
+ */
+export interface EmotionalWeightModifiers {
+  /** Modifier for attack weight (from aggression) */
+  attackModifier: number;
+  /** Modifier for diplomacy weight (from allianceWillingness) */
+  diplomacyModifier: number;
+  /** Modifier for overall decision quality */
+  qualityModifier: number;
+  /** Modifier for trade/negotiation weight */
+  tradeModifier: number;
+}
+
+/**
+ * Apply emotional state modifiers to decision weights.
+ *
+ * PRD 7.8 Effects:
+ * - Confident: +5% optimal decisions, +10% negotiation
+ * - Arrogant: -15% optimal decisions, +30% aggression (attack weight)
+ * - Desperate: +40% alliance-seeking (diplomacy weight)
+ * - Vengeful: +40% aggression, -40% negotiation
+ * - Fearful: -30% aggression, +50% alliance-seeking
+ * - Triumphant: +20% aggression
+ *
+ * @param weights - Base decision weights
+ * @param state - Current emotional state
+ * @param intensity - Emotional intensity (0-1)
+ * @returns Modified weights
+ */
+export function applyEmotionalModifiers(
+  weights: BotDecisionWeights,
+  state: EmotionalStateName,
+  intensity: number
+): BotDecisionWeights {
+  const modifiers = getScaledModifiers(state, intensity);
+
+  // Apply aggression modifier to attack weight
+  const attackMultiplier = 1 + modifiers.aggression;
+
+  // Apply alliance willingness to diplomacy weight
+  const diplomacyMultiplier = 1 + modifiers.allianceWillingness;
+
+  // Apply negotiation modifier to trade weight
+  const tradeMultiplier = 1 + modifiers.negotiation;
+
+  // Calculate modified weights
+  let newWeights: BotDecisionWeights = {
+    build_units: weights.build_units,
+    buy_planet: weights.buy_planet,
+    attack: Math.max(0, weights.attack * attackMultiplier),
+    diplomacy: Math.max(0, weights.diplomacy * diplomacyMultiplier),
+    trade: Math.max(0, weights.trade * tradeMultiplier),
+    do_nothing: weights.do_nothing,
+    craft_component: weights.craft_component,
+    accept_contract: weights.accept_contract,
+    purchase_black_market: weights.purchase_black_market,
+  };
+
+  // Normalize weights to sum to 1.0
+  const sum = Object.values(newWeights).reduce((a, b) => a + b, 0);
+  if (sum > 0) {
+    for (const key of Object.keys(newWeights) as Array<keyof BotDecisionWeights>) {
+      newWeights[key] = newWeights[key] / sum;
+    }
+  }
+
+  return newWeights;
+}
+
+/**
+ * Get emotional weight modifiers for debugging/display.
+ *
+ * @param state - Emotional state name
+ * @param intensity - Intensity (0-1)
+ * @returns Modifiers object
+ */
+export function getEmotionalWeightModifiers(
+  state: EmotionalStateName,
+  intensity: number
+): EmotionalWeightModifiers {
+  const mods = getScaledModifiers(state, intensity);
+
+  return {
+    attackModifier: mods.aggression,
+    diplomacyModifier: mods.allianceWillingness,
+    qualityModifier: mods.decisionQuality,
+    tradeModifier: mods.negotiation,
+  };
+}
+
+// =============================================================================
+// M9: ARCHETYPE DECISION TREE HELPERS
+// =============================================================================
+
+/**
+ * Get archetype behavior definition, with fallback.
+ *
+ * @param archetype - Bot archetype (from database)
+ * @returns Archetype behavior or null if not found
+ */
+function getArchetypeBehavior(archetype: BotArchetype | null): ArchetypeBehavior | null {
+  if (!archetype) return null;
+
+  // Map database archetype names to behavior names
+  const archetypeMap: Record<BotArchetype, string> = {
+    warlord: "warlord",
+    diplomat: "diplomat",
+    merchant: "merchant",
+    schemer: "schemer",
+    turtle: "turtle",
+    blitzkrieg: "blitzkrieg",
+    tech_rush: "techRush",
+    opportunist: "opportunist",
+  };
+
+  const behaviorName = archetypeMap[archetype];
+  return ARCHETYPE_BEHAVIORS[behaviorName as keyof typeof ARCHETYPE_BEHAVIORS] ?? null;
+}
+
+/**
+ * Check if archetype should attack based on power ratio.
+ *
+ * @param archetype - Bot archetype
+ * @param ourPower - Our military power
+ * @param enemyPower - Enemy military power
+ * @returns True if archetype would attack
+ */
+export function shouldArchetypeAttack(
+  archetype: BotArchetype | null,
+  ourPower: number,
+  enemyPower: number
+): boolean {
+  if (!archetype || ourPower === 0) return false;
+
+  const behavior = getArchetypeBehavior(archetype);
+  if (!behavior) return Math.random() < 0.5; // Default random
+
+  // Calculate enemy power as ratio of our power
+  const enemyRatio = enemyPower / ourPower;
+
+  // Archetype attacks if enemy is weaker than threshold
+  return enemyRatio < behavior.combat.attackThreshold;
+}
+
+/**
+ * Get retreat willingness for an archetype.
+ *
+ * @param archetype - Bot archetype
+ * @returns Retreat willingness (0-1)
+ */
+export function getRetreatWillingness(archetype: BotArchetype | null): number {
+  if (!archetype) return 0.3; // Default moderate
+
+  const behavior = getArchetypeBehavior(archetype);
+  return behavior?.combat.retreatWillingness ?? 0.3;
+}
+
+/**
+ * Get alliance seeking tendency for an archetype.
+ *
+ * @param archetype - Bot archetype
+ * @returns Alliance seeking (0-1)
+ */
+export function getAllianceSeeking(archetype: BotArchetype | null): number {
+  if (!archetype) return 0.3; // Default moderate
+
+  const behavior = getArchetypeBehavior(archetype);
+  return behavior?.diplomacy.allianceSeeking ?? 0.3;
+}
+
+// =============================================================================
+// M9: TELL SYSTEM (PRD 7.10)
+// =============================================================================
+
+/**
+ * Determine if bot should telegraph their upcoming action.
+ *
+ * @param archetype - Bot archetype
+ * @param actionType - Type of action being planned
+ * @returns Object with shouldTell and advanceWarningTurns
+ */
+export function shouldTelegraphAction(
+  archetype: BotArchetype | null,
+  actionType: "attack" | "diplomacy" | "trade" | "other"
+): { shouldTell: boolean; advanceWarningTurns: number } {
+  if (!archetype) {
+    return { shouldTell: false, advanceWarningTurns: 0 };
+  }
+
+  const behavior = getArchetypeBehavior(archetype);
+  if (!behavior) {
+    return { shouldTell: false, advanceWarningTurns: 0 };
+  }
+
+  // Only telegraph significant actions
+  if (actionType !== "attack" && actionType !== "diplomacy") {
+    return { shouldTell: false, advanceWarningTurns: 0 };
+  }
+
+  // Roll tell check based on archetype tell rate
+  const shouldTell = Math.random() < behavior.tell.tellRate;
+
+  if (!shouldTell) {
+    return { shouldTell: false, advanceWarningTurns: 0 };
+  }
+
+  // Calculate advance warning turns
+  const { min, max } = behavior.tell.advanceWarning;
+  const advanceWarningTurns = Math.floor(Math.random() * (max - min + 1)) + min;
+
+  return { shouldTell: true, advanceWarningTurns };
+}
+
+/**
+ * Get tell style for an archetype.
+ *
+ * @param archetype - Bot archetype
+ * @returns Tell style string
+ */
+export function getTellStyle(archetype: BotArchetype | null): string {
+  if (!archetype) return "minimal";
+
+  const behavior = getArchetypeBehavior(archetype);
+  return behavior?.tell.style ?? "minimal";
+}
+
 // Planet types that bots can purchase (excludes special types)
 const PURCHASABLE_PLANET_TYPES: PlanetType[] = [
   "food",
@@ -200,10 +454,11 @@ const COMBAT_UNIT_TYPES: UnitType[] = [
 // =============================================================================
 
 /**
- * Get adjusted weights based on game state and archetype.
+ * Get adjusted weights based on game state, archetype, and emotional state.
  * - Uses archetype-specific weights for differentiated playstyles
  * - Attack weight is 0 during protection period (turn <= protectionTurns)
- * - Redistributes attack weight proportionally to other actions
+ * - Applies M10 emotional modifiers based on current state
+ * - Redistributes attack weight proportionally to other actions during protection
  *
  * @param context - Current game context
  * @returns Adjusted decision weights
@@ -213,43 +468,73 @@ export function getAdjustedWeights(
 ): BotDecisionWeights {
   // Get archetype-specific weights (default to BASE_WEIGHTS if archetype unknown)
   const archetype = context.empire.botArchetype;
-  const baseWeights = archetype && ARCHETYPE_WEIGHTS[archetype]
-    ? ARCHETYPE_WEIGHTS[archetype]
-    : BASE_WEIGHTS;
+  let weights = archetype && ARCHETYPE_WEIGHTS[archetype]
+    ? { ...ARCHETYPE_WEIGHTS[archetype] }
+    : { ...BASE_WEIGHTS };
 
   const isProtected = context.currentTurn <= context.protectionTurns;
 
-  if (!isProtected) {
-    // After protection period, use archetype weights
-    return { ...baseWeights };
+  // During protection: set attack to 0 and redistribute
+  if (isProtected) {
+    const attackWeight = weights.attack;
+    const otherWeightSum =
+      weights.build_units +
+      weights.buy_planet +
+      weights.diplomacy +
+      weights.trade +
+      weights.do_nothing +
+      weights.craft_component +
+      weights.accept_contract +
+      weights.purchase_black_market;
+
+    // Redistribute proportionally
+    const redistributionFactor = 1 + attackWeight / otherWeightSum;
+
+    weights = {
+      build_units: weights.build_units * redistributionFactor,
+      buy_planet: weights.buy_planet * redistributionFactor,
+      attack: 0, // No attacks during protection
+      diplomacy: weights.diplomacy * redistributionFactor,
+      trade: weights.trade * redistributionFactor,
+      do_nothing: weights.do_nothing * redistributionFactor,
+      craft_component: weights.craft_component * redistributionFactor,
+      accept_contract: weights.accept_contract * redistributionFactor,
+      purchase_black_market: weights.purchase_black_market * redistributionFactor,
+    };
   }
 
-  // During protection: redistribute attack weight to other actions
-  const attackWeight = baseWeights.attack;
-  const otherWeightSum =
-    baseWeights.build_units +
-    baseWeights.buy_planet +
-    baseWeights.diplomacy +
-    baseWeights.trade +
-    baseWeights.do_nothing +
-    baseWeights.craft_component +
-    baseWeights.accept_contract +
-    baseWeights.purchase_black_market;
+  // M10: Apply emotional state modifiers if available
+  if (context.emotionalState) {
+    const { state, intensity } = context.emotionalState;
+    // Only apply if not neutral
+    if (state !== "neutral") {
+      weights = applyEmotionalModifiers(
+        weights,
+        state as EmotionalStateName,
+        intensity
+      );
+    }
+  }
 
-  // Redistribute proportionally
-  const redistributionFactor = 1 + attackWeight / otherWeightSum;
+  // M10: Apply permanent grudge targeting (increase attack weight against grudge targets)
+  if (context.permanentGrudges && context.permanentGrudges.length > 0) {
+    // Check if any available targets are grudge targets
+    const hasGrudgeTarget = context.availableTargets.some(
+      (t) => context.permanentGrudges?.includes(t.id)
+    );
+    if (hasGrudgeTarget && !isProtected) {
+      // Boost attack weight by 20% when grudge targets are available
+      const boost = weights.attack * 0.2;
+      weights.attack += boost;
+      // Normalize
+      const sum = Object.values(weights).reduce((a, b) => a + b, 0);
+      for (const key of Object.keys(weights) as Array<keyof BotDecisionWeights>) {
+        weights[key] = weights[key] / sum;
+      }
+    }
+  }
 
-  return {
-    build_units: baseWeights.build_units * redistributionFactor,
-    buy_planet: baseWeights.buy_planet * redistributionFactor,
-    attack: 0, // No attacks during protection
-    diplomacy: baseWeights.diplomacy * redistributionFactor,
-    trade: baseWeights.trade * redistributionFactor,
-    do_nothing: baseWeights.do_nothing * redistributionFactor,
-    craft_component: baseWeights.craft_component * redistributionFactor,
-    accept_contract: baseWeights.accept_contract * redistributionFactor,
-    purchase_black_market: baseWeights.purchase_black_market * redistributionFactor,
-  };
+  return weights;
 }
 
 // =============================================================================
@@ -437,7 +722,9 @@ function generateBuyPlanetDecision(
 
 /**
  * Generate an attack decision.
- * Selects a target based on difficulty and allocates forces.
+ * Selects a target based on difficulty, archetype, and grudges.
+ * M9: Uses archetype attack thresholds
+ * M10: Prioritizes grudge targets
  */
 function generateAttackDecision(
   context: BotDecisionContext,
@@ -460,10 +747,42 @@ function generateAttackDecision(
     return { type: "do_nothing" };
   }
 
-  // Select target based on difficulty
-  const target = selectTarget(validTargets, difficulty, random);
+  // M10: Check for grudge targets first
+  let target;
+  if (context.permanentGrudges && context.permanentGrudges.length > 0) {
+    const grudgeTargets = validTargets.filter((t) =>
+      context.permanentGrudges?.includes(t.id)
+    );
+    if (grudgeTargets.length > 0) {
+      // Prioritize grudge targets (70% chance to attack grudge target if available)
+      if ((random ?? Math.random()) < 0.7) {
+        target = grudgeTargets[Math.floor((random ?? Math.random()) * grudgeTargets.length)];
+      }
+    }
+  }
+
+  // If no grudge target selected, use normal selection
+  if (!target) {
+    target = selectTarget(validTargets, difficulty, random);
+  }
+
   if (!target) {
     return { type: "do_nothing" };
+  }
+
+  // M9: Check archetype attack threshold
+  const archetype = empire.botArchetype;
+  if (archetype) {
+    const ourPower = calculateOurMilitaryPower(empire);
+    const enemyPower = target.militaryPower;
+
+    // Only attack if we pass the archetype's attack threshold check
+    // (unless targeting a grudge - grudge overrides threshold)
+    const isGrudgeTarget = context.permanentGrudges?.includes(target.id);
+    if (!isGrudgeTarget && !shouldArchetypeAttack(archetype, ourPower, enemyPower)) {
+      // Archetype wouldn't attack at this power ratio
+      return { type: "do_nothing" };
+    }
   }
 
   // Check if bot has any forces to attack with
@@ -478,8 +797,10 @@ function generateAttackDecision(
     return { type: "do_nothing" };
   }
 
-  // Allocate a portion of forces (30-70% of each unit type)
-  const allocationFactor = 0.3 + (random ?? Math.random()) * 0.4;
+  // Allocate forces based on archetype style
+  const behavior = getArchetypeBehavior(archetype);
+  const baseAllocation = behavior?.combat.style === "aggressive" ? 0.5 : 0.3;
+  const allocationFactor = baseAllocation + (random ?? Math.random()) * 0.3;
 
   const forces: Forces = {
     soldiers: Math.floor(empire.soldiers * allocationFactor),
@@ -496,6 +817,20 @@ function generateAttackDecision(
   }
 
   return { type: "attack", targetId: target.id, forces };
+}
+
+/**
+ * Calculate military power for our empire.
+ */
+function calculateOurMilitaryPower(empire: BotDecisionContext["empire"]): number {
+  return (
+    empire.soldiers +
+    empire.fighters * 3 +
+    empire.lightCruisers * 5 +
+    empire.heavyCruisers * 8 +
+    empire.carriers * 12 +
+    empire.stations * 50
+  );
 }
 
 /**

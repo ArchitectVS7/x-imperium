@@ -46,6 +46,17 @@ export {
   generateBotDecision,
   getWeightSum,
   validateWeights,
+  // M10: Emotional modifiers
+  applyEmotionalModifiers,
+  getEmotionalWeightModifiers,
+  type EmotionalWeightModifiers,
+  // M9: Archetype decision helpers
+  shouldArchetypeAttack,
+  getRetreatWillingness,
+  getAllianceSeeking,
+  // M9: Tell system
+  shouldTelegraphAction,
+  getTellStyle,
 } from "./decision-engine";
 
 // Bot Actions

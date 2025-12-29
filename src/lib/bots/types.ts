@@ -189,6 +189,13 @@ export interface BotDecisionContext {
   availableTargets: EmpireTarget[];
   /** Resources currently in crafting queue (to avoid duplicate orders) */
   queuedCrafting?: CraftedResource[];
+  /** M10: Current emotional state (if loaded) */
+  emotionalState?: {
+    state: "confident" | "arrogant" | "desperate" | "vengeful" | "fearful" | "triumphant" | "neutral";
+    intensity: number;
+  };
+  /** M10: Empire IDs this bot has permanent grudges against */
+  permanentGrudges?: string[];
 }
 
 // =============================================================================
