@@ -25,12 +25,38 @@ export default defineConfig({
         "**/db/**",
         "**/performance/**",
         "**/app/**",
+        // Repository layer - DB access code tested via E2E
+        "**/repositories/**",
         // Service files with Supabase interactions - tested via E2E
         "src/lib/game/services/build-queue-service.ts",
         "src/lib/game/services/research-service.ts",
         "src/lib/game/services/planet-service.ts",
         "src/lib/game/services/upgrade-service.ts",
         "src/lib/game/services/turn-processor.ts",
+        "src/lib/game/services/combat-service.ts",
+        "src/lib/game/services/covert-service.ts",
+        "src/lib/game/services/coalition-service.ts",
+        "src/lib/game/services/save-service.ts",
+        "src/lib/game/services/victory-service.ts",
+        "src/lib/game/services/event-service.ts",
+        "src/lib/game/services/crafting-service.ts",
+        // Other integration code with DB dependencies
+        "src/lib/diplomacy/treaty-service.ts",
+        "src/lib/market/market-service.ts",
+        "src/lib/messages/message-service.ts",
+        "src/lib/messages/triggers.ts",
+        "src/lib/messages/template-loader.ts",
+        "src/lib/bots/bot-actions.ts",
+        "src/lib/bots/bot-processor.ts",
+        "src/lib/bots/bot-generator.ts",
+        // Memory system uses integration patterns with database
+        "src/lib/bots/memory/**",
+        // Test simulation utilities (test infrastructure, not production code)
+        "tests/simulation/**",
+        // Index files (re-exports only)
+        "**/index.ts",
+        // Types (no runtime code)
+        "**/types.ts",
       ],
       thresholds: {
         global: {

@@ -10,6 +10,8 @@ import {
   canParticipate,
   getParticipatingUnits,
   getPrimaryPhase,
+  calculatePhaseEffectivePower,
+  getPhaseRoleDescription,
   EFFECTIVENESS_LEVELS,
   UNIT_EFFECTIVENESS,
 } from "./effectiveness";
@@ -220,5 +222,120 @@ describe("Effectiveness Levels", () => {
         expect(UNIT_EFFECTIVENESS[unit as keyof typeof UNIT_EFFECTIVENESS]).toHaveProperty(phase);
       }
     }
+  });
+});
+
+// =============================================================================
+// CALCULATE PHASE EFFECTIVE POWER TESTS
+// =============================================================================
+
+describe("calculatePhaseEffectivePower", () => {
+  it("should calculate power for units with HIGH effectiveness", () => {
+    // Soldiers have HIGH (1.0) effectiveness in ground
+    const power = calculatePhaseEffectivePower("soldiers", 100, 10, "ground");
+    expect(power).toBe(100 * 10 * 1.0); // count * basePower * effectiveness
+  });
+
+  it("should calculate power for units with MEDIUM effectiveness", () => {
+    // Heavy cruisers have MEDIUM (0.5) effectiveness in orbital
+    const power = calculatePhaseEffectivePower("heavyCruisers", 10, 100, "orbital");
+    expect(power).toBe(10 * 100 * 0.5);
+  });
+
+  it("should calculate power for units with LOW effectiveness", () => {
+    // Fighters have LOW (0.25) effectiveness in ground
+    const power = calculatePhaseEffectivePower("fighters", 50, 5, "ground");
+    expect(power).toBe(50 * 5 * 0.25);
+  });
+
+  it("should return 0 for units with NONE effectiveness", () => {
+    // Soldiers have NONE (0) effectiveness in space
+    const power = calculatePhaseEffectivePower("soldiers", 100, 10, "space");
+    expect(power).toBe(0);
+  });
+
+  it("should apply defender bonus for stations in orbital", () => {
+    // Stations get 2x when defending in orbital
+    const attackerPower = calculatePhaseEffectivePower("stations", 10, 50, "orbital", false);
+    const defenderPower = calculatePhaseEffectivePower("stations", 10, 50, "orbital", true);
+    expect(defenderPower).toBe(attackerPower * 2);
+  });
+
+  it("should not apply defender bonus for non-station units", () => {
+    const attackerPower = calculatePhaseEffectivePower("fighters", 50, 5, "orbital", false);
+    const defenderPower = calculatePhaseEffectivePower("fighters", 50, 5, "orbital", true);
+    expect(defenderPower).toBe(attackerPower);
+  });
+});
+
+// =============================================================================
+// GET PHASE ROLE DESCRIPTION TESTS
+// =============================================================================
+
+describe("getPhaseRoleDescription", () => {
+  describe("Soldiers", () => {
+    it("should describe ground combat role", () => {
+      expect(getPhaseRoleDescription("soldiers", "ground")).toBe("Capture enemy planets");
+    });
+
+    it("should describe guerilla combat role", () => {
+      expect(getPhaseRoleDescription("soldiers", "guerilla")).toBe("Conduct hit-and-run raids");
+    });
+
+    it("should return cannot participate for space", () => {
+      expect(getPhaseRoleDescription("soldiers", "space")).toBe("Cannot participate in this phase");
+    });
+  });
+
+  describe("Fighters", () => {
+    it("should describe orbital combat role", () => {
+      expect(getPhaseRoleDescription("fighters", "orbital")).toBe("Contest orbital control");
+    });
+
+    it("should return support for ground", () => {
+      expect(getPhaseRoleDescription("fighters", "ground")).toBe("Provides support");
+    });
+  });
+
+  describe("Stations", () => {
+    it("should describe orbital defense role", () => {
+      expect(getPhaseRoleDescription("stations", "orbital")).toBe("Defend orbit from attackers");
+    });
+
+    it("should return support for ground", () => {
+      expect(getPhaseRoleDescription("stations", "ground")).toBe("Provides support");
+    });
+  });
+
+  describe("Light Cruisers", () => {
+    it("should describe space combat role", () => {
+      expect(getPhaseRoleDescription("lightCruisers", "space")).toBe("Engage in space combat");
+    });
+
+    it("should describe orbital fire support role", () => {
+      expect(getPhaseRoleDescription("lightCruisers", "orbital")).toBe("Provide orbital fire support");
+    });
+
+    it("should return cannot participate for ground", () => {
+      expect(getPhaseRoleDescription("lightCruisers", "ground")).toBe("Cannot participate in this phase");
+    });
+  });
+
+  describe("Heavy Cruisers", () => {
+    it("should describe space combat role", () => {
+      expect(getPhaseRoleDescription("heavyCruisers", "space")).toBe("Heavy capital ship combat");
+    });
+
+    it("should return support for orbital", () => {
+      expect(getPhaseRoleDescription("heavyCruisers", "orbital")).toBe("Provides support");
+    });
+  });
+
+  describe("Carriers", () => {
+    it("should always describe transport role regardless of phase", () => {
+      expect(getPhaseRoleDescription("carriers", "space")).toBe("Transport troops for invasions");
+      expect(getPhaseRoleDescription("carriers", "orbital")).toBe("Transport troops for invasions");
+      expect(getPhaseRoleDescription("carriers", "ground")).toBe("Transport troops for invasions");
+    });
   });
 });
