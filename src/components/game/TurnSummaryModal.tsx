@@ -11,6 +11,7 @@
 
 import { useEffect, useCallback } from "react";
 import type { TurnEvent, ResourceDelta } from "@/lib/game/types/turn-types";
+import { RESOURCE_NAMES, RESOURCE_ICONS, GAME_TERMS, UI_LABELS } from "@/lib/theme/names";
 
 export interface TurnSummaryModalProps {
   isOpen: boolean;
@@ -44,25 +45,25 @@ const CATEGORY_CONFIG = {
     borderColor: "border-green-600/30",
   },
   population: {
-    title: "Population",
-    icon: "👥",
+    title: RESOURCE_NAMES.population,
+    icon: RESOURCE_ICONS.population,
     bgColor: "bg-blue-900/20",
     borderColor: "border-blue-600/30",
   },
   military: {
-    title: "Military",
+    title: UI_LABELS.military,
     icon: "⚔️",
     bgColor: "bg-red-900/20",
     borderColor: "border-red-600/30",
   },
   diplomacy: {
-    title: "Diplomacy & Messages",
+    title: `${UI_LABELS.diplomacy} & ${UI_LABELS.messages}`,
     icon: "📬",
     bgColor: "bg-purple-900/20",
     borderColor: "border-purple-600/30",
   },
   galaxy: {
-    title: "Galaxy Activity",
+    title: `${GAME_TERMS.galaxy} Activity`,
     icon: "🌌",
     bgColor: "bg-indigo-900/20",
     borderColor: "border-indigo-600/30",
@@ -142,7 +143,7 @@ export function TurnSummaryModal({
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-2xl font-display text-lcars-amber">
-                Turn {turn} Complete
+                {GAME_TERMS.turn} {turn} Complete
               </h2>
               <p className="text-sm text-gray-400 mt-1">
                 Processed in {processingMs}ms
@@ -175,15 +176,15 @@ export function TurnSummaryModal({
           {resourceChanges && (
             <SummarySection category="income">
               <div className="grid grid-cols-2 gap-3">
-                <ResourceChange label="Credits" value={resourceChanges.credits} icon="💰" />
-                <ResourceChange label="Food" value={resourceChanges.food} icon="🍞" />
-                <ResourceChange label="Ore" value={resourceChanges.ore} icon="⛏️" />
-                <ResourceChange label="Petroleum" value={resourceChanges.petroleum} icon="🛢️" />
+                <ResourceChange label={RESOURCE_NAMES.credits} value={resourceChanges.credits} icon={RESOURCE_ICONS.credits} />
+                <ResourceChange label={RESOURCE_NAMES.food} value={resourceChanges.food} icon={RESOURCE_ICONS.food} />
+                <ResourceChange label={RESOURCE_NAMES.ore} value={resourceChanges.ore} icon={RESOURCE_ICONS.ore} />
+                <ResourceChange label={RESOURCE_NAMES.petroleum} value={resourceChanges.petroleum} icon={RESOURCE_ICONS.petroleum} />
                 {resourceChanges.researchPoints > 0 && (
                   <ResourceChange
-                    label="Research"
+                    label={RESOURCE_NAMES.researchPoints}
                     value={resourceChanges.researchPoints}
-                    icon="🔬"
+                    icon={RESOURCE_ICONS.researchPoints}
                   />
                 )}
               </div>
@@ -194,7 +195,7 @@ export function TurnSummaryModal({
           {populationBefore !== undefined && populationAfter !== undefined && (
             <SummarySection category="population">
               <div className="flex items-center justify-between">
-                <span className="text-gray-300">Citizens</span>
+                <span className="text-gray-300">{RESOURCE_NAMES.population}</span>
                 <div className="flex items-center gap-2">
                   <span className="text-gray-400">
                     {populationBefore.toLocaleString()}
@@ -236,7 +237,7 @@ export function TurnSummaryModal({
             <SummarySection category="diplomacy">
               {messagesReceived > 0 && (
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-gray-300">Messages received</span>
+                  <span className="text-gray-300">{UI_LABELS.messages} received</span>
                   <span className="text-purple-400 font-semibold">
                     {messagesReceived} new
                   </span>
@@ -250,7 +251,7 @@ export function TurnSummaryModal({
             <SummarySection category="galaxy">
               {botBattles > 0 && (
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-gray-300">Battles this turn</span>
+                  <span className="text-gray-300">Battles this {GAME_TERMS.turn.toLowerCase()}</span>
                   <span className="text-indigo-400">{botBattles}</span>
                 </div>
               )}

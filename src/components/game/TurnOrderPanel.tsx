@@ -16,6 +16,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { UI_LABELS, GAME_TERMS, RESOURCE_NAMES } from "@/lib/theme/names";
 
 export interface TurnOrderPanelProps {
   currentTurn: number;
@@ -42,14 +43,14 @@ interface ActionItem {
 }
 
 const ACTIONS: ActionItem[] = [
-  { id: "military", label: "Military", href: "/game/military", icon: "⚔️", description: "Build units, manage forces" },
-  { id: "planets", label: "Planets", href: "/game/planets", icon: "🌍", description: "Buy or release planets" },
-  { id: "combat", label: "Combat", href: "/game/combat", icon: "💥", description: "Launch attacks" },
-  { id: "diplomacy", label: "Diplomacy", href: "/game/diplomacy", icon: "🤝", description: "Treaties and alliances" },
-  { id: "market", label: "Trade", href: "/game/market", icon: "📊", description: "Buy and sell resources" },
-  { id: "covert", label: "Covert", href: "/game/covert", icon: "🕵️", description: "Spy operations" },
-  { id: "crafting", label: "Crafting", href: "/game/crafting", icon: "🔧", description: "Manufacture components" },
-  { id: "research", label: "Research", href: "/game/research", icon: "🔬", description: "Advance technology" },
+  { id: "military", label: UI_LABELS.military, href: "/game/military", icon: "⚔️", description: "Build units, manage forces" },
+  { id: "planets", label: UI_LABELS.planets, href: "/game/planets", icon: "🌍", description: "Buy or release sectors" },
+  { id: "combat", label: UI_LABELS.combat, href: "/game/combat", icon: "💥", description: "Launch attacks" },
+  { id: "diplomacy", label: UI_LABELS.diplomacy, href: "/game/diplomacy", icon: "🤝", description: "Treaties and alliances" },
+  { id: "market", label: UI_LABELS.market, href: "/game/market", icon: "📊", description: "Buy and sell resources" },
+  { id: "covert", label: UI_LABELS.covert, href: "/game/covert", icon: "🕵️", description: "Spy operations" },
+  { id: "crafting", label: UI_LABELS.crafting, href: "/game/crafting", icon: "🔧", description: "Manufacture components" },
+  { id: "research", label: UI_LABELS.research, href: "/game/research", icon: "🔬", description: "Advance technology" },
 ];
 
 const STATUS_STYLES = {
@@ -180,7 +181,7 @@ export function TurnOrderPanel({
           <span className="text-lg">📬</span>
           <div className="flex-1">
             <span className={`text-sm ${pathname === "/game/messages" ? "text-lcars-amber" : "text-gray-300"}`}>
-              Messages
+              {UI_LABELS.messages}
             </span>
           </div>
           {unreadMessages > 0 && (
@@ -196,14 +197,14 @@ export function TurnOrderPanel({
         <div className="text-xs text-gray-500 uppercase tracking-wider mb-2">Quick Status</div>
 
         <div className="flex items-center justify-between">
-          <span className="text-xs text-gray-400">Food</span>
+          <span className="text-xs text-gray-400">{RESOURCE_NAMES.food}</span>
           <span className={`text-xs px-2 py-0.5 rounded ${foodStyle.bg} ${foodStyle.color}`}>
             {foodStyle.label}
           </span>
         </div>
 
         <div className="flex items-center justify-between">
-          <span className="text-xs text-gray-400">Army</span>
+          <span className="text-xs text-gray-400">{UI_LABELS.military}</span>
           <span className={`text-xs px-2 py-0.5 rounded ${armyStyle.bg} ${armyStyle.color}`}>
             {armyStyle.label}
           </span>
@@ -218,7 +219,7 @@ export function TurnOrderPanel({
               ? "bg-yellow-900/30 text-yellow-400"
               : "bg-gray-800 text-gray-400"
           }`}>
-            {threatCount} {threatCount === 1 ? "empire" : "empires"}
+            {threatCount} {threatCount === 1 ? GAME_TERMS.empire : GAME_TERMS.empires}
           </span>
         </div>
       </div>
@@ -235,14 +236,14 @@ export function TurnOrderPanel({
           }`}
           data-testid="turn-order-end-turn"
         >
-          {isProcessing ? "PROCESSING..." : "END TURN"}
+          {isProcessing ? "PROCESSING..." : UI_LABELS.endTurn.toUpperCase()}
         </button>
         <div className="mt-2 text-center">
           <Link
             href="/game"
             className="text-xs text-gray-500 hover:text-gray-300 transition-colors"
           >
-            ← Back to Dashboard
+            ← Back to {UI_LABELS.dashboard}
           </Link>
         </div>
       </div>

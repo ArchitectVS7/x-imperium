@@ -3,19 +3,20 @@ import { GameFooter } from "@/components/game/GameFooter";
 import { SyndicateNavItem } from "@/components/game/navigation";
 import { GameShell } from "@/components/game/GameShell";
 import { getTurnOrderPanelDataAction } from "@/app/actions/turn-actions";
+import { UI_LABELS } from "@/lib/theme/names";
 
 const navItems = [
-  { href: "/game", label: "Dashboard" },
-  { href: "/game/starmap", label: "Galaxy" },
-  { href: "/game/military", label: "Military" },
-  { href: "/game/planets", label: "Planets" },
-  { href: "/game/combat", label: "Combat" },
-  { href: "/game/diplomacy", label: "Diplomacy" },
-  { href: "/game/market", label: "Market" },
-  { href: "/game/covert", label: "Covert" },
-  { href: "/game/research", label: "Research" },
-  { href: "/game/crafting", label: "Crafting" },
-  { href: "/game/messages", label: "Messages" },
+  { href: "/game", label: UI_LABELS.dashboard },
+  { href: "/game/starmap", label: UI_LABELS.galaxyMap },
+  { href: "/game/military", label: UI_LABELS.military },
+  { href: "/game/planets", label: UI_LABELS.planets },
+  { href: "/game/combat", label: UI_LABELS.combat },
+  { href: "/game/diplomacy", label: UI_LABELS.diplomacy },
+  { href: "/game/market", label: UI_LABELS.market },
+  { href: "/game/covert", label: UI_LABELS.covert },
+  { href: "/game/research", label: UI_LABELS.research },
+  { href: "/game/crafting", label: UI_LABELS.crafting },
+  { href: "/game/messages", label: UI_LABELS.messages },
 ];
 
 export default async function GameLayout({
