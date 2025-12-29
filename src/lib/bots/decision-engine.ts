@@ -573,12 +573,12 @@ function generateTradeDecision(
   const roll = random ?? Math.random();
 
   // Calculate resource needs
-  const lowFood = empire.food < empire.populationTotal * 2; // Need 2x population in food
+  const lowFood = empire.food < empire.population * 2; // Need 2x population in food
   const lowOre = empire.ore < 500;
   const lowPetroleum = empire.petroleum < 200;
 
   // Calculate resource surpluses (arbitrary thresholds)
-  const highFood = empire.food > empire.populationTotal * 10;
+  const highFood = empire.food > empire.population * 10;
   const highOre = empire.ore > 5000;
   const highPetroleum = empire.petroleum > 2000;
 
@@ -602,7 +602,7 @@ function generateTradeDecision(
   // Sell surpluses
   if (highFood && empire.credits < 50000 && roll < 0.5) {
     const quantity = Math.min(
-      Math.floor((empire.food - empire.populationTotal * 5) / 2),
+      Math.floor((empire.food - empire.population * 5) / 2),
       1000
     );
     if (quantity > 50) {

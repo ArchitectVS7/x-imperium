@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { GameFooter } from "@/components/game/GameFooter";
+import { SyndicateNavItem } from "@/components/game/navigation";
 
 const navItems = [
   { href: "/game", label: "Dashboard" },
@@ -11,7 +12,6 @@ const navItems = [
   { href: "/game/starmap", label: "Starmap" },
   { href: "/game/diplomacy", label: "Diplomacy" },
   { href: "/game/market", label: "Market" },
-  { href: "/game/syndicate", label: "Syndicate" },
   { href: "/game/covert", label: "Covert" },
   { href: "/game/messages", label: "Messages" },
 ];
@@ -39,6 +39,8 @@ export default function GameLayout({
                 {item.label}
               </Link>
             ))}
+            {/* Conditional Syndicate nav - only shows when player has access */}
+            <SyndicateNavItem />
           </nav>
         </div>
       </header>

@@ -171,6 +171,8 @@ export interface EmpireTarget {
   isEliminated: boolean;
   /** Military strength estimate (soldiers + fighters + cruisers) */
   militaryPower: number;
+  /** Whether the bot has an active treaty with this target */
+  hasTreaty?: boolean;
 }
 
 // =============================================================================
@@ -185,6 +187,8 @@ export interface BotDecisionContext {
   protectionTurns: number;
   difficulty: Difficulty;
   availableTargets: EmpireTarget[];
+  /** Resources currently in crafting queue (to avoid duplicate orders) */
+  queuedCrafting?: CraftedResource[];
 }
 
 // =============================================================================

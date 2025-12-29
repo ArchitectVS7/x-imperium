@@ -42,3 +42,81 @@ body {
     font-family: var(--font-exo2), sans-serif;
   }
 }
+
+/* Animation keyframes */
+@keyframes fade-out {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes lcars-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 4px rgba(255, 153, 0, 0.3);
+    border-color: rgba(255, 153, 0, 0.6);
+  }
+  50% {
+    box-shadow: 0 0 16px rgba(255, 153, 0, 0.7);
+    border-color: rgba(255, 153, 0, 1);
+  }
+}
+
+@keyframes lcars-pulse-alert {
+  0%,
+  100% {
+    box-shadow: 0 0 4px rgba(255, 153, 153, 0.3);
+    border-color: rgba(255, 153, 153, 0.6);
+  }
+  50% {
+    box-shadow: 0 0 16px rgba(255, 153, 153, 0.8);
+    border-color: rgba(255, 153, 153, 1);
+  }
+}
+
+@keyframes lcars-pulse-success {
+  0%,
+  100% {
+    box-shadow: 0 0 4px rgba(153, 255, 204, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 12px rgba(153, 255, 204, 0.6);
+  }
+}
+
+/* Animation utility classes */
+.animate-fade-out {
+  animation: fade-out 2s ease-out forwards;
+}
+
+.lcars-pulse {
+  animation: lcars-pulse 2s ease-in-out infinite;
+}
+
+.lcars-pulse-alert {
+  animation: lcars-pulse-alert 1.5s ease-in-out infinite;
+}
+
+.lcars-pulse-success {
+  animation: lcars-pulse-success 2s ease-in-out infinite;
+}
+
+/* Glow effect for active elements */
+.lcars-glow {
+  box-shadow: 0 0 8px rgba(255, 153, 0, 0.5);
+}
+
+/* Respect reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-out,
+  .lcars-pulse,
+  .lcars-pulse-alert,
+  .lcars-pulse-success {
+    animation: none;
+  }
+}

@@ -1,9 +1,13 @@
+"use client";
+
 /**
  * Turn Counter Component
  *
  * Displays the current turn number and turn limit.
  * Highlights milestone turns (20, 100, 180, 200).
  */
+
+import { AnimatedCounter } from "@/components/ui";
 
 interface TurnCounterProps {
   currentTurn: number;
@@ -31,12 +35,11 @@ export function TurnCounter({ currentTurn, turnLimit }: TurnCounterProps) {
       data-testid="turn-counter"
     >
       <span className="text-gray-400 text-sm">TURN</span>
-      <span
+      <AnimatedCounter
+        value={currentTurn}
         className={`font-mono text-xl font-bold ${getColorClass()}`}
-        data-testid="current-turn"
-      >
-        {currentTurn}
-      </span>
+        duration={0.5}
+      />
       <span className="text-gray-500">/</span>
       <span
         className="font-mono text-lg text-gray-400"

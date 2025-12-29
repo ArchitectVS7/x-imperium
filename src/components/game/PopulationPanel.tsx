@@ -1,3 +1,7 @@
+"use client";
+
+import { AnimatedCounter } from "@/components/ui";
+
 interface PopulationPanelProps {
   population: number;
   populationCap?: number;
@@ -42,16 +46,18 @@ export function PopulationPanel({
       <div className="space-y-2 text-gray-300">
         <div className="flex justify-between" data-testid="population-count">
           <span>Citizens:</span>
-          <span className="font-mono text-lcars-amber">
-            {population.toLocaleString()}
-          </span>
+          <AnimatedCounter
+            value={population}
+            className="font-mono text-lcars-amber"
+          />
         </div>
         {populationCap && (
           <div className="flex justify-between" data-testid="population-cap">
             <span>Capacity:</span>
-            <span className="font-mono text-gray-400">
-              {populationCap.toLocaleString()}
-            </span>
+            <AnimatedCounter
+              value={populationCap}
+              className="font-mono text-gray-400"
+            />
           </div>
         )}
         <div className="flex justify-between" data-testid="civil-status">

@@ -19,7 +19,7 @@ import { CONTRACT_CONFIGS } from "@/lib/game/constants/syndicate";
 import { executeAttack as executeCombatAttack } from "@/lib/game/services/combat-service";
 import type { Forces as CombatForces } from "@/lib/combat/phases";
 import { proposeTreaty, type TreatyType } from "@/lib/diplomacy";
-import { executeBuyOrder, executeSellOrder, type TradableResource } from "@/lib/market/market-service";
+import { executeBuyOrder, executeSellOrder, type TradableResource } from "@/lib/market";
 
 // =============================================================================
 // MAIN EXECUTOR
@@ -270,11 +270,12 @@ async function executeAttack(
 
   // Build details message
   const outcome = result.result?.outcome ?? "unknown";
-  const planetCaptured = result.result?.planetCaptured ? " (captured planet!)" : "";
+  const planetsCaptured = result.result?.planetsCaptured ?? 0;
+  const capturedMsg = planetsCaptured > 0 ? ` (captured ${planetsCaptured} planet${planetsCaptured > 1 ? "s" : ""}!)` : "";
 
   return {
     success: true,
-    details: `Attack on ${targetId}: ${outcome}${planetCaptured} (${totalForces} units deployed)`,
+    details: `Attack on ${targetId}: ${outcome}${capturedMsg} (${totalForces} units deployed)`,
   };
 }
 
