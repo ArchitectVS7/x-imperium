@@ -6,6 +6,8 @@
  *
  * PRD References:
  * - PRD 3: Turn Processing Order
+ * - PRD 11.2: Galactic Events (M11)
+ * - PRD 11.3: Alliance Checkpoints (M11)
  * - Performance target: <500ms per turn (no bots)
  *
  * Turn Processing Order:
@@ -18,9 +20,12 @@
  * 4.5. Covert point generation
  * 4.6. Crafting queue processing
  * 5. Bot decisions
- * 6. Actions (covert, diplomatic, movement, combat)
- * 7. Maintenance (applied in Phase 1 via resource engine)
+ * 6. Market price update
+ * 7. Bot messages
+ * 7.5. Galactic events (M11) - every 10-20 turns after turn 15
+ * 7.6. Alliance checkpoints (M11) - at turns 30, 60, 90, 120, 150, 180
  * 8. Victory/Defeat check
+ * 9. Auto-save
  */
 
 import { db } from "@/lib/db";
@@ -77,6 +82,12 @@ import {
   triggerEndgame,
   type TriggerContext,
 } from "@/lib/messages";
+import { processGalacticEvents, applyGalacticEvent } from "./event-service";
+import {
+  evaluateAllianceCheckpoint,
+  generateCheckpointNotification,
+  isCheckpointTurn,
+} from "./checkpoint-service";
 
 // =============================================================================
 // TURN PROCESSOR
@@ -205,6 +216,63 @@ export async function processTurn(gameId: string): Promise<TurnResult> {
       // Trigger endgame messages in final turns (turn 180+)
       if (nextTurn >= 180) {
         await triggerEndgame(msgCtx);
+      }
+    }
+
+    // ==========================================================================
+    // PHASE 7.5: GALACTIC EVENTS (M11)
+    // ==========================================================================
+
+    // Process galactic events (every 10-20 turns after turn 15)
+    const eventResult = await processGalacticEvents(
+      gameId,
+      nextTurn,
+      game.empires
+    );
+    if (eventResult.event) {
+      globalEvents.push({
+        type: "other",
+        message: `🌌 ${eventResult.message}`,
+        severity: "warning",
+      });
+    }
+
+    // ==========================================================================
+    // PHASE 7.6: ALLIANCE CHECKPOINTS (M11)
+    // ==========================================================================
+
+    // Evaluate alliance checkpoints at turns 30, 60, 90, 120, 150, 180
+    if (isCheckpointTurn(nextTurn)) {
+      const checkpointResult = await evaluateAllianceCheckpoint(gameId, nextTurn);
+
+      if (checkpointResult.imbalanceDetected && checkpointResult.rebalancingEvent) {
+        // Apply the rebalancing event
+        const rebalanceResult = await applyGalacticEvent(
+          checkpointResult.rebalancingEvent,
+          gameId,
+          nextTurn,
+          game.empires
+        );
+
+        globalEvents.push({
+          type: "other",
+          message: `⚖️ ${generateCheckpointNotification(checkpointResult)}`,
+          severity: "warning",
+        });
+
+        if (rebalanceResult.success) {
+          globalEvents.push({
+            type: "other",
+            message: `🎯 Rebalancing: ${rebalanceResult.message}`,
+            severity: "info",
+          });
+        }
+      } else if (checkpointResult.isCheckpoint) {
+        globalEvents.push({
+          type: "other",
+          message: `⚖️ Turn ${nextTurn} checkpoint: Power balance stable`,
+          severity: "info",
+        });
       }
     }
 
