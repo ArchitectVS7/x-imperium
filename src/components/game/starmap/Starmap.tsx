@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, useCallback } from "react";
 import * as d3 from "d3-force";
-import type { EmpireMapData, StarmapProps, TooltipData } from "./types";
+import type { EmpireMapData, StarmapProps, TooltipData, TreatyConnection } from "./types";
 import { EmpireTooltip } from "./EmpireTooltip";
 
 // Calculate node size based on planet count
@@ -17,11 +17,33 @@ function getNodeColor(empire: EmpireMapData, isPlayer: boolean): string {
   return "#ef4444"; // red-500
 }
 
+// Get treaty connection line color
+function getTreatyLineColor(type: TreatyConnection["type"]): string {
+  return type === "alliance" ? "#99FFCC" : "#FFCC99"; // Green for alliance, amber for NAP
+}
+
+// Generate deterministic star positions using a seed
+function generateStars(count: number, width: number, height: number): Array<{ x: number; y: number; r: number; delay: number; duration: number }> {
+  const stars = [];
+  for (let i = 0; i < count; i++) {
+    // Use deterministic pseudo-random based on index
+    const seed = i * 127;
+    const x = ((seed * 31) % width);
+    const y = ((seed * 37) % height);
+    const r = 0.5 + ((seed * 41) % 15) / 10; // 0.5 to 2.0
+    const delay = ((seed * 43) % 50) / 10; // 0 to 5s
+    const duration = 2 + ((seed * 47) % 30) / 10; // 2 to 5s
+    stars.push({ x, y, r, delay, duration });
+  }
+  return stars;
+}
+
 export function Starmap({
   empires,
   playerEmpireId,
   currentTurn,
   protectionTurns,
+  treaties = [],
   width = 800,
   height = 600,
 }: StarmapProps) {
@@ -31,6 +53,9 @@ export function Starmap({
   const simulationRef = useRef<d3.Simulation<EmpireMapData, undefined> | null>(null);
 
   const isProtected = currentTurn <= protectionTurns;
+
+  // Generate stars once based on dimensions
+  const stars = generateStars(80, width, height);
 
   // Initialize nodes with positions
   useEffect(() => {
@@ -162,6 +187,17 @@ export function Starmap({
           <div className="w-4 h-4 rounded-full bg-gray-500" />
           <span className="text-gray-300">Eliminated</span>
         </div>
+        {/* Treaty indicators */}
+        <div className="pt-2 border-t border-gray-700 space-y-2">
+          <div className="flex items-center gap-2">
+            <div className="w-6 h-0.5 bg-[#99FFCC]" style={{ borderTop: "2px dashed #99FFCC" }} />
+            <span className="text-gray-300">Alliance</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-6 h-0.5" style={{ borderTop: "2px dashed #FFCC99" }} />
+            <span className="text-gray-300">NAP</span>
+          </div>
+        </div>
         {isProtected && (
           <div className="text-yellow-400 text-xs pt-2 border-t border-gray-700">
             Protection Period: {protectionTurns - currentTurn + 1} turns left
@@ -184,22 +220,50 @@ export function Starmap({
         height={height}
         className="bg-gray-900/50 rounded-lg border border-gray-800"
       >
-        {/* Stars background */}
-        <defs>
-          <pattern id="stars" patternUnits="userSpaceOnUse" width="100" height="100">
-            {[...Array(10)].map((_, i) => (
-              <circle
-                key={i}
-                cx={Math.random() * 100}
-                cy={Math.random() * 100}
-                r={Math.random() * 1.5}
-                fill="white"
-                opacity={Math.random() * 0.5 + 0.2}
+        {/* Twinkling stars background */}
+        <g className="stars-layer">
+          {stars.map((star, i) => (
+            <circle
+              key={`star-${i}`}
+              cx={star.x}
+              cy={star.y}
+              r={star.r}
+              fill="white"
+              className="star-twinkle"
+              style={{
+                "--twinkle-delay": `${star.delay}s`,
+                "--twinkle-duration": `${star.duration}s`,
+              } as React.CSSProperties}
+            />
+          ))}
+        </g>
+
+        {/* Treaty connection lines */}
+        <g className="treaty-lines-layer">
+          {treaties.map((treaty, i) => {
+            const empire1 = nodes.find((n) => n.id === treaty.empire1Id);
+            const empire2 = nodes.find((n) => n.id === treaty.empire2Id);
+            if (!empire1?.x || !empire2?.x || !empire1?.y || !empire2?.y) return null;
+
+            const color = getTreatyLineColor(treaty.type);
+            const isAlliance = treaty.type === "alliance";
+
+            return (
+              <line
+                key={`treaty-${i}`}
+                x1={empire1.x}
+                y1={empire1.y}
+                x2={empire2.x}
+                y2={empire2.y}
+                stroke={color}
+                strokeWidth={isAlliance ? 2 : 1.5}
+                strokeDasharray={isAlliance ? "8,4" : "4,4"}
+                strokeOpacity={0.5}
+                className="alliance-line"
               />
-            ))}
-          </pattern>
-        </defs>
-        <rect width="100%" height="100%" fill="url(#stars)" opacity="0.3" />
+            );
+          })}
+        </g>
 
         {/* Empire nodes */}
         {nodes.map((empire) => {
@@ -218,9 +282,22 @@ export function Starmap({
               onMouseMove={(e) => e.buttons === 1 && handleDrag(empire, e)}
               onMouseUp={() => handleDragEnd(empire)}
             >
-              {/* Glow effect for player */}
+              {/* Animated pulse effect for player */}
               {isPlayer && !empire.isEliminated && (
-                <circle r={size + 10} fill={color} opacity={0.2} />
+                <>
+                  {/* Outer pulsing ring */}
+                  <circle
+                    r={size + 15}
+                    fill="none"
+                    stroke="#60a5fa"
+                    strokeWidth={2}
+                    opacity={0.3}
+                    className="empire-pulse"
+                    style={{ "--pulse-radius": `${size + 15}px` } as React.CSSProperties}
+                  />
+                  {/* Inner glow */}
+                  <circle r={size + 8} fill={color} opacity={0.15} />
+                </>
               )}
 
               {/* Main circle */}

@@ -2,9 +2,9 @@
 
 import { cookies } from "next/headers";
 import { db } from "@/lib/db";
-import { games, empires } from "@/lib/db/schema";
-import { eq } from "drizzle-orm";
-import type { EmpireMapData } from "@/components/game/starmap/types";
+import { games, empires, treaties } from "@/lib/db/schema";
+import { eq, and } from "drizzle-orm";
+import type { EmpireMapData, TreatyConnection } from "@/components/game/starmap/types";
 
 // =============================================================================
 // COOKIE HELPERS
@@ -30,6 +30,7 @@ export interface StarmapData {
   playerEmpireId: string;
   currentTurn: number;
   protectionTurns: number;
+  treaties: TreatyConnection[];
 }
 
 /**
@@ -58,6 +59,11 @@ export async function getStarmapDataAction(): Promise<StarmapData | null> {
       where: eq(empires.gameId, gameId),
     });
 
+    // Fetch active treaties in the game
+    const activeTreaties = await db.query.treaties.findMany({
+      where: and(eq(treaties.gameId, gameId), eq(treaties.status, "active")),
+    });
+
     // Map to EmpireMapData
     const empireData: EmpireMapData[] = allEmpires.map((empire) => ({
       id: empire.id,
@@ -68,11 +74,19 @@ export async function getStarmapDataAction(): Promise<StarmapData | null> {
       isEliminated: empire.isEliminated,
     }));
 
+    // Map to TreatyConnection
+    const treatyData: TreatyConnection[] = activeTreaties.map((treaty) => ({
+      empire1Id: treaty.proposerId,
+      empire2Id: treaty.recipientId,
+      type: treaty.treatyType as "alliance" | "nap",
+    }));
+
     return {
       empires: empireData,
       playerEmpireId: empireId,
       currentTurn: game.currentTurn,
       protectionTurns: game.protectionTurns,
+      treaties: treatyData,
     };
   } catch (error) {
     console.error("Failed to fetch starmap data:", error);

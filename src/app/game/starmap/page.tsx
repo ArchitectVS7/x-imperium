@@ -36,6 +36,7 @@ async function StarmapContent() {
         playerEmpireId={data.playerEmpireId}
         currentTurn={data.currentTurn}
         protectionTurns={data.protectionTurns}
+        treaties={data.treaties}
         width={900}
         height={600}
       />

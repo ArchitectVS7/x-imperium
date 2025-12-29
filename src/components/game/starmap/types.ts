@@ -18,11 +18,20 @@ export interface EmpireMapData {
   fy?: number | null;
 }
 
+export type TreatyConnectionType = "alliance" | "nap";
+
+export interface TreatyConnection {
+  empire1Id: string;
+  empire2Id: string;
+  type: TreatyConnectionType;
+}
+
 export interface StarmapProps {
   empires: EmpireMapData[];
   playerEmpireId: string;
   currentTurn: number;
   protectionTurns: number;
+  treaties?: TreatyConnection[];
   width?: number;
   height?: number;
 }

@@ -111,12 +111,67 @@ body {
   box-shadow: 0 0 8px rgba(255, 153, 0, 0.5);
 }
 
+/* Starmap star twinkling animation */
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 0.2;
+  }
+  50% {
+    opacity: 0.9;
+  }
+}
+
+/* SVG pulse animation for empire nodes */
+@keyframes svg-pulse {
+  0%,
+  100% {
+    opacity: 0.15;
+    r: var(--pulse-radius);
+  }
+  50% {
+    opacity: 0.35;
+    r: calc(var(--pulse-radius) + 8px);
+  }
+}
+
+@keyframes svg-pulse-alliance {
+  0%,
+  100% {
+    stroke-opacity: 0.3;
+    stroke-dashoffset: 0;
+  }
+  50% {
+    stroke-opacity: 0.6;
+  }
+  100% {
+    stroke-dashoffset: 16;
+  }
+}
+
+/* Starmap utility classes */
+.star-twinkle {
+  animation: twinkle var(--twinkle-duration, 3s) ease-in-out infinite;
+  animation-delay: var(--twinkle-delay, 0s);
+}
+
+.empire-pulse {
+  animation: svg-pulse 2s ease-in-out infinite;
+}
+
+.alliance-line {
+  animation: svg-pulse-alliance 3s linear infinite;
+}
+
 /* Respect reduced motion preferences */
 @media (prefers-reduced-motion: reduce) {
   .animate-fade-out,
   .lcars-pulse,
   .lcars-pulse-alert,
-  .lcars-pulse-success {
+  .lcars-pulse-success,
+  .star-twinkle,
+  .empire-pulse,
+  .alliance-line {
     animation: none;
   }
 }
