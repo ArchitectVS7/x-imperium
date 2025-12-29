@@ -163,6 +163,47 @@ body {
   animation: svg-pulse-alliance 3s linear infinite;
 }
 
+/* Nebula particle animation */
+@keyframes nebula-drift {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.6;
+  }
+  25% {
+    transform: translate(2px, -1px) scale(1.05);
+    opacity: 0.7;
+  }
+  50% {
+    transform: translate(-1px, 2px) scale(0.95);
+    opacity: 0.5;
+  }
+  75% {
+    transform: translate(1px, 1px) scale(1.02);
+    opacity: 0.65;
+  }
+}
+
+.nebula-particle {
+  animation: nebula-drift 4s ease-in-out infinite;
+  animation-delay: var(--particle-delay, 0s);
+}
+
+/* Slow pulse animation for landing page */
+@keyframes pulse-slow {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.85;
+  }
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 3s ease-in-out infinite;
+}
+
 /* Respect reduced motion preferences */
 @media (prefers-reduced-motion: reduce) {
   .animate-fade-out,
@@ -171,7 +212,9 @@ body {
   .lcars-pulse-success,
   .star-twinkle,
   .empire-pulse,
-  .alliance-line {
+  .alliance-line,
+  .nebula-particle,
+  .animate-pulse-slow {
     animation: none;
   }
 }

@@ -144,7 +144,8 @@ function NewGamePrompt({ error }: { error?: string }) {
     "use server";
     const result = await startGameAction(formData);
     if (result.success) {
-      redirect("/game");
+      // Redirect to starmap as default view for new games
+      redirect("/game/starmap");
     }
     // If failed, redirect with error in query param
     const errorMessage = encodeURIComponent(result.error || "Failed to start game");

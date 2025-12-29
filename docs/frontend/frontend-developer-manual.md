@@ -1336,7 +1336,14 @@ export async function myService(
 | **Offline support** | PWA capabilities | High |
 | **Notifications** | Browser notifications for alerts | Medium |
 
-### 11.6 Technical Debt
+### 11.6 Stubbed Features (To Be Implemented Later)
+
+| Feature | Description | Priority | Notes |
+|---------|-------------|----------|-------|
+| **Interactive Tutorial Tour** | Guided walkthrough for new players | Medium | Currently only turn-based hints exist. Full tour should walk through: Star Chart → Forces → Sectors → End Turn sequence. Consider using a library like `react-joyride` or custom implementation. |
+| **Territory Boundaries (Voronoi)** | Visual territory zones on starmap | Low | Would show sphere of influence using Voronoi diagrams. High complexity due to force-directed layout. Consider only for static/zoomed views. |
+
+### 11.7 Technical Debt
 
 | Item | Description | Priority |
 |------|-------------|----------|

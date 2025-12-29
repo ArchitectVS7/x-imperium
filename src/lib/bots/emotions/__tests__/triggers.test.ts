@@ -255,8 +255,8 @@ describe("Emotional Triggers", () => {
       const newState = applyEmotionalResponse(state, response, 15, "planet_captured");
 
       expect(newState.recentEvents.length).toBe(10);
-      expect(newState.recentEvents[0].event).toBe("planet_captured");
-      expect(newState.recentEvents[0].turn).toBe(15);
+      expect(newState.recentEvents[0]?.event).toBe("planet_captured");
+      expect(newState.recentEvents[0]?.turn).toBe(15);
     });
 
     it("should not change stateChangedTurn if state remains the same", () => {
