@@ -20,8 +20,6 @@ import {
   calculateDecayedReputation,
   ALL_TREATY_TYPES,
   ALL_REPUTATION_EVENTS,
-  type TreatyType,
-  type ReputationEventType,
 } from "../diplomacy";
 
 describe("Diplomacy Constants", () => {

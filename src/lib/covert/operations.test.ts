@@ -2,7 +2,7 @@
  * Covert Operations Execution Tests (PRD 6.8)
  */
 
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, beforeEach } from "vitest";
 import {
   calculateCovertSuccess,
   executeCovertOp,

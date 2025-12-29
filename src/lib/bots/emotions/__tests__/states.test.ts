@@ -19,7 +19,6 @@ import {
   getNegotiationMultiplier,
   isStateCategory,
   ALL_EMOTIONAL_STATES,
-  type EmotionalStateName,
 } from "../states";
 
 describe("Emotional States", () => {
