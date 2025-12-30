@@ -119,9 +119,9 @@ export function getAttackTargetsWithInfo(
   treatyPartnerIds: Set<string>
 ): AttackTargetInfo[] {
   // Build empire info map
-  const empireInfoMap = new Map<string, { name: string; networth: number }>();
+  const empireInfoMap = new Map<string, { id: string; name: string; networth: number }>();
   for (const empire of allEmpires) {
-    empireInfoMap.set(empire.id, { name: empire.name, networth: empire.networth });
+    empireInfoMap.set(empire.id, { id: empire.id, name: empire.name, networth: empire.networth });
   }
 
   // Calculate influence sphere

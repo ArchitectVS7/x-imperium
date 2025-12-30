@@ -14,15 +14,18 @@ import { getScaledModifiers, type EmotionalStateName } from "../emotions";
 
 describe("applyEmotionalModifiers", () => {
   const baseWeights: BotDecisionWeights = {
-    build_units: 0.30,
-    buy_planet: 0.15,
-    attack: 0.12,
+    build_units: 0.25,
+    buy_planet: 0.12,
+    attack: 0.10,
     diplomacy: 0.08,
     trade: 0.08,
-    do_nothing: 0.07,
-    craft_component: 0.10,
-    accept_contract: 0.05,
-    purchase_black_market: 0.05,
+    do_nothing: 0.05,
+    craft_component: 0.08,
+    accept_contract: 0.04,
+    purchase_black_market: 0.04,
+    covert_operation: 0.06,
+    fund_research: 0.05,
+    upgrade_units: 0.05,
   };
 
   it("should increase attack weight for arrogant state", () => {

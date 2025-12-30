@@ -625,7 +625,12 @@ export function generateGalaxy(
   );
 
   // Assign empires to regions
-  const empireAssignments = assignEmpiresToRegions(empires, regionsWithIds, random);
+  const regionsForAssignment = regionsWithIds.map((r) => ({
+    id: r.id,
+    regionType: r.regionType,
+    maxEmpires: r.maxEmpires ?? GALAXY_CONSTANTS.DEFAULT_EMPIRES_PER_REGION,
+  }));
+  const empireAssignments = assignEmpiresToRegions(empires, regionsForAssignment, random);
 
   // Create empire influence records
   const empireInfluenceRecords = createEmpireInfluenceRecords(

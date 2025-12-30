@@ -20,7 +20,7 @@ import {
   validateAttackWithInfluence,
   getAttackTargetsWithInfo,
 } from "../attack-validation-service";
-import type { EmpireInfluence } from "@/lib/db/schema";
+import type { EmpireInfluence, RegionConnection } from "@/lib/db/schema";
 
 describe("Sphere of Influence Integration", () => {
   // Shared test data
@@ -40,6 +40,31 @@ describe("Sphere of Influence Integration", () => {
   let galaxy: ReturnType<typeof generateGalaxy>;
   let regions: Map<string, { id: string; name: string; positionX: string; positionY: string }>;
   let empireRegions: Map<string, string>;
+  let allConnections: RegionConnection[];
+
+  // Helper to convert NewRegionConnection to RegionConnection
+  function toRegionConnections(
+    connections: ReturnType<typeof generateGalaxy>["connections"]
+  ): RegionConnection[] {
+    return connections.map((c, i) => ({
+      id: c.id ?? `conn-${i}`,
+      createdAt: c.createdAt ?? new Date(),
+      updatedAt: c.updatedAt ?? new Date(),
+      gameId: c.gameId,
+      fromRegionId: c.fromRegionId,
+      toRegionId: c.toRegionId,
+      connectionType: c.connectionType,
+      forceMultiplier: c.forceMultiplier ?? "1.00",
+      travelCost: 0,
+      tradeBonus: "1.00",
+      isBidirectional: c.isBidirectional ?? true,
+      wormholeStatus: c.wormholeStatus ?? null,
+      collapseChance: c.collapseChance ?? "0.00",
+      discoveredByEmpireId: c.discoveredByEmpireId ?? null,
+      discoveredAtTurn: c.discoveredAtTurn ?? null,
+      stabilizedAtTurn: null,
+    }));
+  }
 
   beforeAll(() => {
     // Generate galaxy once for all tests
@@ -59,6 +84,9 @@ describe("Sphere of Influence Integration", () => {
 
     // Build empire-to-region map
     empireRegions = galaxy.empireAssignments;
+
+    // Convert connections to RegionConnection type
+    allConnections = toRegionConnections(allConnections);
   });
 
   describe("Attack Validation - Basic Cases", () => {
@@ -84,7 +112,7 @@ describe("Sphere of Influence Integration", () => {
         },
         allEmpiresWithRegions,
         regions,
-        [...galaxy.connections, ...galaxy.wormholes]
+        allConnections
       );
 
       // Should have some direct neighbors
@@ -118,7 +146,7 @@ describe("Sphere of Influence Integration", () => {
         },
         allEmpiresWithRegions,
         regions,
-        [...galaxy.connections, ...galaxy.wormholes]
+        allConnections
       );
 
       // If we have extended neighbors, test them
@@ -151,7 +179,7 @@ describe("Sphere of Influence Integration", () => {
         },
         allEmpiresWithRegions,
         regions,
-        [...galaxy.connections, ...galaxy.wormholes]
+        allConnections
       );
 
       // If we have distant empires, test rejection
@@ -188,7 +216,7 @@ describe("Sphere of Influence Integration", () => {
         },
         allEmpiresWithRegions,
         regions,
-        [...galaxy.connections, ...galaxy.wormholes]
+        allConnections
       );
 
       // Large empire (20 planets)
@@ -200,7 +228,7 @@ describe("Sphere of Influence Integration", () => {
         },
         allEmpiresWithRegions,
         regions,
-        [...galaxy.connections, ...galaxy.wormholes]
+        allConnections
       );
 
       // Large empire should have bigger radius
@@ -424,7 +452,7 @@ describe("Sphere of Influence Integration", () => {
         allEmpiresWithInfo,
         empireRegions,
         regions,
-        [...galaxy.connections, ...galaxy.wormholes],
+        allConnections,
         new Set(), // No protected empires
         new Set()  // No treaty partners
       );
@@ -485,6 +513,30 @@ describe("100-Empire Scalability Test", () => {
       (r) => r.empireId === "player"
     )!;
 
+    // Helper to convert connections (local to this test)
+    const toLocalConnections = (conns: typeof galaxy.connections): RegionConnection[] => {
+      return conns.map((c, i) => ({
+        id: c.id ?? `conn-${i}`,
+        createdAt: c.createdAt ?? new Date(),
+        updatedAt: c.updatedAt ?? new Date(),
+        gameId: c.gameId,
+        fromRegionId: c.fromRegionId,
+        toRegionId: c.toRegionId,
+        connectionType: c.connectionType,
+        forceMultiplier: c.forceMultiplier ?? "1.00",
+        travelCost: 0,
+        tradeBonus: "1.00",
+        isBidirectional: c.isBidirectional ?? true,
+        wormholeStatus: c.wormholeStatus ?? null,
+        collapseChance: c.collapseChance ?? "0.00",
+        discoveredByEmpireId: c.discoveredByEmpireId ?? null,
+        discoveredAtTurn: c.discoveredAtTurn ?? null,
+        stabilizedAtTurn: null,
+      }));
+    };
+
+    const allConnections = toLocalConnections([...galaxy.connections, ...galaxy.wormholes]);
+
     const regions = new Map<string, { id: string; name: string; positionX: string; positionY: string }>();
     galaxy.regions.forEach((r, i) => {
       regions.set(`region-${i}`, {
@@ -511,7 +563,7 @@ describe("100-Empire Scalability Test", () => {
       },
       allEmpiresWithRegions,
       regions,
-      [...galaxy.connections, ...galaxy.wormholes]
+      allConnections
     );
     const sphereTime = Date.now() - sphereStartTime;
 

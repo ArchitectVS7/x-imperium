@@ -343,7 +343,7 @@ async function initializeGalaxyGeography(
     regionCounts.set(regionId, (regionCounts.get(regionId) ?? 0) + 1);
   }
 
-  for (const [regionId, count] of regionCounts) {
+  for (const [regionId, count] of Array.from(regionCounts.entries())) {
     await db
       .update(galaxyRegions)
       .set({ currentEmpireCount: count })

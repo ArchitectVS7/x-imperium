@@ -52,6 +52,7 @@ const createMockEmpire = (overrides: Partial<Empire> = {}): Empire => ({
   type: "player",
   botTier: null,
   botArchetype: null,
+  llmEnabled: false,
   credits: 100000,
   food: 1000,
   ore: 500,
