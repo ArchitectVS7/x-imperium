@@ -584,11 +584,11 @@ export async function stabilizeWormholeAction(
 // GALAXY VIEW DATA
 // =============================================================================
 
-import type { GalaxyRegion, WormholeData } from "@/components/game/starmap/GalaxyView";
+import type { GalaxyRegion, WormholeData as GalaxyWormholeData } from "@/components/game/starmap/GalaxyView";
 
 export interface GalaxyViewData {
   regions: GalaxyRegion[];
-  wormholes: WormholeData[];
+  wormholes: GalaxyWormholeData[];
   playerEmpireId: string;
   playerRegionId: string;
   currentTurn: number;
@@ -722,7 +722,7 @@ export async function getGalaxyViewDataAction(): Promise<GalaxyViewData | null> 
 
     // Group empires by region
     const regionEmpiresMap = new Map<string, EmpireMapData[]>();
-    for (const [empId, regionId] of empireToRegion) {
+    for (const [empId, regionId] of Array.from(empireToRegion.entries())) {
       const empData = empireDataMap.get(empId);
       if (empData) {
         const existing = regionEmpiresMap.get(regionId) ?? [];
@@ -753,7 +753,7 @@ export async function getGalaxyViewDataAction(): Promise<GalaxyViewData | null> 
     });
 
     // Filter to known wormholes
-    const wormholes: WormholeData[] = allConnections
+    const wormholes: GalaxyWormholeData[] = allConnections
       .filter((conn) => {
         // Show stabilized wormholes to everyone
         if (conn.wormholeStatus === "stabilized") return true;
@@ -768,7 +768,7 @@ export async function getGalaxyViewDataAction(): Promise<GalaxyViewData | null> 
         id: conn.id,
         fromRegionId: conn.fromRegionId,
         toRegionId: conn.toRegionId,
-        status: conn.wormholeStatus as WormholeData["status"],
+        status: conn.wormholeStatus as GalaxyWormholeData["status"],
         isKnown: conn.discoveredByEmpireId === empireId || conn.wormholeStatus === "stabilized",
       }));
 
