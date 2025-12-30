@@ -1,13 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import {
-  getResumableGamesAction,
-  resumeGameAction,
-  type ResumableGame,
-} from "@/app/actions/game-actions";
+import { useState } from "react";
 
 // 4X Feature Cards Data
 const features = [
@@ -223,31 +217,6 @@ function ScreenshotCarousel() {
 }
 
 export default function HomePage() {
-  const router = useRouter();
-  const [resumableGames, setResumableGames] = useState<ResumableGame[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [resuming, setResuming] = useState<string | null>(null);
-
-  useEffect(() => {
-    async function loadResumableGames() {
-      const games = await getResumableGamesAction();
-      setResumableGames(games);
-      setLoading(false);
-    }
-    loadResumableGames();
-  }, []);
-
-  const handleResume = async (gameId: string) => {
-    setResuming(gameId);
-    const result = await resumeGameAction(gameId);
-    if (result.success) {
-      router.push("/game/starmap");
-    } else {
-      alert(result.error || "Failed to resume game");
-      setResuming(null);
-    }
-  };
-
   return (
     <main className="min-h-screen">
       {/* Hero Section */}
@@ -284,31 +253,6 @@ export default function HomePage() {
               HOW TO PLAY
             </a>
           </div>
-
-          {/* Resume Games */}
-          {!loading && resumableGames.length > 0 && (
-            <div className="mt-8">
-              <p className="text-gray-500 text-sm mb-3">Or continue your conquest:</p>
-              <div className="flex flex-wrap gap-2 justify-center">
-                {resumableGames.slice(0, 3).map((game) => (
-                  <button
-                    key={game.gameId}
-                    onClick={() => handleResume(game.gameId)}
-                    disabled={resuming !== null}
-                    className="px-4 py-2 bg-gray-800 hover:bg-gray-700 border border-lcars-orange/30 rounded-lg text-sm transition-colors disabled:opacity-50"
-                  >
-                    <span className="text-lcars-amber font-medium">
-                      {game.empireName}
-                    </span>
-                    <span className="text-gray-500 ml-2">Turn {game.turn}</span>
-                    {resuming === game.gameId && (
-                      <span className="text-gray-400 ml-2">Loading...</span>
-                    )}
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
 
           {/* Scroll indicator */}
           <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">

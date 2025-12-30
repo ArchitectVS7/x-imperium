@@ -98,8 +98,11 @@ export async function startGameAction(formData: FormData): Promise<StartGameResu
   }
 
   try {
+    // Auto-generate game name from empire name + timestamp
+    const gameName = `${empireName.trim()}'s Galaxy`;
+
     const { game, empire, bots } = await startNewGame(
-      "New Game",
+      gameName,
       empireName.trim(),
       undefined,
       difficulty,
@@ -127,9 +130,15 @@ export async function startGameAction(formData: FormData): Promise<StartGameResu
     };
   } catch (error) {
     console.error("Failed to start game:", error);
+    // Don't expose raw database errors to users
+    const errorMessage = error instanceof Error && error.message.includes("database")
+      ? "Unable to connect to game server. Please try again later."
+      : error instanceof Error && error.message.length < 100 && !error.message.includes("query")
+        ? error.message
+        : "Failed to start game. Please try again.";
     return {
       success: false,
-      error: error instanceof Error ? error.message : "Failed to start game",
+      error: errorMessage,
     };
   }
 }
@@ -179,7 +188,9 @@ export async function endGameAction(): Promise<void> {
 }
 
 // =============================================================================
-// RESUME GAME ACTIONS
+// RESUME GAME ACTIONS (DEPRECATED)
+// These functions supported the multi-galaxy feature which has been removed
+// to simplify onboarding. Kept for potential future use.
 // =============================================================================
 
 export interface ResumableGame {
@@ -194,6 +205,7 @@ export interface ResumableGame {
 
 /**
  * Get list of games that can be resumed (have saves and are still active).
+ * @deprecated Multi-galaxy feature removed. Single active game per session.
  */
 export async function getResumableGamesAction(): Promise<ResumableGame[]> {
   try {
@@ -213,6 +225,7 @@ export interface ResumeGameResult {
 
 /**
  * Resume a saved game by setting cookies and returning game info.
+ * @deprecated Multi-galaxy feature removed. Single active game per session.
  */
 export async function resumeGameAction(gameId: string): Promise<ResumeGameResult> {
   try {
