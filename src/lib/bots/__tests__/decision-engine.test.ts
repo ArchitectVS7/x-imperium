@@ -76,23 +76,26 @@ describe("Decision Engine", () => {
     });
 
     it("should have correct weights with crafting integration", () => {
-      // Updated weights with crafting system integration
-      expect(BASE_WEIGHTS.build_units).toBe(0.30);
-      expect(BASE_WEIGHTS.buy_planet).toBe(0.15);
-      expect(BASE_WEIGHTS.attack).toBe(0.12);
+      // Updated weights with crafting system and additional game systems
+      expect(BASE_WEIGHTS.build_units).toBe(0.25);
+      expect(BASE_WEIGHTS.buy_planet).toBe(0.12);
+      expect(BASE_WEIGHTS.attack).toBe(0.10);
       expect(BASE_WEIGHTS.diplomacy).toBe(0.08);
       expect(BASE_WEIGHTS.trade).toBe(0.08);
-      expect(BASE_WEIGHTS.do_nothing).toBe(0.07);
-      expect(BASE_WEIGHTS.craft_component).toBe(0.10);
-      expect(BASE_WEIGHTS.accept_contract).toBe(0.05);
-      expect(BASE_WEIGHTS.purchase_black_market).toBe(0.05);
+      expect(BASE_WEIGHTS.do_nothing).toBe(0.05);
+      expect(BASE_WEIGHTS.craft_component).toBe(0.08);
+      expect(BASE_WEIGHTS.accept_contract).toBe(0.04);
+      expect(BASE_WEIGHTS.purchase_black_market).toBe(0.04);
+      expect(BASE_WEIGHTS.covert_operation).toBe(0.06);
+      expect(BASE_WEIGHTS.fund_research).toBe(0.05);
+      expect(BASE_WEIGHTS.upgrade_units).toBe(0.05);
     });
   });
 
   describe("getAdjustedWeights", () => {
     it("should return base weights after protection period", () => {
       const weights = getAdjustedWeights(mockContext);
-      expect(weights.attack).toBe(0.12);
+      expect(weights.attack).toBe(0.10);
     });
 
     it("should set attack weight to 0 during protection period", () => {
@@ -122,71 +125,74 @@ describe("Decision Engine", () => {
     it("should allow attacks at turn = protectionTurns + 1", () => {
       const afterContext = { ...mockContext, currentTurn: 21, protectionTurns: 20 };
       const weights = getAdjustedWeights(afterContext);
-      expect(weights.attack).toBe(0.12); // Can attack at turn 21
+      expect(weights.attack).toBe(0.10); // Can attack at turn 21
     });
   });
 
   describe("selectDecisionType", () => {
-    // Updated cumulative ranges with crafting integration:
-    // 0-0.30: build_units
-    // 0.30-0.45: buy_planet
-    // 0.45-0.57: attack
-    // 0.57-0.65: diplomacy
-    // 0.65-0.73: trade
-    // 0.73-0.80: do_nothing
-    // 0.80-0.90: craft_component
-    // 0.90-0.95: accept_contract
-    // 0.95-1.0: purchase_black_market
+    // Updated cumulative ranges with all game systems:
+    // 0-0.25: build_units
+    // 0.25-0.37: buy_planet
+    // 0.37-0.47: attack
+    // 0.47-0.55: diplomacy
+    // 0.55-0.63: trade
+    // 0.63-0.68: do_nothing
+    // 0.68-0.76: craft_component
+    // 0.76-0.80: accept_contract
+    // 0.80-0.84: purchase_black_market
+    // 0.84-0.90: covert_operation
+    // 0.90-0.95: fund_research
+    // 0.95-1.0: upgrade_units
 
     it("should return build_units for low random value", () => {
       expect(selectDecisionType(BASE_WEIGHTS, 0)).toBe("build_units");
-      expect(selectDecisionType(BASE_WEIGHTS, 0.29)).toBe("build_units");
+      expect(selectDecisionType(BASE_WEIGHTS, 0.24)).toBe("build_units");
     });
 
     it("should return buy_planet for mid-low random value", () => {
-      expect(selectDecisionType(BASE_WEIGHTS, 0.30)).toBe("buy_planet");
-      expect(selectDecisionType(BASE_WEIGHTS, 0.44)).toBe("buy_planet");
+      expect(selectDecisionType(BASE_WEIGHTS, 0.26)).toBe("buy_planet");
+      expect(selectDecisionType(BASE_WEIGHTS, 0.36)).toBe("buy_planet");
     });
 
     it("should return attack for mid random value", () => {
+      expect(selectDecisionType(BASE_WEIGHTS, 0.38)).toBe("attack");
       expect(selectDecisionType(BASE_WEIGHTS, 0.46)).toBe("attack");
-      expect(selectDecisionType(BASE_WEIGHTS, 0.56)).toBe("attack");
     });
 
     it("should return diplomacy for mid-high random value", () => {
-      expect(selectDecisionType(BASE_WEIGHTS, 0.58)).toBe("diplomacy");
-      expect(selectDecisionType(BASE_WEIGHTS, 0.64)).toBe("diplomacy");
+      expect(selectDecisionType(BASE_WEIGHTS, 0.48)).toBe("diplomacy");
+      expect(selectDecisionType(BASE_WEIGHTS, 0.54)).toBe("diplomacy");
     });
 
     it("should return trade for high random value", () => {
-      expect(selectDecisionType(BASE_WEIGHTS, 0.66)).toBe("trade");
-      expect(selectDecisionType(BASE_WEIGHTS, 0.72)).toBe("trade");
+      expect(selectDecisionType(BASE_WEIGHTS, 0.56)).toBe("trade");
+      expect(selectDecisionType(BASE_WEIGHTS, 0.62)).toBe("trade");
     });
 
     it("should return do_nothing for very high random value", () => {
-      expect(selectDecisionType(BASE_WEIGHTS, 0.74)).toBe("do_nothing");
-      expect(selectDecisionType(BASE_WEIGHTS, 0.79)).toBe("do_nothing");
+      expect(selectDecisionType(BASE_WEIGHTS, 0.64)).toBe("do_nothing");
+      expect(selectDecisionType(BASE_WEIGHTS, 0.67)).toBe("do_nothing");
     });
 
     it("should return craft_component for crafting range", () => {
-      expect(selectDecisionType(BASE_WEIGHTS, 0.81)).toBe("craft_component");
-      expect(selectDecisionType(BASE_WEIGHTS, 0.89)).toBe("craft_component");
+      expect(selectDecisionType(BASE_WEIGHTS, 0.69)).toBe("craft_component");
+      expect(selectDecisionType(BASE_WEIGHTS, 0.75)).toBe("craft_component");
     });
 
     it("should return accept_contract for contract range", () => {
-      expect(selectDecisionType(BASE_WEIGHTS, 0.91)).toBe("accept_contract");
-      expect(selectDecisionType(BASE_WEIGHTS, 0.94)).toBe("accept_contract");
+      expect(selectDecisionType(BASE_WEIGHTS, 0.77)).toBe("accept_contract");
+      expect(selectDecisionType(BASE_WEIGHTS, 0.79)).toBe("accept_contract");
     });
 
     it("should return purchase_black_market for black market range", () => {
-      expect(selectDecisionType(BASE_WEIGHTS, 0.96)).toBe("purchase_black_market");
-      expect(selectDecisionType(BASE_WEIGHTS, 0.99)).toBe("purchase_black_market");
+      expect(selectDecisionType(BASE_WEIGHTS, 0.81)).toBe("purchase_black_market");
+      expect(selectDecisionType(BASE_WEIGHTS, 0.83)).toBe("purchase_black_market");
     });
   });
 
   describe("generateBotDecision", () => {
     it("should return diplomacy decision with targets available", () => {
-      const decision = generateBotDecision(mockContext, 0.58); // diplomacy range
+      const decision = generateBotDecision(mockContext, 0.50); // diplomacy range
       // Can return diplomacy or do_nothing depending on archetype and random roll
       expect(["diplomacy", "do_nothing"]).toContain(decision.type);
       if (decision.type === "diplomacy") {
@@ -196,7 +202,7 @@ describe("Decision Engine", () => {
     });
 
     it("should return trade decision or do_nothing based on resources", () => {
-      const decision = generateBotDecision(mockContext, 0.66); // trade range
+      const decision = generateBotDecision(mockContext, 0.58); // trade range (0.55-0.63)
       // Can return trade or do_nothing depending on resource levels
       expect(["trade", "do_nothing"]).toContain(decision.type);
       if (decision.type === "trade") {
@@ -291,7 +297,8 @@ describe("Decision Engine", () => {
     });
 
     it("should have blitzkrieg with maximum aggression", () => {
-      expect(ARCHETYPE_WEIGHTS.blitzkrieg.attack).toBe(0.40);
+      // Blitzkrieg has highest attack weight among all archetypes (0.32)
+      expect(ARCHETYPE_WEIGHTS.blitzkrieg.attack).toBe(0.32);
     });
   });
 
@@ -522,7 +529,7 @@ describe("Decision Engine", () => {
         ...mockContext,
         availableTargets: [],
       };
-      const decision = generateBotDecision(noTargetsContext, 0.58); // diplomacy range
+      const decision = generateBotDecision(noTargetsContext, 0.50); // diplomacy range (0.47-0.55)
       expect(decision.type).toBe("do_nothing");
     });
 
@@ -531,7 +538,7 @@ describe("Decision Engine", () => {
         ...mockContext,
         availableTargets: mockContext.availableTargets.map(t => ({ ...t, hasTreaty: true })),
       };
-      const decision = generateBotDecision(treatyContext, 0.58); // diplomacy range
+      const decision = generateBotDecision(treatyContext, 0.50); // diplomacy range (0.47-0.55)
       expect(decision.type).toBe("do_nothing");
     });
   });
@@ -542,7 +549,7 @@ describe("Decision Engine", () => {
         ...mockContext,
         empire: { ...mockEmpire, food: 100, population: 10000, credits: 50000 },
       };
-      const decision = generateBotDecision(lowFoodContext, 0.66, 0.1); // trade range
+      const decision = generateBotDecision(lowFoodContext, 0.58, 0.1); // trade range (0.55-0.63)
       if (decision.type === "trade") {
         expect(decision.resource).toBe("food");
         expect(decision.action).toBe("buy");
@@ -554,7 +561,7 @@ describe("Decision Engine", () => {
         ...mockContext,
         empire: { ...mockEmpire, food: 200000, population: 10000, credits: 10000 },
       };
-      const decision = generateBotDecision(highFoodContext, 0.66, 0.3); // trade range
+      const decision = generateBotDecision(highFoodContext, 0.58, 0.3); // trade range (0.55-0.63)
       if (decision.type === "trade") {
         expect(decision.resource).toBe("food");
         expect(decision.action).toBe("sell");

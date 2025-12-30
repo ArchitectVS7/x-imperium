@@ -515,7 +515,10 @@ export function getAdjustedWeights(
       weights.do_nothing +
       weights.craft_component +
       weights.accept_contract +
-      weights.purchase_black_market;
+      weights.purchase_black_market +
+      weights.covert_operation +
+      weights.fund_research +
+      weights.upgrade_units;
 
     // Redistribute proportionally
     const redistributionFactor = 1 + attackWeight / otherWeightSum;
@@ -1151,7 +1154,10 @@ export function getWeightSum(weights: BotDecisionWeights): number {
     weights.do_nothing +
     weights.craft_component +
     weights.accept_contract +
-    weights.purchase_black_market
+    weights.purchase_black_market +
+    weights.covert_operation +
+    weights.fund_research +
+    weights.upgrade_units
   );
 }
 

@@ -2,7 +2,15 @@
 
 import { cookies } from "next/headers";
 import { db } from "@/lib/db";
-import { games, empires, treaties, attacks } from "@/lib/db/schema";
+import {
+  games,
+  empires,
+  treaties,
+  attacks,
+  regionConnections,
+  empireInfluence,
+  galaxyRegions,
+} from "@/lib/db/schema";
 import { eq, and, or, desc, gte } from "drizzle-orm";
 import type {
   EmpireMapData,
@@ -11,6 +19,11 @@ import type {
   ThreatLevel,
   EmpireArchetype,
 } from "@/components/game/starmap/types";
+import {
+  canStabilizeWormhole,
+  stabilizeWormhole,
+  WORMHOLE_CONSTANTS,
+} from "@/lib/game/services/wormhole-service";
 
 // =============================================================================
 // COOKIE HELPERS
@@ -279,4 +292,290 @@ export async function getStarmapDataAction(): Promise<StarmapData | null> {
 export async function getAllEmpiresAction(): Promise<EmpireMapData[]> {
   const data = await getStarmapDataAction();
   return data?.empires ?? [];
+}
+
+// =============================================================================
+// WORMHOLE MANAGEMENT
+// =============================================================================
+
+export interface WormholeInfo {
+  connectionId: string;
+  fromRegionId: string;
+  fromRegionName: string;
+  toRegionId: string;
+  toRegionName: string;
+  status: "undiscovered" | "discovered" | "stabilized" | "collapsed";
+  collapseChance: number;
+  discoveredByEmpireId: string | null;
+  discoveredByEmpireName: string | null;
+  discoveredAtTurn: number | null;
+  isKnownByPlayer: boolean;
+  canStabilize: boolean;
+  stabilizationReason?: string;
+}
+
+export interface WormholeData {
+  wormholes: WormholeInfo[];
+  stabilizationCost: number;
+  stabilizationResearchRequired: number;
+  playerCredits: number;
+  playerResearchLevel: number;
+}
+
+/**
+ * Get all known wormholes for the current player.
+ */
+export async function getWormholesAction(): Promise<WormholeData | null> {
+  const { gameId, empireId } = await getGameCookies();
+
+  if (!gameId || !empireId) {
+    return null;
+  }
+
+  try {
+    // Fetch player empire
+    const empire = await db.query.empires.findFirst({
+      where: eq(empires.id, empireId),
+    });
+
+    if (!empire) {
+      return null;
+    }
+
+    // Fetch player's influence record
+    const influence = await db.query.empireInfluence.findFirst({
+      where: eq(empireInfluence.empireId, empireId),
+    });
+
+    if (!influence) {
+      return null;
+    }
+
+    // Fetch all wormholes in the game
+    const allConnections = await db.query.regionConnections.findMany({
+      where: and(
+        eq(regionConnections.gameId, gameId),
+        eq(regionConnections.connectionType, "wormhole")
+      ),
+    });
+
+    // Fetch all regions for names
+    const regions = await db.query.galaxyRegions.findMany({
+      where: eq(galaxyRegions.gameId, gameId),
+    });
+    const regionMap = new Map(regions.map((r) => [r.id, r]));
+
+    // Fetch all empires for discoverer names
+    const allEmpires = await db.query.empires.findMany({
+      where: eq(empires.gameId, gameId),
+    });
+    const empireMap = new Map(allEmpires.map((e) => [e.id, e]));
+
+    // Map wormholes with additional info
+    const wormholes: WormholeInfo[] = [];
+
+    for (const conn of allConnections) {
+      const fromRegion = regionMap.get(conn.fromRegionId);
+      const toRegion = regionMap.get(conn.toRegionId);
+      const discoverer = conn.discoveredByEmpireId
+        ? empireMap.get(conn.discoveredByEmpireId)
+        : null;
+
+      // Determine if player knows about this wormhole
+      const discoveredByPlayer = conn.discoveredByEmpireId === empireId;
+      const inPlayerRegion =
+        conn.fromRegionId === influence.primaryRegionId ||
+        conn.toRegionId === influence.primaryRegionId;
+      const isStabilized = conn.wormholeStatus === "stabilized";
+
+      const isKnown =
+        discoveredByPlayer ||
+        inPlayerRegion ||
+        isStabilized ||
+        conn.wormholeStatus !== "undiscovered";
+
+      // Skip undiscovered wormholes the player doesn't know about
+      if (!isKnown) {
+        continue;
+      }
+
+      // Check if player can stabilize
+      const stabilizationCheck = canStabilizeWormhole(
+        empire,
+        conn.wormholeStatus as "discovered" | "stabilized" | "collapsed"
+      );
+
+      // Additional check: only the discoverer can stabilize
+      const isDiscoverer = conn.discoveredByEmpireId === empireId;
+      const canPlayerStabilize =
+        stabilizationCheck.canStabilize && isDiscoverer;
+      const stabilizationReason = !isDiscoverer
+        ? "Only the discoverer can stabilize this wormhole"
+        : stabilizationCheck.reason;
+
+      wormholes.push({
+        connectionId: conn.id,
+        fromRegionId: conn.fromRegionId,
+        fromRegionName: fromRegion?.name ?? "Unknown",
+        toRegionId: conn.toRegionId,
+        toRegionName: toRegion?.name ?? "Unknown",
+        status: conn.wormholeStatus as WormholeInfo["status"],
+        collapseChance: conn.collapseChance
+          ? Number(conn.collapseChance)
+          : 0,
+        discoveredByEmpireId: conn.discoveredByEmpireId,
+        discoveredByEmpireName: discoverer?.name ?? null,
+        discoveredAtTurn: conn.discoveredAtTurn,
+        isKnownByPlayer: discoveredByPlayer || isStabilized,
+        canStabilize: canPlayerStabilize,
+        stabilizationReason,
+      });
+    }
+
+    return {
+      wormholes,
+      stabilizationCost: WORMHOLE_CONSTANTS.STABILIZATION_COST,
+      stabilizationResearchRequired: WORMHOLE_CONSTANTS.STABILIZATION_RESEARCH_REQUIREMENT,
+      playerCredits: empire.credits,
+      playerResearchLevel: empire.fundamentalResearchLevel,
+    };
+  } catch (error) {
+    console.error("Failed to fetch wormhole data:", error);
+    return null;
+  }
+}
+
+export interface StabilizeWormholeResult {
+  success: boolean;
+  message: string;
+  creditsSpent: number;
+}
+
+/**
+ * Stabilize a discovered wormhole.
+ * Requires:
+ * - Player discovered the wormhole
+ * - Research level >= 5
+ * - Credits >= 50,000
+ */
+export async function stabilizeWormholeAction(
+  connectionId: string
+): Promise<StabilizeWormholeResult> {
+  const { gameId, empireId } = await getGameCookies();
+
+  if (!gameId || !empireId) {
+    return {
+      success: false,
+      message: "Not logged in",
+      creditsSpent: 0,
+    };
+  }
+
+  try {
+    // Fetch player empire
+    const empire = await db.query.empires.findFirst({
+      where: eq(empires.id, empireId),
+    });
+
+    if (!empire) {
+      return {
+        success: false,
+        message: "Empire not found",
+        creditsSpent: 0,
+      };
+    }
+
+    // Fetch the wormhole
+    const wormhole = await db.query.regionConnections.findFirst({
+      where: and(
+        eq(regionConnections.id, connectionId),
+        eq(regionConnections.gameId, gameId),
+        eq(regionConnections.connectionType, "wormhole")
+      ),
+    });
+
+    if (!wormhole) {
+      return {
+        success: false,
+        message: "Wormhole not found",
+        creditsSpent: 0,
+      };
+    }
+
+    // Verify player discovered this wormhole
+    if (wormhole.discoveredByEmpireId !== empireId) {
+      return {
+        success: false,
+        message: "Only the discoverer can stabilize a wormhole",
+        creditsSpent: 0,
+      };
+    }
+
+    // Check if can stabilize
+    const check = canStabilizeWormhole(
+      empire,
+      wormhole.wormholeStatus as "discovered" | "stabilized" | "collapsed"
+    );
+
+    if (!check.canStabilize) {
+      return {
+        success: false,
+        message: check.reason ?? "Cannot stabilize wormhole",
+        creditsSpent: 0,
+      };
+    }
+
+    // Perform stabilization
+    const result = stabilizeWormhole(empire, wormhole);
+
+    if (!result.success) {
+      return {
+        success: false,
+        message: result.message,
+        creditsSpent: 0,
+      };
+    }
+
+    // Update wormhole status
+    await db
+      .update(regionConnections)
+      .set({
+        wormholeStatus: "stabilized",
+        collapseChance: "0.00",
+        updatedAt: new Date(),
+      })
+      .where(eq(regionConnections.id, connectionId));
+
+    // Deduct credits from empire
+    await db
+      .update(empires)
+      .set({
+        credits: empire.credits - result.creditsSpent,
+        updatedAt: new Date(),
+      })
+      .where(eq(empires.id, empireId));
+
+    // Fetch region names for the message
+    const regions = await db.query.galaxyRegions.findMany({
+      where: or(
+        eq(galaxyRegions.id, wormhole.fromRegionId),
+        eq(galaxyRegions.id, wormhole.toRegionId)
+      ),
+    });
+    const fromRegion = regions.find((r) => r.id === wormhole.fromRegionId);
+    const toRegion = regions.find((r) => r.id === wormhole.toRegionId);
+
+    return {
+      success: true,
+      message: `Wormhole between ${fromRegion?.name ?? "Unknown"} and ${toRegion?.name ?? "Unknown"} has been stabilized for ${result.creditsSpent.toLocaleString()} credits.`,
+      creditsSpent: result.creditsSpent,
+    };
+  } catch (error) {
+    console.error("Failed to stabilize wormhole:", error);
+    return {
+      success: false,
+      message: "An error occurred while stabilizing the wormhole",
+      creditsSpent: 0,
+    };
+  }
 }
