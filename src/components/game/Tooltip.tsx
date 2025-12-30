@@ -121,9 +121,10 @@ export function InfoIcon({ tooltip, position = "top" }: InfoIconProps) {
  * Game Mechanic Tooltips
  *
  * Pre-defined tooltips for common game mechanics.
+ * These are functions that return JSX to avoid Next.js Server Component bundler issues.
  */
-export const GAME_TOOLTIPS = {
-  civilStatus: (
+export function CivilStatusTooltip() {
+  return (
     <div>
       <strong className="text-lcars-amber">Civil Status</strong>
       <p className="mt-1">
@@ -134,8 +135,11 @@ export const GAME_TOOLTIPS = {
         Keep your people fed and avoid overpopulation!
       </p>
     </div>
-  ),
-  protection: (
+  );
+}
+
+export function ProtectionTooltip() {
+  return (
     <div>
       <strong className="text-lcars-amber">Protection Period</strong>
       <p className="mt-1">
@@ -143,8 +147,11 @@ export const GAME_TOOLTIPS = {
         Use this time to build up your economy and military!
       </p>
     </div>
-  ),
-  networth: (
+  );
+}
+
+export function NetworthTooltip() {
+  return (
     <div>
       <strong className="text-lcars-amber">Networth</strong>
       <p className="mt-1">
@@ -153,8 +160,11 @@ export const GAME_TOOLTIPS = {
         networth of the second-place empire!
       </p>
     </div>
-  ),
-  research: (
+  );
+}
+
+export function ResearchTooltip() {
+  return (
     <div>
       <strong className="text-lcars-amber">Research Level</strong>
       <p className="mt-1">
@@ -169,8 +179,11 @@ export const GAME_TOOLTIPS = {
         Build Research planets to generate research points!
       </p>
     </div>
-  ),
-  food: (
+  );
+}
+
+export function FoodTooltip() {
+  return (
     <div>
       <strong className="text-lcars-amber">Food</strong>
       <p className="mt-1">
@@ -181,8 +194,11 @@ export const GAME_TOOLTIPS = {
         Food planets produce 160 food/turn each.
       </p>
     </div>
-  ),
-  carriers: (
+  );
+}
+
+export function CarriersTooltip() {
+  return (
     <div>
       <strong className="text-lcars-amber">Carriers</strong>
       <p className="mt-1">
@@ -191,8 +207,11 @@ export const GAME_TOOLTIPS = {
         in ground combat!
       </p>
     </div>
-  ),
-  combatPhases: (
+  );
+}
+
+export function CombatPhasesTooltip() {
+  return (
     <div>
       <strong className="text-lcars-amber">Combat Phases</strong>
       <ol className="mt-1 text-xs space-y-1 list-decimal list-inside">
@@ -204,8 +223,11 @@ export const GAME_TOOLTIPS = {
         You must win all 3 phases to capture a planet!
       </p>
     </div>
-  ),
-  syndicate: (
+  );
+}
+
+export function SyndicateTooltip() {
+  return (
     <div>
       <strong className="text-lcars-purple">The Galactic Syndicate</strong>
       <p className="mt-1">
@@ -216,5 +238,9 @@ export const GAME_TOOLTIPS = {
         Warning: Trust decays over time without activity!
       </p>
     </div>
-  ),
-};
+  );
+}
+
+// Note: Tooltip content functions are exported above for use in components.
+// Import them directly (e.g., CivilStatusTooltip) rather than using an object
+// to avoid Next.js Server Components bundler issues with JSX objects.

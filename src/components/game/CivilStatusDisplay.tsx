@@ -6,6 +6,21 @@
  */
 
 import { CIVIL_STATUS_INCOME_MULTIPLIERS, type CivilStatusLevel } from "@/lib/game/constants";
+import { Tooltip } from "./Tooltip";
+
+// Inline tooltip content to avoid Next.js Server Components bundler issues
+const CivilStatusTooltipContent = (
+  <div>
+    <strong className="text-lcars-amber">Civil Status</strong>
+    <p className="mt-1">
+      Your population&apos;s happiness affects your income. Happy citizens (Ecstatic)
+      give 4x income, while unhappy ones (Revolting) give only 0.25x.
+    </p>
+    <p className="mt-1 text-gray-400 text-xs">
+      Keep your people fed and avoid overpopulation!
+    </p>
+  </div>
+);
 
 interface CivilStatusDisplayProps {
   status: string;
@@ -52,25 +67,27 @@ export function CivilStatusDisplay({
   };
 
   return (
-    <div
-      className={`inline-flex items-center gap-2 px-3 py-1.5 border rounded-lcars ${colorClass}`}
-      data-testid="civil-status-display"
-    >
-      <span className="font-semibold" data-testid="civil-status-label">
-        {label}
-      </span>
-      {showMultiplier && (
-        <>
-          <span className="text-gray-500">|</span>
-          <span
-            className="font-mono text-sm"
-            data-testid="civil-status-multiplier"
-            title={`Income multiplier: ${formatMultiplier(multiplier)}`}
-          >
-            {formatMultiplier(multiplier)}
-          </span>
-        </>
-      )}
-    </div>
+    <Tooltip content={CivilStatusTooltipContent} position="bottom">
+      <div
+        className={`inline-flex items-center gap-2 px-3 py-1.5 border rounded-lcars cursor-help ${colorClass}`}
+        data-testid="civil-status-display"
+      >
+        <span className="font-semibold" data-testid="civil-status-label">
+          {label}
+        </span>
+        {showMultiplier && (
+          <>
+            <span className="text-gray-500">|</span>
+            <span
+              className="font-mono text-sm"
+              data-testid="civil-status-multiplier"
+              title={`Income multiplier: ${formatMultiplier(multiplier)}`}
+            >
+              {formatMultiplier(multiplier)}
+            </span>
+          </>
+        )}
+      </div>
+    </Tooltip>
   );
 }
