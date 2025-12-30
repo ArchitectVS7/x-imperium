@@ -82,7 +82,7 @@ This document tracks the status of all major features and redesign initiatives f
 
 | Item | Status | Priority | Estimated | Notes |
 |------|--------|----------|-----------|-------|
-| Coalition mechanics (automatic) | 📋 PLANNED | P0 | 1 day | +1 attack bonus vs leaders at 7+ VP |
+| Coalition mechanics (automatic) | ✅ IMPLEMENTED | P0 | ✓ | +10% attack bonus vs leaders at 7+ VP |
 | Reverse turn order | 📋 PLANNED | P1 | 0.5 day | Weakest empire goes first |
 | Sector traits | 💡 PROPOSED | P2 | 1 day | "Mining Belt" +20% ore, etc. |
 | Victory Points system | 💡 PROPOSED | P2 | 2-3 days | 10 VP from any combination |
@@ -91,6 +91,79 @@ This document tracks the status of all major features and redesign initiatives f
 **Dependencies**: Combat system (for proper balance testing)
 **Blocker**: None
 **ETA**: 2 days (P0-P1 only), +3 days if including P2
+
+---
+
+### Session & Campaign Management 🆕
+
+| Item | Status | Priority | Estimated | Notes |
+|------|--------|----------|-----------|-------|
+| Game creation flow | 📋 PLANNED | P0 | 1 day | Currently missing - no way to start new game |
+| Game mode selection | 📋 PLANNED | P0 | 0.5 day | Oneshot (10-25 empires, 50-100 turns) vs Campaign (50-100 empires, 200+ turns) |
+| Session save/resume | 📋 PLANNED | P0 | 1 day | Save session state, resume later. **NO save-scumming** (no loading previous saves) |
+| Mode selection on return | 📋 PLANNED | P1 | 0.5 day | Returning player can choose: continue campaign OR start new oneshot |
+| Session summary screen | 📋 PLANNED | P1 | 1 day | Between sessions: what happened, eliminations, power rankings |
+| Campaign "chapters" narrative | 💡 PROPOSED | P2 | 0.5 day | "Session 1: The Early Days", "Session 5: Rise of the Hegemony" |
+
+**Philosophy**: Sessions are saved automatically. No manual save/load to prevent exploiting bad decisions. Campaign mode spans multiple sessions; Oneshot is single-session.
+
+**Dependencies**: None
+**Blocker**: None (this is critical infrastructure)
+**ETA**: 3-4 days
+
+---
+
+### Boss Emergence & Coalition Raids 🆕
+
+| Item | Status | Priority | Feature Flag | Notes |
+|------|--------|----------|--------------|-------|
+| Boss detection | 📋 PLANNED | P1 | - | Identify empires that won 5+ battles, have 2×+ average networth |
+| Boss indicators (UI) | 📋 PLANNED | P1 | - | Visual highlighting of dominant empires |
+| Coalition raid mechanics | 📋 PLANNED | P1 | `FEATURE_COALITION_RAIDS` | When 3+ empires attack same boss in same turn: +5% per additional attacker |
+| Raid territory distribution | 📋 PLANNED | P2 | `FEATURE_COALITION_RAIDS` | Split captured territory (equal vs proportional_to_damage) |
+| Shared victory rewards | 📋 PLANNED | P2 | `FEATURE_COALITION_RAIDS` | All raid participants share elimination credit |
+| Boss strength tracking | 💡 PROPOSED | P2 | - | **Playtest first** - determine if elite bots need bonuses or emerge naturally strong |
+
+**Philosophy**: Raid bonuses are for taking down **bosses** (objectively overpowered empires), NOT for general bullying. The trigger is boss emergence, not just "two players teaming up."
+
+**Key Decision**: Boss strength bonuses (3× military, etc.) will be determined through playtesting. May not need artificial bonuses if bot natural selection creates sufficiently powerful bosses.
+
+**Dependencies**: Boss detection logic
+**Feature Flags**: `FEATURE_COALITION_RAIDS` - toggle for playtesting
+
+---
+
+### Underdog & Punching Up Mechanics 🆕
+
+| Item | Status | Priority | Feature Flag | Notes |
+|------|--------|----------|--------------|-------|
+| Underdog combat bonus | 📋 PLANNED | P1 | `FEATURE_UNDERDOG_BONUS` | +10-20% when weaker empire attacks stronger one |
+| "Punching up" victory bonus | 📋 PLANNED | P1 | `FEATURE_PUNCHUP_BONUS` | Bonus rewards for **winning** against stronger opponent (not just attacking) |
+
+**Philosophy**: Undecided on automatic underdog bonus - may feel like punishment for success. Alternative "punching up" bonus rewards **victories** against stronger foes, not just attempts. Both will be feature-flagged for playtesting.
+
+**Note**: Weak players already have asymmetric options: covert ops, sabotage, pirates, Syndicate contracts. May not need direct combat bonus.
+
+**Feature Flags**:
+- `FEATURE_UNDERDOG_BONUS` - flat bonus when attacking stronger empire
+- `FEATURE_PUNCHUP_BONUS` - bonus for winning against stronger empire
+
+---
+
+### Advanced Connection Types 🆕
+
+| Item | Status | Priority | Feature Flag | Notes |
+|------|--------|----------|--------------|-------|
+| Trade route connections | 💡 PROPOSED | P2 | `FEATURE_TRADE_ROUTES` | 1.0× force cost + trade bonuses with partner |
+| Trade route as attack relay | 💡 PROPOSED | P2 | `FEATURE_TRADE_ROUTES` | Use trade partner as staging point for remote attacks |
+| Hazardous connections | 💡 PROPOSED | P3 | `FEATURE_HAZARD_ZONES` | 1.5× force cost, random unit attrition |
+| Contested zones | 💡 PROPOSED | P3 | `FEATURE_CONTESTED_ZONES` | 1.25× force cost, random combat events |
+
+**Philosophy**: Current system has 3 connection types (same sector, adjacent border, wormhole). These additions create richer strategic options. All feature-flagged for playtesting.
+
+**Key Idea**: Trade routes could allow indirect attacks - if I have a trade partner in Sector 7, I could use that relationship to project power into their neighborhood.
+
+**Feature Flags**: `FEATURE_TRADE_ROUTES`, `FEATURE_HAZARD_ZONES`, `FEATURE_CONTESTED_ZONES`
 
 ---
 
@@ -287,7 +360,25 @@ This document tracks the status of all major features and redesign initiatives f
 
 ## Decision Log
 
-### 2025-12-30
+### 2025-12-30 (Evening) - Redesign Documentation Review
+- ✅ **CAPTURED**: 6 ideas from older redesign docs now tracked in Implementation Tracker
+- ✅ **APPROVED**: Session/Campaign Management (P0) - game creation flow, mode selection, session save/resume
+  - **Key constraint**: NO save-scumming. Sessions auto-save, no manual save/load.
+  - Player can choose to continue campaign OR start new oneshot when returning
+- ✅ **APPROVED**: Coalition Raid Mechanics - tied to boss emergence, not general "bullying"
+  - Feature-flagged: `FEATURE_COALITION_RAIDS`
+  - Trigger: Boss must be detected (5+ battle wins, 2×+ networth) before raid bonuses apply
+- ✅ **APPROVED**: Underdog/Punching Up mechanics - implement both variants, feature-flagged
+  - `FEATURE_UNDERDOG_BONUS` - flat bonus when attacking stronger
+  - `FEATURE_PUNCHUP_BONUS` - bonus for **winning** against stronger (preferred approach)
+  - Note: Weak players already have covert ops, pirates, Syndicate - may not need combat bonus
+- ✅ **APPROVED**: Advanced Connection Types (trade routes as attack relay) - feature-flagged for playtesting
+- 📝 **NOTED**: Boss strength bonuses (3× military, etc.) to be determined by playtesting
+  - Don't assume bots need bonuses - let natural selection create bosses first
+- 📝 **NOTED**: MMO vision language ("Crusader Kings meets Eve Online") to be added to VISION.md
+- 🗂️ **CONSOLIDATED**: Redesign folders merged into single `/docs/redesign-12-30-2024/` archive
+
+### 2025-12-30 (Morning)
 - ✅ **APPROVED**: Concept 2 (Regional Cluster Map) for starmap redesign
   - Full implementation greenlit (13-15 days)
   - Includes LCARS aesthetic, 5-step onboarding, sector system
@@ -332,14 +423,35 @@ Three independent reviewers (newbie, experienced, designer) converged on:
 
 ---
 
+## Feature Flags for Playtesting
+
+All experimental mechanics are behind feature flags for A/B testing and balance iteration:
+
+| Flag | Feature | Default | Notes |
+|------|---------|---------|-------|
+| `FEATURE_COALITION_RAIDS` | Multi-empire raid bonuses vs bosses | OFF | +5% per attacker when 3+ attack same boss |
+| `FEATURE_UNDERDOG_BONUS` | Flat bonus when weaker attacks stronger | OFF | +10-20% combat power |
+| `FEATURE_PUNCHUP_BONUS` | Bonus for winning against stronger foe | OFF | Alternative to underdog bonus |
+| `FEATURE_TRADE_ROUTES` | Trade routes as attack relay points | OFF | Use trade partner as staging area |
+| `FEATURE_HAZARD_ZONES` | Hazardous connections with attrition | OFF | 1.5× force cost + random losses |
+| `FEATURE_CONTESTED_ZONES` | Contested areas with random events | OFF | 1.25× force cost + combat events |
+
+**Implementation**: Feature flags should be environment variables or database settings that can be toggled without code deployment.
+
+---
+
 ## References
 
-- **Design Docs**: `/docs/redesign/` folder (see GAME-DESIGN-EVALUATION.md, PATH-FORWARD.md)
-- **Starmap Specs**: STARMAP-CONCEPT2-DEEP-DIVE.md, STARMAP-CONCEPT2-REVIEWS.md
-- **PRD**: `/docs/PRD.md`
-- **VISION**: `/docs/VISION.md` (comprehensive game vision document)
+- **Design Archive**: `/docs/redesign-12-30-2024/` folder (consolidated redesign documentation)
+  - GAME-DESIGN-EVALUATION.md - Problem analysis
+  - PATH-FORWARD.md - Decision framework
+  - STARMAP-CONCEPT2-DEEP-DIVE.md - Starmap implementation spec
+  - STARMAP-CONCEPT2-REVIEWS.md - Three independent reviews
+- **Historical**: `/docs/redesign/` folder contains earlier brainstorm documents (COMBAT-GEOGRAPHY-TURNS.md, UNIFIED-VISION-ANALYSIS.md)
+- **PRD**: `/docs/PRD.md` - Product requirements
+- **VISION**: `/docs/VISION.md` - Game vision and design philosophy
 
 ---
 
 *This tracker is the living source of truth for Nexus Dominion development.*
-*Last updated: 2025-12-30 by Claude*
+*Last updated: 2025-12-30 (Evening) by Claude*

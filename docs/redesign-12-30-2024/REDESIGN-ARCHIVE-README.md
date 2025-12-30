@@ -1,16 +1,18 @@
-# Redesign Folder Archive - December 30, 2025
+# Redesign Folder Archive - December 30, 2024
 
-**Purpose**: This folder contains the design evaluation and redesign process that led to Nexus Dominion v2.0.
+**Purpose**: This folder contains ALL design evaluation and redesign documentation that led to Nexus Dominion v2.0.
 
 **Date Range**: December 28-30, 2024
 
 **Outcome**: Major design decisions finalized and documented in `/docs/VISION.md`
 
+**Consolidated**: 2025-12-30 (Evening) - Merged older `/docs/redesign/` folder into this archive
+
 ---
 
 ## What Happened
 
-Between December 28-30, 2024, extensive playtesting and evaluation revealed critical issues with the game's combat system and galaxy structure. This folder contains the investigation, analysis, and redesign process.
+Between December 28-30, 2024, extensive playtesting and evaluation revealed critical issues with the game's combat system and galaxy structure. This folder contains the complete investigation, analysis, and redesign process.
 
 ---
 
@@ -33,8 +35,22 @@ Between December 28-30, 2024, extensive playtesting and evaluation revealed crit
 - **STARMAP-CONCEPT2-DEEP-DIVE.md** - Detailed implementation plan for Concept 2 (Regional Cluster Map)
 - **STARMAP-CONCEPT2-REVIEWS.md** - Three independent critical reviews (newbie, experienced, designer perspectives)
 
-### Implementation Planning
-- **IMPLEMENTATION-TRACKER.md** - Living tracker of all features, status, timelines
+### Early Brainstorm Documents (from original /docs/redesign/ folder)
+- **COMBAT-GEOGRAPHY-TURNS.md** - Comprehensive analysis including:
+  - Three combat resolution solutions (A, B, C)
+  - Sphere of influence data structures
+  - Turn order panel discussion (Elena Chen, Marcus Webb, Mark Rosewater)
+  - Parallel turn processing architecture
+  - Revised turn structure proposal
+- **UNIFIED-VISION-ANALYSIS.md** - MMO-style vision document including:
+  - "Crusader Kings meets Eve Online" framing
+  - Emergent boss mechanics
+  - Coalition raid mechanics
+  - Campaign vs oneshot modes
+  - Session management concepts
+
+### Historical Tracking
+- **IMPLEMENTATION-TRACKER-OLD.md** - Earlier version of implementation tracker (for reference)
 
 ---
 
@@ -97,6 +113,8 @@ The comprehensive VISION document now contains:
 - Coalition mechanics
 - Onboarding philosophy
 - All greenlit features
+- **NEW (2025-12-30 Evening)**: MMO framing language ("Crusader Kings meets Eve Online")
+- **NEW**: "Natural selection is the content" design principle
 
 ### Consolidated into `/docs/PRD.md` (v2.0)
 PRD updated with:
@@ -106,12 +124,19 @@ PRD updated with:
 - Starting planets changed to 5
 - Key Decisions table updated
 
-### Tracked in `/docs/redesign/IMPLEMENTATION-TRACKER.md`
+### Tracked in `/docs/IMPLEMENTATION-TRACKER.md` (Main Tracker)
 Living document tracking:
 - What's implemented ✅
 - What's in progress 🚧
 - What's planned 📋
 - What's under evaluation 💭
+
+**NEW Sections Added (2025-12-30 Evening)**:
+- **Session & Campaign Management** - Game creation flow, mode selection, session save/resume (NO save-scumming)
+- **Boss Emergence & Coalition Raids** - Raid bonuses tied to boss detection, feature-flagged
+- **Underdog & Punching Up Mechanics** - Two variants, both feature-flagged for playtesting
+- **Advanced Connection Types** - Trade routes as attack relay, hazardous zones
+- **Feature Flags for Playtesting** - Reference table of all experimental toggles
 
 ---
 

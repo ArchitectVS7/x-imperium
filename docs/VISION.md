@@ -27,6 +27,21 @@
 
 ## Game Philosophy
 
+### The MMO Experience (Single Player)
+
+> **"Crusader Kings meets Eve Online, simulated."**
+
+Nexus Dominion isn't "Solar Realms with 100 AI players" - it's a **simulated MMO galaxy** designed for solo play:
+
+- **Bots fight bots** - Natural selection occurs. 100 empires become 80, then 60, then fewer.
+- **Emergent bosses** - Victors accumulate power. A bot that eliminated 5 others IS the boss, organically.
+- **Player fights ~10-15** - At any time, only your neighbors matter. Not the whole galaxy.
+- **Coalitions are raids** - Defeating an emergent boss requires coordination, like MMO raids against dungeon bosses.
+- **Sessions are chapters** - A 100-empire campaign spans multiple 1-2 hour sessions, each a chapter in your story.
+- **Neighbors are characters** - Your 5-10 neighbors become personalities you know, with history and rivalries.
+
+**Target audience**: Single-player enthusiasts who want a rich, deep experience without being steamrolled by power gamers in multiplayer. The game delivers MMO-style emergent drama in a controlled, fair environment.
+
 ### Design Principles
 
 1. **"Every game is someone's first game"** (Stan Lee / Mark Rosewater)
@@ -53,6 +68,11 @@
    - Combat must work before adding covert ops
    - Balance before variety
    - Elegance before feature creep
+
+6. **"Natural selection is the content"**
+   - Don't script bosses - let them emerge from bot-vs-bot conflict
+   - A bot that won 5 battles IS the boss, with all the power that implies
+   - The drama comes from organic gameplay, not authored scenarios
 
 ---
 
