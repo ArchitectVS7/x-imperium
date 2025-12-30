@@ -29,6 +29,7 @@ export const empireTypeEnum = pgEnum("empire_type", ["player", "bot"]);
 
 export const botTierEnum = pgEnum("bot_tier", [
   "tier1_llm",
+  "tier1_elite_scripted",
   "tier2_strategic",
   "tier3_simple",
   "tier4_random",
@@ -279,6 +280,8 @@ export const empires = pgTable(
     // Bot-specific fields (null for player)
     botTier: botTierEnum("bot_tier"),
     botArchetype: botArchetypeEnum("bot_archetype"),
+    /** LLM-enabled flag for Tier 1 bots (10 elite bots use LLM API) */
+    llmEnabled: boolean("llm_enabled").notNull().default(false),
 
     // Resources (stored as bigint for large numbers)
     credits: bigint("credits", { mode: "number" }).notNull().default(100000),

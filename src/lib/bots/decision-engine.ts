@@ -68,16 +68,20 @@ import {
 // =============================================================================
 
 export const BASE_WEIGHTS: BotDecisionWeights = {
-  build_units: 0.30,
-  buy_planet: 0.15,
-  attack: 0.12,
-  diplomacy: 0.08, // Stub: resolves to do_nothing until M7
-  trade: 0.08, // Stub: resolves to do_nothing until M7
-  do_nothing: 0.07,
+  build_units: 0.25,
+  buy_planet: 0.12,
+  attack: 0.10,
+  diplomacy: 0.08,
+  trade: 0.08,
+  do_nothing: 0.05,
   // Crafting system weights
-  craft_component: 0.10,
-  accept_contract: 0.05,
-  purchase_black_market: 0.05,
+  craft_component: 0.08,
+  accept_contract: 0.04,
+  purchase_black_market: 0.04,
+  // Additional game systems (PRD 6.8, 9.2, 9.4)
+  covert_operation: 0.06,
+  fund_research: 0.05,
+  upgrade_units: 0.05,
 };
 
 // =============================================================================
@@ -98,100 +102,124 @@ export const BASE_WEIGHTS: BotDecisionWeights = {
  */
 export const ARCHETYPE_WEIGHTS: Record<BotArchetype, BotDecisionWeights> = {
   warlord: {
-    build_units: 0.28,
-    buy_planet: 0.08,
-    attack: 0.32,      // Highly aggressive
-    diplomacy: 0.04,
-    trade: 0.04,
-    do_nothing: 0.04,
-    // Crafting: military focus, moderate Syndicate
-    craft_component: 0.10,
-    accept_contract: 0.06,
-    purchase_black_market: 0.04,
+    build_units: 0.22,
+    buy_planet: 0.06,
+    attack: 0.28,      // Highly aggressive
+    diplomacy: 0.03,
+    trade: 0.03,
+    do_nothing: 0.03,
+    craft_component: 0.08,
+    accept_contract: 0.05,
+    purchase_black_market: 0.03,
+    // Military focus: high covert ops, low research
+    covert_operation: 0.10,
+    fund_research: 0.03,
+    upgrade_units: 0.06,
   },
   diplomat: {
-    build_units: 0.22,
-    buy_planet: 0.22,
-    attack: 0.04,      // Very peaceful
-    diplomacy: 0.22,   // High diplomacy (still stub)
-    trade: 0.12,
-    do_nothing: 0.04,
-    // Crafting: minimal Syndicate engagement
-    craft_component: 0.08,
+    build_units: 0.18,
+    buy_planet: 0.18,
+    attack: 0.03,      // Very peaceful
+    diplomacy: 0.18,   // High diplomacy
+    trade: 0.10,
+    do_nothing: 0.03,
+    craft_component: 0.06,
     accept_contract: 0.02,
-    purchase_black_market: 0.04,
+    purchase_black_market: 0.03,
+    // Peaceful: low covert, moderate research
+    covert_operation: 0.04,
+    fund_research: 0.08,
+    upgrade_units: 0.07,
   },
   merchant: {
-    build_units: 0.15,
-    buy_planet: 0.27,  // Economy expansion
-    attack: 0.08,
-    diplomacy: 0.08,
-    trade: 0.15,       // High trade (still stub)
-    do_nothing: 0.04,
-    // Crafting: economy focus, moderate Syndicate
-    craft_component: 0.15,
-    accept_contract: 0.04,
-    purchase_black_market: 0.04,
+    build_units: 0.12,
+    buy_planet: 0.22,  // Economy expansion
+    attack: 0.06,
+    diplomacy: 0.06,
+    trade: 0.12,       // High trade
+    do_nothing: 0.03,
+    craft_component: 0.12,
+    accept_contract: 0.03,
+    purchase_black_market: 0.03,
+    // Economy focus: moderate covert, economy research
+    covert_operation: 0.05,
+    fund_research: 0.10,
+    upgrade_units: 0.06,
   },
   schemer: {
-    build_units: 0.20,
-    buy_planet: 0.10,
-    attack: 0.22,      // Opportunistic strikes
+    build_units: 0.16,
+    buy_planet: 0.08,
+    attack: 0.18,      // Opportunistic strikes
+    diplomacy: 0.05,
+    trade: 0.05,
+    do_nothing: 0.02,
+    craft_component: 0.10,
+    accept_contract: 0.07,
+    purchase_black_market: 0.10,
+    // Stealth focus: HIGH covert ops
+    covert_operation: 0.12,
+    fund_research: 0.04,
+    upgrade_units: 0.03,
+  },
+  turtle: {
+    build_units: 0.28, // Heavy defense building (stations)
+    buy_planet: 0.16,
+    attack: 0.03,      // Very defensive
     diplomacy: 0.06,
     trade: 0.06,
     do_nothing: 0.03,
-    // Crafting: stealth focus, high Syndicate engagement
-    craft_component: 0.12,
-    accept_contract: 0.09,
-    purchase_black_market: 0.12,
-  },
-  turtle: {
-    build_units: 0.35, // Heavy defense building (stations)
-    buy_planet: 0.20,
-    attack: 0.04,      // Very defensive
-    diplomacy: 0.08,
-    trade: 0.08,
-    do_nothing: 0.04,
-    // Crafting: defense focus, low Syndicate
-    craft_component: 0.12,
-    accept_contract: 0.03,
-    purchase_black_market: 0.06,
+    craft_component: 0.10,
+    accept_contract: 0.02,
+    purchase_black_market: 0.05,
+    // Defense focus: low covert, defense research, high upgrades
+    covert_operation: 0.04,
+    fund_research: 0.07,
+    upgrade_units: 0.10,
   },
   blitzkrieg: {
-    build_units: 0.20,
-    buy_planet: 0.08,
-    attack: 0.40,      // Maximum aggression
-    diplomacy: 0.04,
-    trade: 0.04,
-    do_nothing: 0.04,
-    // Crafting: speed/attack focus, high Syndicate
-    craft_component: 0.08,
-    accept_contract: 0.07,
-    purchase_black_market: 0.05,
+    build_units: 0.16,
+    buy_planet: 0.06,
+    attack: 0.32,      // Maximum aggression
+    diplomacy: 0.03,
+    trade: 0.03,
+    do_nothing: 0.03,
+    craft_component: 0.06,
+    accept_contract: 0.06,
+    purchase_black_market: 0.04,
+    // Speed focus: moderate covert, low research, moderate upgrades
+    covert_operation: 0.08,
+    fund_research: 0.05,
+    upgrade_units: 0.08,
   },
   tech_rush: {
-    build_units: 0.18,
-    buy_planet: 0.27,  // Research planets
-    attack: 0.08,
-    diplomacy: 0.08,
-    trade: 0.10,
-    do_nothing: 0.04,
-    // Crafting: tech focus, moderate Syndicate
-    craft_component: 0.15,
-    accept_contract: 0.05,
-    purchase_black_market: 0.05,
+    build_units: 0.14,
+    buy_planet: 0.20,  // Research planets
+    attack: 0.06,
+    diplomacy: 0.06,
+    trade: 0.08,
+    do_nothing: 0.03,
+    craft_component: 0.12,
+    accept_contract: 0.04,
+    purchase_black_market: 0.04,
+    // Tech focus: HIGH research, high upgrades
+    covert_operation: 0.05,
+    fund_research: 0.12,
+    upgrade_units: 0.06,
   },
   opportunist: {
-    build_units: 0.20,
-    buy_planet: 0.15,
-    attack: 0.28,      // Attacks when advantage
-    diplomacy: 0.08,
-    trade: 0.04,
-    do_nothing: 0.04,
-    // Crafting: balanced, moderate Syndicate
-    craft_component: 0.10,
-    accept_contract: 0.05,
-    purchase_black_market: 0.06,
+    build_units: 0.16,
+    buy_planet: 0.12,
+    attack: 0.22,      // Attacks when advantage
+    diplomacy: 0.06,
+    trade: 0.03,
+    do_nothing: 0.03,
+    craft_component: 0.08,
+    accept_contract: 0.04,
+    purchase_black_market: 0.05,
+    // Balanced: moderate everything
+    covert_operation: 0.08,
+    fund_research: 0.06,
+    upgrade_units: 0.07,
   },
 };
 
