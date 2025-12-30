@@ -15,6 +15,7 @@ import type {
   NewRegionConnection,
   NewEmpireInfluence,
 } from "@/lib/db/schema";
+import { assignEmpiresWithBalancing } from "./sector-balancing-service";
 
 // =============================================================================
 // TYPES
@@ -624,13 +625,14 @@ export function generateGalaxy(
     random
   );
 
-  // Assign empires to regions
+  // Assign empires to regions using balanced distribution (M6.1)
   const regionsForAssignment = regionsWithIds.map((r) => ({
     id: r.id,
     regionType: r.regionType,
     maxEmpires: r.maxEmpires ?? GALAXY_CONSTANTS.DEFAULT_EMPIRES_PER_REGION,
+    wealthModifier: r.wealthModifier,
   }));
-  const empireAssignments = assignEmpiresToRegions(empires, regionsForAssignment, random);
+  const empireAssignments = assignEmpiresWithBalancing(empires, regionsForAssignment, random);
 
   // Create empire influence records
   const empireInfluenceRecords = createEmpireInfluenceRecords(
