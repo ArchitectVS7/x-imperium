@@ -158,3 +158,61 @@ export const GAME_SETTINGS = {
   protectionTurns: 20,
   armyEffectivenessDefault: 85,
 } as const;
+
+// =============================================================================
+// GAME MODE PRESETS
+// =============================================================================
+
+export type GameMode = "oneshot" | "campaign";
+
+/**
+ * Game mode presets define the constraints for each game type.
+ *
+ * Oneshot: Quick, single-session games with fewer empires
+ * Campaign: Multi-session games with larger galaxy and longer duration
+ */
+export const GAME_MODE_PRESETS = {
+  oneshot: {
+    label: "Oneshot",
+    description: "Quick game, 10-25 empires, 50-100 turns, single session",
+    minBots: 10,
+    maxBots: 25,
+    defaultBots: 15,
+    minTurns: 50,
+    maxTurns: 100,
+    defaultTurns: 75,
+  },
+  campaign: {
+    label: "Campaign",
+    description: "Multi-session, 25-100 empires, 150-500 turns",
+    minBots: 25,
+    maxBots: 100,
+    defaultBots: 50,
+    minTurns: 150,
+    maxTurns: 500,
+    defaultTurns: 200,
+  },
+} as const;
+
+/**
+ * Get the preset configuration for a game mode.
+ */
+export function getGameModePreset(mode: GameMode) {
+  return GAME_MODE_PRESETS[mode];
+}
+
+/**
+ * Validate bot count for a given game mode.
+ */
+export function validateBotCount(mode: GameMode, botCount: number): boolean {
+  const preset = GAME_MODE_PRESETS[mode];
+  return botCount >= preset.minBots && botCount <= preset.maxBots;
+}
+
+/**
+ * Validate turn limit for a given game mode.
+ */
+export function validateTurnLimit(mode: GameMode, turnLimit: number): boolean {
+  const preset = GAME_MODE_PRESETS[mode];
+  return turnLimit >= preset.minTurns && turnLimit <= preset.maxTurns;
+}

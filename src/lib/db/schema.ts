@@ -191,6 +191,12 @@ export const difficultyEnum = pgEnum("difficulty", [
   "nightmare",
 ]);
 
+// Game mode: oneshot (quick games) vs campaign (multi-session)
+export const gameModeEnum = pgEnum("game_mode", [
+  "oneshot",   // 10-25 empires, 50-100 turns, single session
+  "campaign",  // 50-100 empires, 200+ turns, multi-session
+]);
+
 export const victoryTypeEnum = pgEnum("victory_type", [
   "conquest",
   "economic",
@@ -238,6 +244,11 @@ export const games = pgTable(
     id: uuid("id").primaryKey().defaultRandom(),
     name: varchar("name", { length: 255 }).notNull(),
     status: gameStatusEnum("status").notNull().default("setup"),
+
+    // Game mode and session tracking
+    gameMode: gameModeEnum("game_mode").notNull().default("oneshot"),
+    sessionCount: integer("session_count").notNull().default(0),
+    lastSessionAt: timestamp("last_session_at"),
 
     // Game settings
     turnLimit: integer("turn_limit").notNull().default(200),
