@@ -19,7 +19,8 @@ interface GameStatsRow {
 }
 
 interface CountRow {
-  total: number;
+  count: number;
+  total?: number;
 }
 
 /**
@@ -39,7 +40,24 @@ export async function checkDatabaseTablesAction(): Promise<{
       ORDER BY table_name
     `);
 
-    const tables = (result as unknown as { rows: TableRow[] }).rows.map((row) => row.table_name);
+    console.log("Check tables result:", JSON.stringify(result, null, 2));
+
+    // Handle different possible result formats
+    let rows: TableRow[] = [];
+    if (result && typeof result === 'object') {
+      // Try direct rows property
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      if ('rows' in result && Array.isArray((result as any).rows)) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        rows = (result as any).rows;
+      }
+      // Try if result itself is an array
+      else if (Array.isArray(result)) {
+        rows = result as unknown as TableRow[];
+      }
+    }
+
+    const tables = rows.map((row) => row.table_name);
 
     return {
       success: true,
@@ -130,6 +148,33 @@ export async function getDatabaseStatsAction(): Promise<{
   error?: string;
 }> {
   try {
+    // Helper to safely get count from result
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const getCount = (result: any): number => {
+      if (!result) return 0;
+      // Try rows array first
+      if (Array.isArray(result)) {
+        return Number(result[0]?.total ?? 0);
+      }
+      if ('rows' in result && Array.isArray(result.rows)) {
+        return Number(result.rows[0]?.total ?? 0);
+      }
+      return 0;
+    };
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const getGameStats = (result: any): GameStatsRow => {
+      if (!result) return { total: 0, active: 0, completed: 0 };
+      // Try rows array first
+      if (Array.isArray(result)) {
+        return result[0] ?? { total: 0, active: 0, completed: 0 };
+      }
+      if ('rows' in result && Array.isArray(result.rows)) {
+        return result.rows[0] ?? { total: 0, active: 0, completed: 0 };
+      }
+      return { total: 0, active: 0, completed: 0 };
+    };
+
     // Use raw SQL to be more resilient to missing tables
     const gameStatsResult = await db.execute(sql`
       SELECT
@@ -138,7 +183,7 @@ export async function getDatabaseStatsAction(): Promise<{
         COUNT(*) FILTER (WHERE status = 'completed')::int as completed
       FROM games
     `);
-    const gameStats = (gameStatsResult as unknown as { rows: GameStatsRow[] }).rows[0];
+    const gameStats = getGameStats(gameStatsResult);
 
     const empireStatsResult = await db.execute(sql`SELECT COUNT(*)::int as total FROM empires`);
     const planetStatsResult = await db.execute(sql`SELECT COUNT(*)::int as total FROM planets`);
@@ -151,14 +196,14 @@ export async function getDatabaseStatsAction(): Promise<{
       success: true,
       stats: {
         gameCount: Number(gameStats?.total ?? 0),
-        empireCount: Number(((empireStatsResult as unknown as { rows: CountRow[] }).rows[0])?.total ?? 0),
+        empireCount: getCount(empireStatsResult),
         activeGames: Number(gameStats?.active ?? 0),
         completedGames: Number(gameStats?.completed ?? 0),
-        planetCount: Number(((planetStatsResult as unknown as { rows: CountRow[] }).rows[0])?.total ?? 0),
-        memoryCount: Number(((memoryStatsResult as unknown as { rows: CountRow[] }).rows[0])?.total ?? 0),
-        messageCount: Number(((messageStatsResult as unknown as { rows: CountRow[] }).rows[0])?.total ?? 0),
-        attackCount: Number(((attackStatsResult as unknown as { rows: CountRow[] }).rows[0])?.total ?? 0),
-        combatLogCount: Number(((combatLogStatsResult as unknown as { rows: CountRow[] }).rows[0])?.total ?? 0),
+        planetCount: getCount(planetStatsResult),
+        memoryCount: getCount(memoryStatsResult),
+        messageCount: getCount(messageStatsResult),
+        attackCount: getCount(attackStatsResult),
+        combatLogCount: getCount(combatLogStatsResult),
       },
     };
   } catch (error) {
@@ -181,17 +226,38 @@ export async function deleteAllGamesAction(): Promise<{
 }> {
   try {
     // Count games before deletion
-    const [countResult] = await db
-      .select({ count: sql<number>`count(*)` })
-      .from(games);
-    const gameCount = Number(countResult?.count ?? 0);
+    const countResult = await db.execute(sql`SELECT COUNT(*)::int as count FROM games`);
+    const gameCount = Array.isArray(countResult)
+      ? Number((countResult[0] as CountRow | undefined)?.count ?? 0)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      : Number(((countResult as any).rows?.[0] as CountRow | undefined)?.count ?? 0);
+
+    console.log("Games before truncate:", gameCount);
 
     // Use raw SQL TRUNCATE CASCADE for efficiency
-    // This is much faster than deleting row by row
     await db.execute(sql`TRUNCATE games CASCADE`);
+    console.log("TRUNCATE games CASCADE executed");
 
-    // Also clean up performance logs (not cascade-deleted)
+    // Also clean up performance logs
     await db.execute(sql`TRUNCATE performance_logs CASCADE`);
+    console.log("TRUNCATE performance_logs CASCADE executed");
+
+    // Verify it worked
+    const verifyResult = await db.execute(sql`SELECT COUNT(*)::int as count FROM games`);
+    const remainingGames = Array.isArray(verifyResult)
+      ? Number((verifyResult[0] as CountRow | undefined)?.count ?? 0)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      : Number(((verifyResult as any).rows?.[0] as CountRow | undefined)?.count ?? 0);
+
+    console.log("Games after truncate:", remainingGames);
+
+    if (remainingGames > 0) {
+      return {
+        success: false,
+        deletedCount: 0,
+        error: `TRUNCATE failed! Still ${remainingGames} games in database.`,
+      };
+    }
 
     return {
       success: true,
@@ -243,17 +309,45 @@ export async function truncateAllTablesAction(): Promise<{
       "covert_operations",
     ];
 
+    const succeeded: string[] = [];
+    const failed: string[] = [];
+
     for (const table of tablesToTruncate) {
       try {
-        await db.execute(sql.raw(`TRUNCATE ${table} CASCADE`));
+        console.log(`Truncating ${table}...`);
+        await db.execute(sql.raw(`TRUNCATE TABLE ${table} CASCADE`));
+
+        // Verify it worked
+        const countResult = await db.execute(sql.raw(`SELECT COUNT(*) as count FROM ${table}`));
+        const count = Array.isArray(countResult)
+          ? Number((countResult[0] as CountRow | undefined)?.count ?? 0)
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          : Number(((countResult as any).rows?.[0] as CountRow | undefined)?.count ?? 0);
+
+        if (count === 0) {
+          console.log(`✓ ${table} cleared`);
+          succeeded.push(table);
+        } else {
+          console.warn(`✗ ${table} still has ${count} rows`);
+          failed.push(table);
+        }
       } catch (err) {
         console.warn(`Failed to truncate ${table}:`, err);
+        failed.push(table);
       }
+    }
+
+    if (failed.length > 0) {
+      return {
+        success: false,
+        tablesCleared: succeeded,
+        error: `Failed to clear ${failed.length} tables: ${failed.join(", ")}`,
+      };
     }
 
     return {
       success: true,
-      tablesCleared: tablesToTruncate,
+      tablesCleared: succeeded,
     };
   } catch (error) {
     console.error("Failed to truncate all tables:", error);
