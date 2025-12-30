@@ -18,16 +18,29 @@ import {
   startGameAction,
   hasActiveGameAction,
   endGameAction,
+  getResumableCampaignsAction,
+  resumeCampaignAction,
+  type ResumableCampaign,
 } from "@/app/actions/game-actions";
 import { DifficultySelector } from "@/components/start-game/DifficultySelector";
 import { BotCountSelector } from "@/components/start-game/BotCountSelector";
 import { GameModeSelector } from "@/components/start-game/GameModeSelector";
+import { ReturnModeSelector } from "@/components/start-game/ReturnModeSelector";
 
-async function DashboardContent({ errorFromUrl }: { errorFromUrl?: string }) {
+async function DashboardContent({ errorFromUrl, showNewGame }: { errorFromUrl?: string; showNewGame?: boolean }) {
   const hasGame = await hasActiveGameAction();
 
   if (!hasGame) {
-    return <NewGamePrompt error={errorFromUrl} />;
+    // Check for resumable campaigns
+    const campaigns = await getResumableCampaignsAction();
+
+    // If showNewGame flag is set or no campaigns exist, show new game form
+    if (showNewGame || campaigns.length === 0) {
+      return <NewGamePrompt error={errorFromUrl} />;
+    }
+
+    // Show return mode selector with campaign options
+    return <ReturnPrompt campaigns={campaigns} error={errorFromUrl} />;
   }
 
   const data = await fetchDashboardDataAction();
@@ -141,6 +154,43 @@ function ResearchPanel({
   );
 }
 
+function ReturnPrompt({
+  campaigns,
+  error,
+}: {
+  campaigns: ResumableCampaign[];
+  error?: string;
+}) {
+  async function handleResumeCampaign(gameId: string) {
+    "use server";
+    const result = await resumeCampaignAction(gameId);
+    if (result.success) {
+      redirect("/game/starmap");
+    }
+    const errorMessage = encodeURIComponent(result.error || "Failed to resume campaign");
+    redirect(`/game?error=${errorMessage}`);
+  }
+
+  async function handleStartNewGame() {
+    "use server";
+    redirect("/game?newGame=true");
+  }
+
+  return (
+    <div className="lcars-panel max-w-lg mx-auto" data-testid="return-mode-prompt">
+      <h2 className="text-xl font-display text-lcars-amber mb-4 text-center">
+        Welcome Back, Commander
+      </h2>
+      {error && <p className="text-red-400 mb-4 text-center">{error}</p>}
+      <ReturnModeSelector
+        campaigns={campaigns}
+        resumeAction={handleResumeCampaign}
+        newGameAction={handleStartNewGame}
+      />
+    </div>
+  );
+}
+
 function NewGamePrompt({ error }: { error?: string }) {
   async function handleStartGame(formData: FormData) {
     "use server";
@@ -203,10 +253,11 @@ function DashboardSkeleton() {
 export default async function DashboardPage({
   searchParams,
 }: {
-  searchParams: Promise<{ error?: string }>;
+  searchParams: Promise<{ error?: string; newGame?: string }>;
 }) {
   const params = await searchParams;
   const errorFromUrl = params.error ? decodeURIComponent(params.error) : undefined;
+  const showNewGame = params.newGame === "true";
 
   return (
     <div className="max-w-6xl mx-auto">
@@ -214,7 +265,7 @@ export default async function DashboardPage({
         Empire Dashboard
       </h1>
       <Suspense fallback={<DashboardSkeleton />}>
-        <DashboardContent errorFromUrl={errorFromUrl} />
+        <DashboardContent errorFromUrl={errorFromUrl} showNewGame={showNewGame} />
       </Suspense>
     </div>
   );

@@ -201,7 +201,110 @@ export async function endGameAction(): Promise<void> {
 }
 
 // =============================================================================
-// RESUME GAME ACTIONS (DEPRECATED)
+// CAMPAIGN RESUME ACTIONS
+// =============================================================================
+
+export interface ResumableCampaign {
+  gameId: string;
+  gameName: string;
+  empireName: string;
+  empireId: string;
+  currentTurn: number;
+  turnLimit: number;
+  sessionCount: number;
+  lastSessionAt: Date | null;
+  empireCount: number;
+  playerNetworth: number;
+}
+
+/**
+ * Get resumable campaign games.
+ * Returns campaigns that are still active (not completed).
+ */
+export async function getResumableCampaignsAction(): Promise<ResumableCampaign[]> {
+  try {
+    // Find all active campaign games
+    const campaigns = await db.query.games.findMany({
+      where: (g, { and, eq }) => and(
+        eq(g.gameMode, "campaign"),
+        eq(g.status, "active")
+      ),
+      with: {
+        empires: {
+          columns: {
+            id: true,
+            name: true,
+            type: true,
+            credits: true,
+          },
+          with: {
+            planets: {
+              columns: { id: true },
+            },
+          },
+        },
+      },
+    });
+
+    return campaigns.map((game) => {
+      const playerEmpire = game.empires.find((e) => e.type === "player");
+      const activeEmpires = game.empires.filter((e) => e.planets.length > 0);
+
+      return {
+        gameId: game.id,
+        gameName: game.name,
+        empireName: playerEmpire?.name ?? "Unknown",
+        empireId: playerEmpire?.id ?? "",
+        currentTurn: game.currentTurn,
+        turnLimit: game.turnLimit,
+        sessionCount: game.sessionCount,
+        lastSessionAt: game.lastSessionAt,
+        empireCount: activeEmpires.length,
+        playerNetworth: playerEmpire?.credits ?? 0,
+      };
+    });
+  } catch (error) {
+    console.error("Failed to get resumable campaigns:", error);
+    return [];
+  }
+}
+
+/**
+ * Resume a campaign game by setting cookies.
+ */
+export async function resumeCampaignAction(gameId: string): Promise<ResumeGameResult> {
+  try {
+    // Find the player empire for this game
+    const playerEmpire = await db.query.empires.findFirst({
+      where: (e, { and, eq }) => and(
+        eq(e.gameId, gameId),
+        eq(e.type, "player")
+      ),
+    });
+
+    if (!playerEmpire) {
+      return { success: false, error: "No player empire found for this game" };
+    }
+
+    // Set cookies for the resumed game
+    await setGameCookies(gameId, playerEmpire.id);
+
+    return {
+      success: true,
+      gameId,
+      empireId: playerEmpire.id,
+    };
+  } catch (error) {
+    console.error("Failed to resume campaign:", error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Failed to resume campaign",
+    };
+  }
+}
+
+// =============================================================================
+// RESUME GAME ACTIONS (LEGACY)
 // These functions supported the multi-galaxy feature which has been removed
 // to simplify onboarding. Kept for potential future use.
 // =============================================================================
