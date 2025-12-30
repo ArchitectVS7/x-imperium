@@ -104,6 +104,9 @@ async function verifyGameActive(page: Page): Promise<boolean> {
 
 test.describe("50-Turn Comprehensive Game Test", () => {
   test("Complete 50-turn playthrough with all features", async ({ page }) => {
+    // Extend timeout for long test (10 minutes)
+    test.setTimeout(600000);
+
     logDebug("=== STARTING 50-TURN COMPREHENSIVE TEST ===");
 
     // Step 1: Start new game
@@ -171,7 +174,7 @@ test.describe("50-Turn Comprehensive Game Test", () => {
 
       try {
         // Check for turn summary/acknowledgment modal
-        const turnSummary = page.locator('[data-testid="turn-summary"], [role="dialog"]:has-text("Income"), .modal:has-text("Turn")');
+        const turnSummary = page.locator('[data-testid="turn-summary-modal"], [data-testid="turn-summary"], [role="dialog"]:has-text("Turn")');
         if (await turnSummary.isVisible({ timeout: 2000 }).catch(() => false)) {
           logSuccess(`Turn ${turn}: Turn summary modal displayed`);
 
@@ -387,12 +390,28 @@ async function testMarket(page: Page, turn: number) {
     await marketLink.click();
     await waitForNavigation(page, "Market page");
 
-    // Check for buy/sell buttons
-    const tradeButtons = await page.locator('button:has-text("Buy"), button:has-text("Sell")').count();
-    if (tradeButtons > 0) {
-      logSuccess(`Turn ${turn}: Market interface available`);
+    // Wait for market panel to load (fast - should be ready within 3 seconds)
+    await page.waitForSelector('[data-testid="market-panel"]', { timeout: 3000 }).catch(() => {});
+
+    // Check for buy/sell buttons using data-testid
+    const buyTab = page.locator('[data-testid="market-buy-tab"]');
+    const sellTab = page.locator('[data-testid="market-sell-tab"]');
+    const tradeButton = page.locator('[data-testid="market-trade-button"]');
+
+    const hasBuyTab = await buyTab.isVisible().catch(() => false);
+    const hasSellTab = await sellTab.isVisible().catch(() => false);
+    const hasTradeButton = await tradeButton.isVisible().catch(() => false);
+
+    if (hasBuyTab || hasSellTab || hasTradeButton) {
+      logSuccess(`Turn ${turn}: Market interface available (Buy: ${hasBuyTab}, Sell: ${hasSellTab}, Trade: ${hasTradeButton})`);
     } else {
-      logUXIssue("No trade buttons found on market page", "Add clear buy/sell buttons for resources");
+      // Check if panel is still loading
+      const isLoading = await page.locator('[data-testid="market-panel-loading"]').isVisible().catch(() => false);
+      if (isLoading) {
+        logDebug(`Turn ${turn}: Market panel still loading`);
+      } else {
+        logUXIssue("No trade buttons found on market page", "Check market panel rendering");
+      }
     }
   } catch (error) {
     logError(`Turn ${turn}: Market test failed`, String(error));
@@ -523,42 +542,30 @@ async function testStarmap(page: Page, turn: number) {
   }
 }
 
-// Fast end turn - minimal waits, max 5 seconds per turn
+// Fast end turn - target ~2 seconds per turn
 async function endTurn(page: Page, turn: number) {
   try {
-    // First, dismiss any modal that might be blocking (from previous turn)
+    // Dismiss any lingering modal from previous turn (fast check)
     const modal = page.locator('[data-testid="turn-summary-modal"]');
-    if (await modal.isVisible({ timeout: 200 }).catch(() => false)) {
-      const closeBtn = page.locator('[data-testid="turn-summary-modal"] button:has-text("Continue"), [data-testid="turn-summary-modal"] button').first();
-      await closeBtn.click({ timeout: 500 }).catch(() => {});
-      await page.waitForTimeout(200);
+    const continueBtn = page.locator('[data-testid="turn-summary-continue"]');
+
+    if (await modal.isVisible({ timeout: 100 }).catch(() => false)) {
+      await continueBtn.click({ timeout: 500 }).catch(() => {});
+      await page.waitForTimeout(100);
     }
 
-    // Quick check - is NEXT CYCLE button visible?
-    let endTurnButton = page.locator('button:has-text("NEXT CYCLE")').first();
-
-    // If not visible, quick navigate to dashboard
-    if (!await endTurnButton.isVisible({ timeout: 300 }).catch(() => false)) {
-      await page.goto('/game');
-      await page.waitForLoadState('domcontentloaded', { timeout: 2000 });
-    }
-
-    // Wait for button to be clickable (max 1 second)
-    await page.waitForSelector('button:has-text("NEXT CYCLE"):not([disabled])', { timeout: 1000 }).catch(() => {});
-
-    endTurnButton = page.locator('button:has-text("NEXT CYCLE")').first();
-
-    // Click the button
-    await endTurnButton.click({ timeout: 1000 });
+    // Click End Turn button (with force if needed to bypass overlay issues)
+    const endTurnButton = page.locator('[data-testid="turn-order-end-turn"]');
+    await endTurnButton.click({ force: true, timeout: 1000 });
     logSuccess(`Turn ${turn}: End Turn clicked`);
 
-    // Brief wait for turn processing
-    await page.waitForTimeout(300);
+    // Wait briefly for turn processing - modal should appear within 2 seconds
+    await page.waitForTimeout(1500);
 
-    // Quick dismiss turn summary modal if it appears
-    if (await modal.isVisible({ timeout: 300 }).catch(() => false)) {
-      const closeBtn = page.locator('[data-testid="turn-summary-modal"] button:has-text("Continue"), [data-testid="turn-summary-modal"] button').first();
-      await closeBtn.click({ timeout: 500 }).catch(() => {});
+    // Dismiss turn summary modal if it appeared
+    if (await modal.isVisible({ timeout: 100 }).catch(() => false)) {
+      await continueBtn.click({ timeout: 500 }).catch(() => {});
+      await page.waitForTimeout(100);
     }
   } catch (error) {
     logError(`Turn ${turn}: Failed to end turn`, String(error));

@@ -15,7 +15,7 @@
  * context to child components.
  */
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { TurnOrderPanel } from "./TurnOrderPanel";
 import { TurnSummaryModal } from "./TurnSummaryModal";
@@ -89,52 +89,45 @@ export function GameShell({ children, initialLayoutData }: GameShellProps) {
     return () => clearInterval(interval);
   }, [initialLayoutData, refreshLayoutData]);
 
+  // Track if we've shown the initial welcome modal (using ref to persist across re-renders)
+  const hasShownWelcomeModal = useRef(false);
+
   // Show initial turn summary on turn 1 (game start)
   useEffect(() => {
-    console.log('[GameShell] Initial turn summary check:', {
-      hasLayoutData: !!layoutData,
-      currentTurn: layoutData?.currentTurn,
-      hasSeenBefore: sessionStorage.getItem('hasSeenTurn1Summary'),
-    });
+    // Only show welcome modal once per component mount, for turn 1
+    if (layoutData && layoutData.currentTurn === 1 && !hasShownWelcomeModal.current) {
+      hasShownWelcomeModal.current = true;
 
-    if (layoutData && layoutData.currentTurn === 1) {
-      // Check if we've already shown the initial summary
-      const hasSeenInitialSummary = sessionStorage.getItem('hasSeenTurn1Summary');
-
-      if (!hasSeenInitialSummary) {
-        console.log('[GameShell] Showing initial turn summary modal');
-        // Generate initial turn summary with starting resources
-        setTurnResult({
-          turn: 1,
-          processingMs: 0,
-          resourceChanges: {
-            credits: layoutData.credits,
-            food: layoutData.food,
-            ore: layoutData.ore,
-            petroleum: layoutData.petroleum,
-            researchPoints: layoutData.researchPoints,
+      // Show immediately - no delay needed
+      setTurnResult({
+        turn: 1,
+        processingMs: 0,
+        resourceChanges: {
+          credits: layoutData.credits,
+          food: layoutData.food,
+          ore: layoutData.ore,
+          petroleum: layoutData.petroleum,
+          researchPoints: layoutData.researchPoints,
+        },
+        populationBefore: 0,
+        populationAfter: layoutData.population,
+        events: [
+          {
+            type: "other" as const,
+            severity: "info" as const,
+            message: "Welcome to Nexus Dominion! Your empire begins with starting resources and population.",
           },
-          populationBefore: 0,
-          populationAfter: layoutData.population,
-          events: [
-            {
-              type: "other" as const,
-              severity: "info" as const,
-              message: "🎮 Welcome to Nexus Dominion! Your empire begins with starting resources and population.",
-            },
-            {
-              type: "other" as const,
-              severity: "info" as const,
-              message: `🛡️ You have ${layoutData.protectionTurnsLeft} turns of protection from attacks.`,
-            },
-          ],
-          messagesReceived: 0,
-          botBattles: 0,
-          empiresEliminated: [],
-        });
-        setShowModal(true);
-        sessionStorage.setItem('hasSeenTurn1Summary', 'true');
-      }
+          {
+            type: "other" as const,
+            severity: "info" as const,
+            message: `You have ${layoutData.protectionTurnsLeft} turns of protection from attacks.`,
+          },
+        ],
+        messagesReceived: 0,
+        botBattles: 0,
+        empiresEliminated: [],
+      });
+      setShowModal(true);
     }
   }, [layoutData]);
 

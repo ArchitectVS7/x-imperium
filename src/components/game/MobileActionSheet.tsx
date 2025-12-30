@@ -41,6 +41,7 @@ const ACTIONS: ActionItem[] = [
   { id: "covert", label: UI_LABELS.covert, href: "/game/covert", icon: "🕵️" },
   { id: "crafting", label: UI_LABELS.crafting, href: "/game/crafting", icon: "🔧" },
   { id: "research", label: UI_LABELS.research, href: "/game/research", icon: "🔬" },
+  { id: "starmap", label: "Starmap", href: "/game/starmap", icon: "🗺️" },
 ];
 
 const STATUS_STYLES = {

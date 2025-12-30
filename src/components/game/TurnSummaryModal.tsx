@@ -135,7 +135,7 @@ export function TurnSummaryModal({
       />
 
       {/* Modal */}
-      <div className="relative bg-gray-900 border border-lcars-amber/50 rounded-lg shadow-2xl max-w-lg w-full mx-4 max-h-[80vh] overflow-hidden flex flex-col">
+      <div role="dialog" aria-modal="true" className="relative bg-gray-900 border border-lcars-amber/50 rounded-lg shadow-2xl max-w-lg w-full mx-4 max-h-[80vh] overflow-hidden flex flex-col">
         {/* Header */}
         <div className="p-6 border-b border-gray-800 bg-gradient-to-r from-gray-900 to-gray-800">
           <div className="flex items-center justify-between">

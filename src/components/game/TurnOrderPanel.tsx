@@ -51,6 +51,7 @@ const ACTIONS: ActionItem[] = [
   { id: "covert", label: UI_LABELS.covert, href: "/game/covert", icon: "🕵️", description: "Spy operations" },
   { id: "crafting", label: UI_LABELS.crafting, href: "/game/crafting", icon: "🔧", description: "Manufacture components" },
   { id: "research", label: UI_LABELS.research, href: "/game/research", icon: "🔬", description: "Advance technology" },
+  { id: "starmap", label: "Starmap", href: "/game/starmap", icon: "🗺️", description: "View galaxy map" },
 ];
 
 const STATUS_STYLES = {
