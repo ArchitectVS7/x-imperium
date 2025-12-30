@@ -317,7 +317,7 @@ Each milestone delivers a **playable vertical slice** that can be tested end-to-
 
 ---
 
-## MILESTONE 5: Random Bots (25 Tier 4)
+## MILESTONE 5: Random Bots (Tier Distribution)
 
 **Duration**: 2 days
 **Dependency**: M4
@@ -325,8 +325,12 @@ Each milestone delivers a **playable vertical slice** that can be tested end-to-
 **Gate**: First Playable Demo
 **Status**: ✅ COMPLETE (2024-12-24)
 
+> **Updated Bot Distribution (2024-12-29):**
+> Full 100-bot games now use: 10 T1-LLM, 15 T1-Scripted, 25 T2, 25 T3, 25 T4
+> Player can select: 10, 25, 50, or 100 bots (scaled proportionally)
+
 ### Deliverables
-- ✅ Bot empire generation (25 bots) — *`src/lib/bots/bot-generator.ts`*
+- ✅ Bot empire generation (10-100 bots) — *`src/lib/bots/bot-generator.ts`*
 - ✅ Random decision engine (weighted actions) — *`src/lib/bots/decision-engine.ts`*
 - ✅ Parallel bot processing — *`src/lib/bots/bot-processor.ts` with Promise.all()*
 - ✅ Bot turn execution — *Integrated in `turn-processor.ts`*

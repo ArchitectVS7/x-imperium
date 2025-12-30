@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-type BotCount = 10 | 25 | 50;
+type BotCount = 10 | 25 | 50 | 100;
 
 interface BotCountOption {
   value: BotCount;
@@ -16,19 +16,25 @@ const BOT_COUNT_OPTIONS: BotCountOption[] = [
     value: 10,
     label: "Small Galaxy",
     description: "Quick games with fewer rivals",
-    tierBreakdown: "2 elite, 2 strategic, 3 simple, 3 random",
+    tierBreakdown: "1 LLM, 2 elite, 2 strategic, 2 simple, 3 random",
   },
   {
     value: 25,
     label: "Standard",
     description: "Balanced competitive experience",
-    tierBreakdown: "5 elite, 6 strategic, 7 simple, 7 random",
+    tierBreakdown: "2 LLM, 4 elite, 6 strategic, 6 simple, 7 random",
   },
   {
     value: 50,
     label: "Large Galaxy",
     description: "Epic battles with many factions",
-    tierBreakdown: "10 elite, 12 strategic, 14 simple, 14 random",
+    tierBreakdown: "5 LLM, 8 elite, 12 strategic, 12 simple, 13 random",
+  },
+  {
+    value: 100,
+    label: "Epic Galaxy",
+    description: "Full-scale galactic warfare",
+    tierBreakdown: "10 LLM, 15 elite, 25 strategic, 25 simple, 25 random",
   },
 ];
 
@@ -50,7 +56,7 @@ export function BotCountSelector({
         Galaxy Size
       </label>
       <input type="hidden" name={name} value={selected} />
-      <div className="grid grid-cols-3 gap-2">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
         {BOT_COUNT_OPTIONS.map((option) => (
           <div key={option.value} className="relative">
             <button

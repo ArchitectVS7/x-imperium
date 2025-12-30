@@ -507,10 +507,13 @@ AI bots populate the galaxy with varying intelligence and personalities. Bots cr
 
 | Tier | v0.5 Count | v0.6+ Count | Intelligence | Description |
 |------|------------|-------------|--------------|-------------|
-| **Tier 4** | 25 | 20 | Random | Weighted random decisions, placeholder names |
-| **Tier 3** | — | 40 | Simple | Basic decision trees, template messages |
-| **Tier 2** | — | 30 | Strategic | Sophisticated trees with archetypes |
-| **Tier 1** | — | 10 | LLM-Powered | Natural language, adaptive strategies |
+| **Tier 4** | 25 | 25 | Random/Chaos | Weighted random decisions, placeholder names |
+| **Tier 3** | — | 25 | Simple/Mid-tier | Basic decision trees, template messages |
+| **Tier 2** | — | 25 | Strategic | Sophisticated trees with archetypes |
+| **Tier 1 Scripted** | — | 15 | Elite Scripted | Sophisticated algorithms, archetype-driven, no LLM |
+| **Tier 1 LLM** | — | 10 | Elite LLM | Natural language, adaptive strategies, LLM API |
+
+**Player Selection Options**: 10, 25, 50, or 100 bots (scaled proportionally)
 
 ### 7.3 MVP Scope (v0.5 - Tier 4 Only)
 
@@ -537,12 +540,18 @@ AI bots populate the galaxy with varying intelligence and personalities. Bots cr
 
 ### 7.5 v0.7+ Scope (Tier 1)
 
-**Tier 1 (LLM Elite)**:
-- 10 bots maximum (performance constraint)
-- Connected to LLM API with provider failover
-- Natural language messages
-- Adaptive strategies
-- Async processing (decisions computed for NEXT turn)
+**Tier 1 Scripted (Elite Scripted)** - 15 bots:
+- Sophisticated algorithmic decision-making
+- Archetype-driven behavior with full strategic weight system
+- Uses same decision framework as LLM bots (fallback compatible)
+- No API calls - fully deterministic
+
+**Tier 1 LLM (Elite LLM)** - 10 bots:
+- Connected to LLM API with provider failover (Groq → Together → OpenAI)
+- Natural language messages reflecting persona voice
+- Adaptive strategies based on full game state context
+- Async processing (decisions computed for NEXT turn during player's turn)
+- Falls back to Tier 1 Scripted behavior on API failure
 
 ### 7.6 Bot Archetypes
 

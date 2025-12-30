@@ -43,6 +43,7 @@ export type BotArchetype =
 
 export type BotTier =
   | "tier1_llm"
+  | "tier1_elite_scripted"
   | "tier2_strategic"
   | "tier3_simple"
   | "tier4_random";
@@ -91,6 +92,26 @@ export interface Forces {
 // BOT DECISIONS
 // =============================================================================
 
+export type CovertOperationType =
+  | "send_spy"
+  | "insurgent_aid"
+  | "support_dissension"
+  | "demoralize_troops"
+  | "bombing_operations"
+  | "relations_spying"
+  | "take_hostages"
+  | "carriers_sabotage"
+  | "communications_spying"
+  | "setup_coup";
+
+export type ResearchBranch =
+  | "military"
+  | "defense"
+  | "propulsion"
+  | "stealth"
+  | "economy"
+  | "biotech";
+
 export type BotDecision =
   | { type: "build_units"; unitType: UnitType; quantity: number }
   | { type: "buy_planet"; planetType: PlanetType }
@@ -110,7 +131,13 @@ export type BotDecision =
   // Crafting system decisions
   | { type: "craft_component"; resourceType: CraftedResource; quantity: number }
   | { type: "accept_contract"; contractType: ContractType; targetId?: string }
-  | { type: "purchase_black_market"; itemId: string; quantity: number };
+  | { type: "purchase_black_market"; itemId: string; quantity: number }
+  // Covert operations (PRD 6.8)
+  | { type: "covert_operation"; operation: CovertOperationType; targetId: string }
+  // Research funding (PRD 9.2)
+  | { type: "fund_research"; branch: ResearchBranch; amount: number }
+  // Unit upgrades (PRD 9.4)
+  | { type: "upgrade_units"; unitType: UnitType; level: 1 | 2 };
 
 export type BotDecisionType =
   | "build_units"
@@ -122,23 +149,31 @@ export type BotDecisionType =
   // Crafting system decision types
   | "craft_component"
   | "accept_contract"
-  | "purchase_black_market";
+  | "purchase_black_market"
+  // Additional game systems
+  | "covert_operation"
+  | "fund_research"
+  | "upgrade_units";
 
 // =============================================================================
 // DECISION WEIGHTS
 // =============================================================================
 
 export interface BotDecisionWeights {
-  build_units: number; // 30%
-  buy_planet: number; // 15%
-  attack: number; // 12% (0% before protection ends)
-  diplomacy: number; // 8% (stub: resolves to do_nothing)
-  trade: number; // 8% (stub: resolves to do_nothing)
-  do_nothing: number; // 7%
+  build_units: number; // 25%
+  buy_planet: number; // 12%
+  attack: number; // 10% (0% before protection ends)
+  diplomacy: number; // 8%
+  trade: number; // 8%
+  do_nothing: number; // 5%
   // Crafting system weights
-  craft_component: number; // 10%
-  accept_contract: number; // 5%
-  purchase_black_market: number; // 5%
+  craft_component: number; // 8%
+  accept_contract: number; // 4%
+  purchase_black_market: number; // 4%
+  // Additional game systems
+  covert_operation: number; // 6%
+  fund_research: number; // 5%
+  upgrade_units: number; // 5%
 }
 
 // =============================================================================
@@ -229,4 +264,6 @@ export interface BotEmpireConfig {
   emperorName: string;
   archetype: BotArchetype;
   tier: BotTier;
+  /** Whether this bot uses LLM API for decisions (only for tier1_llm) */
+  llmEnabled: boolean;
 }

@@ -36,6 +36,8 @@ interface Persona {
   emperorName: string;
   archetype: BotArchetype;
   tier: number;
+  /** Whether this Tier 1 bot uses LLM API for decisions */
+  llmEnabled?: boolean;
   voice: {
     tone: string;
     quirks: string[];
@@ -54,10 +56,18 @@ const personas = personasData as Persona[];
 
 /**
  * Tier distribution for different bot counts.
- * Maps tier numbers (1-4) to how many bots should be created.
+ * Maps tiers to how many bots should be created.
+ *
+ * User Vision (100 bots):
+ * - 25 Tier 4 (Random/Chaos)
+ * - 25 Tier 3 (Mid-tier/Simple)
+ * - 25 Tier 2 (Strategic)
+ * - 15 Tier 1 Elite Scripted (sophisticated algorithms, no LLM)
+ * - 10 Tier 1 LLM (uses LLM API for custom strategy)
  */
 interface TierDistribution {
-  tier1: number;
+  tier1_llm: number;
+  tier1_elite_scripted: number;
   tier2: number;
   tier3: number;
   tier4: number;
@@ -65,30 +75,69 @@ interface TierDistribution {
 
 /**
  * Get the tier distribution for a given bot count.
- * Distribution:
- * - 10 bots: 2 T1, 2 T2, 3 T3, 3 T4
- * - 25 bots: 5 T1, 6 T2, 7 T3, 7 T4
- * - 50 bots: 10 T1, 12 T2, 14 T3, 14 T4
+ * Scaled proportionally from the 100-bot baseline.
+ *
+ * 100 bots: 10 T1-LLM, 15 T1-Scripted, 25 T2, 25 T3, 25 T4
+ * 50 bots:  5 T1-LLM,  8 T1-Scripted, 12 T2, 12 T3, 13 T4
+ * 25 bots:  2 T1-LLM,  4 T1-Scripted,  6 T2,  6 T3,  7 T4
+ * 10 bots:  1 T1-LLM,  2 T1-Scripted,  2 T2,  2 T3,  3 T4
  */
 export function getTierDistribution(botCount: number): TierDistribution {
   switch (botCount) {
-    case 10:
-      return { tier1: 2, tier2: 2, tier3: 3, tier4: 3 };
+    case 100:
+      // Full distribution per user vision
+      return {
+        tier1_llm: 10,
+        tier1_elite_scripted: 15,
+        tier2: 25,
+        tier3: 25,
+        tier4: 25,
+      };
     case 50:
-      return { tier1: 10, tier2: 12, tier3: 14, tier4: 14 };
+      // Scaled down proportionally
+      return {
+        tier1_llm: 5,
+        tier1_elite_scripted: 8,
+        tier2: 12,
+        tier3: 12,
+        tier4: 13,
+      };
     case 25:
+      return {
+        tier1_llm: 2,
+        tier1_elite_scripted: 4,
+        tier2: 6,
+        tier3: 6,
+        tier4: 7,
+      };
+    case 10:
+      return {
+        tier1_llm: 1,
+        tier1_elite_scripted: 2,
+        tier2: 2,
+        tier3: 2,
+        tier4: 3,
+      };
     default:
-      return { tier1: 5, tier2: 6, tier3: 7, tier4: 7 };
+      // Default to 25 distribution
+      return {
+        tier1_llm: 2,
+        tier1_elite_scripted: 4,
+        tier2: 6,
+        tier3: 6,
+        tier4: 7,
+      };
   }
 }
 
 /**
  * Convert tier number (1-4) to BotTier enum value.
+ * For tier 1, uses llmEnabled to distinguish between LLM and scripted.
  */
-function tierNumberToBotTier(tier: number): BotTier {
+function tierNumberToBotTier(tier: number, llmEnabled: boolean = false): BotTier {
   switch (tier) {
     case 1:
-      return "tier1_llm";
+      return llmEnabled ? "tier1_llm" : "tier1_elite_scripted";
     case 2:
       return "tier2_strategic";
     case 3:
@@ -102,13 +151,17 @@ function tierNumberToBotTier(tier: number): BotTier {
 /**
  * Select personas based on tier distribution.
  * Shuffles within each tier to randomize selection.
+ * For Tier 1, separates LLM-enabled from scripted personas.
  */
 export function selectPersonasForGame(botCount: number): Persona[] {
   const distribution = getTierDistribution(botCount);
   const selected: Persona[] = [];
 
   // Group personas by tier
-  const tier1 = personas.filter((p) => p.tier === 1);
+  // Tier 1 is split into LLM-enabled and scripted
+  const tier1All = personas.filter((p) => p.tier === 1);
+  const tier1LLM = tier1All.filter((p) => p.llmEnabled === true);
+  const tier1Scripted = tier1All.filter((p) => p.llmEnabled !== true);
   const tier2 = personas.filter((p) => p.tier === 2);
   const tier3 = personas.filter((p) => p.tier === 3);
   const tier4 = personas.filter((p) => p.tier === 4);
@@ -123,8 +176,9 @@ export function selectPersonasForGame(botCount: number): Persona[] {
     return shuffled;
   };
 
-  // Select from each tier
-  selected.push(...shuffle(tier1).slice(0, distribution.tier1));
+  // Select from each tier (respecting the new distribution)
+  selected.push(...shuffle(tier1LLM).slice(0, distribution.tier1_llm));
+  selected.push(...shuffle(tier1Scripted).slice(0, distribution.tier1_elite_scripted));
   selected.push(...shuffle(tier2).slice(0, distribution.tier2));
   selected.push(...shuffle(tier3).slice(0, distribution.tier3));
   selected.push(...shuffle(tier4).slice(0, distribution.tier4));
@@ -170,13 +224,15 @@ export function getRandomArchetype(): BotArchetype {
  * @param emperorName - Bot emperor name
  * @param archetype - Bot archetype (affects behavior in M9+)
  * @param tier - Bot tier (tier4_random for M5)
+ * @param llmEnabled - Whether this bot uses LLM API for decisions
  */
 export async function createBotEmpire(
   gameId: string,
   name: string,
   emperorName: string,
   archetype: BotArchetype,
-  tier: BotTier = "tier4_random"
+  tier: BotTier = "tier4_random",
+  llmEnabled: boolean = false
 ): Promise<Empire> {
   // Calculate starting networth (same as player)
   const networth = calculateNetworth({
@@ -192,6 +248,7 @@ export async function createBotEmpire(
     type: "bot",
     botTier: tier,
     botArchetype: archetype,
+    llmEnabled,
     ...STARTING_RESOURCES,
     ...STARTING_MILITARY,
     ...STARTING_POPULATION,
@@ -267,14 +324,16 @@ export async function createBotEmpires(
     const name = persona?.name ?? getBotEmpireName(i);
     const emperorName = persona?.emperorName ?? getBotEmperorName(i);
     const archetype = (persona?.archetype as BotArchetype) ?? getRandomArchetype();
-    const tier = persona ? tierNumberToBotTier(persona.tier) : "tier4_random";
+    const llmEnabled = persona?.llmEnabled ?? false;
+    const tier = persona ? tierNumberToBotTier(persona.tier, llmEnabled) : "tier4_random";
 
     const bot = await createBotEmpire(
       gameId,
       name,
       emperorName,
       archetype,
-      tier
+      tier,
+      llmEnabled
     );
 
     bots.push(bot);
@@ -309,10 +368,11 @@ export async function createBotEmpiresParallel(
     const name = persona?.name ?? getBotEmpireName(i);
     const emperorName = persona?.emperorName ?? getBotEmperorName(i);
     const archetype = (persona?.archetype as BotArchetype) ?? getRandomArchetype();
-    const tier = persona ? tierNumberToBotTier(persona.tier) : "tier4_random";
+    const llmEnabled = persona?.llmEnabled ?? false;
+    const tier = persona ? tierNumberToBotTier(persona.tier, llmEnabled) : "tier4_random";
 
     promises.push(
-      createBotEmpire(gameId, name, emperorName, archetype, tier)
+      createBotEmpire(gameId, name, emperorName, archetype, tier, llmEnabled)
     );
   }
 

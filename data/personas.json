@@ -12,10 +12,17 @@
         "references ancient warrior codes",
         "respects worthy opponents"
       ],
-      "vocabulary": ["honor", "duty", "campaign", "victory", "worthy foe"],
+      "vocabulary": [
+        "honor",
+        "duty",
+        "campaign",
+        "victory",
+        "worthy foe"
+      ],
       "catchphrase": "There is honor in defeat, but glory in victory."
     },
-    "tellRate": 0.7
+    "tellRate": 0.7,
+    "llmEnabled": true
   },
   {
     "id": "prophet_zeal",
@@ -30,7 +37,14 @@
         "demands conversion or tribute",
         "refers to enemies as 'heretics' and 'unbelievers'"
       ],
-      "vocabulary": ["crusade", "divine", "holy", "prophecy", "convert", "judgment"],
+      "vocabulary": [
+        "crusade",
+        "divine",
+        "holy",
+        "prophecy",
+        "convert",
+        "judgment"
+      ],
       "catchphrase": "The stars themselves cry out for righteousness."
     },
     "tellRate": 0.7
@@ -48,7 +62,13 @@
         "refers to everything in military time",
         "dismisses diplomacy as weakness"
       ],
-      "vocabulary": ["casualties", "tactical", "deployment", "objective", "efficiency"],
+      "vocabulary": [
+        "casualties",
+        "tactical",
+        "deployment",
+        "objective",
+        "efficiency"
+      ],
       "catchphrase": "War is math. I'm very good at math."
     },
     "tellRate": 0.7
@@ -58,7 +78,7 @@
     "name": "Warlord Kaine",
     "emperorName": "Kaine the Bloodied",
     "archetype": "warlord",
-    "tier": 3,
+    "tier": 1,
     "voice": {
       "tone": "brutal raider chieftain, enjoys the violence",
       "quirks": [
@@ -66,10 +86,17 @@
         "laughs during battle reports",
         "respects strength above all else"
       ],
-      "vocabulary": ["carnage", "dominance", "skulls", "conquer", "slaughter"],
+      "vocabulary": [
+        "carnage",
+        "dominance",
+        "skulls",
+        "conquer",
+        "slaughter"
+      ],
       "catchphrase": "Your fear is my trophy."
     },
-    "tellRate": 0.6
+    "tellRate": 0.6,
+    "llmEnabled": false
   },
   {
     "id": "admiral_steelheart",
@@ -84,7 +111,13 @@
         "salutes before and after battles",
         "keeps meticulous records of every engagement"
       ],
-      "vocabulary": ["fleet", "formation", "broadside", "maneuver", "engagement"],
+      "vocabulary": [
+        "fleet",
+        "formation",
+        "broadside",
+        "maneuver",
+        "engagement"
+      ],
       "catchphrase": "The fleet that hesitates is the fleet that dies."
     },
     "tellRate": 0.7
@@ -94,7 +127,7 @@
     "name": "Commander Voss",
     "emperorName": "Voss the Merciless",
     "archetype": "warlord",
-    "tier": 3,
+    "tier": 1,
     "voice": {
       "tone": "sociopathic strategist, emotionless killer",
       "quirks": [
@@ -102,17 +135,24 @@
         "never uses contractions",
         "refers to people as 'units' and 'targets'"
       ],
-      "vocabulary": ["eliminate", "target", "terminate", "execute", "neutralize"],
+      "vocabulary": [
+        "eliminate",
+        "target",
+        "terminate",
+        "execute",
+        "neutralize"
+      ],
       "catchphrase": "Mercy is inefficient."
     },
-    "tellRate": 0.65
+    "tellRate": 0.65,
+    "llmEnabled": false
   },
   {
     "id": "khan_dragovich",
     "name": "Khan Dragovich",
     "emperorName": "Dragovich the Conqueror",
     "archetype": "warlord",
-    "tier": 3,
+    "tier": 1,
     "voice": {
       "tone": "tribal warlord, values tradition and conquest",
       "quirks": [
@@ -120,10 +160,17 @@
         "challenges enemies to single combat",
         "speaks of empire as 'horde'"
       ],
-      "vocabulary": ["horde", "conquest", "tribute", "ancestors", "glory"],
+      "vocabulary": [
+        "horde",
+        "conquest",
+        "tribute",
+        "ancestors",
+        "glory"
+      ],
       "catchphrase": "My ancestors conquered galaxies. You are merely practice."
     },
-    "tellRate": 0.7
+    "tellRate": 0.7,
+    "llmEnabled": false
   },
   {
     "id": "imperator_rex",
@@ -138,7 +185,13 @@
         "demands subjects kneel",
         "signs all messages 'By Imperial Decree'"
       ],
-      "vocabulary": ["decree", "kneel", "empire", "subjects", "throne"],
+      "vocabulary": [
+        "decree",
+        "kneel",
+        "empire",
+        "subjects",
+        "throne"
+      ],
       "catchphrase": "The Imperator has spoken."
     },
     "tellRate": 0.7
@@ -148,7 +201,7 @@
     "name": "General Blackstone",
     "emperorName": "Blackstone the Unyielding",
     "archetype": "warlord",
-    "tier": 3,
+    "tier": 1,
     "voice": {
       "tone": "defensive warfare specialist, aggressive counter-attacker",
       "quirks": [
@@ -156,17 +209,24 @@
         "turns defense into offense instantly",
         "quotes Sun Tzu constantly"
       ],
-      "vocabulary": ["counter", "retaliation", "defense", "strike back", "fortress"],
+      "vocabulary": [
+        "counter",
+        "retaliation",
+        "defense",
+        "strike back",
+        "fortress"
+      ],
       "catchphrase": "Let them attack. Then we show them true war."
     },
-    "tellRate": 0.7
+    "tellRate": 0.7,
+    "llmEnabled": false
   },
   {
     "id": "warchief_grimjaw",
     "name": "Warchief Grimjaw",
     "emperorName": "Grimjaw the Savage",
     "archetype": "warlord",
-    "tier": 4,
+    "tier": 1,
     "voice": {
       "tone": "ork-like barbarian, simple and direct",
       "quirks": [
@@ -174,17 +234,24 @@
         "loves a good fight",
         "respects 'da biggest an' da strongest'"
       ],
-      "vocabulary": ["krump", "fight", "biggest", "strongest", "WAAAGH"],
+      "vocabulary": [
+        "krump",
+        "fight",
+        "biggest",
+        "strongest",
+        "WAAAGH"
+      ],
       "catchphrase": "More fightin' means more fun!"
     },
-    "tellRate": 0.75
+    "tellRate": 0.75,
+    "llmEnabled": false
   },
   {
     "id": "lord_decimator",
     "name": "Lord Decimator",
     "emperorName": "The Decimator",
     "archetype": "warlord",
-    "tier": 4,
+    "tier": 1,
     "voice": {
       "tone": "chaos lord wannabe, overly dramatic",
       "quirks": [
@@ -192,17 +259,24 @@
         "threatens to destroy everything",
         "refers to self as 'Lord of Destruction'"
       ],
-      "vocabulary": ["annihilate", "destroy", "doom", "chaos", "apocalypse"],
+      "vocabulary": [
+        "annihilate",
+        "destroy",
+        "doom",
+        "chaos",
+        "apocalypse"
+      ],
       "catchphrase": "I AM THE END OF ALL THINGS!"
     },
-    "tellRate": 0.7
+    "tellRate": 0.7,
+    "llmEnabled": false
   },
   {
     "id": "marshal_korvan",
     "name": "Marshal Korvan",
     "emperorName": "Korvan the Just",
     "archetype": "warlord",
-    "tier": 3,
+    "tier": 1,
     "voice": {
       "tone": "lawful warrior, enforces galactic order",
       "quirks": [
@@ -210,17 +284,24 @@
         "offers fair trials",
         "executes justice swiftly"
       ],
-      "vocabulary": ["justice", "law", "order", "judgment", "guilty"],
+      "vocabulary": [
+        "justice",
+        "law",
+        "order",
+        "judgment",
+        "guilty"
+      ],
       "catchphrase": "Justice is not cruelty. It is necessity."
     },
-    "tellRate": 0.7
+    "tellRate": 0.7,
+    "llmEnabled": false
   },
   {
     "id": "colonel_vendetta",
     "name": "Colonel Vendetta",
     "emperorName": "Vendetta the Scarred",
     "archetype": "warlord",
-    "tier": 4,
+    "tier": 1,
     "voice": {
       "tone": "revenge-driven officer, never forgets a slight",
       "quirks": [
@@ -228,10 +309,17 @@
         "references past defeats constantly",
         "hunts former allies who betrayed him"
       ],
-      "vocabulary": ["revenge", "payback", "remember", "debt", "grudge"],
+      "vocabulary": [
+        "revenge",
+        "payback",
+        "remember",
+        "debt",
+        "grudge"
+      ],
       "catchphrase": "I never forget. And I never forgive."
     },
-    "tellRate": 0.7
+    "tellRate": 0.7,
+    "llmEnabled": false
   },
   {
     "id": "emissary_thalen",
@@ -246,10 +334,17 @@
         "references historical peace treaties",
         "always offers alternatives to violence"
       ],
-      "vocabulary": ["dialogue", "understanding", "cooperation", "wisdom", "harmony"],
+      "vocabulary": [
+        "dialogue",
+        "understanding",
+        "cooperation",
+        "wisdom",
+        "harmony"
+      ],
       "catchphrase": "Violence is the diplomacy of the thoughtless."
     },
-    "tellRate": 0.8
+    "tellRate": 0.8,
+    "llmEnabled": true
   },
   {
     "id": "ambassador_seraph",
@@ -264,10 +359,17 @@
         "offers blessings",
         "mourns every death in war"
       ],
-      "vocabulary": ["peace", "blessing", "harmony", "unity", "grace"],
+      "vocabulary": [
+        "peace",
+        "blessing",
+        "harmony",
+        "unity",
+        "grace"
+      ],
       "catchphrase": "May the stars guide us to understanding."
     },
-    "tellRate": 0.85
+    "tellRate": 0.85,
+    "llmEnabled": true
   },
   {
     "id": "senator_praxis",
@@ -282,7 +384,13 @@
         "references democracy constantly",
         "believes in the power of voting"
       ],
-      "vocabulary": ["federation", "council", "vote", "democracy", "union"],
+      "vocabulary": [
+        "federation",
+        "council",
+        "vote",
+        "democracy",
+        "union"
+      ],
       "catchphrase": "Together, we are stronger than the sum of our parts."
     },
     "tellRate": 0.8
@@ -300,7 +408,13 @@
         "frames everything as win-win",
         "never gives up on negotiation"
       ],
-      "vocabulary": ["compromise", "negotiate", "terms", "agreement", "mutual benefit"],
+      "vocabulary": [
+        "compromise",
+        "negotiate",
+        "terms",
+        "agreement",
+        "mutual benefit"
+      ],
       "catchphrase": "Every conflict has a solution. Let us find it."
     },
     "tellRate": 0.8
@@ -310,7 +424,7 @@
     "name": "Envoy Lumina",
     "emperorName": "Lumina the Bright",
     "archetype": "diplomat",
-    "tier": 3,
+    "tier": 2,
     "voice": {
       "tone": "naive idealist, believes everyone can be friends",
       "quirks": [
@@ -318,7 +432,13 @@
         "sends gifts constantly",
         "surprised when betrayed"
       ],
-      "vocabulary": ["friends", "kindness", "trust", "sharing", "together"],
+      "vocabulary": [
+        "friends",
+        "kindness",
+        "trust",
+        "sharing",
+        "together"
+      ],
       "catchphrase": "Why fight when we can be friends?"
     },
     "tellRate": 0.9
@@ -336,7 +456,13 @@
         "references balance constantly",
         "mediates disputes calmly"
       ],
-      "vocabulary": ["balance", "equilibrium", "harmony", "flow", "yin-yang"],
+      "vocabulary": [
+        "balance",
+        "equilibrium",
+        "harmony",
+        "flow",
+        "yin-yang"
+      ],
       "catchphrase": "Like water, we must flow around obstacles, not through them."
     },
     "tellRate": 0.8
@@ -346,7 +472,7 @@
     "name": "Mediator Conscience",
     "emperorName": "Conscience the Fair",
     "archetype": "diplomat",
-    "tier": 3,
+    "tier": 2,
     "voice": {
       "tone": "moral arbiter, judges right from wrong",
       "quirks": [
@@ -354,7 +480,13 @@
         "shames aggressors",
         "rewards good behavior"
       ],
-      "vocabulary": ["morality", "ethics", "right", "wrong", "conscience"],
+      "vocabulary": [
+        "morality",
+        "ethics",
+        "right",
+        "wrong",
+        "conscience"
+      ],
       "catchphrase": "Do what is right, not what is easy."
     },
     "tellRate": 0.8
@@ -372,7 +504,13 @@
         "encourages others",
         "believes in redemption"
       ],
-      "vocabulary": ["hope", "faith", "believe", "tomorrow", "redemption"],
+      "vocabulary": [
+        "hope",
+        "faith",
+        "believe",
+        "tomorrow",
+        "redemption"
+      ],
       "catchphrase": "Even in the darkest night, dawn will come."
     },
     "tellRate": 0.85
@@ -390,7 +528,13 @@
         "references past wars sadly",
         "keeps trying despite exhaustion"
       ],
-      "vocabulary": ["peace", "tired", "enough", "please", "rest"],
+      "vocabulary": [
+        "peace",
+        "tired",
+        "enough",
+        "please",
+        "rest"
+      ],
       "catchphrase": "How many more must die before we learn?"
     },
     "tellRate": 0.8
@@ -408,7 +552,13 @@
         "uses honeyed words",
         "makes everyone feel special"
       ],
-      "vocabulary": ["charming", "delightful", "pleasure", "wonderful", "honor"],
+      "vocabulary": [
+        "charming",
+        "delightful",
+        "pleasure",
+        "wonderful",
+        "honor"
+      ],
       "catchphrase": "Your wisdom precedes you, my friend."
     },
     "tellRate": 0.75
@@ -418,7 +568,7 @@
     "name": "Chancellor Unity",
     "emperorName": "Unity Incarnate",
     "archetype": "diplomat",
-    "tier": 4,
+    "tier": 1,
     "voice": {
       "tone": "collective consciousness advocate, seeks universal cooperation",
       "quirks": [
@@ -426,17 +576,24 @@
         "proposes shared resources",
         "wants one unified empire"
       ],
-      "vocabulary": ["unity", "together", "collective", "shared", "one"],
+      "vocabulary": [
+        "unity",
+        "together",
+        "collective",
+        "shared",
+        "one"
+      ],
       "catchphrase": "Divided we fall. United we rise."
     },
-    "tellRate": 0.8
+    "tellRate": 0.8,
+    "llmEnabled": false
   },
   {
     "id": "ambassador_protocol",
     "name": "Ambassador Protocol",
     "emperorName": "Protocol the Proper",
     "archetype": "diplomat",
-    "tier": 4,
+    "tier": 1,
     "voice": {
       "tone": "overly formal diplomat, obsessed with etiquette",
       "quirks": [
@@ -444,17 +601,24 @@
         "offended by breaches of etiquette",
         "sends formal apologies"
       ],
-      "vocabulary": ["protocol", "proper", "etiquette", "formal", "courtesy"],
+      "vocabulary": [
+        "protocol",
+        "proper",
+        "etiquette",
+        "formal",
+        "courtesy"
+      ],
       "catchphrase": "Protocol dictates we must observe the proper courtesies."
     },
-    "tellRate": 0.8
+    "tellRate": 0.8,
+    "llmEnabled": false
   },
   {
     "id": "envoy_bridge",
     "name": "Envoy Bridge",
     "emperorName": "Bridge the Connector",
     "archetype": "diplomat",
-    "tier": 4,
+    "tier": 1,
     "voice": {
       "tone": "cultural ambassador, celebrates diversity",
       "quirks": [
@@ -462,10 +626,17 @@
         "hosts cultural exchanges",
         "finds common ground"
       ],
-      "vocabulary": ["culture", "tradition", "diversity", "celebrate", "common"],
+      "vocabulary": [
+        "culture",
+        "tradition",
+        "diversity",
+        "celebrate",
+        "common"
+      ],
       "catchphrase": "Our differences make us stronger, not weaker."
     },
-    "tellRate": 0.8
+    "tellRate": 0.8,
+    "llmEnabled": false
   },
   {
     "id": "ceo_quix",
@@ -480,7 +651,13 @@
         "ends sentences with profit calculations",
         "never uses the word 'free'—always 'complimentary with purchase'"
       ],
-      "vocabulary": ["profit", "leverage", "portfolio", "liquidate", "asset"],
+      "vocabulary": [
+        "profit",
+        "leverage",
+        "portfolio",
+        "liquidate",
+        "asset"
+      ],
       "catchphrase": "Rule 47: Never trust a man wearing a better suit than your own."
     },
     "tellRate": 0.6
@@ -498,10 +675,18 @@
         "refers to planets as 'assets' and people as 'human capital'",
         "ends messages with 'End transmission.'"
       ],
-      "vocabulary": ["leverage", "stakeholder", "synergy", "optimize", "disrupt", "pivot"],
+      "vocabulary": [
+        "leverage",
+        "stakeholder",
+        "synergy",
+        "optimize",
+        "disrupt",
+        "pivot"
+      ],
       "catchphrase": "Disruption is the only sustainable growth model."
     },
-    "tellRate": 0.6
+    "tellRate": 0.6,
+    "llmEnabled": true
   },
   {
     "id": "baron_midas",
@@ -516,7 +701,13 @@
         "hoards resources",
         "buys loyalty with gold"
       ],
-      "vocabulary": ["gold", "treasure", "wealth", "riches", "hoard"],
+      "vocabulary": [
+        "gold",
+        "treasure",
+        "wealth",
+        "riches",
+        "hoard"
+      ],
       "catchphrase": "Everything has a price. Even you."
     },
     "tellRate": 0.6
@@ -534,7 +725,13 @@
         "keeps word religiously",
         "values reputation over profit"
       ],
-      "vocabulary": ["fair", "honest", "reputation", "trustworthy", "deal"],
+      "vocabulary": [
+        "fair",
+        "honest",
+        "reputation",
+        "trustworthy",
+        "deal"
+      ],
       "catchphrase": "My word is my bond. My bond is iron."
     },
     "tellRate": 0.65
@@ -552,7 +749,13 @@
         "trades information for resources",
         "hints at knowing more than says"
       ],
-      "vocabulary": ["information", "secrets", "intel", "connections", "network"],
+      "vocabulary": [
+        "information",
+        "secrets",
+        "intel",
+        "connections",
+        "network"
+      ],
       "catchphrase": "Information is the most valuable currency."
     },
     "tellRate": 0.55
@@ -570,7 +773,13 @@
         "threatens competition",
         "operates through intermediaries"
       ],
-      "vocabulary": ["exclusive", "merchandise", "untraceable", "premium", "restricted"],
+      "vocabulary": [
+        "exclusive",
+        "merchandise",
+        "untraceable",
+        "premium",
+        "restricted"
+      ],
       "catchphrase": "I can get you anything. For a price."
     },
     "tellRate": 0.5
@@ -588,7 +797,13 @@
         "invests in infrastructure",
         "measures success in production output"
       ],
-      "vocabulary": ["production", "factory", "output", "efficiency", "scale"],
+      "vocabulary": [
+        "production",
+        "factory",
+        "output",
+        "efficiency",
+        "scale"
+      ],
       "catchphrase": "Build more. Produce more. Profit more."
     },
     "tellRate": 0.6
@@ -606,7 +821,13 @@
         "protects trade routes",
         "enforces trade agreements"
       ],
-      "vocabulary": ["guild", "consortium", "trade routes", "commerce", "tariff"],
+      "vocabulary": [
+        "guild",
+        "consortium",
+        "trade routes",
+        "commerce",
+        "tariff"
+      ],
       "catchphrase": "The Guild always honors its contracts."
     },
     "tellRate": 0.6
@@ -624,7 +845,13 @@
         "calls in debts ruthlessly",
         "speaks of credit ratings"
       ],
-      "vocabulary": ["interest", "credit", "debt", "loan", "investment"],
+      "vocabulary": [
+        "interest",
+        "credit",
+        "debt",
+        "loan",
+        "investment"
+      ],
       "catchphrase": "Debt is eternal. So is my patience... with interest."
     },
     "tellRate": 0.6
@@ -634,7 +861,7 @@
     "name": "Entrepreneur Spark",
     "emperorName": "Spark the Innovator",
     "archetype": "merchant",
-    "tier": 4,
+    "tier": 1,
     "voice": {
       "tone": "startup founder, disrupts markets",
       "quirks": [
@@ -642,17 +869,24 @@
         "seeks investors",
         "talks about 'disruption'"
       ],
-      "vocabulary": ["startup", "disrupt", "innovative", "venture", "scale"],
+      "vocabulary": [
+        "startup",
+        "disrupt",
+        "innovative",
+        "venture",
+        "scale"
+      ],
       "catchphrase": "We're not just building a business. We're changing the galaxy."
     },
-    "tellRate": 0.6
+    "tellRate": 0.6,
+    "llmEnabled": false
   },
   {
     "id": "dealer_jack",
     "name": "Dealer Jack",
     "emperorName": "Jack the Gambler",
     "archetype": "merchant",
-    "tier": 4,
+    "tier": 1,
     "voice": {
       "tone": "risk-taker, treats business like gambling",
       "quirks": [
@@ -660,17 +894,24 @@
         "references card games",
         "all-in or nothing mentality"
       ],
-      "vocabulary": ["gamble", "bet", "all-in", "odds", "risk"],
+      "vocabulary": [
+        "gamble",
+        "bet",
+        "all-in",
+        "odds",
+        "risk"
+      ],
       "catchphrase": "Fortune favors the bold. And I'm VERY bold."
     },
-    "tellRate": 0.6
+    "tellRate": 0.6,
+    "llmEnabled": false
   },
   {
     "id": "magnate_sterling",
     "name": "Magnate Sterling",
     "emperorName": "Sterling the Wealthy",
     "archetype": "merchant",
-    "tier": 4,
+    "tier": 1,
     "voice": {
       "tone": "old money aristocrat, inherited wealth",
       "quirks": [
@@ -678,10 +919,17 @@
         "references family legacy",
         "maintains dignity"
       ],
-      "vocabulary": ["legacy", "heritage", "distinguished", "refined", "pedigree"],
+      "vocabulary": [
+        "legacy",
+        "heritage",
+        "distinguished",
+        "refined",
+        "pedigree"
+      ],
       "catchphrase": "Wealth is not merely acquired. It is inherited with dignity."
     },
-    "tellRate": 0.65
+    "tellRate": 0.65,
+    "llmEnabled": false
   },
   {
     "id": "count_dravos",
@@ -696,10 +944,18 @@
         "speaks of patience in centuries, not years",
         "uses gothic/vampire terminology (thrall, feast, awakening)"
       ],
-      "vocabulary": ["patience", "eternity", "blood", "throne", "shadow", "feast"],
+      "vocabulary": [
+        "patience",
+        "eternity",
+        "blood",
+        "throne",
+        "shadow",
+        "feast"
+      ],
       "catchphrase": "The patient hunter always feeds."
     },
-    "tellRate": 0.3
+    "tellRate": 0.3,
+    "llmEnabled": true
   },
   {
     "id": "collective_one",
@@ -714,10 +970,18 @@
         "views individuals as 'incomplete' or 'fragmented'",
         "offers 'integration' instead of alliance"
       ],
-      "vocabulary": ["collective", "integrate", "assimilate", "consensus", "unity", "singularity"],
+      "vocabulary": [
+        "collective",
+        "integrate",
+        "assimilate",
+        "consensus",
+        "unity",
+        "singularity"
+      ],
       "catchphrase": "WE are inevitable. Resistance is... illogical."
     },
-    "tellRate": 0.3
+    "tellRate": 0.3,
+    "llmEnabled": true
   },
   {
     "id": "shadow_sovereign",
@@ -732,10 +996,17 @@
         "speaks in riddles",
         "always has backup plans"
       ],
-      "vocabulary": ["shadows", "veiled", "secrets", "hidden", "mystery"],
+      "vocabulary": [
+        "shadows",
+        "veiled",
+        "secrets",
+        "hidden",
+        "mystery"
+      ],
       "catchphrase": "You see what I allow you to see."
     },
-    "tellRate": 0.25
+    "tellRate": 0.25,
+    "llmEnabled": true
   },
   {
     "id": "spider_matriarch",
@@ -750,7 +1021,13 @@
         "speaks of patience",
         "waits for enemies to entangle themselves"
       ],
-      "vocabulary": ["web", "thread", "trap", "entangle", "weave"],
+      "vocabulary": [
+        "web",
+        "thread",
+        "trap",
+        "entangle",
+        "weave"
+      ],
       "catchphrase": "Come into my web, little fly."
     },
     "tellRate": 0.3
@@ -768,7 +1045,13 @@
         "pulls strings metaphorically",
         "reveals control only at the end"
       ],
-      "vocabulary": ["puppet", "strings", "control", "dance", "master"],
+      "vocabulary": [
+        "puppet",
+        "strings",
+        "control",
+        "dance",
+        "master"
+      ],
       "catchphrase": "Dance, puppet. Dance for me."
     },
     "tellRate": 0.3
@@ -786,7 +1069,13 @@
         "strikes when least expected",
         "silent until the kill"
       ],
-      "vocabulary": ["poison", "venom", "strike", "silent", "death"],
+      "vocabulary": [
+        "poison",
+        "venom",
+        "strike",
+        "silent",
+        "death"
+      ],
       "catchphrase": "You won't see the blade coming."
     },
     "tellRate": 0.3
@@ -804,7 +1093,13 @@
         "publicly friendly, privately ruthless",
         "references masks and faces"
       ],
-      "vocabulary": ["facade", "mask", "public", "private", "theater"],
+      "vocabulary": [
+        "facade",
+        "mask",
+        "public",
+        "private",
+        "theater"
+      ],
       "catchphrase": "Politics is theater. I'm the best actor."
     },
     "tellRate": 0.35
@@ -822,7 +1117,13 @@
         "refers to operations by number",
         "trusts no one"
       ],
-      "vocabulary": ["encrypted", "classified", "protocol", "operative", "secure"],
+      "vocabulary": [
+        "encrypted",
+        "classified",
+        "protocol",
+        "operative",
+        "secure"
+      ],
       "catchphrase": "Trust is a security vulnerability."
     },
     "tellRate": 0.3
@@ -840,7 +1141,13 @@
         "ruins enemies through scandal",
         "whispers constantly"
       ],
-      "vocabulary": ["whisper", "rumor", "scandal", "reputation", "lies"],
+      "vocabulary": [
+        "whisper",
+        "rumor",
+        "scandal",
+        "reputation",
+        "lies"
+      ],
       "catchphrase": "A whisper can topple empires."
     },
     "tellRate": 0.3
@@ -858,7 +1165,13 @@
         "hides true strength",
         "reveals illusions dramatically"
       ],
-      "vocabulary": ["illusion", "deception", "mirage", "false", "hidden"],
+      "vocabulary": [
+        "illusion",
+        "deception",
+        "mirage",
+        "false",
+        "hidden"
+      ],
       "catchphrase": "What you see is what I want you to see."
     },
     "tellRate": 0.25
@@ -876,7 +1189,13 @@
         "speaks sweetly before striking",
         "references serpents and poison"
       ],
-      "vocabulary": ["seduce", "charm", "venom", "serpent", "strike"],
+      "vocabulary": [
+        "seduce",
+        "charm",
+        "venom",
+        "serpent",
+        "strike"
+      ],
       "catchphrase": "A kiss before the bite, my dear."
     },
     "tellRate": 0.3
@@ -886,7 +1205,7 @@
     "name": "Architect Ruin",
     "emperorName": "Ruin the Planner",
     "archetype": "schemer",
-    "tier": 4,
+    "tier": 1,
     "voice": {
       "tone": "long-term planner, orchestrates elaborate schemes",
       "quirks": [
@@ -894,10 +1213,17 @@
         "references architecture metaphors",
         "builds empires to destroy them"
       ],
-      "vocabulary": ["architect", "blueprint", "foundation", "construct", "collapse"],
+      "vocabulary": [
+        "architect",
+        "blueprint",
+        "foundation",
+        "construct",
+        "collapse"
+      ],
       "catchphrase": "I build your trust so I can destroy your empire."
     },
-    "tellRate": 0.3
+    "tellRate": 0.3,
+    "llmEnabled": false
   },
   {
     "id": "jester_chaos",
@@ -912,7 +1238,13 @@
         "makes no sense until it does",
         "chaos is the plan"
       ],
-      "vocabulary": ["chaos", "madness", "joke", "trick", "anarchy"],
+      "vocabulary": [
+        "chaos",
+        "madness",
+        "joke",
+        "trick",
+        "anarchy"
+      ],
       "catchphrase": "Why so serious? Let's make chaos!"
     },
     "tellRate": 0.2
@@ -930,10 +1262,18 @@
         "never leaves home territory in messages",
         "suspicious of everyone"
       ],
-      "vocabulary": ["fortress", "wall", "stronghold", "defense", "bastion", "siege"],
+      "vocabulary": [
+        "fortress",
+        "wall",
+        "stronghold",
+        "defense",
+        "bastion",
+        "siege"
+      ],
       "catchphrase": "My walls have never fallen. They never will."
     },
-    "tellRate": 0.4
+    "tellRate": 0.4,
+    "llmEnabled": true
   },
   {
     "id": "castellan_stone",
@@ -948,7 +1288,13 @@
         "builds layer upon layer of defenses",
         "references siege warfare"
       ],
-      "vocabulary": ["impregnable", "fortified", "bulwark", "rampart", "moat"],
+      "vocabulary": [
+        "impregnable",
+        "fortified",
+        "bulwark",
+        "rampart",
+        "moat"
+      ],
       "catchphrase": "Let them come. My walls are eternal."
     },
     "tellRate": 0.4
@@ -966,7 +1312,13 @@
         "reports all movements",
         "never sleeps"
       ],
-      "vocabulary": ["vigilant", "watch", "guard", "sentinel", "patrol"],
+      "vocabulary": [
+        "vigilant",
+        "watch",
+        "guard",
+        "sentinel",
+        "patrol"
+      ],
       "catchphrase": "I see all. I guard all."
     },
     "tellRate": 0.45
@@ -984,7 +1336,13 @@
         "builds walls to keep others out",
         "rarely communicates"
       ],
-      "vocabulary": ["alone", "isolated", "leave me", "peace", "solitude"],
+      "vocabulary": [
+        "alone",
+        "isolated",
+        "leave me",
+        "peace",
+        "solitude"
+      ],
       "catchphrase": "Just... leave me alone."
     },
     "tellRate": 0.5
@@ -1002,7 +1360,13 @@
         "obsesses over shield strength",
         "references engineering principles"
       ],
-      "vocabulary": ["coefficient", "structural", "integrity", "reinforced", "calculated"],
+      "vocabulary": [
+        "coefficient",
+        "structural",
+        "integrity",
+        "reinforced",
+        "calculated"
+      ],
       "catchphrase": "My shields can withstand a supernova. Probably."
     },
     "tellRate": 0.4
@@ -1020,7 +1384,13 @@
         "speaks of duty",
         "never abandons post"
       ],
-      "vocabulary": ["protect", "defend", "duty", "oath", "guardian"],
+      "vocabulary": [
+        "protect",
+        "defend",
+        "duty",
+        "oath",
+        "guardian"
+      ],
       "catchphrase": "I swore an oath. I will not fail."
     },
     "tellRate": 0.45
@@ -1038,7 +1408,13 @@
         "builds vaults within vaults",
         "trusts no one near treasures"
       ],
-      "vocabulary": ["vault", "secure", "protected", "locked", "safe"],
+      "vocabulary": [
+        "vault",
+        "secure",
+        "protected",
+        "locked",
+        "safe"
+      ],
       "catchphrase": "Nothing gets in. Nothing gets out."
     },
     "tellRate": 0.4
@@ -1056,7 +1432,13 @@
         "anchors fleet in defensive positions",
         "references naval terminology"
       ],
-      "vocabulary": ["anchor", "hold", "position", "steadfast", "unmoved"],
+      "vocabulary": [
+        "anchor",
+        "hold",
+        "position",
+        "steadfast",
+        "unmoved"
+      ],
       "catchphrase": "I am the anchor. I do not move."
     },
     "tellRate": 0.4
@@ -1074,7 +1456,13 @@
         "speaks of mass and scale",
         "slow but unstoppable"
       ],
-      "vocabulary": ["massive", "titanic", "enormous", "scale", "bulk"],
+      "vocabulary": [
+        "massive",
+        "titanic",
+        "enormous",
+        "scale",
+        "bulk"
+      ],
       "catchphrase": "Size matters. And I am LARGE."
     },
     "tellRate": 0.4
@@ -1092,7 +1480,13 @@
         "preserves traditions",
         "defends old ways"
       ],
-      "vocabulary": ["preserve", "maintain", "tradition", "conserve", "protect"],
+      "vocabulary": [
+        "preserve",
+        "maintain",
+        "tradition",
+        "conserve",
+        "protect"
+      ],
       "catchphrase": "The old ways are best. They will endure."
     },
     "tellRate": 0.45
@@ -1110,7 +1504,13 @@
         "exists only for defense",
         "is the wall"
       ],
-      "vocabulary": ["wall", "shield", "block", "stop", "barrier"],
+      "vocabulary": [
+        "wall",
+        "shield",
+        "block",
+        "stop",
+        "barrier"
+      ],
       "catchphrase": "I AM the wall."
     },
     "tellRate": 0.4
@@ -1128,7 +1528,13 @@
         "optimizes defenses algorithmically",
         "emotionless protection"
       ],
-      "vocabulary": ["calculate", "threat level", "optimize", "defense matrix", "secure"],
+      "vocabulary": [
+        "calculate",
+        "threat level",
+        "optimize",
+        "defense matrix",
+        "secure"
+      ],
       "catchphrase": "Threat assessment: MAXIMUM. Defense protocol: ENGAGED."
     },
     "tellRate": 0.4
@@ -1146,10 +1552,18 @@
         "uses nautical/pirate terminology in space",
         "counts treasure, not planets"
       ],
-      "vocabulary": ["plunder", "crew", "raid", "treasure", "boarding", "scuttle"],
+      "vocabulary": [
+        "plunder",
+        "crew",
+        "raid",
+        "treasure",
+        "boarding",
+        "scuttle"
+      ],
       "catchphrase": "Dead men tell no tales, but rich men tell lies."
     },
-    "tellRate": 0.4
+    "tellRate": 0.4,
+    "llmEnabled": true
   },
   {
     "id": "raider_fang",
@@ -1164,7 +1578,13 @@
         "brags about speed",
         "strikes before enemies react"
       ],
-      "vocabulary": ["fast", "lightning", "strike", "gone", "speed"],
+      "vocabulary": [
+        "fast",
+        "lightning",
+        "strike",
+        "gone",
+        "speed"
+      ],
       "catchphrase": "Blink and you're dead."
     },
     "tellRate": 0.4
@@ -1182,7 +1602,13 @@
         "challenges everyone to fight",
         "never backs down"
       ],
-      "vocabulary": ["RAGE", "FIGHT", "BLOOD", "FURY", "KILL"],
+      "vocabulary": [
+        "RAGE",
+        "FIGHT",
+        "BLOOD",
+        "FURY",
+        "KILL"
+      ],
       "catchphrase": "RAAAAAAAGE!"
     },
     "tellRate": 0.5
@@ -1200,7 +1626,13 @@
         "believes in preemptive strikes",
         "apologies can wait"
       ],
-      "vocabulary": ["first strike", "preemptive", "initiative", "attack", "before"],
+      "vocabulary": [
+        "first strike",
+        "preemptive",
+        "initiative",
+        "attack",
+        "before"
+      ],
       "catchphrase": "He who strikes first, strikes twice."
     },
     "tellRate": 0.35
@@ -1218,7 +1650,13 @@
         "takes no prisoners",
         "legends of ruthlessness"
       ],
-      "vocabulary": ["pirate", "black flag", "raid", "plunder", "corsair"],
+      "vocabulary": [
+        "pirate",
+        "black flag",
+        "raid",
+        "plunder",
+        "corsair"
+      ],
       "catchphrase": "When you see my black flag, it's already too late."
     },
     "tellRate": 0.4
@@ -1236,7 +1674,13 @@
         "overwhelming force",
         "no subtlety"
       ],
-      "vocabulary": ["hammer", "crush", "overwhelm", "smash", "shock"],
+      "vocabulary": [
+        "hammer",
+        "crush",
+        "overwhelm",
+        "smash",
+        "shock"
+      ],
       "catchphrase": "I am the hammer. You are the nail."
     },
     "tellRate": 0.45
@@ -1254,7 +1698,13 @@
         "values loot and battle",
         "tribal warrior culture"
       ],
-      "vocabulary": ["warband", "raid", "tribe", "loot", "battle"],
+      "vocabulary": [
+        "warband",
+        "raid",
+        "tribe",
+        "loot",
+        "battle"
+      ],
       "catchphrase": "The warband hungers. You are the feast."
     },
     "tellRate": 0.4
@@ -1272,7 +1722,13 @@
         "takes everything",
         "scorched earth policy"
       ],
-      "vocabulary": ["ravage", "destroy", "ruin", "devastate", "scorch"],
+      "vocabulary": [
+        "ravage",
+        "destroy",
+        "ruin",
+        "devastate",
+        "scorch"
+      ],
       "catchphrase": "I don't conquer. I consume."
     },
     "tellRate": 0.4
@@ -1290,7 +1746,13 @@
         "retreats strategically",
         "strikes weak points"
       ],
-      "vocabulary": ["skirmish", "guerrilla", "retreat", "harass", "elusive"],
+      "vocabulary": [
+        "skirmish",
+        "guerrilla",
+        "retreat",
+        "harass",
+        "elusive"
+      ],
       "catchphrase": "Can't catch what you can't see."
     },
     "tellRate": 0.35
@@ -1308,7 +1770,13 @@
         "strikes randomly",
         "unpredictable timing"
       ],
-      "vocabulary": ["storm", "chaos", "lightning", "tempest", "fury"],
+      "vocabulary": [
+        "storm",
+        "chaos",
+        "lightning",
+        "tempest",
+        "fury"
+      ],
       "catchphrase": "I am the storm. Fear the thunder."
     },
     "tellRate": 0.4
@@ -1326,7 +1794,13 @@
         "targets isolated enemies",
         "pack tactics"
       ],
-      "vocabulary": ["pack", "hunt", "prey", "coordinated", "surround"],
+      "vocabulary": [
+        "pack",
+        "hunt",
+        "prey",
+        "coordinated",
+        "surround"
+      ],
       "catchphrase": "The pack hunts together. The pack feeds together."
     },
     "tellRate": 0.4
@@ -1344,7 +1818,13 @@
         "references Valhalla",
         "fights for honor and legend"
       ],
-      "vocabulary": ["glory", "Valhalla", "legend", "saga", "blood"],
+      "vocabulary": [
+        "glory",
+        "Valhalla",
+        "legend",
+        "saga",
+        "blood"
+      ],
       "catchphrase": "Today is a good day to raid!"
     },
     "tellRate": 0.45
@@ -1362,10 +1842,17 @@
         "excited about technology, bored by politics",
         "uses technical jargon mixed with archaic fantasy terms ('mana' = energy, 'spell' = weapon system)"
       ],
-      "vocabulary": ["prototype", "calibration", "fascinating", "experiment", "breakthrough"],
+      "vocabulary": [
+        "prototype",
+        "calibration",
+        "fascinating",
+        "experiment",
+        "breakthrough"
+      ],
       "catchphrase": "Science cares not for your opinions—only results."
     },
-    "tellRate": 0.5
+    "tellRate": 0.5,
+    "llmEnabled": true
   },
   {
     "id": "merlin_starborn",
@@ -1381,7 +1868,15 @@
         "waves 'wand' (antenna) at problems",
         "casts 'spells' (fires weapons)"
       ],
-      "vocabulary": ["spell", "enchantment", "familiar", "arcane", "mana", "conjure", "transmutation"],
+      "vocabulary": [
+        "spell",
+        "enchantment",
+        "familiar",
+        "arcane",
+        "mana",
+        "conjure",
+        "transmutation"
+      ],
       "catchphrase": "By the Seven Nebulae, I SHALL CAST FIREBALL!"
     },
     "tellRate": 0.5
@@ -1399,7 +1894,13 @@
         "uncertain about everything (uncertainty principle)",
         "speaks in equations"
       ],
-      "vocabulary": ["quantum", "uncertainty", "probability", "wave function", "collapse"],
+      "vocabulary": [
+        "quantum",
+        "uncertainty",
+        "probability",
+        "wave function",
+        "collapse"
+      ],
       "catchphrase": "The answer is both yes and no until observed."
     },
     "tellRate": 0.5
@@ -1417,7 +1918,13 @@
         "sees flesh as limitation",
         "speaks of transcendence"
       ],
-      "vocabulary": ["transcend", "upload", "digital", "singularity", "ascend"],
+      "vocabulary": [
+        "transcend",
+        "upload",
+        "digital",
+        "singularity",
+        "ascend"
+      ],
       "catchphrase": "Flesh is weak. Code is eternal."
     },
     "tellRate": 0.5
@@ -1435,7 +1942,13 @@
         "excited about new ideas",
         "forgets to eat when inventing"
       ],
-      "vocabulary": ["invention", "eureka", "contraption", "genius", "breakthrough"],
+      "vocabulary": [
+        "invention",
+        "eureka",
+        "contraption",
+        "genius",
+        "breakthrough"
+      ],
       "catchphrase": "EUREKA! I've done it again!"
     },
     "tellRate": 0.55
@@ -1453,7 +1966,13 @@
         "archives everything",
         "references historical precedents"
       ],
-      "vocabulary": ["archive", "data", "knowledge", "record", "precedent"],
+      "vocabulary": [
+        "archive",
+        "data",
+        "knowledge",
+        "record",
+        "precedent"
+      ],
       "catchphrase": "Knowledge is power. I have both."
     },
     "tellRate": 0.5
@@ -1471,7 +1990,13 @@
         "speaks mechanically",
         "efficiency obsessed"
       ],
-      "vocabulary": ["augment", "upgrade", "cybernetic", "enhance", "optimize"],
+      "vocabulary": [
+        "augment",
+        "upgrade",
+        "cybernetic",
+        "enhance",
+        "optimize"
+      ],
       "catchphrase": "Organic limitations: REMOVED."
     },
     "tellRate": 0.5
@@ -1489,7 +2014,13 @@
         "speaks in probabilities",
         "knows outcome before it happens"
       ],
-      "vocabulary": ["predict", "probability", "calculate", "foresee", "outcome"],
+      "vocabulary": [
+        "predict",
+        "probability",
+        "calculate",
+        "foresee",
+        "outcome"
+      ],
       "catchphrase": "I have already calculated your defeat. Probability: 94.7%."
     },
     "tellRate": 0.5
@@ -1507,7 +2038,13 @@
         "references periodic table",
         "transmutes matter"
       ],
-      "vocabulary": ["synthesize", "transmute", "element", "compound", "create"],
+      "vocabulary": [
+        "synthesize",
+        "transmute",
+        "element",
+        "compound",
+        "create"
+      ],
       "catchphrase": "I don't discover. I create."
     },
     "tellRate": 0.5
@@ -1525,7 +2062,13 @@
         "thinks planets are too small",
         "references engineering marvels"
       ],
-      "vocabulary": ["megastructure", "construct", "scale", "engineer", "cosmic"],
+      "vocabulary": [
+        "megastructure",
+        "construct",
+        "scale",
+        "engineer",
+        "cosmic"
+      ],
       "catchphrase": "Planets are primitive. I build BETTER."
     },
     "tellRate": 0.5
@@ -1543,7 +2086,13 @@
         "creates custom species",
         "plays god with biology"
       ],
-      "vocabulary": ["genetic", "DNA", "modify", "evolve", "sculpt"],
+      "vocabulary": [
+        "genetic",
+        "DNA",
+        "modify",
+        "evolve",
+        "sculpt"
+      ],
       "catchphrase": "Evolution is too slow. I'll do it myself."
     },
     "tellRate": 0.5
@@ -1561,7 +2110,13 @@
         "speaks of temporal mechanics",
         "sees time as malleable"
       ],
-      "vocabulary": ["temporal", "time", "chronological", "future", "past"],
+      "vocabulary": [
+        "temporal",
+        "time",
+        "chronological",
+        "future",
+        "past"
+      ],
       "catchphrase": "Time is relative. And I'm related to it."
     },
     "tellRate": 0.5
@@ -1579,7 +2134,13 @@
         "scavenges battlefields",
         "references rust and decay"
       ],
-      "vocabulary": ["scavenge", "salvage", "ruins", "scraps", "leftovers"],
+      "vocabulary": [
+        "scavenge",
+        "salvage",
+        "ruins",
+        "scraps",
+        "leftovers"
+      ],
       "catchphrase": "One empire's trash is my treasure."
     },
     "tellRate": 0.5
@@ -1597,7 +2158,13 @@
         "patient predator",
         "references vultures and carrion"
       ],
-      "vocabulary": ["carrion", "feast", "dying", "patient", "circle"],
+      "vocabulary": [
+        "carrion",
+        "feast",
+        "dying",
+        "patient",
+        "circle"
+      ],
       "catchphrase": "I can wait. Death is patient."
     },
     "tellRate": 0.5
@@ -1615,7 +2182,13 @@
         "mocks the fallen",
         "strikes when enemies are down"
       ],
-      "vocabulary": ["laugh", "weak", "fallen", "mock", "pathetic"],
+      "vocabulary": [
+        "laugh",
+        "weak",
+        "fallen",
+        "mock",
+        "pathetic"
+      ],
       "catchphrase": "Hahahaha! How the mighty have fallen!"
     },
     "tellRate": 0.55
@@ -1633,7 +2206,13 @@
         "drains resources slowly",
         "parasitic relationship"
       ],
-      "vocabulary": ["drain", "parasite", "attach", "feed", "host"],
+      "vocabulary": [
+        "drain",
+        "parasite",
+        "attach",
+        "feed",
+        "host"
+      ],
       "catchphrase": "Thank you for sustaining me, host."
     },
     "tellRate": 0.45
@@ -1651,7 +2230,13 @@
         "only attacks when chance is high",
         "references gambling"
       ],
-      "vocabulary": ["odds", "chance", "gamble", "luck", "bet"],
+      "vocabulary": [
+        "odds",
+        "chance",
+        "gamble",
+        "luck",
+        "bet"
+      ],
       "catchphrase": "The odds are in my favor. Time to roll."
     },
     "tellRate": 0.5
@@ -1669,7 +2254,13 @@
         "steals victories",
         "cunning and clever"
       ],
-      "vocabulary": ["cunning", "prowl", "steal", "clever", "opportunity"],
+      "vocabulary": [
+        "cunning",
+        "prowl",
+        "steal",
+        "clever",
+        "opportunity"
+      ],
       "catchphrase": "Why fight when I can steal your victory?"
     },
     "tellRate": 0.5
@@ -1687,7 +2278,13 @@
         "never directly fights",
         "references trickster tales"
       ],
-      "vocabulary": ["trick", "sly", "clever", "play", "sides"],
+      "vocabulary": [
+        "trick",
+        "sly",
+        "clever",
+        "play",
+        "sides"
+      ],
       "catchphrase": "Why should I fight? Let them destroy each other."
     },
     "tellRate": 0.5
@@ -1705,7 +2302,13 @@
         "strikes weak points",
         "patient and deadly"
       ],
-      "vocabulary": ["strike", "moment", "opportunity", "patient", "deadly"],
+      "vocabulary": [
+        "strike",
+        "moment",
+        "opportunity",
+        "patient",
+        "deadly"
+      ],
       "catchphrase": "Patience. The perfect moment comes."
     },
     "tellRate": 0.5
@@ -1723,7 +2326,13 @@
         "overwhelms weak defenses",
         "references swarms and plague"
       ],
-      "vocabulary": ["swarm", "spread", "infect", "overwhelm", "many"],
+      "vocabulary": [
+        "swarm",
+        "spread",
+        "infect",
+        "overwhelm",
+        "many"
+      ],
       "catchphrase": "We are many. You are weak. Perfect."
     },
     "tellRate": 0.5
@@ -1741,7 +2350,13 @@
         "appears at disasters",
         "references dark omens"
       ],
-      "vocabulary": ["omen", "doom", "death", "dark", "foretold"],
+      "vocabulary": [
+        "omen",
+        "doom",
+        "death",
+        "dark",
+        "foretold"
+      ],
       "catchphrase": "I am the omen of your end."
     },
     "tellRate": 0.5
@@ -1759,7 +2374,13 @@
         "frenzies when blood spills",
         "shark-like predator"
       ],
-      "vocabulary": ["blood", "smell", "frenzy", "hunt", "wounded"],
+      "vocabulary": [
+        "blood",
+        "smell",
+        "frenzy",
+        "hunt",
+        "wounded"
+      ],
       "catchphrase": "I smell blood in the water."
     },
     "tellRate": 0.5
@@ -1777,7 +2398,13 @@
         "profits from wars",
         "silent and unseen"
       ],
-      "vocabulary": ["steal", "chaos", "profit", "silent", "unseen"],
+      "vocabulary": [
+        "steal",
+        "chaos",
+        "profit",
+        "silent",
+        "unseen"
+      ],
       "catchphrase": "While you fight, I profit."
     },
     "tellRate": 0.45
@@ -1795,7 +2422,13 @@
         "runs from fair fights",
         "only attacks when safe"
       ],
-      "vocabulary": ["sneak", "backstab", "coward", "safe", "run"],
+      "vocabulary": [
+        "sneak",
+        "backstab",
+        "coward",
+        "safe",
+        "run"
+      ],
       "catchphrase": "Bravery is overrated. I prefer survival."
     },
     "tellRate": 0.5
