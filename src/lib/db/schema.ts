@@ -272,6 +272,39 @@ export const games = pgTable(
 );
 
 // ============================================
+// GAME SESSIONS TABLE
+// ============================================
+// Tracks individual play sessions for campaign mode
+// Auto-save only - NO manual save/load to prevent save-scumming
+
+export const gameSessions = pgTable(
+  "game_sessions",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    gameId: uuid("game_id")
+      .notNull()
+      .references(() => games.id, { onDelete: "cascade" }),
+    sessionNumber: integer("session_number").notNull(),
+
+    // Turn range for this session
+    startTurn: integer("start_turn").notNull(),
+    endTurn: integer("end_turn"),
+
+    // Timestamps
+    startedAt: timestamp("started_at").notNull().defaultNow(),
+    endedAt: timestamp("ended_at"),
+
+    // Session summary (for session recaps)
+    empiresEliminated: integer("empires_eliminated").notNull().default(0),
+    notableEvents: jsonb("notable_events").$type<string[]>().default([]),
+  },
+  (table) => [
+    index("game_sessions_game_id_idx").on(table.gameId),
+    index("game_sessions_session_number_idx").on(table.gameId, table.sessionNumber),
+  ]
+);
+
+// ============================================
 // EMPIRES TABLE
 // ============================================
 
@@ -704,11 +737,19 @@ export const gamesRelations = relations(games, ({ many }) => ({
   empires: many(empires),
   planets: many(planets),
   saves: many(gameSaves),
+  sessions: many(gameSessions),
   performanceLogs: many(performanceLogs),
   // Geography System Relations
   galaxyRegions: many(galaxyRegions),
   regionConnections: many(regionConnections),
   empireInfluences: many(empireInfluence),
+}));
+
+export const gameSessionsRelations = relations(gameSessions, ({ one }) => ({
+  game: one(games, {
+    fields: [gameSessions.gameId],
+    references: [games.id],
+  }),
 }));
 
 export const empiresRelations = relations(empires, ({ one, many }) => ({
@@ -2237,6 +2278,9 @@ export const empireInfluenceRelations = relations(empireInfluence, ({ one }) => 
 
 export type Game = typeof games.$inferSelect;
 export type NewGame = typeof games.$inferInsert;
+
+export type GameSession = typeof gameSessions.$inferSelect;
+export type NewGameSession = typeof gameSessions.$inferInsert;
 
 export type Empire = typeof empires.$inferSelect;
 export type NewEmpire = typeof empires.$inferInsert;
