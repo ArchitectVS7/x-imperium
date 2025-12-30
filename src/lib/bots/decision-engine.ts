@@ -285,6 +285,9 @@ export function applyEmotionalModifiers(
     craft_component: weights.craft_component,
     accept_contract: weights.accept_contract,
     purchase_black_market: weights.purchase_black_market,
+    covert_operation: weights.covert_operation,
+    fund_research: weights.fund_research,
+    upgrade_units: weights.upgrade_units,
   };
 
   // Normalize weights to sum to 1.0
@@ -527,6 +530,9 @@ export function getAdjustedWeights(
       craft_component: weights.craft_component * redistributionFactor,
       accept_contract: weights.accept_contract * redistributionFactor,
       purchase_black_market: weights.purchase_black_market * redistributionFactor,
+      covert_operation: weights.covert_operation * redistributionFactor,
+      fund_research: weights.fund_research * redistributionFactor,
+      upgrade_units: weights.upgrade_units * redistributionFactor,
     };
   }
 

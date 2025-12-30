@@ -8,13 +8,13 @@
  * - Game loop compatibility with 100 bots
  */
 
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect } from "vitest";
 import {
   getTierDistribution,
   selectPersonasForGame,
   getAllPersonas,
 } from "../bot-generator";
-import { BASE_WEIGHTS, ARCHETYPE_WEIGHTS, generateDecision } from "../decision-engine";
+import { BASE_WEIGHTS, ARCHETYPE_WEIGHTS } from "../decision-engine";
 import type { BotDecisionWeights, BotArchetype, BotTier } from "../types";
 
 // =============================================================================
@@ -133,7 +133,7 @@ describe("Bot Tier Distribution", () => {
 // =============================================================================
 
 describe("Bot Decision Weights", () => {
-  const validateWeightSum = (weights: BotDecisionWeights, name: string) => {
+  const validateWeightSum = (weights: BotDecisionWeights) => {
     const sum = Object.values(weights).reduce((a, b) => a + b, 0);
     // Allow for floating point precision (0.99 to 1.01)
     expect(sum).toBeGreaterThanOrEqual(0.99);
@@ -141,7 +141,7 @@ describe("Bot Decision Weights", () => {
   };
 
   it("BASE_WEIGHTS should sum to 1.0", () => {
-    validateWeightSum(BASE_WEIGHTS, "BASE_WEIGHTS");
+    validateWeightSum(BASE_WEIGHTS);
   });
 
   it("BASE_WEIGHTS should include all 12 decision types", () => {
@@ -167,7 +167,7 @@ describe("Bot Decision Weights", () => {
 
     archetypes.forEach(archetype => {
       it(`${archetype} weights should sum to 1.0`, () => {
-        validateWeightSum(ARCHETYPE_WEIGHTS[archetype], archetype);
+        validateWeightSum(ARCHETYPE_WEIGHTS[archetype]);
       });
 
       it(`${archetype} should include all 12 decision types`, () => {
