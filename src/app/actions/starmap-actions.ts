@@ -579,3 +579,217 @@ export async function stabilizeWormholeAction(
     };
   }
 }
+
+// =============================================================================
+// GALAXY VIEW DATA
+// =============================================================================
+
+import type { GalaxyRegion, WormholeData } from "@/components/game/starmap/GalaxyView";
+
+export interface GalaxyViewData {
+  regions: GalaxyRegion[];
+  wormholes: WormholeData[];
+  playerEmpireId: string;
+  playerRegionId: string;
+  currentTurn: number;
+  protectionTurns: number;
+  treaties: {
+    empire1Id: string;
+    empire2Id: string;
+    type: "alliance" | "nap";
+  }[];
+}
+
+/**
+ * Fetch galaxy view data with sectors and empire assignments.
+ * Returns regions with empires positioned within them, plus wormhole connections.
+ */
+export async function getGalaxyViewDataAction(): Promise<GalaxyViewData | null> {
+  const { gameId, empireId } = await getGameCookies();
+
+  if (!gameId || !empireId) {
+    return null;
+  }
+
+  try {
+    // Fetch game info
+    const game = await db.query.games.findFirst({
+      where: eq(games.id, gameId),
+    });
+
+    if (!game) {
+      return null;
+    }
+
+    // Fetch all regions for this game
+    const allRegions = await db.query.galaxyRegions.findMany({
+      where: eq(galaxyRegions.gameId, gameId),
+    });
+
+    // Fetch all empires with their influence (region assignments)
+    const allEmpires = await db.query.empires.findMany({
+      where: eq(empires.gameId, gameId),
+    });
+
+    const allInfluence = await db.query.empireInfluence.findMany({
+      where: eq(empireInfluence.gameId, gameId),
+    });
+
+    // Build influence map (empire -> region)
+    const empireToRegion = new Map<string, string>();
+    let playerRegionId = "";
+    for (const inf of allInfluence) {
+      empireToRegion.set(inf.empireId, inf.primaryRegionId);
+      if (inf.empireId === empireId) {
+        playerRegionId = inf.primaryRegionId;
+      }
+    }
+
+    // Fetch active treaties
+    const activeTreaties = await db.query.treaties.findMany({
+      where: and(eq(treaties.gameId, gameId), eq(treaties.status, "active")),
+    });
+
+    // Build treaty map for player's treaties
+    const treatyMap = new Map<string, "alliance" | "nap">();
+    for (const treaty of activeTreaties) {
+      if (treaty.proposerId === empireId) {
+        treatyMap.set(treaty.recipientId, treaty.treatyType as "alliance" | "nap");
+      } else if (treaty.recipientId === empireId) {
+        treatyMap.set(treaty.proposerId, treaty.treatyType as "alliance" | "nap");
+      }
+    }
+
+    // Fetch recent attacks for threat calculation
+    const recentTurnThreshold = Math.max(1, game.currentTurn - 10);
+    const recentAttacks = await db.query.attacks.findMany({
+      where: and(
+        eq(attacks.gameId, gameId),
+        gte(attacks.turn, recentTurnThreshold),
+        or(eq(attacks.attackerId, empireId), eq(attacks.defenderId, empireId))
+      ),
+      orderBy: desc(attacks.turn),
+    });
+
+    // Build combat sets
+    const recentCombatIds = new Set<string>();
+    const attackedPlayerIds = new Set<string>();
+
+    for (const attack of recentAttacks) {
+      if (attack.attackerId === empireId) {
+        recentCombatIds.add(attack.defenderId);
+      } else if (attack.defenderId === empireId) {
+        recentCombatIds.add(attack.attackerId);
+        attackedPlayerIds.add(attack.attackerId);
+      }
+    }
+
+    // Map empires to EmpireMapData format
+    const empireDataMap = new Map<string, EmpireMapData>();
+    for (const empire of allEmpires) {
+      const intelLevel = calculateIntelLevel(
+        empire.id,
+        empireId,
+        treatyMap,
+        recentCombatIds
+      );
+
+      const empireData: EmpireMapData = {
+        id: empire.id,
+        name: empire.name,
+        type: empire.type as "player" | "bot",
+        planetCount: empire.planetCount,
+        networth: empire.networth,
+        isEliminated: empire.isEliminated,
+        intelLevel,
+        recentAggressor: attackedPlayerIds.has(empire.id),
+        hasTreaty: treatyMap.has(empire.id),
+      };
+
+      // Add detailed info for known empires
+      if (intelLevel === "moderate" || intelLevel === "full" || empire.id === empireId) {
+        empireData.militaryTier = calculateMilitaryTier(
+          empire.soldiers,
+          empire.fighters,
+          empire.lightCruisers,
+          empire.heavyCruisers,
+          empire.carriers
+        );
+      }
+
+      empireDataMap.set(empire.id, empireData);
+    }
+
+    // Group empires by region
+    const regionEmpiresMap = new Map<string, EmpireMapData[]>();
+    for (const [empId, regionId] of empireToRegion) {
+      const empData = empireDataMap.get(empId);
+      if (empData) {
+        const existing = regionEmpiresMap.get(regionId) ?? [];
+        existing.push(empData);
+        regionEmpiresMap.set(regionId, existing);
+      }
+    }
+
+    // Build region data
+    const regions: GalaxyRegion[] = allRegions.map((region) => ({
+      id: region.id,
+      name: region.name,
+      regionType: region.regionType as GalaxyRegion["regionType"],
+      positionX: Number(region.positionX),
+      positionY: Number(region.positionY),
+      wealthModifier: Number(region.wealthModifier),
+      dangerLevel: region.dangerLevel,
+      maxEmpires: region.maxEmpires,
+      empires: regionEmpiresMap.get(region.id) ?? [],
+    }));
+
+    // Fetch wormholes
+    const allConnections = await db.query.regionConnections.findMany({
+      where: and(
+        eq(regionConnections.gameId, gameId),
+        eq(regionConnections.connectionType, "wormhole")
+      ),
+    });
+
+    // Filter to known wormholes
+    const wormholes: WormholeData[] = allConnections
+      .filter((conn) => {
+        // Show stabilized wormholes to everyone
+        if (conn.wormholeStatus === "stabilized") return true;
+        // Show discovered wormholes if player discovered them or they're in player's region
+        if (conn.discoveredByEmpireId === empireId) return true;
+        if (conn.fromRegionId === playerRegionId || conn.toRegionId === playerRegionId) {
+          return conn.wormholeStatus !== "undiscovered";
+        }
+        return false;
+      })
+      .map((conn) => ({
+        id: conn.id,
+        fromRegionId: conn.fromRegionId,
+        toRegionId: conn.toRegionId,
+        status: conn.wormholeStatus as WormholeData["status"],
+        isKnown: conn.discoveredByEmpireId === empireId || conn.wormholeStatus === "stabilized",
+      }));
+
+    // Map treaties
+    const treatyData = activeTreaties.map((treaty) => ({
+      empire1Id: treaty.proposerId,
+      empire2Id: treaty.recipientId,
+      type: treaty.treatyType as "alliance" | "nap",
+    }));
+
+    return {
+      regions,
+      wormholes,
+      playerEmpireId: empireId,
+      playerRegionId,
+      currentTurn: game.currentTurn,
+      protectionTurns: game.protectionTurns,
+      treaties: treatyData,
+    };
+  } catch (error) {
+    console.error("Failed to fetch galaxy view data:", error);
+    return null;
+  }
+}

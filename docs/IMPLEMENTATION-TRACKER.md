@@ -56,10 +56,11 @@ This document tracks the status of all major features and redesign initiatives f
 | Wormhole construction UI | 📋 PLANNED | P1 | - | 15k-40k credits, 300-800 petro, 6-15 turns |
 | Border discovery system | 📋 PLANNED | P1 | - | Unlock borders at Turn 10-15 (phased expansion) |
 | **UI Components** | | | | |
-| Galaxy View Component (sector boxes) | 📋 PLANNED | P0 | 1 day | LCARS styled, 10 sectors |
+| Galaxy View Component (sector boxes) | ✅ IMPLEMENTED | P0 | ✓ | `GalaxyView.tsx`, `SectorBox.tsx` - static sector grid |
 | Sector Detail Component (empire nodes) | 📋 PLANNED | P0 | 1 day | Force-directed or static layout |
 | Zoom transition animation (galaxy ↔ sector) | 📋 PLANNED | P1 | 0.5 day | Smooth fade/zoom |
-| LCARS Panel System (semi-transparent) | 📋 PLANNED | P0 | 1 day | Orange/peach/violet palette |
+| LCARS Panel System (semi-transparent) | ✅ IMPLEMENTED | P0 | ✓ | `LCARSPanel.tsx`, `LCARSButton.tsx`, `LCARSHeader.tsx`, `LCARSSidebar.tsx` |
+| Wormhole connections component | ✅ IMPLEMENTED | P0 | ✓ | `WormholeConnection.tsx` - curved paths with status indicators |
 | Threat Assessment Panel | 📋 PLANNED | P1 | 0.5 day | Right sidebar with active threats |
 | Expansion Options Panel | 📋 PLANNED | P1 | 0.5 day | Borders + wormholes |
 | **Onboarding** | | | | |
@@ -289,11 +290,11 @@ This document tracks the status of all major features and redesign initiatives f
 - [✓] Wormhole processing (discovery, collapse, stabilization)
 - [✓] Wormhole slot limits (2 base, +2 research, max 4)
 
-**Frontend (PENDING)**:
-- [ ] Galaxy View Component (Concept 2 - static sector boxes)
+**Frontend (IN PROGRESS)**:
+- [✓] Galaxy View Component (Concept 2 - static sector boxes)
 - [ ] Sector Detail Component (empire nodes with LCARS panels)
-- [ ] LCARS panel system (semi-transparent, Star Trek aesthetic)
-- [ ] Wormhole visualization (pulsing connections, discovery states)
+- [✓] LCARS panel system (semi-transparent, Star Trek aesthetic)
+- [✓] Wormhole visualization (curved paths, discovery/stabilized states)
 - [ ] Threat assessment panel (right sidebar)
 - [ ] Expansion options panel (borders + wormholes)
 - [ ] Zoom transition (galaxy ↔ sector view)
