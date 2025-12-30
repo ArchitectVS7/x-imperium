@@ -12,7 +12,6 @@
  */
 
 import {
-  resolveInvasion,
   resolveGuerillaAttack,
   resolveRetreat,
   type Forces,
@@ -20,6 +19,7 @@ import {
   type AttackType,
   SOLDIERS_PER_CARRIER,
 } from "@/lib/combat/phases";
+import { resolveUnifiedInvasion } from "@/lib/combat/unified-combat";
 import {
   saveAttack,
   applyCombatResults,
@@ -287,19 +287,16 @@ export async function executeAttack(params: AttackParams): Promise<AttackResult>
       defenderForces
     );
   } else {
-    // Full invasion with three phases
-    const attackerEffectiveness = Number(attacker.armyEffectiveness);
-
-    // Validate effectiveness is within valid range
-    const safeEffectiveness = Math.max(0, Math.min(100,
-      Number.isFinite(attackerEffectiveness) ? attackerEffectiveness : 50
-    ));
-
-    result = resolveInvasion(
+    // Full invasion using unified combat resolution
+    // M4: Pass networth for feature-flagged underdog bonus
+    result = resolveUnifiedInvasion(
       forces,
       defenderForces,
-      safeEffectiveness,
-      defender.planetCount
+      defender.planetCount,
+      {
+        attackerNetworth: attacker.networth,
+        defenderNetworth: defender.networth,
+      }
     );
   }
 

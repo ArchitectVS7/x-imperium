@@ -20,6 +20,7 @@ import {
   type CombatOutcome as EffectivenessOutcome,
   calculateCombatEffectivenessChange,
 } from "../formulas/army-effectiveness";
+import { isFeatureEnabled } from "@/lib/config/feature-flags";
 
 // =============================================================================
 // CONSTANTS
@@ -41,6 +42,24 @@ export const DEFENDER_BONUS = 1.10; // 10% bonus (reduced from 20%)
 /** Underdog bonus when outpowered 2:1 or more */
 export const UNDERDOG_BONUS_THRESHOLD = 0.5; // power ratio below this triggers bonus
 export const UNDERDOG_BONUS_MAX = 1.25; // max 25% bonus for severe underdogs
+
+/**
+ * M4: Networth-based underdog bonus (feature-flagged)
+ * When FEATURE_UNDERDOG_BONUS is enabled, weaker empires get a combat bonus
+ * based on networth disparity, not just combat power.
+ */
+export const NETWORTH_UNDERDOG_THRESHOLD = 0.5; // networth ratio below this triggers bonus
+export const NETWORTH_UNDERDOG_MIN_BONUS = 1.10; // 10% bonus at threshold
+export const NETWORTH_UNDERDOG_MAX_BONUS = 1.20; // 20% max bonus for severe disparity
+
+/**
+ * M4: Punching-up victory bonus (feature-flagged)
+ * When FEATURE_PUNCHUP_BONUS is enabled, weaker empires that WIN against
+ * stronger opponents get extra planet capture bonus.
+ */
+export const PUNCHUP_EXTRA_PLANET_MIN = 1; // minimum extra planets
+export const PUNCHUP_EXTRA_PLANET_MAX = 3; // maximum extra planets (for severe disparity)
+export const PUNCHUP_NETWORTH_THRESHOLD = 0.75; // attacker must be weaker than this ratio
 
 /** Planet capture percentages */
 export const PLANET_CAPTURE_MIN_PERCENT = 0.05;
@@ -102,6 +121,98 @@ export function applyUnderdogBonus(
   }
 
   return myPower;
+}
+
+/**
+ * M4: Calculate networth-based underdog bonus.
+ *
+ * When FEATURE_UNDERDOG_BONUS is enabled, weaker empires (by networth)
+ * get a combat bonus when attacking stronger empires.
+ *
+ * @param attackerNetworth - Attacker's total networth
+ * @param defenderNetworth - Defender's total networth
+ * @returns Multiplier to apply to attacker's combat power (1.0 = no bonus)
+ */
+export function calculateNetworthUnderdogBonus(
+  attackerNetworth: number,
+  defenderNetworth: number
+): number {
+  // Check feature flag
+  if (!isFeatureEnabled("UNDERDOG_BONUS")) {
+    return 1.0;
+  }
+
+  // Only applies when attacker is weaker by networth
+  if (defenderNetworth <= 0 || attackerNetworth >= defenderNetworth) {
+    return 1.0;
+  }
+
+  const ratio = attackerNetworth / defenderNetworth;
+
+  // Only apply if significantly weaker
+  if (ratio >= NETWORTH_UNDERDOG_THRESHOLD) {
+    return 1.0;
+  }
+
+  // Scale bonus: weaker = bigger bonus
+  // At 0.5 ratio: 10% bonus
+  // At 0.25 ratio: 15% bonus
+  // At 0.1 ratio: 20% bonus (max)
+  const bonusRange = NETWORTH_UNDERDOG_MAX_BONUS - NETWORTH_UNDERDOG_MIN_BONUS;
+  const scaleFactor = 1 - (ratio / NETWORTH_UNDERDOG_THRESHOLD);
+  const bonus = NETWORTH_UNDERDOG_MIN_BONUS + (bonusRange * scaleFactor);
+
+  return Math.min(bonus, NETWORTH_UNDERDOG_MAX_BONUS);
+}
+
+/**
+ * M4: Calculate punching-up victory bonus (extra planets captured).
+ *
+ * When FEATURE_PUNCHUP_BONUS is enabled and a weaker empire (by networth)
+ * WINS against a stronger empire, they capture extra planets.
+ *
+ * @param attackerNetworth - Attacker's total networth
+ * @param defenderNetworth - Defender's total networth
+ * @param attackerWon - Whether the attacker won the battle
+ * @returns Extra planets to capture (0 if not applicable)
+ */
+export function calculatePunchupBonus(
+  attackerNetworth: number,
+  defenderNetworth: number,
+  attackerWon: boolean
+): number {
+  // Check feature flag
+  if (!isFeatureEnabled("PUNCHUP_BONUS")) {
+    return 0;
+  }
+
+  // Only applies when attacker wins
+  if (!attackerWon) {
+    return 0;
+  }
+
+  // Only applies when attacker is weaker by networth
+  if (defenderNetworth <= 0 || attackerNetworth >= defenderNetworth) {
+    return 0;
+  }
+
+  const ratio = attackerNetworth / defenderNetworth;
+
+  // Only apply if significantly weaker
+  if (ratio >= PUNCHUP_NETWORTH_THRESHOLD) {
+    return 0;
+  }
+
+  // Scale bonus: weaker = bigger bonus
+  // At 0.75 ratio: 1 extra planet
+  // At 0.5 ratio: 2 extra planets
+  // At 0.25 ratio: 3 extra planets (max)
+  const normalizedRatio = ratio / PUNCHUP_NETWORTH_THRESHOLD;
+  const scaleFactor = 1 - normalizedRatio;
+  const extraPlanets = PUNCHUP_EXTRA_PLANET_MIN +
+    Math.floor((PUNCHUP_EXTRA_PLANET_MAX - PUNCHUP_EXTRA_PLANET_MIN) * scaleFactor);
+
+  return Math.min(extraPlanets, PUNCHUP_EXTRA_PLANET_MAX);
 }
 
 // =============================================================================
@@ -322,20 +433,37 @@ function generateNarrativePhases(
 // =============================================================================
 
 /**
+ * Combat options for invasion resolution.
+ */
+export interface CombatOptions {
+  /** Optional random value for deterministic testing (0-1) */
+  randomValue?: number;
+  /** Optional attacker networth for M4 underdog bonus */
+  attackerNetworth?: number;
+  /** Optional defender networth for M4 underdog bonus */
+  defenderNetworth?: number;
+}
+
+/**
  * Resolve an invasion using unified combat roll.
  *
  * @param attackerForces - Attacking forces
  * @param defenderForces - Defending forces
  * @param defenderPlanetCount - Number of planets defender owns
- * @param randomValue - Optional random value for deterministic testing
+ * @param options - Optional combat parameters (random value, networth for underdog bonus)
  * @returns Complete combat result
  */
 export function resolveUnifiedInvasion(
   attackerForces: Forces,
   defenderForces: Forces,
   defenderPlanetCount: number,
-  randomValue?: number
+  options?: CombatOptions | number
 ): CombatResult {
+  // Handle backwards compatibility: if options is a number, it's the random value
+  const opts: CombatOptions = typeof options === "number"
+    ? { randomValue: options }
+    : options ?? {};
+
   // Apply carrier capacity limit
   const maxSoldiersTransportable = attackerForces.carriers * SOLDIERS_PER_CARRIER;
   const effectiveAttackerForces: Forces = {
@@ -347,15 +475,23 @@ export function resolveUnifiedInvasion(
   let attackerPower = calculateUnifiedPower(effectiveAttackerForces, false);
   const defenderPower = calculateUnifiedPower(defenderForces, true);
 
-  // Apply underdog bonus (helps weaker side)
+  // Apply power-based underdog bonus (helps weaker side)
   attackerPower = applyUnderdogBonus(attackerPower, defenderPower);
-  // Defender already has home turf bonus, don't double-apply underdog
+
+  // M4: Apply networth-based underdog bonus (feature-flagged)
+  if (opts.attackerNetworth !== undefined && opts.defenderNetworth !== undefined) {
+    const networthBonus = calculateNetworthUnderdogBonus(
+      opts.attackerNetworth,
+      opts.defenderNetworth
+    );
+    attackerPower *= networthBonus;
+  }
 
   // Determine winner
   const { winner, attackerWinChance } = determineUnifiedWinner(
     attackerPower,
     defenderPower,
-    randomValue
+    opts.randomValue
   );
 
   // Calculate casualties
@@ -365,7 +501,7 @@ export function resolveUnifiedInvasion(
     attackerPower,
     defenderPower,
     winner,
-    randomValue
+    opts.randomValue
   );
 
   // Generate narrative phases
@@ -386,8 +522,18 @@ export function resolveUnifiedInvasion(
   if (winner === "attacker") {
     outcome = "attacker_victory";
     const capturePercent = PLANET_CAPTURE_MIN_PERCENT +
-      (randomValue ?? Math.random()) * (PLANET_CAPTURE_MAX_PERCENT - PLANET_CAPTURE_MIN_PERCENT);
+      (opts.randomValue ?? Math.random()) * (PLANET_CAPTURE_MAX_PERCENT - PLANET_CAPTURE_MIN_PERCENT);
     planetsCaptured = Math.max(1, Math.floor(defenderPlanetCount * capturePercent));
+
+    // M4: Apply punching-up bonus for extra planet capture
+    if (opts.attackerNetworth !== undefined && opts.defenderNetworth !== undefined) {
+      const extraPlanets = calculatePunchupBonus(
+        opts.attackerNetworth,
+        opts.defenderNetworth,
+        true // attacker won
+      );
+      planetsCaptured += extraPlanets;
+    }
   } else if (winner === "defender") {
     outcome = "defender_victory";
   } else {

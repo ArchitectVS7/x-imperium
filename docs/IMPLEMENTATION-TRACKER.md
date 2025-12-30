@@ -84,7 +84,7 @@ This document tracks the status of all major features and redesign initiatives f
 | Item | Status | Priority | Estimated | Notes |
 |------|--------|----------|-----------|-------|
 | Coalition mechanics (automatic) | ✅ IMPLEMENTED | P0 | ✓ | +10% attack bonus vs leaders at 7+ VP |
-| Reverse turn order | 📋 PLANNED | P1 | 0.5 day | Weakest empire goes first |
+| Reverse turn order | ✅ IMPLEMENTED | P1 | ✓ | Weak-first initiative in bot combat processing |
 | Sector traits | 💡 PROPOSED | P2 | 1 day | "Mining Belt" +20% ore, etc. |
 | Victory Points system | 💡 PROPOSED | P2 | 2-3 days | 10 VP from any combination |
 | Leader containment bonus | 📋 PLANNED | P1 | 0.5 day | Adjacent sectors get bonuses vs leader |
@@ -139,10 +139,10 @@ This document tracks the status of all major features and redesign initiatives f
 
 | Item | Status | Priority | Feature Flag | Notes |
 |------|--------|----------|--------------|-------|
-| Underdog combat bonus | 📋 PLANNED | P1 | `FEATURE_UNDERDOG_BONUS` | +10-20% when weaker empire attacks stronger one |
-| "Punching up" victory bonus | 📋 PLANNED | P1 | `FEATURE_PUNCHUP_BONUS` | Bonus rewards for **winning** against stronger opponent (not just attacking) |
+| Underdog combat bonus | ✅ IMPLEMENTED | P1 | `FEATURE_UNDERDOG_BONUS` | +10-20% when weaker empire attacks stronger one (networth-based) |
+| "Punching up" victory bonus | ✅ IMPLEMENTED | P1 | `FEATURE_PUNCHUP_BONUS` | +1-3 extra planets captured when winning against stronger opponent |
 
-**Philosophy**: Undecided on automatic underdog bonus - may feel like punishment for success. Alternative "punching up" bonus rewards **victories** against stronger foes, not just attempts. Both will be feature-flagged for playtesting.
+**Philosophy**: Undecided on automatic underdog bonus - may feel like punishment for success. Alternative "punching up" bonus rewards **victories** against stronger foes, not just attempts. Both are feature-flagged for playtesting.
 
 **Note**: Weak players already have asymmetric options: covert ops, sabotage, pirates, Syndicate contracts. May not need direct combat bonus.
 
@@ -308,9 +308,11 @@ This document tracks the status of all major features and redesign initiatives f
 
 ### Phase 3: Balance & Polish (Week 4)
 **Target**: 2025-01-27
-**Status**: 📋 PLANNED
+**Status**: 🚧 IN PROGRESS
 
-- [ ] Reverse turn order (weakest first)
+- [✓] Reverse turn order (weakest first) - M4: `bot-processor.ts` weak-first initiative
+- [✓] Underdog combat bonus (feature-flagged) - M4: +10-20% networth-based bonus
+- [✓] Punching-up victory bonus (feature-flagged) - M4: +1-3 extra planet capture
 - [ ] Sector traits (Mining Belt, Core Worlds, etc.)
 - [ ] Turn-by-turn goals for tutorial
 - [ ] Feedback tooltips
@@ -361,6 +363,18 @@ This document tracks the status of all major features and redesign initiatives f
 ---
 
 ## Decision Log
+
+### 2025-12-30 (Late Evening) - M4 Game Balance Implementation
+- ✅ **IMPLEMENTED**: Reverse turn order (weak-first initiative) in `bot-processor.ts`
+  - Bot decisions generated in parallel, then attacks sorted by networth ascending and executed sequentially
+  - Non-attack decisions still execute in parallel for performance
+- ✅ **IMPLEMENTED**: Underdog combat bonus in `unified-combat.ts`
+  - Feature-flagged via `FEATURE_UNDERDOG_BONUS`
+  - +10-20% combat power bonus when attacking stronger empire (by networth)
+- ✅ **IMPLEMENTED**: Punching-up victory bonus in `unified-combat.ts`
+  - Feature-flagged via `FEATURE_PUNCHUP_BONUS`
+  - +1-3 extra planets captured when weaker empire defeats stronger one
+- ✅ **UPDATED**: Combat service now uses unified combat system for invasions
 
 ### 2025-12-30 (Evening) - Redesign Documentation Review
 - ✅ **CAPTURED**: 6 ideas from older redesign docs now tracked in Implementation Tracker
@@ -456,4 +470,4 @@ All experimental mechanics are behind feature flags for A/B testing and balance 
 ---
 
 *This tracker is the living source of truth for Nexus Dominion development.*
-*Last updated: 2025-12-30 (Evening) by Claude*
+*Last updated: 2025-12-30 (Late Evening) by Claude - M4 Game Balance Implementation*

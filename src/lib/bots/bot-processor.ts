@@ -1,12 +1,20 @@
 /**
  * Bot Processor
  *
- * Orchestrates parallel processing of all bot decisions each turn.
- * Uses Promise.all for concurrent execution with performance tracking.
+ * Orchestrates bot decision processing each turn with weak-first initiative.
  *
  * M5: Base bot processing
  * M9: Archetype-based decisions
  * M10: Emotional state integration
+ * M4: Weak-first initiative (attacks sorted by networth ascending)
+ *
+ * Turn Order:
+ * 1. Generate all decisions in parallel (for speed)
+ * 2. Execute non-attack decisions in parallel
+ * 3. Execute attack decisions sequentially, weakest empire first
+ *
+ * Weak-first initiative prevents stronger empires from always striking first,
+ * giving weaker empires a chance to react before being eliminated.
  *
  * Performance target: <1.5s for 25 bots
  */
@@ -16,6 +24,7 @@ import { games, type Empire, type Planet } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 import { perfLogger } from "@/lib/performance/logger";
 import type {
+  BotDecision,
   BotDecisionContext,
   BotProcessingResult,
   BotTurnResult,
@@ -41,8 +50,13 @@ import { triggerThreatWarning, type TriggerContext, type BotInfo } from "@/lib/m
 // =============================================================================
 
 /**
- * Process all bot decisions for a turn in parallel.
- * Uses Promise.all for concurrent execution.
+ * Process all bot decisions for a turn with weak-first initiative.
+ *
+ * Implementation:
+ * 1. Generate all decisions in parallel (for speed)
+ * 2. Execute non-attack decisions in parallel
+ * 3. Sort attack decisions by empire networth (ascending - weakest first)
+ * 4. Execute attack decisions sequentially in weak-first order
  *
  * @param gameId - Game to process
  * @param currentTurn - Current turn number
@@ -94,10 +108,13 @@ export async function processBotTurn(
     const difficulty = (game.difficulty as Difficulty) ?? "normal";
     const protectionTurns = game.protectionTurns ?? 20;
 
-    // Process all bots in parallel
-    const results = await Promise.all(
+    // ==========================================================================
+    // M4: WEAK-FIRST INITIATIVE
+    // ==========================================================================
+    // Step 1: Generate all decisions in parallel (for speed)
+    const decisionResults = await Promise.all(
       botEmpires.map((bot) =>
-        processSingleBot(bot, bot.planets, {
+        generateBotDecisionWithContext(bot, bot.planets, {
           gameId,
           currentTurn,
           protectionTurns,
@@ -106,6 +123,52 @@ export async function processBotTurn(
         })
       )
     );
+
+    // Step 2: Separate attack vs non-attack decisions
+    const attackDecisions: Array<{
+      bot: Empire;
+      planets: Planet[];
+      decision: BotDecision;
+      context: BotDecisionContext;
+      networth: number;
+    }> = [];
+    const nonAttackDecisions: Array<{
+      bot: Empire;
+      planets: Planet[];
+      decision: BotDecision;
+      context: BotDecisionContext;
+    }> = [];
+
+    for (const result of decisionResults) {
+      if (result.decision.type === "attack") {
+        attackDecisions.push({
+          ...result,
+          networth: result.bot.networth,
+        });
+      } else {
+        nonAttackDecisions.push(result);
+      }
+    }
+
+    // Step 3: Execute non-attack decisions in parallel (they don't conflict)
+    const nonAttackResults = await Promise.all(
+      nonAttackDecisions.map(({ bot, decision, context }) =>
+        executeAndRecordDecision(bot, decision, context)
+      )
+    );
+
+    // Step 4: Sort attack decisions by networth ascending (weakest first)
+    attackDecisions.sort((a, b) => a.networth - b.networth);
+
+    // Step 5: Execute attack decisions sequentially in weak-first order
+    const attackResults: BotProcessingResult[] = [];
+    for (const { bot, decision, context } of attackDecisions) {
+      const result = await executeAndRecordDecision(bot, decision, context);
+      attackResults.push(result);
+    }
+
+    // Combine all results
+    const results = [...nonAttackResults, ...attackResults];
 
     const totalDurationMs = Math.round(performance.now() - startTime);
 
@@ -176,7 +239,7 @@ export async function processBotTurn(
 }
 
 // =============================================================================
-// SINGLE BOT PROCESSING
+// WEAK-FIRST INITIATIVE HELPERS (M4)
 // =============================================================================
 
 interface ProcessingContext {
@@ -188,60 +251,81 @@ interface ProcessingContext {
 }
 
 /**
- * Process a single bot's turn.
- * M5: Generates decision and executes it
- * M10: Loads emotional state, applies to decisions, updates based on outcome
+ * Generate a bot decision and return it with context.
+ * Used in the first phase of weak-first initiative to collect all decisions.
  */
-async function processSingleBot(
+async function generateBotDecisionWithContext(
   empire: Empire,
   empirePlanets: Planet[],
   context: ProcessingContext
+): Promise<{
+  bot: Empire;
+  planets: Planet[];
+  decision: BotDecision;
+  context: BotDecisionContext;
+}> {
+  // Load emotional state and grudges
+  let emotionalState: { state: EmotionalStateName | "neutral"; intensity: number } | undefined;
+  let permanentGrudges: string[] | undefined;
+
+  try {
+    const emotionData = await getEmotionalStateWithGrudges(empire.id, context.gameId);
+    emotionalState = {
+      state: emotionData.state as EmotionalStateName | "neutral",
+      intensity: parseFloat(emotionData.intensity),
+    };
+    permanentGrudges = emotionData.permanentGrudges;
+  } catch {
+    // If emotional state doesn't exist yet, continue without it
+    emotionalState = undefined;
+    permanentGrudges = undefined;
+  }
+
+  // Build decision context
+  const decisionContext: BotDecisionContext = {
+    empire,
+    planets: empirePlanets,
+    gameId: context.gameId,
+    currentTurn: context.currentTurn,
+    protectionTurns: context.protectionTurns,
+    difficulty: context.difficulty,
+    availableTargets: context.targetList.filter((t) => t.id !== empire.id),
+    emotionalState,
+    permanentGrudges,
+  };
+
+  // Generate decision
+  const decision = generateBotDecision(decisionContext);
+
+  return {
+    bot: empire,
+    planets: empirePlanets,
+    decision,
+    context: decisionContext,
+  };
+}
+
+/**
+ * Execute a bot decision and record the result.
+ * Used after decisions are sorted for weak-first initiative.
+ */
+async function executeAndRecordDecision(
+  empire: Empire,
+  decision: BotDecision,
+  decisionContext: BotDecisionContext
 ): Promise<BotProcessingResult> {
   const startTime = performance.now();
 
   try {
-    // M10: Load emotional state and grudges
-    let emotionalState: { state: EmotionalStateName | "neutral"; intensity: number } | undefined;
-    let permanentGrudges: string[] | undefined;
-
-    try {
-      const emotionData = await getEmotionalStateWithGrudges(empire.id, context.gameId);
-      emotionalState = {
-        state: emotionData.state as EmotionalStateName | "neutral",
-        intensity: parseFloat(emotionData.intensity),
-      };
-      permanentGrudges = emotionData.permanentGrudges;
-    } catch {
-      // If emotional state doesn't exist yet, continue without it
-      emotionalState = undefined;
-      permanentGrudges = undefined;
-    }
-
-    // Build decision context with emotional state
-    const decisionContext: BotDecisionContext = {
-      empire,
-      planets: empirePlanets,
-      gameId: context.gameId,
-      currentTurn: context.currentTurn,
-      protectionTurns: context.protectionTurns,
-      difficulty: context.difficulty,
-      availableTargets: context.targetList.filter((t) => t.id !== empire.id),
-      emotionalState,
-      permanentGrudges,
-    };
-
-    // Generate decision
-    const decision = generateBotDecision(decisionContext);
-
     // Execute decision
     const result = await executeBotDecision(decision, decisionContext);
 
-    // M10: Process emotional event based on decision outcome
+    // Process emotional event based on decision outcome
     try {
       await processEmotionalOutcome(
         empire.id,
-        context.gameId,
-        context.currentTurn,
+        decisionContext.gameId,
+        decisionContext.currentTurn,
         decision,
         result.success
       );
