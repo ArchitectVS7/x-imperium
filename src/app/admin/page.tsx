@@ -9,6 +9,7 @@ import {
   truncateAllTablesAction,
   pruneAllMemoriesAction,
   prunePerformanceLogsAction,
+  checkDatabaseTablesAction,
 } from "@/app/actions/admin-actions";
 
 interface Stats {
@@ -27,6 +28,20 @@ export default function AdminPage() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<string | null>(null);
   const [stats, setStats] = useState<Stats | null>(null);
+  const [tables, setTables] = useState<string[] | null>(null);
+
+  const handleCheckTables = async () => {
+    setLoading(true);
+    setResult(null);
+    const res = await checkDatabaseTablesAction();
+    setLoading(false);
+    if (res.success && res.tables) {
+      setTables(res.tables);
+      setResult(`Found ${res.tables.length} tables in database`);
+    } else {
+      setResult(`Error: ${res.error}`);
+    }
+  };
 
   const handleGetStats = async () => {
     setLoading(true);
@@ -143,6 +158,44 @@ export default function AdminPage() {
           >
             ← Back to Home
           </Link>
+        </div>
+
+        <div className="lcars-panel mb-6">
+          <h2 className="text-lg font-semibold text-lcars-orange mb-4">
+            🔍 Diagnostics
+          </h2>
+          <p className="text-gray-400 text-sm mb-4">
+            First, check if your database tables exist. If they don&apos;t, you need to run migrations.
+          </p>
+          <button
+            onClick={handleCheckTables}
+            disabled={loading}
+            className="mb-4 px-4 py-2 bg-lcars-orange text-gray-950 rounded hover:brightness-110 transition-all disabled:opacity-50"
+          >
+            {loading ? "Checking..." : "Check Database Tables"}
+          </button>
+          {tables && (
+            <div className="mt-4 p-4 bg-gray-800/50 rounded">
+              <p className="text-lcars-mint font-semibold mb-2">
+                Tables found: {tables.length}
+              </p>
+              <div className="grid grid-cols-2 gap-2 text-sm text-gray-400 max-h-40 overflow-y-auto">
+                {tables.map((table) => (
+                  <div key={table} className="font-mono">
+                    • {table}
+                  </div>
+                ))}
+              </div>
+              {tables.length === 0 && (
+                <div className="mt-4 p-3 bg-red-900/20 border border-red-500/30 rounded">
+                  <p className="text-red-400 font-semibold">⚠️ No tables found!</p>
+                  <p className="text-gray-400 text-sm mt-2">
+                    Run migrations: <code className="bg-gray-900 px-2 py-1 rounded">npm run db:push</code>
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
         <div className="lcars-panel mb-6">

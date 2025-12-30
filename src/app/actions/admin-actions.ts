@@ -3,15 +3,56 @@
 import { db } from "@/lib/db";
 import {
   games,
-  empires,
-  planets,
   botMemories,
-  messages,
-  attacks,
-  combatLogs,
   performanceLogs,
 } from "@/lib/db/schema";
 import { eq, lt, and, or, sql } from "drizzle-orm";
+
+interface TableRow {
+  table_name: string;
+}
+
+interface GameStatsRow {
+  total: number;
+  active: number;
+  completed: number;
+}
+
+interface CountRow {
+  total: number;
+}
+
+/**
+ * Check which tables actually exist in the database.
+ * Useful for diagnosing migration issues.
+ */
+export async function checkDatabaseTablesAction(): Promise<{
+  success: boolean;
+  tables?: string[];
+  error?: string;
+}> {
+  try {
+    const result = await db.execute(sql`
+      SELECT table_name
+      FROM information_schema.tables
+      WHERE table_schema = 'public'
+      ORDER BY table_name
+    `);
+
+    const tables = (result as unknown as { rows: TableRow[] }).rows.map((row) => row.table_name);
+
+    return {
+      success: true,
+      tables,
+    };
+  } catch (error) {
+    console.error("Failed to check database tables:", error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Unknown error",
+    };
+  }
+}
 
 /**
  * Clean up old games to free up database space.
@@ -89,47 +130,35 @@ export async function getDatabaseStatsAction(): Promise<{
   error?: string;
 }> {
   try {
-    // Get game counts
-    const [gameStats] = await db
-      .select({
-        total: sql<number>`count(*)`,
-        active: sql<number>`count(*) filter (where status = 'active')`,
-        completed: sql<number>`count(*) filter (where status = 'completed')`,
-      })
-      .from(games);
+    // Use raw SQL to be more resilient to missing tables
+    const gameStatsResult = await db.execute(sql`
+      SELECT
+        COUNT(*)::int as total,
+        COUNT(*) FILTER (WHERE status = 'active')::int as active,
+        COUNT(*) FILTER (WHERE status = 'completed')::int as completed
+      FROM games
+    `);
+    const gameStats = (gameStatsResult as unknown as { rows: GameStatsRow[] }).rows[0];
 
-    // Get record counts for major tables
-    const [empireStats] = await db
-      .select({ total: sql<number>`count(*)` })
-      .from(empires);
-    const [planetStats] = await db
-      .select({ total: sql<number>`count(*)` })
-      .from(planets);
-    const [memoryStats] = await db
-      .select({ total: sql<number>`count(*)` })
-      .from(botMemories);
-    const [messageStats] = await db
-      .select({ total: sql<number>`count(*)` })
-      .from(messages);
-    const [attackStats] = await db
-      .select({ total: sql<number>`count(*)` })
-      .from(attacks);
-    const [combatLogStats] = await db
-      .select({ total: sql<number>`count(*)` })
-      .from(combatLogs);
+    const empireStatsResult = await db.execute(sql`SELECT COUNT(*)::int as total FROM empires`);
+    const planetStatsResult = await db.execute(sql`SELECT COUNT(*)::int as total FROM planets`);
+    const memoryStatsResult = await db.execute(sql`SELECT COUNT(*)::int as total FROM bot_memories`);
+    const messageStatsResult = await db.execute(sql`SELECT COUNT(*)::int as total FROM messages`);
+    const attackStatsResult = await db.execute(sql`SELECT COUNT(*)::int as total FROM attacks`);
+    const combatLogStatsResult = await db.execute(sql`SELECT COUNT(*)::int as total FROM combat_logs`);
 
     return {
       success: true,
       stats: {
         gameCount: Number(gameStats?.total ?? 0),
-        empireCount: Number(empireStats?.total ?? 0),
+        empireCount: Number(((empireStatsResult as unknown as { rows: CountRow[] }).rows[0])?.total ?? 0),
         activeGames: Number(gameStats?.active ?? 0),
         completedGames: Number(gameStats?.completed ?? 0),
-        planetCount: Number(planetStats?.total ?? 0),
-        memoryCount: Number(memoryStats?.total ?? 0),
-        messageCount: Number(messageStats?.total ?? 0),
-        attackCount: Number(attackStats?.total ?? 0),
-        combatLogCount: Number(combatLogStats?.total ?? 0),
+        planetCount: Number(((planetStatsResult as unknown as { rows: CountRow[] }).rows[0])?.total ?? 0),
+        memoryCount: Number(((memoryStatsResult as unknown as { rows: CountRow[] }).rows[0])?.total ?? 0),
+        messageCount: Number(((messageStatsResult as unknown as { rows: CountRow[] }).rows[0])?.total ?? 0),
+        attackCount: Number(((attackStatsResult as unknown as { rows: CountRow[] }).rows[0])?.total ?? 0),
+        combatLogCount: Number(((combatLogStatsResult as unknown as { rows: CountRow[] }).rows[0])?.total ?? 0),
       },
     };
   } catch (error) {
