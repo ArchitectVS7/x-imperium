@@ -86,7 +86,7 @@ describe("Sphere of Influence Integration", () => {
     empireRegions = galaxy.empireAssignments;
 
     // Convert connections to RegionConnection type
-    allConnections = toRegionConnections(allConnections);
+    allConnections = toRegionConnections([...galaxy.connections, ...galaxy.wormholes]);
   });
 
   describe("Attack Validation - Basic Cases", () => {

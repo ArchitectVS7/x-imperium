@@ -242,8 +242,9 @@ describe("checkWormholeCollapse", () => {
       collapseChance: "0.05",
     };
 
-    // With long time, even moderate rolls should collapse
-    const result = checkWormholeCollapse(wormhole, 100, () => 0.10);
+    // With 100 turns: adjustedChance = min(0.05 * 2.0, 0.25) = 0.10
+    // Roll of 0.09 < 0.10 should collapse
+    const result = checkWormholeCollapse(wormhole, 100, () => 0.09);
     expect(result.collapsed).toBe(true);
   });
 });
