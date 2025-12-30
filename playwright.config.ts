@@ -28,4 +28,6 @@ export default defineConfig({
     reuseExistingServer: !process.env.CI,
     timeout: 120 * 1000,
   },
+  // Cleanup test data after all tests complete
+  globalTeardown: "./e2e/global-teardown.ts",
 });
