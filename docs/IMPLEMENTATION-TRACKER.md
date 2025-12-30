@@ -364,6 +364,18 @@ This document tracks the status of all major features and redesign initiatives f
 
 ## Decision Log
 
+### 2025-12-30 (Late Evening) - M5 Integration & Testing
+- ✅ **IMPLEMENTED**: 10-bot integration tests (`tests/integration/quick-wins-10bot.test.ts`)
+  - Starting planets (5), feature flags, weak-first initiative, underdog/punchup bonuses
+  - 21 tests verifying M1-M4 integration
+- ✅ **IMPLEMENTED**: 25-bot simulation tests (`tests/simulation/quick-wins-25bot.test.ts`)
+  - Elimination tracking, leader containment, victory variety
+  - Archetype survival balance, system coverage metrics
+- ✅ **IMPLEMENTED**: 50-bot stress tests (`tests/stress/quick-wins-50bot.test.ts`)
+  - Turn processing performance (<200ms per turn)
+  - Memory usage verification, boss emergence detection
+  - Extended campaign-scale simulation (100+ turns)
+
 ### 2025-12-30 (Late Evening) - M4 Game Balance Implementation
 - ✅ **IMPLEMENTED**: Reverse turn order (weak-first initiative) in `bot-processor.ts`
   - Bot decisions generated in parallel, then attacks sorted by networth ascending and executed sequentially
@@ -470,4 +482,4 @@ All experimental mechanics are behind feature flags for A/B testing and balance 
 ---
 
 *This tracker is the living source of truth for Nexus Dominion development.*
-*Last updated: 2025-12-30 (Late Evening) by Claude - M4 Game Balance Implementation*
+*Last updated: 2025-12-30 (Late Evening) by Claude - M5 Integration & Testing*
