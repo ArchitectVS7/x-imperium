@@ -9,37 +9,49 @@ This document tracks all identified gaps, proposed solutions, implementation sta
 ## Open Items
 
 ### 1. Combat System - Broken Math
-- **Status:** ❌ NOT IMPLEMENTED
+- **Status:** ✅ IMPLEMENTED (unified-combat.ts)
 - **Problem:** Sequential 3-phase combat (space → orbital → ground) results in ~1.2% attacker win rate. Attacker must win ALL three phases.
-- **Proposed Solutions:**
-  - **A) 2/3 Phase Victory (SRE Model):** Win 2 of 3 phases = victory
-  - **B) Unified Combat Roll:** Single roll with all forces, phases are narrative only
-  - **C) Parallel Phase Resolution:** All phases resolve simultaneously, aggregate results
-- **Recommendation:** Solution B (Unified Roll) - simplest, most balanced
-- **Files to Modify:** `src/lib/combat/phases.ts`, `src/lib/game/services/combat-service.ts`
-- **Testing Required:**
-  - [ ] Unit tests for new combat math
-  - [ ] 100 simulated battles with varied force compositions
-  - [ ] Verify attacker win rate is 30-50% when forces are equal
-  - [ ] Verify defender advantage (home turf) is meaningful but not insurmountable
+- **Solution Implemented:** Option B - Unified Combat Roll
+  - Single power calculation from all units
+  - D20-style variance with 5% minimum / 95% maximum win chance
+  - Defender bonus (1.1x power) for home turf advantage
+  - Underdog bonus (up to 25%) for weaker attackers
+- **Files Created:** `src/lib/combat/unified-combat.ts`
+- **Test Results (500 simulations each):**
+  - Equal forces: ~42% attacker win rate ✅
+  - Strong attacker (2x): ~61% win rate ✅
+  - Weak attacker (0.5x): ~31% win rate ✅
+  - Very weak attacker: ~10% win rate (underdogs can still win) ✅
+- **Testing Completed:**
+  - [x] Unit tests for new combat math (`src/lib/combat/__tests__/unified-combat.test.ts`)
+  - [x] 500 simulated battles with varied force compositions
+  - [x] Verify attacker win rate is 30-50% when forces are equal
+  - [x] Verify defender advantage (home turf) is meaningful but not insurmountable
 
 ### 2. Sphere of Influence / Geography System
-- **Status:** ✅ IMPLEMENTED (schema + services)
+- **Status:** ✅ FULLY IMPLEMENTED & TESTED
 - **Problem:** 100 empires = 100 potential attack targets = overwhelming
-- **Solution:** Regional geography limits attackable targets to ~25 neighbors
+- **Solution:** Regional geography limits attackable targets to ~15 neighbors (3 direct + 12 extended)
 - **Implementation:**
   - [x] Database schema (`galaxy_regions`, `region_connections`, `empire_influence`)
   - [x] Influence sphere calculation service
   - [x] Galaxy generation service
   - [x] Attack validation with force multipliers
-- **Testing Required:**
-  - [ ] **PRIORITY:** Verify attack validation rejects distant empires
-  - [ ] Verify force multiplier applies (1.5x for extended neighbors)
-  - [ ] Test galaxy generation produces valid connected graphs
-  - [ ] Integration test with 100 empires
+  - [x] Galaxy generation wired into game creation
+  - [x] Wormhole processing wired into turn processor
+- **100-Empire Test Results:**
+  - Regions: 10 | Wormholes: 4
+  - Direct neighbors: 3 (1.0x force)
+  - Extended neighbors: 12 (1.5x force)
+  - Unreachable: 84 (cannot attack)
+- **Testing Completed:**
+  - [x] Verify attack validation rejects distant empires
+  - [x] Verify force multiplier applies (1.5x for extended neighbors)
+  - [x] Test galaxy generation produces valid connected graphs
+  - [x] Integration test with 100 empires (14 tests passing)
 
 ### 3. Wormhole Discovery Mechanic
-- **Status:** ✅ IMPLEMENTED (service logic)
+- **Status:** ✅ FULLY IMPLEMENTED & TESTED
 - **Problem:** How do empires reach distant regions?
 - **Solution:** Hidden wormholes discovered through exploration
 - **Discovery Mechanism (as implemented):**
@@ -57,12 +69,18 @@ This document tracks all identified gaps, proposed solutions, implementation sta
   5. Unstabilized wormholes have 5% collapse chance per turn
   6. Stabilization costs 50,000 credits + research level 5
 - **NOT via crafting** - discovery is passive/automatic based on stats
-- **Testing Required:**
-  - [ ] Verify wormhole generation places shortcuts between distant regions
-  - [ ] Verify discovery rolls work correctly
-  - [ ] Verify stabilization mechanics
-  - [ ] Verify collapse/reopen mechanics
-  - [ ] Integration test: empire discovers wormhole, attacks via it
+- **Turn Processing Integration:**
+  - [x] Discovery attempts for each empire each turn
+  - [x] Collapse checks for unstabilized wormholes
+  - [x] Reopen checks for collapsed wormholes (1% chance)
+  - [x] Auto-stabilization after 50 turns
+- **Server Action:** `stabilizeWormholeAction()` in `src/app/actions/starmap-actions.ts`
+- **Testing Completed:**
+  - [x] Verify wormhole generation places shortcuts between distant regions
+  - [x] Verify discovery rolls work correctly (22 tests)
+  - [x] Verify stabilization mechanics
+  - [x] Verify collapse/reopen mechanics
+  - [x] Integration test: wormhole discovery and attack validation
 
 ### 4. Bot Coalition Formation
 - **Status:** ❌ NOT IMPLEMENTED

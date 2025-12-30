@@ -35,9 +35,13 @@ import {
   empires,
   resourceInventory,
   craftingQueue,
+  regionConnections,
+  empireInfluence,
+  galaxyRegions,
   type Empire,
   type Planet,
   type CraftingQueue,
+  type RegionConnection,
 } from "@/lib/db/schema";
 import { eq, and } from "drizzle-orm";
 import type {
@@ -91,6 +95,10 @@ import {
   generateCheckpointNotification,
   isCheckpointTurn,
 } from "./checkpoint-service";
+import {
+  processWormholesTurn,
+  attemptWormholeDiscovery,
+} from "./wormhole-service";
 
 // =============================================================================
 // TURN PROCESSOR
@@ -320,6 +328,16 @@ export async function processTurn(gameId: string): Promise<TurnResult> {
           severity: "info",
         });
       }
+    }
+
+    // ==========================================================================
+    // PHASE 7.7: WORMHOLE PROCESSING (Geography System)
+    // ==========================================================================
+
+    // Process wormhole discovery, collapse, and reopen mechanics
+    const wormholeEvents = await processWormholesForGame(gameId, nextTurn, game.empires);
+    for (const event of wormholeEvents) {
+      globalEvents.push(event);
     }
 
     // ==========================================================================
@@ -1113,4 +1131,208 @@ export async function processPhase4_6_CraftingQueue(
   currentTurn: number
 ): Promise<{ completed: CompletedCrafting[] }> {
   return processCraftingQueueForEmpire(empireId, gameId, currentTurn);
+}
+
+// =============================================================================
+// WORMHOLE PROCESSING (Geography System)
+// =============================================================================
+
+/**
+ * Process wormholes for a game each turn.
+ * - Attempts discovery for each empire
+ * - Checks for collapse of unstabilized wormholes
+ * - Checks for reopen of collapsed wormholes
+ * - Auto-stabilizes old wormholes
+ */
+async function processWormholesForGame(
+  gameId: string,
+  currentTurn: number,
+  allEmpires: Array<Pick<Empire, "id" | "type" | "isEliminated" | "covertAgents" | "fundamentalResearchLevel">>
+): Promise<TurnEvent[]> {
+  const events: TurnEvent[] = [];
+
+  // Load all wormholes for this game
+  const wormholes = await db.query.regionConnections.findMany({
+    where: and(
+      eq(regionConnections.gameId, gameId),
+      eq(regionConnections.connectionType, "wormhole")
+    ),
+  });
+
+  if (wormholes.length === 0) {
+    return events;
+  }
+
+  // Load regions for names
+  const regions = await db.query.galaxyRegions.findMany({
+    where: eq(galaxyRegions.gameId, gameId),
+  });
+  const regionMap = new Map(regions.map((r) => [r.id, r]));
+
+  // Load empire influence records for region assignments
+  const influenceRecords = await db.query.empireInfluence.findMany({
+    where: eq(empireInfluence.gameId, gameId),
+  });
+  const empireRegionMap = new Map(influenceRecords.map((r) => [r.empireId, r.primaryRegionId]));
+
+  // ============================================================================
+  // PHASE 1: WORMHOLE COLLAPSE/REOPEN/AUTO-STABILIZE
+  // ============================================================================
+
+  const wormholesWithDates = wormholes.map((w) => ({
+    ...w,
+    discoveredAtTurn: w.discoveredAtTurn,
+  }));
+
+  const turnResult = processWormholesTurn(wormholesWithDates, currentTurn);
+
+  // Update collapsed wormholes
+  for (const connectionId of turnResult.collapsed) {
+    await db
+      .update(regionConnections)
+      .set({
+        wormholeStatus: "collapsed",
+        updatedAt: new Date(),
+      })
+      .where(eq(regionConnections.id, connectionId));
+
+    const wormhole = wormholes.find((w) => w.id === connectionId);
+    if (wormhole) {
+      const fromRegion = regionMap.get(wormhole.fromRegionId);
+      const toRegion = regionMap.get(wormhole.toRegionId);
+      events.push({
+        type: "other",
+        message: `⚠️ Wormhole between ${fromRegion?.name ?? "Unknown"} and ${toRegion?.name ?? "Unknown"} has collapsed!`,
+        severity: "warning",
+      });
+    }
+  }
+
+  // Update reopened wormholes
+  for (const connectionId of turnResult.reopened) {
+    await db
+      .update(regionConnections)
+      .set({
+        wormholeStatus: "undiscovered",
+        collapseChance: "0.05",
+        discoveredAtTurn: null,
+        discoveredByEmpireId: null,
+        updatedAt: new Date(),
+      })
+      .where(eq(regionConnections.id, connectionId));
+
+    events.push({
+      type: "other",
+      message: `🌀 A collapsed wormhole has reopened and awaits rediscovery!`,
+      severity: "info",
+    });
+  }
+
+  // Update auto-stabilized wormholes
+  for (const connectionId of turnResult.autoStabilized) {
+    await db
+      .update(regionConnections)
+      .set({
+        wormholeStatus: "stabilized",
+        collapseChance: "0.00",
+        updatedAt: new Date(),
+      })
+      .where(eq(regionConnections.id, connectionId));
+
+    const wormhole = wormholes.find((w) => w.id === connectionId);
+    if (wormhole) {
+      const fromRegion = regionMap.get(wormhole.fromRegionId);
+      const toRegion = regionMap.get(wormhole.toRegionId);
+      events.push({
+        type: "other",
+        message: `✨ Wormhole between ${fromRegion?.name ?? "Unknown"} and ${toRegion?.name ?? "Unknown"} has naturally stabilized!`,
+        severity: "info",
+      });
+    }
+  }
+
+  // ============================================================================
+  // PHASE 2: WORMHOLE DISCOVERY ATTEMPTS
+  // ============================================================================
+
+  // Get undiscovered wormholes
+  const undiscoveredWormholes = wormholes
+    .filter((w) => w.wormholeStatus === "undiscovered")
+    .map((w) => ({
+      id: w.id,
+      fromRegionId: w.fromRegionId,
+      fromRegionName: regionMap.get(w.fromRegionId)?.name ?? "Unknown",
+      toRegionId: w.toRegionId,
+      toRegionName: regionMap.get(w.toRegionId)?.name ?? "Unknown",
+    }));
+
+  if (undiscoveredWormholes.length === 0) {
+    return events;
+  }
+
+  // Each active empire attempts discovery
+  for (const empire of allEmpires) {
+    if (empire.isEliminated) continue;
+
+    const empireRegionId = empireRegionMap.get(empire.id);
+    if (!empireRegionId) continue;
+
+    const discoveryResult = attemptWormholeDiscovery(
+      empire,
+      undiscoveredWormholes,
+      empireRegionId
+    );
+
+    if (discoveryResult.discovered && discoveryResult.connectionId) {
+      // Update the wormhole as discovered
+      await db
+        .update(regionConnections)
+        .set({
+          wormholeStatus: "discovered",
+          discoveredByEmpireId: empire.id,
+          discoveredAtTurn: currentTurn,
+          updatedAt: new Date(),
+        })
+        .where(eq(regionConnections.id, discoveryResult.connectionId));
+
+      // Update empire's known wormholes
+      const influenceRecord = influenceRecords.find((r) => r.empireId === empire.id);
+      if (influenceRecord) {
+        const knownWormholes = JSON.parse(influenceRecord.knownWormholeIds as string) as string[];
+        knownWormholes.push(discoveryResult.connectionId);
+        await db
+          .update(empireInfluence)
+          .set({
+            knownWormholeIds: JSON.stringify(knownWormholes),
+            updatedAt: new Date(),
+          })
+          .where(eq(empireInfluence.id, influenceRecord.id));
+      }
+
+      // Remove from undiscovered list (so others can't discover same one this turn)
+      const idx = undiscoveredWormholes.findIndex((w) => w.id === discoveryResult.connectionId);
+      if (idx !== -1) {
+        undiscoveredWormholes.splice(idx, 1);
+      }
+
+      // Only show event to player (bot discoveries are hidden)
+      if (empire.type === "player") {
+        events.push({
+          type: "other",
+          message: `🌀 ${discoveryResult.message}`,
+          severity: "info",
+          empireId: empire.id,
+        });
+      } else {
+        // For bots, just log that a wormhole was discovered (anonymously)
+        events.push({
+          type: "other",
+          message: `🌀 Rumors spread of a new wormhole discovery...`,
+          severity: "info",
+        });
+      }
+    }
+  }
+
+  return events;
 }

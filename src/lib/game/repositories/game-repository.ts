@@ -3,6 +3,9 @@ import {
   games,
   empires,
   planets,
+  galaxyRegions,
+  regionConnections,
+  empireInfluence,
   type NewEmpire,
   type NewPlanet,
   type Game,
@@ -25,6 +28,10 @@ import { initializeUnitUpgrades } from "../services/upgrade-service";
 import { createBotEmpires } from "@/lib/bots/bot-generator";
 import type { Difficulty } from "@/lib/bots/types";
 import { initializeMarketPrices } from "@/lib/market";
+import {
+  generateGalaxy,
+  createSeededRandom,
+} from "../services/galaxy-generation-service";
 
 // =============================================================================
 // GAME OPERATIONS
@@ -241,6 +248,12 @@ export async function startNewGame(
   // Initialize market prices (M7)
   await initializeMarketPrices(game.id);
 
+  // ============================================================================
+  // GENERATE GALAXY GEOGRAPHY
+  // ============================================================================
+  // Creates regions, connections, wormholes, and assigns empires to regions
+  await initializeGalaxyGeography(game.id, [empire, ...bots]);
+
   // Update game status to active
   await db
     .update(games)
@@ -251,6 +264,94 @@ export async function startNewGame(
     .where(eq(games.id, game.id));
 
   return { game, empire, bots };
+}
+
+/**
+ * Initialize galaxy geography for a game.
+ * Creates regions, connections, wormholes, and assigns empires to starting regions.
+ */
+async function initializeGalaxyGeography(
+  gameId: string,
+  allEmpires: Empire[]
+): Promise<void> {
+  // Generate galaxy structure with seeded random for reproducibility
+  const seed = Date.now();
+  const empireData = allEmpires.map((e) => ({
+    id: e.id,
+    type: e.type as "player" | "bot",
+    botTier: e.botTier,
+    planetCount: e.planetCount,
+  }));
+
+  const galaxy = generateGalaxy(gameId, empireData, { seed });
+
+  // Insert regions and get their actual IDs
+  const insertedRegions = await db
+    .insert(galaxyRegions)
+    .values(galaxy.regions)
+    .returning();
+
+  // Create ID mapping (placeholder -> actual)
+  const regionIdMap = new Map<string, string>();
+  for (let i = 0; i < galaxy.regions.length; i++) {
+    regionIdMap.set(`region-${i}`, insertedRegions[i]!.id);
+  }
+
+  // Update connections with actual region IDs
+  const connectionsWithRealIds = galaxy.connections.map((conn) => ({
+    ...conn,
+    fromRegionId: regionIdMap.get(conn.fromRegionId) ?? conn.fromRegionId,
+    toRegionId: regionIdMap.get(conn.toRegionId) ?? conn.toRegionId,
+  }));
+
+  // Update wormholes with actual region IDs
+  const wormholesWithRealIds = galaxy.wormholes.map((wh) => ({
+    ...wh,
+    fromRegionId: regionIdMap.get(wh.fromRegionId) ?? wh.fromRegionId,
+    toRegionId: regionIdMap.get(wh.toRegionId) ?? wh.toRegionId,
+  }));
+
+  // Insert connections and wormholes
+  if (connectionsWithRealIds.length > 0) {
+    await db.insert(regionConnections).values(connectionsWithRealIds);
+  }
+  if (wormholesWithRealIds.length > 0) {
+    await db.insert(regionConnections).values(wormholesWithRealIds);
+  }
+
+  // Update empire assignments with actual region IDs
+  const influenceRecordsWithRealIds = galaxy.empireInfluenceRecords.map((record) => {
+    const realHomeRegionId = regionIdMap.get(record.homeRegionId) ?? record.homeRegionId;
+    const realPrimaryRegionId = regionIdMap.get(record.primaryRegionId) ?? record.primaryRegionId;
+    const controlledIds = JSON.parse(record.controlledRegionIds as string) as string[];
+    const realControlledIds = controlledIds.map((id) => regionIdMap.get(id) ?? id);
+
+    return {
+      ...record,
+      homeRegionId: realHomeRegionId,
+      primaryRegionId: realPrimaryRegionId,
+      controlledRegionIds: JSON.stringify(realControlledIds),
+    };
+  });
+
+  // Insert empire influence records
+  if (influenceRecordsWithRealIds.length > 0) {
+    await db.insert(empireInfluence).values(influenceRecordsWithRealIds);
+  }
+
+  // Update region empire counts
+  const regionCounts = new Map<string, number>();
+  for (const record of influenceRecordsWithRealIds) {
+    const regionId = record.homeRegionId;
+    regionCounts.set(regionId, (regionCounts.get(regionId) ?? 0) + 1);
+  }
+
+  for (const [regionId, count] of regionCounts) {
+    await db
+      .update(galaxyRegions)
+      .set({ currentEmpireCount: count })
+      .where(eq(galaxyRegions.id, regionId));
+  }
 }
 
 /**

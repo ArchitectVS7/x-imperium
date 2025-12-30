@@ -5,6 +5,52 @@
  * Applies force multipliers based on distance/connection type.
  *
  * Based on docs/redesign/COMBAT-GEOGRAPHY-TURNS.md
+ *
+ * ============================================================
+ * FORCE MULTIPLIER EXPLAINED
+ * ============================================================
+ *
+ * The 1.5x "force multiplier" represents SUPPLY LINE STRAIN.
+ * Your forces are DIVIDED by this multiplier, reducing effectiveness.
+ *
+ * Example:
+ *   - You send 100 soldiers to attack an extended neighbor
+ *   - Due to stretched supply lines: 100 / 1.5 = 66 effective soldiers
+ *   - You fight as if you only had 66 soldiers
+ *
+ * Multiplier Values:
+ *   - Direct neighbor:     1.0x (100 soldiers → 100 effective)
+ *   - Extended neighbor:   1.5x (100 soldiers → 66 effective)
+ *   - Via wormhole:        1.0x (100 soldiers → 100 effective)
+ *   - Hazardous route:     1.5x (dangerous passage)
+ *   - Contested route:     1.25x (active conflict zone)
+ *
+ * ============================================================
+ * WHY ATTACK EXTENDED NEIGHBORS?
+ * ============================================================
+ *
+ * Strategic reasons to accept the 1.5x penalty:
+ *
+ * 1. TARGET IS WEAK: Even at 66% effectiveness, you can win if
+ *    the defender is significantly weaker than you.
+ *
+ * 2. PREEMPTIVE STRIKE: Stop a growing threat before they
+ *    become your direct neighbor at full strength.
+ *
+ * 3. COALITION ATTACK: Multiple empires attack same target.
+ *    Even at reduced power, combined forces overwhelm.
+ *
+ * 4. TERRITORY EXPANSION: Conquering their planets pulls them
+ *    into your direct sphere for future attacks.
+ *
+ * 5. WORMHOLE DISCOVERY: Combat operations may discover
+ *    wormholes, making future attacks cheaper.
+ *
+ * 6. REVENGE/GRUDGE: Bot archetypes may attack for emotional
+ *    reasons regardless of strategic cost.
+ *
+ * 7. SYNDICATE CONTRACT: Kill contracts may require attacking
+ *    specific targets regardless of distance.
  */
 
 import {
