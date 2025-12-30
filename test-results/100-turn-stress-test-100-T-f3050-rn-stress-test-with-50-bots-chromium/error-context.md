@@ -1,0 +1,416 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - generic [ref=e4]:
+        - link "NEXUS DOMINION" [ref=e5] [cursor=pointer]:
+          - /url: /game
+        - generic [ref=e6]:
+          - generic [ref=e7]:
+            - generic [ref=e8]: "T:"
+            - generic [ref=e9]: "3"
+            - generic [ref=e10]: /200
+          - generic [ref=e12]:
+            - generic [ref=e13]: 💰
+            - generic [ref=e14]: 142K
+          - generic [ref=e15]:
+            - generic [ref=e16]: 🍞
+            - generic [ref=e17]: Deficit
+          - generic [ref=e18]:
+            - generic [ref=e19]: 👥
+            - generic [ref=e20]: 10K
+        - button "Menu" [ref=e22] [cursor=pointer]:
+          - img [ref=e23]
+    - main [ref=e25]:
+      - generic [ref=e26]:
+        - generic [ref=e28]:
+          - generic [ref=e29]:
+            - generic [ref=e30]:
+              - generic [ref=e31]: 🌍
+              - heading "Grow Your Domain" [level=3] [ref=e32]
+            - button "Dismiss hint" [ref=e33] [cursor=pointer]:
+              - img [ref=e34]
+          - paragraph [ref=e36]: More sectors = more resources. Visit Sectors to buy new territories. Different types produce different resources. Balance is key!
+          - generic [ref=e37]:
+            - link "Buy Sectors" [ref=e38] [cursor=pointer]:
+              - /url: /game/planets
+            - button "Got it" [ref=e39] [cursor=pointer]
+        - generic [ref=e40]:
+          - generic [ref=e43]:
+            - heading "Covert Operations" [level=1] [ref=e44]
+            - generic [ref=e45]:
+              - generic [ref=e47]:
+                - heading "Covert Status" [level=2] [ref=e48]
+                - generic [ref=e49]:
+                  - generic [ref=e50]:
+                    - generic [ref=e51]:
+                      - generic [ref=e52]: Covert Points
+                      - generic [ref=e53]: 20 / 50
+                    - paragraph [ref=e56]: +5 points per turn
+                  - generic [ref=e57]:
+                    - generic [ref=e58]:
+                      - generic [ref=e59]: Covert Agents
+                      - generic [ref=e60]: 0 / 300
+                    - paragraph [ref=e62]: "Capacity: 1 Government planets x 300"
+              - generic [ref=e64]:
+                - heading "Select Target" [level=2] [ref=e65]
+                - combobox [ref=e66]:
+                  - option "-- Select an empire --" [selected]
+                  - 'option "Shadow Sovereign (9 planets, NW: 90)"'
+                  - 'option "Hyena Laugh (9 planets, NW: 90)"'
+                  - 'option "Imperator Rex (9 planets, NW: 90)"'
+                  - 'option "Vanguard Strike (9 planets, NW: 90)"'
+                  - 'option "Broker Nexus (9 planets, NW: 90)"'
+                  - 'option "Conservator Preserve (9 planets, NW: 90)"'
+                  - 'option "Professor Quantum (10 planets, NW: 90)"'
+                  - 'option "Shock Trooper (9 planets, NW: 90)"'
+                  - 'option "Blood Eagle (9 planets, NW: 90)"'
+                  - 'option "Merchant Silver (9 planets, NW: 90)"'
+                  - 'option "Ambassador Hope (10 planets, NW: 90)"'
+                  - 'option "Berserker Rage (9 planets, NW: 90)"'
+                  - 'option "Engineer Bunker (10 planets, NW: 90)"'
+                  - 'option "Marshal Korvan (9 planets, NW: 90)"'
+                  - 'option "Skirmisher Dart (9 planets, NW: 90)"'
+                  - 'option "Architect Ruin (9 planets, NW: 91)"'
+                  - 'option "Warchief Grimjaw (10 planets, NW: 90)"'
+                  - 'option "Spider Matriarch (9 planets, NW: 90)"'
+                  - 'option "Crow Omen (9 planets, NW: 90)"'
+                  - 'option "Admiral Anchor (11 planets, NW: 90)"'
+                  - 'option "General Blackstone (10 planets, NW: 90)"'
+                  - 'option "Hermit Recluse (9 planets, NW: 90)"'
+                  - 'option "Bulwark Titan (9 planets, NW: 90)"'
+                  - 'option "Vulture Carrion (9 planets, NW: 90)"'
+                  - 'option "Fortress Prime (9 planets, NW: 90)"'
+                  - 'option "Rat Swarm (9 planets, NW: 91)"'
+                  - 'option "Archmagos Vex (9 planets, NW: 90)"'
+                  - 'option "Snake Opportune (9 planets, NW: 90)"'
+                  - 'option "Coyote Trickster (11 planets, NW: 90)"'
+                  - 'option "Technarch Prime (11 planets, NW: 90)"'
+                  - 'option "Curator Archive (9 planets, NW: 90)"'
+                  - 'option "Admiral Steelheart (9 planets, NW: 90)"'
+                  - 'option "Hunter Pack (10 planets, NW: 90)"'
+                  - 'option "Khan Dragovich (9 planets, NW: 90)"'
+                  - 'option "Envoy Lumina (9 planets, NW: 90)"'
+                  - 'option "Commander Voss (9 planets, NW: 90)"'
+                  - 'option "Inventor Spark (9 planets, NW: 90)"'
+                  - 'option "Cyborg Nexus (11 planets, NW: 90)"'
+                  - 'option "Diplomat Silk (10 planets, NW: 90)"'
+                  - 'option "Marshal Valorian (10 planets, NW: 90)"'
+                  - 'option "Senator Praxis (9 planets, NW: 90)"'
+                  - 'option "Lord Decimator (10 planets, NW: 90)"'
+                  - 'option "Cartel Boss Vex (10 planets, NW: 90)"'
+                  - 'option "Captain Redmaw (10 planets, NW: 90)"'
+                  - 'option "Viper Venom (9 planets, NW: 90)"'
+                  - 'option "Entrepreneur Spark (10 planets, NW: 90)"'
+                  - 'option "Queen Serpent (9 planets, NW: 90)"'
+                  - 'option "Agent Cipher (10 planets, NW: 90)"'
+                  - 'option "Prophet Zeal (9 planets, NW: 90)"'
+                  - 'option "CEO Synergy (12 planets, NW: 90)"'
+            - heading "Available Operations" [level=2] [ref=e67]
+            - paragraph [ref=e69]: Select a target empire to view operation success rates
+            - generic [ref=e70]:
+              - generic [ref=e71]:
+                - generic [ref=e72]:
+                  - heading "Send Spy" [level=3] [ref=e73]
+                  - generic [ref=e74]: low
+                - paragraph [ref=e75]: Reveal enemy stats and composition
+                - generic [ref=e76]:
+                  - generic [ref=e77]:
+                    - text: "Cost:"
+                    - generic [ref=e78]: 5 CP
+                  - generic [ref=e79]: "Min Agents: 1"
+                  - generic [ref=e80]:
+                    - text: "Base Success:"
+                    - generic [ref=e81]: 80%
+                - button "Cannot Execute" [disabled] [ref=e82]
+              - generic [ref=e83]:
+                - generic [ref=e84]:
+                  - heading "Insurgent Aid" [level=3] [ref=e85]
+                  - generic [ref=e86]: medium
+                - paragraph [ref=e87]: Support rebels in enemy territory
+                - generic [ref=e88]:
+                  - generic [ref=e89]:
+                    - text: "Cost:"
+                    - generic [ref=e90]: 15 CP
+                  - generic [ref=e91]: "Min Agents: 5"
+                  - generic [ref=e92]:
+                    - text: "Base Success:"
+                    - generic [ref=e93]: 65%
+                - button "Cannot Execute" [disabled] [ref=e94]
+              - generic [ref=e95]:
+                - generic [ref=e96]:
+                  - heading "Support Dissension" [level=3] [ref=e97]
+                  - generic [ref=e98]: medium
+                - paragraph [ref=e99]: Worsen target's civil status
+                - generic [ref=e100]:
+                  - generic [ref=e101]:
+                    - text: "Cost:"
+                    - generic [ref=e102]: 12 CP
+                  - generic [ref=e103]: "Min Agents: 3"
+                  - generic [ref=e104]:
+                    - text: "Base Success:"
+                    - generic [ref=e105]: 70%
+                - button "Cannot Execute" [disabled] [ref=e106]
+              - generic [ref=e107]:
+                - generic [ref=e108]:
+                  - heading "Demoralize Troops" [level=3] [ref=e109]
+                  - generic [ref=e110]: medium
+                - paragraph [ref=e111]: Reduce army effectiveness
+                - generic [ref=e112]:
+                  - generic [ref=e113]:
+                    - text: "Cost:"
+                    - generic [ref=e114]: 10 CP
+                  - generic [ref=e115]: "Min Agents: 3"
+                  - generic [ref=e116]:
+                    - text: "Base Success:"
+                    - generic [ref=e117]: 70%
+                - button "Cannot Execute" [disabled] [ref=e118]
+              - generic [ref=e119]:
+                - generic [ref=e120]:
+                  - heading "Bombing Operations" [level=3] [ref=e121]
+                  - generic [ref=e122]: high
+                - paragraph [ref=e123]: Destroy resources and production
+                - generic [ref=e124]:
+                  - generic [ref=e125]:
+                    - text: "Cost:"
+                    - generic [ref=e126]: 25 CP
+                  - generic [ref=e127]: "Min Agents: 10"
+                  - generic [ref=e128]:
+                    - text: "Base Success:"
+                    - generic [ref=e129]: 55%
+                - button "Cannot Execute" [disabled] [ref=e130]
+              - generic [ref=e131]:
+                - generic [ref=e132]:
+                  - heading "Relations Spying" [level=3] [ref=e133]
+                  - generic [ref=e134]: low
+                - paragraph [ref=e135]: Reveal diplomacy and alliances
+                - generic [ref=e136]:
+                  - generic [ref=e137]:
+                    - text: "Cost:"
+                    - generic [ref=e138]: 8 CP
+                  - generic [ref=e139]: "Min Agents: 2"
+                  - generic [ref=e140]:
+                    - text: "Base Success:"
+                    - generic [ref=e141]: 85%
+                - button "Cannot Execute" [disabled] [ref=e142]
+              - generic [ref=e143]:
+                - generic [ref=e144]:
+                  - heading "Take Hostages" [level=3] [ref=e145]
+                  - generic [ref=e146]: high
+                - paragraph [ref=e147]: Demand ransom payment
+                - generic [ref=e148]:
+                  - generic [ref=e149]:
+                    - text: "Cost:"
+                    - generic [ref=e150]: 30 CP
+                  - generic [ref=e151]: "Min Agents: 15"
+                  - generic [ref=e152]:
+                    - text: "Base Success:"
+                    - generic [ref=e153]: 45%
+                - button "Cannot Execute" [disabled] [ref=e154]
+              - generic [ref=e155]:
+                - generic [ref=e156]:
+                  - heading "Carriers Sabotage" [level=3] [ref=e157]
+                  - generic [ref=e158]: very high
+                - paragraph [ref=e159]: Damage carrier fleet
+                - generic [ref=e160]:
+                  - generic [ref=e161]:
+                    - text: "Cost:"
+                    - generic [ref=e162]: 40 CP
+                  - generic [ref=e163]: "Min Agents: 20"
+                  - generic [ref=e164]:
+                    - text: "Base Success:"
+                    - generic [ref=e165]: 35%
+                - button "Cannot Execute" [disabled] [ref=e166]
+              - generic [ref=e167]:
+                - generic [ref=e168]:
+                  - heading "Communications Spying" [level=3] [ref=e169]
+                  - generic [ref=e170]: low
+                - paragraph [ref=e171]: Intercept enemy messages
+                - generic [ref=e172]:
+                  - generic [ref=e173]:
+                    - text: "Cost:"
+                    - generic [ref=e174]: 10 CP
+                  - generic [ref=e175]: "Min Agents: 2"
+                  - generic [ref=e176]:
+                    - text: "Base Success:"
+                    - generic [ref=e177]: 75%
+                - button "Cannot Execute" [disabled] [ref=e178]
+              - generic [ref=e179]:
+                - generic [ref=e180]:
+                  - heading "Setup Coup" [level=3] [ref=e181]
+                  - generic [ref=e182]: very high
+                - paragraph [ref=e183]: Attempt to overthrow government
+                - generic [ref=e184]:
+                  - generic [ref=e185]:
+                    - text: "Cost:"
+                    - generic [ref=e186]: 50 CP
+                  - generic [ref=e187]: "Min Agents: 50"
+                  - generic [ref=e188]:
+                    - text: "Base Success:"
+                    - generic [ref=e189]: 20%
+                - button "Cannot Execute" [disabled] [ref=e190]
+          - generic [ref=e191]:
+            - generic [ref=e192]:
+              - generic [ref=e193]: Current Turn
+              - generic [ref=e194]:
+                - generic [ref=e195]: "4"
+                - generic [ref=e196]: of 200
+              - generic [ref=e199]: 🛡️ Protected for 17 more turns
+            - generic [ref=e200]:
+              - generic [ref=e201]: Your Actions
+              - generic [ref=e202]:
+                - link "⚔️ Forces" [ref=e203] [cursor=pointer]:
+                  - /url: /game/military
+                  - generic [ref=e204]: ⚔️
+                  - generic [ref=e207]: Forces
+                - link "🌍 Sectors" [ref=e208] [cursor=pointer]:
+                  - /url: /game/planets
+                  - generic [ref=e209]: 🌍
+                  - generic [ref=e212]: Sectors
+                - link "💥 Combat" [ref=e213] [cursor=pointer]:
+                  - /url: /game/combat
+                  - generic [ref=e214]: 💥
+                  - generic [ref=e217]: Combat
+                - link "🤝 Diplomacy" [ref=e218] [cursor=pointer]:
+                  - /url: /game/diplomacy
+                  - generic [ref=e219]: 🤝
+                  - generic [ref=e222]: Diplomacy
+                - link "📊 Exchange" [ref=e223] [cursor=pointer]:
+                  - /url: /game/market
+                  - generic [ref=e224]: 📊
+                  - generic [ref=e227]: Exchange
+                - link "🕵️ Intel Ops" [ref=e228] [cursor=pointer]:
+                  - /url: /game/covert
+                  - generic [ref=e229]: 🕵️
+                  - generic [ref=e232]: Intel Ops
+                - link "🔧 Manufacturing" [ref=e233] [cursor=pointer]:
+                  - /url: /game/crafting
+                  - generic [ref=e234]: 🔧
+                  - generic [ref=e237]: Manufacturing
+                - link "🔬 Research" [ref=e238] [cursor=pointer]:
+                  - /url: /game/research
+                  - generic [ref=e239]: 🔬
+                  - generic [ref=e242]: Research
+                - link "🗺️ Starmap" [ref=e243] [cursor=pointer]:
+                  - /url: /game/starmap
+                  - generic [ref=e244]: 🗺️
+                  - generic [ref=e247]: Starmap
+              - link "📬 Comms" [ref=e248] [cursor=pointer]:
+                - /url: /game/messages
+                - generic [ref=e249]: 📬
+                - generic [ref=e250]: Comms
+            - generic [ref=e251]:
+              - generic [ref=e252]: Quick Status
+              - generic [ref=e253]:
+                - generic [ref=e254]: Food
+                - generic [ref=e255]: Deficit
+              - generic [ref=e256]:
+                - generic [ref=e257]: Forces
+                - generic [ref=e258]: Moderate
+              - generic [ref=e259]:
+                - generic [ref=e260]: Threats
+                - generic [ref=e261]: 0 Domains
+            - generic [ref=e262]:
+              - generic [ref=e263]: Suggested
+              - generic [ref=e264]:
+                - generic [ref=e265]:
+                  - generic [ref=e266]: ⚠️
+                  - generic [ref=e267]: Food deficit - expand Agriculture
+                - generic [ref=e268]:
+                  - generic [ref=e269]: 💡
+                  - generic [ref=e270]: "Early game: focus on expansion"
+            - generic [ref=e271]:
+              - button "NEXT CYCLE" [ref=e272] [cursor=pointer]
+              - link "← Back to Command Center" [ref=e274] [cursor=pointer]:
+                - /url: /game
+        - generic [ref=e276]:
+          - button "💰 176K 🍞 430 ⛏️ 1K 🛢️ 476 📊 900" [ref=e277] [cursor=pointer]:
+            - generic [ref=e278]:
+              - generic [ref=e279]: 💰
+              - generic [ref=e280]: 176K
+            - generic [ref=e281]:
+              - generic [ref=e282]: 🍞
+              - generic [ref=e283]: "430"
+            - generic [ref=e284]:
+              - generic [ref=e285]: ⛏️
+              - generic [ref=e286]: 1K
+            - generic [ref=e287]:
+              - generic [ref=e288]: 🛢️
+              - generic [ref=e289]: "476"
+            - generic [ref=e290]:
+              - generic [ref=e291]: 📊
+              - generic [ref=e292]: "900"
+          - button "🌍 9 Sectors" [ref=e294] [cursor=pointer]:
+            - generic [ref=e295]: 🌍
+            - generic [ref=e296]: 9 Sectors
+          - button "⚔️ 100 Power" [ref=e297] [cursor=pointer]:
+            - generic [ref=e298]: ⚔️
+            - generic [ref=e299]: 100 Power
+          - button "👥 11K" [ref=e301] [cursor=pointer]:
+            - generic [ref=e302]: 👥
+            - generic [ref=e303]: 11K
+          - generic [ref=e304]:
+            - generic [ref=e305]: 🌟
+            - generic [ref=e306]: Thriving
+          - generic [ref=e307]:
+            - generic [ref=e308]:
+              - text: Rank
+              - generic [ref=e309]: "#40"
+            - generic [ref=e310]: Renown 90
+        - dialog [ref=e313]:
+          - generic [ref=e315]:
+            - generic [ref=e316]:
+              - heading "Turn 4 Complete" [level=2] [ref=e317]
+              - paragraph [ref=e318]: Processed in 58978ms
+            - generic [ref=e319]: 📊
+          - generic [ref=e320]:
+            - generic [ref=e321]:
+              - generic [ref=e322]:
+                - generic [ref=e323]: 📈
+                - heading "Income & Production" [level=3] [ref=e324]
+              - generic [ref=e326]:
+                - generic [ref=e327]:
+                  - generic [ref=e328]:
+                    - generic [ref=e329]: 💰
+                    - text: Credits
+                  - generic [ref=e330]: +34,488
+                - generic [ref=e331]:
+                  - generic [ref=e332]:
+                    - generic [ref=e333]: 🍞
+                    - text: Food
+                  - generic [ref=e334]: "-200"
+                - generic [ref=e335]:
+                  - generic [ref=e336]:
+                    - generic [ref=e337]: ⛏️
+                    - text: Raw Materials
+                  - generic [ref=e338]: "+224"
+                - generic [ref=e339]:
+                  - generic [ref=e340]:
+                    - generic [ref=e341]: 🛢️
+                    - text: Plasma
+                  - generic [ref=e342]: "+92"
+                - generic [ref=e343]:
+                  - generic [ref=e344]:
+                    - generic [ref=e345]: 📊
+                    - text: Data
+                  - generic [ref=e346]: "+400"
+            - generic [ref=e347]:
+              - generic [ref=e348]:
+                - generic [ref=e349]: 👥
+                - heading "Citizens" [level=3] [ref=e350]
+              - generic [ref=e351]:
+                - generic [ref=e352]:
+                  - generic [ref=e353]: Citizens
+                  - generic [ref=e354]:
+                    - generic [ref=e355]: 10,404
+                    - generic [ref=e356]: →
+                    - generic [ref=e357]: 10,612
+                    - generic [ref=e358]: (+208)
+                - generic [ref=e359]: Population grew by 208 citizens
+          - generic [ref=e360]:
+            - button "CONTINUE" [active] [ref=e361] [cursor=pointer]
+            - paragraph [ref=e362]: Press Enter or Escape to continue
+  - alert [ref=e363]
+```

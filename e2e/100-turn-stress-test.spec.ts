@@ -133,7 +133,7 @@ test.describe("100-Turn Stress Test", () => {
     if (await gameNameInput.count() === 0) {
       logUXIssue("Game name input not found or not clearly labeled");
     } else {
-      await gameNameInput.fill("50-Turn Test Game");
+      await gameNameInput.fill("100-Turn Stress Test (50 Bots)");
       logSuccess("Entered game name");
     }
 
@@ -144,11 +144,11 @@ test.describe("100-Turn Stress Test", () => {
       logSuccess("Entered empire name");
     }
 
-    // Select bot count (25 bots for full experience)
-    const botSelect = page.locator('select[name="botCount"], button:has-text("25")').first();
+    // Select bot count (50 bots for stress test)
+    const botSelect = page.locator('select[name="botCount"], button:has-text("50")').first();
     if (await botSelect.count() > 0) {
       await botSelect.click();
-      logSuccess("Selected bot count");
+      logSuccess("Selected bot count: 50");
     }
 
     // Start game
@@ -166,10 +166,10 @@ test.describe("100-Turn Stress Test", () => {
       logSuccess("Game started - Turn counter visible");
     }
 
-    // Step 4: Play 50 turns
-    logDebug("Step 4: Beginning 50-turn playthrough");
+    // Step 4: Play 100 turns
+    logDebug("Step 4: Beginning 100-turn stress test playthrough");
 
-    for (let turn = 1; turn <= 50; turn++) {
+    for (let turn = 1; turn <= 100; turn++) {
       logDebug(`\n=== TURN ${turn} ===`);
 
       try {
@@ -280,7 +280,7 @@ test.describe("100-Turn Stress Test", () => {
     const path = require('path');
     const logPath = path.join(process.cwd(), 'e2e', 'debug-log.md');
     const logContent = [
-      '# 50-Turn Comprehensive Test Debug Log',
+      '# 100-Turn Stress Test Debug Log (50 Bots)',
       '',
       `**Test Run:** ${new Date().toISOString()}`,
       '',
@@ -290,7 +290,8 @@ test.describe("100-Turn Stress Test", () => {
       DEBUG_LOG.join('\n'),
       '',
       '### Summary',
-      `- Total turns played: 50`,
+      `- Total turns played: 100`,
+      `- Bot count: 50`,
       `- Total actions logged: ${DEBUG_LOG.length}`,
       '',
     ].join('\n');
@@ -302,7 +303,23 @@ test.describe("100-Turn Stress Test", () => {
 
 // Helper functions for testing different game features
 
+// Dismiss any lingering turn summary modal
+async function dismissModal(page: Page) {
+  try {
+    const modal = page.locator('[data-testid="turn-summary-modal"]');
+    const continueBtn = page.locator('[data-testid="turn-summary-continue"]');
+
+    if (await modal.isVisible({ timeout: 100 }).catch(() => false)) {
+      await continueBtn.click({ force: true, timeout: 500 }).catch(() => {});
+      await page.waitForTimeout(100);
+    }
+  } catch {
+    // Ignore errors - modal might not be present
+  }
+}
+
 async function testBuyPlanets(page: Page, turn: number) {
+  await dismissModal(page);
   logDebug(`Turn ${turn}: Testing planet purchase`);
 
   try {
@@ -334,6 +351,7 @@ async function testBuyPlanets(page: Page, turn: number) {
 }
 
 async function testBuildUnits(page: Page, turn: number) {
+  await dismissModal(page);
   logDebug(`Turn ${turn}: Testing unit building`);
 
   try {
@@ -358,6 +376,7 @@ async function testBuildUnits(page: Page, turn: number) {
 }
 
 async function testResearch(page: Page, turn: number) {
+  await dismissModal(page);
   logDebug(`Turn ${turn}: Testing research`);
 
   try {
@@ -381,6 +400,7 @@ async function testResearch(page: Page, turn: number) {
 }
 
 async function testMarket(page: Page, turn: number) {
+  await dismissModal(page);
   logDebug(`Turn ${turn}: Testing market`);
 
   try {
@@ -422,6 +442,7 @@ async function testMarket(page: Page, turn: number) {
 }
 
 async function testEspionage(page: Page, turn: number) {
+  await dismissModal(page);
   logDebug(`Turn ${turn}: Testing espionage`);
 
   try {
@@ -441,6 +462,7 @@ async function testEspionage(page: Page, turn: number) {
 }
 
 async function testCombat(page: Page, turn: number) {
+  await dismissModal(page);
   logDebug(`Turn ${turn}: Testing combat`);
 
   try {
@@ -464,6 +486,7 @@ async function testCombat(page: Page, turn: number) {
 }
 
 async function testDiplomacy(page: Page, turn: number) {
+  await dismissModal(page);
   logDebug(`Turn ${turn}: Testing diplomacy`);
 
   try {
