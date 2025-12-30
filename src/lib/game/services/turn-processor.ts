@@ -57,6 +57,7 @@ import { processResearchProduction } from "./research-service";
 import { perfLogger } from "@/lib/performance/logger";
 import { processBotTurn, applyBotNightmareBonus } from "@/lib/bots";
 import { applyEmotionalDecay } from "@/lib/game/repositories/bot-emotional-state-repository";
+import { pruneDecayedMemories } from "@/lib/game/repositories/bot-memory-repository";
 import type { Difficulty } from "@/lib/bots/types";
 import {
   checkVictoryConditions,
@@ -196,6 +197,33 @@ export async function processTurn(gameId: string): Promise<TurnResult> {
         })
       )
     );
+
+    // ==========================================================================
+    // PHASE 5.6: MEMORY CLEANUP (every 5 turns)
+    // ==========================================================================
+
+    // Prune decayed memories to prevent database bloat
+    // Memories below weight 1.0 are removed (except permanent scars)
+    if (nextTurn % 5 === 0) {
+      let totalPruned = 0;
+      await Promise.all(
+        botEmpires.map(async (bot) => {
+          try {
+            const pruned = await pruneDecayedMemories(bot.id, nextTurn, 1.0);
+            totalPruned += pruned;
+          } catch (err) {
+            console.warn(`Memory pruning failed for bot ${bot.id}:`, err);
+          }
+        })
+      );
+      if (totalPruned > 0) {
+        globalEvents.push({
+          type: "other",
+          message: `Cleaned up ${totalPruned} old memories`,
+          severity: "info",
+        });
+      }
+    }
 
     // ==========================================================================
     // PHASE 6: MARKET PRICE UPDATE (M7)

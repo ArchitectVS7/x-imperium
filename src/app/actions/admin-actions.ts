@@ -1,7 +1,16 @@
 "use server";
 
 import { db } from "@/lib/db";
-import { games, empires } from "@/lib/db/schema";
+import {
+  games,
+  empires,
+  planets,
+  botMemories,
+  messages,
+  attacks,
+  combatLogs,
+  performanceLogs,
+} from "@/lib/db/schema";
 import { eq, lt, and, or, sql } from "drizzle-orm";
 
 /**
@@ -31,14 +40,9 @@ export async function cleanupOldGamesAction(): Promise<{
         eq(games.status, "completed"),
         eq(games.status, "abandoned"),
         // Old inactive games (setup status and older than 7 days)
-        and(
-          eq(games.status, "setup"),
-          lt(games.createdAt, sevenDaysAgo)
-        ),
+        and(eq(games.status, "setup"), lt(games.createdAt, sevenDaysAgo)),
         // Old active games (older than 7 days with no recent activity)
-        and(
-          lt(games.updatedAt, sevenDaysAgo)
-        )
+        and(lt(games.updatedAt, sevenDaysAgo))
       ),
       columns: { id: true, name: true, status: true },
     });
@@ -67,7 +71,7 @@ export async function cleanupOldGamesAction(): Promise<{
 }
 
 /**
- * Get database storage statistics.
+ * Get detailed database storage statistics.
  */
 export async function getDatabaseStatsAction(): Promise<{
   success: boolean;
@@ -76,10 +80,16 @@ export async function getDatabaseStatsAction(): Promise<{
     empireCount: number;
     activeGames: number;
     completedGames: number;
+    planetCount: number;
+    memoryCount: number;
+    messageCount: number;
+    attackCount: number;
+    combatLogCount: number;
   };
   error?: string;
 }> {
   try {
+    // Get game counts
     const [gameStats] = await db
       .select({
         total: sql<number>`count(*)`,
@@ -88,11 +98,25 @@ export async function getDatabaseStatsAction(): Promise<{
       })
       .from(games);
 
+    // Get record counts for major tables
     const [empireStats] = await db
-      .select({
-        total: sql<number>`count(*)`,
-      })
+      .select({ total: sql<number>`count(*)` })
       .from(empires);
+    const [planetStats] = await db
+      .select({ total: sql<number>`count(*)` })
+      .from(planets);
+    const [memoryStats] = await db
+      .select({ total: sql<number>`count(*)` })
+      .from(botMemories);
+    const [messageStats] = await db
+      .select({ total: sql<number>`count(*)` })
+      .from(messages);
+    const [attackStats] = await db
+      .select({ total: sql<number>`count(*)` })
+      .from(attacks);
+    const [combatLogStats] = await db
+      .select({ total: sql<number>`count(*)` })
+      .from(combatLogs);
 
     return {
       success: true,
@@ -101,6 +125,11 @@ export async function getDatabaseStatsAction(): Promise<{
         empireCount: Number(empireStats?.total ?? 0),
         activeGames: Number(gameStats?.active ?? 0),
         completedGames: Number(gameStats?.completed ?? 0),
+        planetCount: Number(planetStats?.total ?? 0),
+        memoryCount: Number(memoryStats?.total ?? 0),
+        messageCount: Number(messageStats?.total ?? 0),
+        attackCount: Number(attackStats?.total ?? 0),
+        combatLogCount: Number(combatLogStats?.total ?? 0),
       },
     };
   } catch (error) {
@@ -113,8 +142,8 @@ export async function getDatabaseStatsAction(): Promise<{
 }
 
 /**
- * Delete ALL games - nuclear option for testing/development.
- * WARNING: This deletes everything!
+ * Delete ALL games using TRUNCATE CASCADE for efficiency.
+ * WARNING: This deletes everything instantly!
  */
 export async function deleteAllGamesAction(): Promise<{
   success: boolean;
@@ -122,20 +151,109 @@ export async function deleteAllGamesAction(): Promise<{
   error?: string;
 }> {
   try {
-    const allGames = await db.query.games.findMany({
-      columns: { id: true },
-    });
+    // Count games before deletion
+    const [countResult] = await db
+      .select({ count: sql<number>`count(*)` })
+      .from(games);
+    const gameCount = Number(countResult?.count ?? 0);
 
-    for (const game of allGames) {
-      await db.delete(games).where(eq(games.id, game.id));
-    }
+    // Use raw SQL TRUNCATE CASCADE for efficiency
+    // This is much faster than deleting row by row
+    await db.execute(sql`TRUNCATE games CASCADE`);
+
+    // Also clean up performance logs (not cascade-deleted)
+    await db.execute(sql`TRUNCATE performance_logs`);
 
     return {
       success: true,
-      deletedCount: allGames.length,
+      deletedCount: gameCount,
     };
   } catch (error) {
     console.error("Failed to delete all games:", error);
+    return {
+      success: false,
+      deletedCount: 0,
+      error: error instanceof Error ? error.message : "Unknown error",
+    };
+  }
+}
+
+/**
+ * Prune bot memories to free up space without deleting games.
+ * Useful when the memory table is the main bloat.
+ */
+export async function pruneAllMemoriesAction(): Promise<{
+  success: boolean;
+  deletedCount: number;
+  error?: string;
+}> {
+  try {
+    // Count memories before deletion
+    const [countResult] = await db
+      .select({ count: sql<number>`count(*)` })
+      .from(botMemories);
+    const memoryCount = Number(countResult?.count ?? 0);
+
+    // Delete all non-permanent-scar memories
+    await db.execute(
+      sql`DELETE FROM bot_memories WHERE is_permanent_scar = false`
+    );
+
+    // Count remaining
+    const [afterCount] = await db
+      .select({ count: sql<number>`count(*)` })
+      .from(botMemories);
+    const remaining = Number(afterCount?.count ?? 0);
+
+    return {
+      success: true,
+      deletedCount: memoryCount - remaining,
+    };
+  } catch (error) {
+    console.error("Failed to prune memories:", error);
+    return {
+      success: false,
+      deletedCount: 0,
+      error: error instanceof Error ? error.message : "Unknown error",
+    };
+  }
+}
+
+/**
+ * Prune performance logs older than 24 hours.
+ */
+export async function prunePerformanceLogsAction(): Promise<{
+  success: boolean;
+  deletedCount: number;
+  error?: string;
+}> {
+  try {
+    const oneDayAgo = new Date();
+    oneDayAgo.setDate(oneDayAgo.getDate() - 1);
+
+    // Count logs before deletion
+    const [countResult] = await db
+      .select({ count: sql<number>`count(*)` })
+      .from(performanceLogs);
+    const totalCount = Number(countResult?.count ?? 0);
+
+    // Delete old logs
+    await db
+      .delete(performanceLogs)
+      .where(lt(performanceLogs.createdAt, oneDayAgo));
+
+    // Count remaining
+    const [afterCount] = await db
+      .select({ count: sql<number>`count(*)` })
+      .from(performanceLogs);
+    const remaining = Number(afterCount?.count ?? 0);
+
+    return {
+      success: true,
+      deletedCount: totalCount - remaining,
+    };
+  } catch (error) {
+    console.error("Failed to prune performance logs:", error);
     return {
       success: false,
       deletedCount: 0,
