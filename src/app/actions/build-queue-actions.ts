@@ -14,6 +14,12 @@ import { isFeatureUnlocked } from "@/lib/constants/unlocks";
 import { db } from "@/lib/db";
 import { games } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
+import {
+  isValidUnitType,
+  isValidUUID,
+  sanitizeQuantity,
+  verifyEmpireOwnership,
+} from "@/lib/security/validation";
 
 // =============================================================================
 // COOKIE HELPERS
@@ -39,15 +45,34 @@ async function getGameCookies(): Promise<{
 
 /**
  * Add units to the build queue.
+ *
+ * SECURITY: Validates unit type and quantity at runtime, verifies empire ownership.
  */
 export async function addToBuildQueueAction(
   unitType: UnitType,
   quantity: number
 ): Promise<AddToQueueResult> {
+  // Validate unit type at runtime (TypeScript types are compile-time only)
+  if (!isValidUnitType(unitType)) {
+    return { success: false, error: "Invalid unit type" };
+  }
+
+  // Validate and sanitize quantity
+  const safeQuantity = sanitizeQuantity(quantity, 1, 100_000);
+  if (safeQuantity === undefined) {
+    return { success: false, error: "Invalid quantity (must be between 1 and 100,000)" };
+  }
+
   const { gameId, empireId } = await getGameCookies();
 
   if (!gameId || !empireId) {
     return { success: false, error: "No active game session" };
+  }
+
+  // Verify empire belongs to the game (authorization check)
+  const ownership = await verifyEmpireOwnership(empireId, gameId);
+  if (!ownership.valid) {
+    return { success: false, error: ownership.error ?? "Authorization failed" };
   }
 
   try {
@@ -61,7 +86,7 @@ export async function addToBuildQueueAction(
       }
     }
 
-    return await addToBuildQueue(empireId, gameId, unitType, quantity);
+    return await addToBuildQueue(empireId, gameId, unitType, safeQuantity);
   } catch (error) {
     console.error("Failed to add to build queue:", error);
     return {
@@ -73,14 +98,27 @@ export async function addToBuildQueueAction(
 
 /**
  * Cancel a build order.
+ *
+ * SECURITY: Validates queue ID format and verifies empire ownership.
  */
 export async function cancelBuildOrderAction(
   queueId: string
 ): Promise<CancelBuildResult> {
-  const { empireId } = await getGameCookies();
+  // Validate queue ID format
+  if (!isValidUUID(queueId)) {
+    return { success: false, error: "Invalid queue ID format" };
+  }
 
-  if (!empireId) {
+  const { gameId, empireId } = await getGameCookies();
+
+  if (!gameId || !empireId) {
     return { success: false, error: "No active game session" };
+  }
+
+  // Verify empire belongs to the game (authorization check)
+  const ownership = await verifyEmpireOwnership(empireId, gameId);
+  if (!ownership.valid) {
+    return { success: false, error: ownership.error ?? "Authorization failed" };
   }
 
   try {

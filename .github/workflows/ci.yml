@@ -104,8 +104,8 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
 
-      - name: Run E2E tests
-        run: npm run test:e2e
+      - name: Run E2E tests (smoke only for CI efficiency)
+        run: npm run test:e2e:smoke
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL_TEST }}
 

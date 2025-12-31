@@ -276,6 +276,13 @@ export async function deleteAllGamesAction(): Promise<{
 /**
  * Nuclear option: TRUNCATE all major tables individually.
  * Use this if CASCADE isn't working as expected.
+ *
+ * SECURITY NOTE: This function uses sql.raw() for table names, which is safe because:
+ * 1. Table names come from the hardcoded `tablesToTruncate` array below (NOT user input)
+ * 2. No external input is interpolated into the SQL query
+ * 3. This is an admin-only function for database maintenance
+ *
+ * Do NOT modify this pattern to accept dynamic table names from user input.
  */
 export async function truncateAllTablesAction(): Promise<{
   success: boolean;
@@ -284,6 +291,7 @@ export async function truncateAllTablesAction(): Promise<{
 }> {
   try {
     // Order matters! Truncate child tables before parents to avoid FK constraint issues
+    // SECURITY: These are hardcoded table names - NOT user input
     const tablesToTruncate = [
       // Child tables first (have foreign keys to other tables)
       "bot_memories",

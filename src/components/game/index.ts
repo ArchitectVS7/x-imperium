@@ -17,3 +17,6 @@ export { UnlockNotification, UpcomingUnlocks } from "./UnlockNotification";
 export { TurnOrderPanel } from "./TurnOrderPanel";
 export { TurnSummaryModal } from "./TurnSummaryModal";
 export { GameShell } from "./GameShell";
+
+// Session components
+export { SessionSummaryScreen } from "./session";

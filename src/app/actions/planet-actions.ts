@@ -12,6 +12,11 @@ import {
 } from "@/lib/game/services/planet-service";
 import { getGameById } from "@/lib/game/repositories/game-repository";
 import type { PlanetType } from "@/lib/game/constants";
+import {
+  isValidPlanetType,
+  isValidUUID,
+  verifyEmpireOwnership,
+} from "@/lib/security/validation";
 
 // =============================================================================
 // COOKIE HELPERS
@@ -37,14 +42,27 @@ async function getGameCookies(): Promise<{
 
 /**
  * Buy a planet of the specified type.
+ *
+ * SECURITY: Validates planet type at runtime and verifies empire ownership.
  */
 export async function buyPlanetAction(
   planetType: PlanetType
 ): Promise<BuyPlanetResult> {
+  // Validate planet type at runtime (TypeScript types are compile-time only)
+  if (!isValidPlanetType(planetType)) {
+    return { success: false, error: "Invalid planet type" };
+  }
+
   const { gameId, empireId } = await getGameCookies();
 
   if (!gameId || !empireId) {
     return { success: false, error: "No active game session" };
+  }
+
+  // Verify empire belongs to the game (authorization check)
+  const ownership = await verifyEmpireOwnership(empireId, gameId);
+  if (!ownership.valid) {
+    return { success: false, error: ownership.error ?? "Authorization failed" };
   }
 
   // Get current game for turn number
@@ -66,14 +84,27 @@ export async function buyPlanetAction(
 
 /**
  * Release (sell) a planet by ID.
+ *
+ * SECURITY: Validates planet ID format and verifies empire ownership.
  */
 export async function releasePlanetAction(
   planetId: string
 ): Promise<ReleasePlanetResult> {
-  const { empireId } = await getGameCookies();
+  // Validate planet ID format
+  if (!isValidUUID(planetId)) {
+    return { success: false, error: "Invalid planet ID format" };
+  }
 
-  if (!empireId) {
+  const { gameId, empireId } = await getGameCookies();
+
+  if (!gameId || !empireId) {
     return { success: false, error: "No active game session" };
+  }
+
+  // Verify empire belongs to the game (authorization check)
+  const ownership = await verifyEmpireOwnership(empireId, gameId);
+  if (!ownership.valid) {
+    return { success: false, error: ownership.error ?? "Authorization failed" };
   }
 
   try {
@@ -89,10 +120,17 @@ export async function releasePlanetAction(
 
 /**
  * Get purchase info for a specific planet type.
+ *
+ * SECURITY: Validates planet type at runtime.
  */
 export async function getPlanetPurchaseInfoAction(
   planetType: PlanetType
 ): Promise<PlanetPurchaseInfo | null> {
+  // Validate planet type at runtime
+  if (!isValidPlanetType(planetType)) {
+    return null;
+  }
+
   const { empireId } = await getGameCookies();
 
   if (!empireId) {

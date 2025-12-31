@@ -16,6 +16,7 @@ import {
   type UnitCounts,
 } from "@/lib/game/services/unit-service";
 import type { UnitType } from "@/lib/game/unit-config";
+import { isValidUnitType, sanitizeQuantity } from "@/lib/security/validation";
 
 // =============================================================================
 // COOKIE HELPERS
@@ -34,11 +35,24 @@ async function getEmpireId(): Promise<string | undefined> {
 
 /**
  * Validate if the current empire can build a specific unit type.
+ *
+ * SECURITY: Validates unit type and quantity at runtime.
  */
 export async function validateBuildAction(
   unitType: UnitType,
   quantity: number
 ): Promise<BuildValidation | { error: string }> {
+  // Validate unit type at runtime
+  if (!isValidUnitType(unitType)) {
+    return { error: "Invalid unit type" };
+  }
+
+  // Validate quantity (bounded to prevent overflow)
+  const safeQuantity = sanitizeQuantity(quantity, 1, 100_000);
+  if (safeQuantity === undefined) {
+    return { error: "Invalid quantity (must be between 1 and 100,000)" };
+  }
+
   const empireId = await getEmpireId();
 
   if (!empireId) {
@@ -56,7 +70,7 @@ export async function validateBuildAction(
 
     return validateBuild(
       unitType,
-      quantity,
+      safeQuantity,
       empire.credits,
       empire.population,
       empire.fundamentalResearchLevel
@@ -69,10 +83,17 @@ export async function validateBuildAction(
 
 /**
  * Check if a unit type is locked for the current empire.
+ *
+ * SECURITY: Validates unit type at runtime.
  */
 export async function checkUnitLockAction(
   unitType: UnitType
 ): Promise<{ isLocked: boolean; reason?: string } | { error: string }> {
+  // Validate unit type at runtime
+  if (!isValidUnitType(unitType)) {
+    return { error: "Invalid unit type" };
+  }
+
   const empireId = await getEmpireId();
 
   if (!empireId) {

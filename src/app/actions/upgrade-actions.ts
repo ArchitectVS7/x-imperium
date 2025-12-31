@@ -11,6 +11,7 @@ import {
   type AllUpgradeStatuses,
 } from "@/lib/game/services/upgrade-service";
 import type { UnitType } from "@/lib/game/unit-config";
+import { isValidUnitType } from "@/lib/security/validation";
 
 // =============================================================================
 // COOKIE HELPERS
@@ -29,10 +30,17 @@ async function getEmpireId(): Promise<string | undefined> {
 
 /**
  * Upgrade a unit type to the next level.
+ *
+ * SECURITY: Validates unit type at runtime.
  */
 export async function upgradeUnitAction(
   unitType: UnitType
 ): Promise<UpgradeResult> {
+  // Validate unit type at runtime
+  if (!isValidUnitType(unitType)) {
+    return { success: false, error: "Invalid unit type" };
+  }
+
   const empireId = await getEmpireId();
 
   if (!empireId) {
@@ -52,10 +60,17 @@ export async function upgradeUnitAction(
 
 /**
  * Get upgrade status for a specific unit type.
+ *
+ * SECURITY: Validates unit type at runtime.
  */
 export async function getUnitUpgradeStatusAction(
   unitType: UnitType
 ): Promise<UpgradeStatus | null> {
+  // Validate unit type at runtime
+  if (!isValidUnitType(unitType)) {
+    return null;
+  }
+
   const empireId = await getEmpireId();
 
   if (!empireId) {
@@ -90,10 +105,17 @@ export async function getAllUpgradeStatusesAction(): Promise<AllUpgradeStatuses 
 
 /**
  * Check if a specific unit can be upgraded.
+ *
+ * SECURITY: Validates unit type at runtime.
  */
 export async function canUpgradeUnitAction(
   unitType: UnitType
 ): Promise<{ canUpgrade: boolean; reason?: string }> {
+  // Validate unit type at runtime
+  if (!isValidUnitType(unitType)) {
+    return { canUpgrade: false, reason: "Invalid unit type" };
+  }
+
   const empireId = await getEmpireId();
 
   if (!empireId) {

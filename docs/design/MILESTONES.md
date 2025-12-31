@@ -34,7 +34,7 @@ Each milestone delivers a **playable vertical slice** that can be tested end-to-
 | 9 | Bot Decision Trees | 3d | 26d | Bots think | ✅ |
 | 10 | Emotional States | 3d | 29d | Bots remember | ✅ |
 | 11 | Mid-Game Systems | 3d | 32d | **v0.6 Complete** | ✅ |
-| 12 | LLM Bots | 4d | 36d | **v0.7 Alpha** | 🔲 |
+| 12 | LLM Bots | 4d | 36d | **v0.7 Alpha** | ✅ |
 
 ---
 
@@ -798,7 +798,7 @@ Each milestone delivers a **playable vertical slice** that can be tested end-to-
 **Dependency**: M11
 **Testable**: Yes
 **Gate**: v0.7 Alpha
-**Status**: 🔲 PLANNED
+**Status**: ✅ COMPLETE (Audited 2025-12-31)
 
 ### Overview
 

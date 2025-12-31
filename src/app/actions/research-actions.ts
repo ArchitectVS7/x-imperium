@@ -11,10 +11,15 @@ import {
   getNextUnlock,
   initializeResearch,
   RESEARCH_POINTS_PER_PLANET,
+  MAX_RESEARCH_LEVEL,
   type ResearchStatus,
   type ResearchResult,
 } from "@/lib/game/services/research-service";
 import { initializeUnitUpgrades } from "@/lib/game/services/upgrade-service";
+import {
+  sanitizeQuantity,
+  verifyEmpireOwnership,
+} from "@/lib/security/validation";
 
 // =============================================================================
 // COOKIE HELPERS
@@ -134,18 +139,28 @@ export async function getResearchInfoAction(): Promise<{
  * Manually invest research points.
  * Note: This is typically done automatically through turn processing,
  * but allows for manual investment if the game design requires it.
+ *
+ * SECURITY: Validates points amount and verifies empire ownership.
  */
 export async function investResearchPointsAction(
   points: number
 ): Promise<ResearchResult> {
-  const { empireId } = await getGameCookies();
+  // Validate and sanitize points (max 1 million to prevent overflow)
+  const safePoints = sanitizeQuantity(points, 1, 1_000_000);
+  if (safePoints === undefined) {
+    return { success: false, error: "Invalid points amount (must be between 1 and 1,000,000)" };
+  }
 
-  if (!empireId) {
+  const { gameId, empireId } = await getGameCookies();
+
+  if (!gameId || !empireId) {
     return { success: false, error: "No active game session" };
   }
 
-  if (points <= 0) {
-    return { success: false, error: "Points must be positive" };
+  // Verify empire belongs to the game (authorization check)
+  const ownership = await verifyEmpireOwnership(empireId, gameId);
+  if (!ownership.valid) {
+    return { success: false, error: ownership.error ?? "Authorization failed" };
   }
 
   try {
@@ -160,7 +175,7 @@ export async function investResearchPointsAction(
 
     // Note: If we want to allow manual investment from a "research point pool",
     // we would need to add that to the schema. For now, this just adds points.
-    return await investResearchPoints(empireId, points);
+    return await investResearchPoints(empireId, safePoints);
   } catch (error) {
     console.error("Failed to invest research points:", error);
     return {
@@ -176,6 +191,8 @@ export async function investResearchPointsAction(
 
 /**
  * Get projection for reaching a target research level.
+ *
+ * SECURITY: Validates target level range.
  */
 export async function getResearchProjectionAction(
   targetLevel: number
@@ -186,6 +203,12 @@ export async function getResearchProjectionAction(
   pointsNeeded: number;
   achievable: boolean;
 } | null> {
+  // Validate target level (must be positive integer within valid range)
+  const safeLevel = sanitizeQuantity(targetLevel, 1, MAX_RESEARCH_LEVEL);
+  if (safeLevel === undefined) {
+    return null;
+  }
+
   const { empireId } = await getGameCookies();
 
   if (!empireId) {
@@ -210,18 +233,18 @@ export async function getResearchProjectionAction(
     const turnsNeeded = await calculateTurnsToLevel(
       empireId,
       researchPlanetCount,
-      targetLevel
+      safeLevel
     );
 
     // Calculate points needed
     let pointsNeeded = status.pointsToNextLevel;
-    for (let level = status.level + 1; level < targetLevel; level++) {
+    for (let level = status.level + 1; level < safeLevel; level++) {
       pointsNeeded += 1000 * Math.pow(2, level);
     }
 
     return {
       currentLevel: status.level,
-      targetLevel,
+      targetLevel: safeLevel,
       turnsNeeded: turnsNeeded === Infinity ? -1 : turnsNeeded,
       pointsNeeded,
       achievable: researchPlanetCount > 0,
