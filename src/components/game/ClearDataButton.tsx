@@ -1,11 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 
 export function ClearDataButton() {
   const [isClearing, setIsClearing] = useState(false);
-  const router = useRouter();
 
   const handleClear = async () => {
     if (!confirm("Are you sure you want to clear all game data and start fresh? This cannot be undone.")) {
