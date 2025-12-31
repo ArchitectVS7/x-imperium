@@ -3,7 +3,7 @@ import { promises as fs } from "fs";
 import path from "path";
 import type { Persona, BotArchetype, PersonaTemplates } from "../types";
 
-const DATA_DIR = path.join(process.cwd(), "data");
+const DATA_DIR = path.join(process.cwd(), "src", "data");
 const PERSONAS_FILE = path.join(DATA_DIR, "personas.json");
 const TEMPLATES_DIR = path.join(DATA_DIR, "templates");
 
