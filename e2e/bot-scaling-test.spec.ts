@@ -30,11 +30,19 @@ async function createGameWithBots(page: any, botCount: number, testName: string)
   await page.waitForLoadState("networkidle");
 
   // Check if we need to create a new game
-  const dashboard = page.locator('[data-testid="dashboard"]');
-  const isDashboardVisible = await dashboard.isVisible().catch(() => false);
+  const turnCounter = page.locator('[data-testid="turn-counter"]');
+  const isGameReady = await turnCounter.isVisible().catch(() => false);
 
-  if (!isDashboardVisible) {
+  if (!isGameReady) {
     console.log("  Creating new game...");
+
+    // Dismiss tutorial overlay if it exists
+    const tutorialSkipButton = page.locator('[data-testid="tutorial-skip"]');
+    if (await tutorialSkipButton.isVisible({ timeout: 2000 }).catch(() => false)) {
+      console.log("  Skipping tutorial...");
+      await tutorialSkipButton.click();
+      await page.waitForTimeout(1000);
+    }
 
     // Wait for and fill setup form
     const nameInput = page.locator('[data-testid="empire-name-input"]');
@@ -44,18 +52,49 @@ async function createGameWithBots(page: any, botCount: number, testName: string)
     // Select bot count
     const botCountButton = page.locator(`[data-testid="bot-count-${botCount}"]`);
     await botCountButton.waitFor({ state: "visible", timeout: 5000 });
-    await botCountButton.click();
+    await botCountButton.click({ force: true }); // Force click to bypass any overlays
     console.log(`  Selected ${botCount} bots`);
 
     // Submit form
     const startButton = page.locator('[data-testid="start-game-button"]');
-    await startButton.click();
+    await startButton.click({ force: true }); // Force click to bypass any remaining overlays
     console.log(`  Form submitted, waiting for game creation...`);
 
-    // Wait for dashboard to appear
-    await expect(dashboard).toBeVisible({ timeout: 60000 });
+    // Dismiss any tutorial modals that appear after game creation
+    console.log("  Dismissing post-creation tutorial modals...");
+    let modalsDismissed = 0;
+    for (let i = 0; i < 5; i++) { // Max 5 modals to prevent infinite loop
+      // Try "Got it" button first
+      const gotItButton = page.locator('button:has-text("Got it")');
+      if (await gotItButton.isVisible({ timeout: 1000 }).catch(() => false)) {
+        await gotItButton.click();
+        modalsDismissed++;
+        console.log(`  Dismissed modal ${modalsDismissed} via "Got it" button`);
+        await page.waitForTimeout(500);
+        continue;
+      }
+
+      // Try X close button (tutorial modals)
+      const closeButton = page.locator('button[aria-label="Dismiss hint"]').first();
+      if (await closeButton.isVisible({ timeout: 1000 }).catch(() => false)) {
+        await closeButton.click();
+        modalsDismissed++;
+        console.log(`  Dismissed modal ${modalsDismissed} via X button`);
+        await page.waitForTimeout(500);
+        continue;
+      }
+
+      // No more modals visible
+      break;
+    }
+    console.log(`  Dismissed ${modalsDismissed} tutorial modals`);
+
+    // Wait for game to be ready - look for the end turn button in the turn order panel
+    const gameReadyButton = page.locator('[data-testid="turn-order-end-turn"]');
+    await expect(gameReadyButton).toBeVisible({ timeout: 60000 });
+    console.log("  Game is ready - turn order panel visible");
   } else {
-    console.log("  Dashboard already visible - game exists");
+    console.log("  Game already ready - turn counter visible");
   }
 
   console.log(`✅ Game ready with ${botCount} bots`);
@@ -69,8 +108,8 @@ async function processTurns(page: any, turns: number, botCount: number) {
   for (let i = 0; i < turns; i++) {
     const turnStart = Date.now();
 
-    // Click end turn
-    const endTurnButton = page.locator('[data-testid="end-turn-button"]');
+    // Click end turn button in turn order panel
+    const endTurnButton = page.locator('[data-testid="turn-order-end-turn"]');
     await endTurnButton.click();
 
     // Wait for turn processing
