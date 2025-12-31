@@ -1,26 +1,56 @@
 # Nexus Dominion: Future Visions
 
-**Status:** Deferred Features for Post-Playtesting
-**Last Updated:** December 28, 2024
+**Status:** Post-Launch Enhancement Roadmap
+**Last Updated:** December 30, 2024
 **Source Documents:** game-evolution-plan.md, crafting-integration-plan.md, crafting-system-implementation.md
 
 ---
 
 ## Overview
 
-This document consolidates all deferred features, unused ideas, and future enhancement concepts from the crafting system design process. These ideas are valuable but have been intentionally deferred to avoid feature creep during initial playtesting.
+This document outlines future enhancements and deferred features for Nexus Dominion. It represents a natural progression from the current implementation, building on the foundation of crafting, syndicate, coalitions, and wormhole systems already in place.
 
-**Guiding Principle:** Get the core crafting/syndicate/research system stable through playtesting before adding complexity.
+**Current Baseline (December 2024):**
+- ✅ Crafting system (3 tiers, 19 resources)
+- ✅ Syndicate/Black Market (8 trust levels, contracts)
+- ✅ Coalition mechanics (formation, bonuses, raids)
+- ✅ Wormhole construction (instant sector travel)
+- ✅ Research branches (6 branches, 8 levels)
+- ✅ WMD systems (Chemical, Nuclear, Bio weapons)
+- ✅ LLM-powered Tier 1 bots (10 elite opponents)
+
+**Guiding Principle:** Build on proven systems through playtesting feedback before adding new complexity.
+
+---
+
+## Quick Reference: Feature Status
+
+| Feature Category | Status | Location |
+|------------------|--------|----------|
+| **Crafting (3 tiers, 19 resources)** | ✅ Complete | `src/lib/game/services/crafting-service.ts` |
+| **Syndicate/Black Market** | ✅ Complete | `src/app/actions/syndicate-actions.ts` |
+| **Coalition Mechanics** | ✅ Complete | `src/lib/game/services/coalition-service.ts` |
+| **Wormhole Construction** | ✅ Complete | `src/lib/game/services/wormhole-service.ts` |
+| **Research Branches** | ✅ Complete | `src/lib/game/services/research-service.ts` |
+| **WMD Systems** | ✅ Complete | Integrated in combat system |
+| **LLM Bots (Tier 1)** | ✅ Complete | `src/lib/llm/` |
+| **Strategic Systems (Virus, ECM)** | ⚠️ Schema only | Schema ready, UI pending |
+| **Persistent Pirates** | ❌ Future | Wave 1 priority |
+| **Hoarding Detection** | ❌ Future | Wave 2 priority |
+| **Information Warfare** | ❌ Future | Wave 3 priority |
+| **Branching Tech Tree** | ❌ Future | Wave 4 (v2.0) |
 
 ---
 
 ## Part 1: Pirate System Enhancements
 
+**Current Status:** ⚠️ Basic pirate raids exist via Syndicate contracts (supply runs, disruption missions). Missing: persistent factions, raid history, player interactions.
+
 ### 1.1 Persistent Pirate Factions (HIGH PRIORITY)
 
 **Source:** game-evolution-plan.md, crafting-system-implementation.md
 
-The current pirate system triggers raids but lacks persistent faction entities.
+**Goal:** Evolve one-off raids into persistent threats that grow and respond to player actions.
 
 **Proposed Schema:**
 ```typescript
@@ -265,42 +295,59 @@ If `missedPayments >= 3`:
 
 ## Part 6: Coalition Mechanics
 
-### 6.1 Anti-Dominant Player Coalitions
+**Status:** ✅ **IMPLEMENTED (December 2024)**
 
-**Source:** game-evolution-plan.md
+**Current Features:**
+- ✅ Anti-dominant player coalition formation
+- ✅ Coalition bonuses (defense pacts, intel sharing, market preferencing)
+- ✅ Coalition raids (coordinated attacks)
+- ✅ Dynamic membership based on networth/territory thresholds
+- ✅ Bot coordination and joint attack planning
 
-**Detection:**
-- Player exceeds 1.5x average networth
-- Player controls 30%+ of territory
+**Location:** `src/lib/game/services/coalition-service.ts`
 
-**Coalition Formation:**
-- Bots coordinate defensive treaties
-- Joint attack planning
-- Resource sharing against dominant player
+### 6.3 Future Coalition Enhancements
 
-### 6.2 Coalition Bonuses
-
-| Bonus | Effect |
-|-------|--------|
-| **Defense Pact** | +20% defense when allied planets attacked |
-| **Intel Sharing** | Coalition members share spy reports |
-| **Market Preferencing** | Coalition trade bonuses |
+**Potential Additions:**
+- Coalition chat/coordination interface for human players
+- Coalition-specific contracts via Syndicate
+- Cross-coalition espionage and betrayal mechanics
+- Coalition victory condition (team-based win)
 
 ---
 
 ## Part 7: Advanced Military Units
 
-### 7.1 Strategic Systems (Deferred)
+### 7.1 Wormhole System
+
+**Status:** ✅ **IMPLEMENTED (December 2024)**
+
+**Current Features:**
+- ✅ Wormhole construction (requires research + warp drives)
+- ✅ Instant sector travel
+- ✅ Strategic positioning and sector control
+
+**Location:** `src/lib/game/services/wormhole-service.ts`
+
+### 7.2 Strategic Systems (Schema Ready, UI Pending)
+
+**Status:** ⚠️ Database schema exists, crafting UI not implemented
 
 **Source:** crafting-system.md
 
-| System | Cost | Components | Effect |
-|--------|------|------------|--------|
-| **Virus Uplink** | 20,000 | 2 Quantum Processors, 1 Neural Interface | Disable 20% enemy defenses |
-| **Wormhole Generator** | 60,000 | 1 Warp Drive, 1 Singularity Containment | Instant attack (no warning) |
-| **Command Ship Upgrade** | 25,000 | 1 Neural Interface, 1 Reactor Core | Fleet command bonus |
+| System | Cost | Components | Effect | Status |
+|--------|------|------------|--------|--------|
+| **Virus Uplink** | 20,000 | 2 Quantum Processors, 1 Neural Interface | Disable 20% enemy defenses | Schema ✅ UI ❌ |
+| **Command Ship Upgrade** | 25,000 | 1 Neural Interface, 1 Reactor Core | Fleet command bonus | Schema ✅ UI ❌ |
+| **Targeting Computer** | 15,000 | 1 Quantum Processor, 1 Advanced Sensor | +15% attack accuracy | Schema ✅ UI ❌ |
+| **ECM Suite** | 18,000 | 1 Advanced Sensor, 1 Electronics | -10% enemy accuracy | Schema ✅ UI ❌ |
 
-### 7.2 Psionic Weapons
+**Implementation Notes:** Resource types exist in `craftedResources` enum. Need to:
+1. Add crafting recipes to `CRAFTING_RECIPES` constant
+2. Create UI for strategic systems installation
+3. Add combat integration for system effects
+
+### 7.3 Psionic Weapons (Future Research)
 
 **Source:** crafting-system.md
 
@@ -417,22 +464,47 @@ interface BotSyndicatePreference {
 
 ## Implementation Priority
 
-### Wave 1 (Post-Playtesting)
-1. Persistent Pirate Factions
-2. Pirate Raid History
-3. Feature Flags
-4. Hoarding Detection
+**Legend:**
+- ✅ = Implemented
+- ⚠️ = Partially implemented (schema/backend ready, UI pending)
+- 🔄 = In consideration for next milestone
+- 📋 = Planned for future version
 
-### Wave 2 (Future Milestone)
-1. Anti-Turtle Mechanics
-2. Coalition Formation
-3. Loan Shark System
+### Current Baseline (Already Done)
+1. ✅ Crafting System (3 tiers, 19 resources, queue management)
+2. ✅ Syndicate/Black Market (8 trust levels, contracts, catalog)
+3. ✅ Coalition Mechanics (formation, bonuses, raids)
+4. ✅ Wormhole Construction (instant sector travel)
+5. ✅ Research Branches (6 branches with specialization)
+6. ✅ WMD Systems (Chemical, Nuclear, Bio weapons)
+7. ✅ LLM Bots (10 Tier 1 elite opponents with GPT decision-making)
 
-### Wave 3 (v2)
-1. Information Warfare
-2. Framing Operations
-3. Branching Tech Tree
-4. Bookie System
+### Wave 1 (Post-Launch Polish - Q1 2025)
+1. 🔄 **Strategic Systems UI** - Crafting interface for Virus Uplink, ECM Suite, etc.
+2. 🔄 **Feature Flags** - Toggle systems on/off for testing/variants
+3. 🔄 **Persistent Pirate Factions** - Factions that grow stronger over time
+4. 🔄 **Pirate Raid History** - Track raids for narrative and statistics
+5. 🔄 **Tutorial Improvements** - Extend onboarding to cover crafting/syndicate
+
+### Wave 2 (Ecosystem Balance - Q2 2025)
+1. 📋 **Hoarding Detection & Response** - Anti-exploit for resource manipulation
+2. 📋 **Anti-Turtle Mechanics** - Punish passive defensive play
+3. 📋 **Tech Rush Detection** - Balance research vs military
+4. 📋 **Market Manipulation Detection** - Anti-exploit for trade abuse
+5. 📋 **Loan Shark System** - Syndicate loans with consequences
+
+### Wave 3 (Information Warfare - Q3 2025)
+1. 📋 **Rumor System** - Information spreads with degrading accuracy
+2. 📋 **Intelligence Operations** - Spy reports with accuracy ratings
+3. 📋 **Framing Operations** - Plant false evidence via Syndicate
+4. 📋 **Bookie/Gambling** - Bet on game outcomes, self-insurance
+
+### Wave 4 (v2.0 - Major Expansion)
+1. 📋 **Branching Tech Tree** - Exclusive research paths with pinnacle technologies
+2. 📋 **Psionic Weapons** - New research branch and weapon types
+3. 📋 **Advanced Bot Betrayal** - Archetype-specific Syndicate engagement
+4. 📋 **Coalition Victory** - Team-based win condition
+5. 📋 **Player-Pirate Diplomacy** - Tribute, hunt bases, hire pirates
 
 ---
 
@@ -448,8 +520,22 @@ interface BotSyndicatePreference {
 
 ## Changelog
 
+- **2024-12-30:** Major update reflecting implemented systems (coalitions, wormholes, crafting, syndicate, LLM bots). Reorganized priority waves from current baseline. Updated to reflect natural progression from December 2024 state.
 - **2024-12-28:** Initial consolidation from game-evolution-plan.md, crafting-integration-plan.md, crafting-system-implementation.md
 
 ---
 
-*This document is a living repository of deferred features. Ideas will be promoted to the PRD after playtesting validates core systems.*
+## Summary
+
+**What We Have (December 2024):**
+A feature-complete 4X strategy game with crafting, black market intrigue, coalition warfare, instant sector travel, and elite AI opponents powered by LLMs. The core gameplay loop is solid and ready for playtesting.
+
+**What's Next:**
+Iterative improvements based on player feedback. Wave 1 focuses on polish (strategic systems UI, feature flags, tutorial improvements). Wave 2 tackles ecosystem balance and anti-exploit mechanics. Waves 3-4 add depth through information warfare and branching progression systems.
+
+**Philosophy:**
+Build on what works. Let playtesting guide priorities. Avoid feature creep - every addition must enhance the core experience, not dilute it.
+
+---
+
+*This document is a living roadmap. Features will be promoted, reprioritized, or archived based on playtesting feedback and community engagement.*

@@ -108,33 +108,48 @@ export function RecipeList({ refreshTrigger, onCraftQueued }: RecipeListProps) {
 
   return (
     <div className="space-y-4">
+      {/* Help text */}
+      <div className="bg-gray-800/50 border border-gray-700 rounded p-3 text-xs text-gray-400">
+        <p className="mb-1">
+          <span className="text-lcars-amber font-semibold">Tier 1</span>: Refined materials from raw resources
+        </p>
+        <p className="mb-1">
+          <span className="text-cyan-400 font-semibold">Tier 2</span>: Components for advanced ships
+        </p>
+        <p>
+          <span className="text-purple-400 font-semibold">Tier 3</span>: Weapon systems and specialized equipment
+        </p>
+      </div>
+
       {/* Filters */}
-      <div className="flex flex-wrap gap-2 items-center text-xs">
-        <span className="text-gray-400">Filter:</span>
-        <button
-          onClick={() => setFilterTier("all")}
-          className={`px-2 py-1 rounded ${
-            filterTier === "all"
-              ? "bg-lcars-amber text-black"
-              : "bg-gray-700 text-gray-300 hover:bg-gray-600"
-          }`}
-        >
-          All
-        </button>
-        {([1, 2, 3] as const).map((tier) => (
+      <div className="flex flex-col sm:flex-row sm:flex-wrap gap-2 sm:items-center text-xs">
+        <span className="text-gray-400 font-semibold">Filter:</span>
+        <div className="flex flex-wrap gap-2">
           <button
-            key={tier}
-            onClick={() => setFilterTier(tier)}
+            onClick={() => setFilterTier("all")}
             className={`px-2 py-1 rounded ${
-              filterTier === tier
+              filterTier === "all"
                 ? "bg-lcars-amber text-black"
                 : "bg-gray-700 text-gray-300 hover:bg-gray-600"
             }`}
           >
-            {TIER_LABELS[tier]}
+            All
           </button>
-        ))}
-        <label className="flex items-center gap-1 ml-2">
+          {([1, 2, 3] as const).map((tier) => (
+            <button
+              key={tier}
+              onClick={() => setFilterTier(tier)}
+              className={`px-2 py-1 rounded ${
+                filterTier === tier
+                  ? "bg-lcars-amber text-black"
+                  : "bg-gray-700 text-gray-300 hover:bg-gray-600"
+              }`}
+            >
+              {TIER_LABELS[tier]}
+            </button>
+          ))}
+        </div>
+        <label className="flex items-center gap-1 sm:ml-2">
           <input
             type="checkbox"
             checked={showLocked}
@@ -183,17 +198,18 @@ export function RecipeList({ refreshTrigger, onCraftQueued }: RecipeListProps) {
                       }
                     }}
                     disabled={!recipe.isAvailable}
-                    className={`w-full text-left p-2 rounded border transition-colors mb-1 ${
+                    className={`w-full text-left p-2 md:p-3 rounded border transition-colors mb-1 ${
                       isSelected
                         ? "border-lcars-amber bg-lcars-amber/10"
                         : !recipe.isAvailable
                         ? "border-gray-700 bg-gray-900/50 opacity-50 cursor-not-allowed"
                         : "border-gray-700 bg-black/30 hover:border-gray-500"
                     }`}
+                    title={!recipe.isAvailable ? `Unlock at Research Level ${recipe.researchRequired}` : `Click to craft ${recipe.label}`}
                   >
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <div className={`font-semibold ${recipe.isAvailable ? TIER_COLORS[recipe.tier] : "text-gray-500"}`}>
+                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-1 sm:gap-0">
+                      <div className="flex-1">
+                        <div className={`font-semibold text-sm md:text-base ${recipe.isAvailable ? TIER_COLORS[recipe.tier] : "text-gray-500"}`}>
                           {recipe.label}
                           {!recipe.isAvailable && (
                             <span className="ml-2 text-xs text-red-400">LOCKED</span>
@@ -203,13 +219,13 @@ export function RecipeList({ refreshTrigger, onCraftQueued }: RecipeListProps) {
                           {recipe.inputs.map((i) => `${i.amount} ${i.label}`).join(" + ")}
                         </div>
                       </div>
-                      <div className="text-right text-xs">
+                      <div className="text-left sm:text-right text-xs flex sm:flex-col gap-2 sm:gap-0">
                         <div className="text-gray-400">
-                          {recipe.craftingTime} turn{recipe.craftingTime !== 1 ? "s" : ""}
+                          ⏱ {recipe.craftingTime} turn{recipe.craftingTime !== 1 ? "s" : ""}
                         </div>
                         {!recipe.isAvailable && (
                           <div className="text-red-400">
-                            Research L{recipe.researchRequired}
+                            🔒 Research L{recipe.researchRequired}
                           </div>
                         )}
                       </div>
@@ -225,8 +241,14 @@ export function RecipeList({ refreshTrigger, onCraftQueued }: RecipeListProps) {
       {/* Craft controls */}
       {selectedRecipe && (
         <div className="border-t border-gray-700 pt-3">
-          <div className="flex items-center gap-4 mb-3">
-            <label className="text-gray-400 text-sm">Quantity:</label>
+          <div className="bg-lcars-purple/10 border border-lcars-purple/30 rounded p-3 mb-3">
+            <div className="text-xs text-gray-400 mb-2">
+              💡 <span className="font-semibold text-lcars-purple">Tip:</span> Items are queued and complete over multiple turns. You can queue multiple items - they&apos;ll build in order.
+            </div>
+          </div>
+
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mb-3">
+            <label className="text-gray-400 text-sm font-semibold">Quantity:</label>
             <input
               type="number"
               min={1}
@@ -235,10 +257,11 @@ export function RecipeList({ refreshTrigger, onCraftQueued }: RecipeListProps) {
               onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
               className="w-20 px-2 py-1 bg-black border border-gray-600 rounded text-white font-mono text-center focus:border-lcars-amber focus:outline-none"
             />
+            <span className="text-xs text-gray-500">Max 100 per order</span>
           </div>
 
-          <div className="text-sm text-gray-400 mb-3 space-y-1">
-            <div className="flex justify-between">
+          <div className="text-sm text-gray-400 mb-3 space-y-1 bg-black/30 rounded p-2 md:p-3">
+            <div className="flex justify-between font-semibold mb-1">
               <span>Resources Required:</span>
             </div>
             {selectedRecipe.inputs.map((input) => (
@@ -249,9 +272,9 @@ export function RecipeList({ refreshTrigger, onCraftQueued }: RecipeListProps) {
                 </span>
               </div>
             ))}
-            <div className="flex justify-between pt-1">
-              <span>Total Crafting Time:</span>
-              <span className="text-gray-300">
+            <div className="flex justify-between pt-1 border-t border-gray-700 mt-2">
+              <span className="font-semibold">Total Crafting Time:</span>
+              <span className="text-gray-300 font-mono">
                 {selectedRecipe.craftingTime * quantity} turn{selectedRecipe.craftingTime * quantity !== 1 ? "s" : ""}
               </span>
             </div>
@@ -260,7 +283,7 @@ export function RecipeList({ refreshTrigger, onCraftQueued }: RecipeListProps) {
           <button
             onClick={handleCraft}
             disabled={isPending || quantity <= 0}
-            className={`w-full py-2 rounded font-semibold transition-colors ${
+            className={`w-full py-2 md:py-3 rounded font-semibold transition-colors text-sm md:text-base ${
               quantity > 0
                 ? "bg-lcars-amber text-black hover:bg-lcars-amber/80"
                 : "bg-gray-700 text-gray-500 cursor-not-allowed"
