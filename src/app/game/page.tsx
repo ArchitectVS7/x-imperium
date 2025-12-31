@@ -26,6 +26,7 @@ import { DifficultySelector } from "@/components/start-game/DifficultySelector";
 import { BotCountSelector } from "@/components/start-game/BotCountSelector";
 import { GameModeSelector } from "@/components/start-game/GameModeSelector";
 import { ReturnModeSelector } from "@/components/start-game/ReturnModeSelector";
+import { ClearDataButton } from "@/components/game/ClearDataButton";
 
 async function DashboardContent({ errorFromUrl, showNewGame }: { errorFromUrl?: string; showNewGame?: boolean }) {
   const hasGame = await hasActiveGameAction();
@@ -210,27 +211,48 @@ function NewGamePrompt({ error }: { error?: string }) {
         Welcome, Commander
       </h2>
       {error && (
-        <p className="text-red-400 mb-4">{error}</p>
+        <div className="p-3 mb-4 bg-red-900/30 border border-red-500/50 rounded">
+          <p className="text-red-400">{error}</p>
+          <p className="text-red-300 text-sm mt-2">
+            Fill in the form below to start a new game.
+          </p>
+          {error.includes("Failed to load") && (
+            <div className="mt-3 pt-3 border-t border-red-500/30">
+              <p className="text-red-200 text-xs mb-2">
+                If you&apos;re stuck with corrupted data:
+              </p>
+              <ClearDataButton />
+            </div>
+          )}
+        </div>
       )}
       <p className="text-gray-300 mb-6">
         Begin your galactic conquest. Name your empire and configure your galaxy.
       </p>
       <form action={handleStartGame} className="space-y-4">
-        <input
-          type="text"
-          name="empireName"
-          placeholder="Empire Name"
-          className="w-full px-4 py-2 bg-gray-800 border border-lcars-amber/30 rounded text-white placeholder-gray-500 focus:border-lcars-amber focus:outline-none"
-          required
-          maxLength={100}
-          data-testid="empire-name-input"
-        />
+        <div>
+          <label htmlFor="empireName" className="block text-sm font-medium text-gray-400 mb-2 text-left">
+            Empire Name <span className="text-red-400">*</span>
+          </label>
+          <input
+            id="empireName"
+            type="text"
+            name="empireName"
+            placeholder="e.g., Terran Federation"
+            className="w-full px-4 py-2 bg-gray-800 border border-lcars-amber/30 rounded text-white placeholder-gray-500 focus:border-lcars-amber focus:outline-none"
+            required
+            minLength={2}
+            maxLength={100}
+            autoFocus
+            data-testid="empire-name-input"
+          />
+        </div>
         <GameModeSelector defaultValue="oneshot" />
         <BotCountSelector defaultValue={25} />
         <DifficultySelector defaultValue="normal" />
         <button
           type="submit"
-          className="lcars-button w-full"
+          className="lcars-button w-full text-lg py-3"
           data-testid="start-game-button"
         >
           BEGIN CONQUEST
