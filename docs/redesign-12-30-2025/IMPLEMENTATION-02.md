@@ -1,7 +1,8 @@
 # Nexus Dominion: Implementation Plan - Phase 2
 
 **Created**: 2025-12-30
-**Status**: DRAFT - Awaiting Approval
+**Last Updated**: 2025-12-31
+**Status**: ACTIVE - M6-M10 Implementation Complete
 **Scope**: Geographic Strategy, Anti-Snowball, and Player Guidance Systems
 
 ---
@@ -67,8 +68,9 @@ Create the foundation for meaningful geographic strategy by ensuring fair starts
 
 ### 6.1 Sector Balancing Algorithm
 
-**Status**: 📋 PLANNED (P0)
-**Estimated**: 1 day
+**Status**: ✅ COMPLETE
+**Implemented**: 2025-12-30
+**Files**: `src/lib/game/services/sector-balancing-service.ts`, `src/lib/game/services/__tests__/sector-balancing-service.test.ts`
 
 **Problem**: Random sector assignment could create unfair advantages
 
@@ -160,8 +162,9 @@ export function balanceSectors(
 
 ### 6.2 Border Discovery System
 
-**Status**: 📋 PLANNED (P1)
-**Estimated**: 1 day
+**Status**: ✅ COMPLETE
+**Implemented**: 2025-12-30
+**Files**: `src/lib/game/services/border-discovery-service.ts`, `src/lib/game/services/__tests__/border-discovery-service.test.ts`
 
 **Problem**: Players have immediate access to adjacent sectors, overwhelming them
 
@@ -279,8 +282,9 @@ Locked border:        ┅┅┅┅┅┅┅┅┅ (dotted line)
 
 ### 6.3 Wormhole Construction UI
 
-**Status**: 📋 PLANNED (P1)
-**Estimated**: 1 day
+**Status**: ✅ COMPLETE
+**Implemented**: 2025-12-30
+**Files**: `src/components/game/starmap/WormholeConstructionPanel.tsx`, `src/app/actions/wormhole-actions.ts`, `src/lib/game/services/wormhole-construction-service.ts`
 
 **Problem**: Players can build wormholes but have no UI to do so
 
@@ -445,8 +449,9 @@ Implement organic boss detection and create anti-snowball mechanics that activat
 
 ### 7.1 Boss Detection Logic
 
-**Status**: 📋 PLANNED (P1)
-**Estimated**: 1 day
+**Status**: ✅ COMPLETE
+**Implemented**: 2025-12-30
+**Files**: `src/lib/game/services/boss-detection-service.ts`, `src/lib/game/services/__tests__/boss-detection-service.test.ts`
 
 **Design Philosophy** (from VISION.md):
 > "Don't script bosses - let them emerge from bot-vs-bot conflict. A bot that won 5 battles IS the boss."
@@ -569,8 +574,9 @@ async function processBossDetection(gameId: string): Promise<void> {
 
 ### 7.2 Boss UI Indicators
 
-**Status**: 📋 PLANNED (P1)
-**Estimated**: 0.5 day
+**Status**: ✅ COMPLETE
+**Implemented**: 2025-12-30
+**Files**: `src/components/game/starmap/BossDetailPanel.tsx`, `src/components/game/starmap/EmpireNode.tsx`
 
 **Purpose**: Make bosses visually obvious without cluttering UI
 
@@ -670,8 +676,9 @@ export function BossDetailPanel({ empire, bossStatus }: { empire: Empire; bossSt
 
 ### 7.3 Leader Containment Bonus
 
-**Status**: 📋 PLANNED (P1)
-**Estimated**: 0.5 day
+**Status**: ✅ COMPLETE
+**Implemented**: 2025-12-30
+**Files**: `src/lib/combat/containment-bonus.ts`, `src/lib/combat/__tests__/containment-bonus.test.ts`
 
 **Purpose**: Give adjacent sector empires extra incentive to contain bosses
 
@@ -760,8 +767,9 @@ Reduce decision paralysis by providing clear guidance on threats and expansion o
 
 ### 8.1 Threat Assessment Panel
 
-**Status**: 📋 PLANNED (P1)
-**Estimated**: 1 day
+**Status**: ✅ COMPLETE
+**Implemented**: 2025-12-30
+**Files**: `src/components/game/panels/ThreatAssessmentPanel.tsx`, `src/lib/game/services/threat-service.ts`, `src/lib/game/services/__tests__/threat-service.test.ts`
 
 **Purpose**: Answer "Who should I be worried about?" at a glance
 
@@ -875,8 +883,9 @@ export function ThreatAssessmentPanel({
 
 ### 8.2 Expansion Options Panel
 
-**Status**: 📋 PLANNED (P1)
-**Estimated**: 1 day
+**Status**: ✅ COMPLETE
+**Implemented**: 2025-12-30
+**Files**: `src/components/game/panels/ExpansionOptionsPanel.tsx`, `src/lib/game/services/expansion-service.ts`, `src/lib/game/services/__tests__/expansion-service.test.ts`
 
 **Purpose**: Answer "How can I expand?" with clear options
 
@@ -1006,11 +1015,13 @@ function BorderOptionRow({ option }: { option: BorderOption }) {
 ### Purpose
 Implement coordinated attack bonuses against bosses, with territory distribution.
 
+> **NOTE (2025-12-31):** Original M9 scope (Coalition Raids) was replaced with an onboarding tutorial system. The tutorial system (TutorialOverlay.tsx) provides contextual guidance for new players. Coalition raid mechanics remain as future work.
+
 ### 9.1 Coalition Raid Detection
 
-**Status**: 📋 PLANNED (P1)
+**Status**: ⏸️ DEFERRED (Replaced with tutorial system)
 **Feature Flag**: `FEATURE_COALITION_RAIDS`
-**Estimated**: 0.5 day
+**Note**: Tutorial system implemented instead (TutorialOverlay.tsx)
 
 **Criteria**:
 - Target must be a detected boss
@@ -1072,8 +1083,8 @@ export function detectCoalitionRaid(
 
 ### 9.2 Raid Combat Bonuses
 
-**Status**: 📋 PLANNED (P1)
-**Estimated**: 0.5 day
+**Status**: ⏸️ DEFERRED
+**Note**: Part of coalition raid mechanics, deferred with M9.1
 
 **Mechanics**:
 - All raid participants get +5% combat power per additional attacker
@@ -1114,8 +1125,8 @@ export function resolveCombatWithRaidBonus(
 
 ### 9.3 Raid Territory Distribution
 
-**Status**: 📋 PLANNED (P2)
-**Estimated**: 1 day
+**Status**: ⏸️ DEFERRED
+**Note**: Part of coalition raid mechanics, deferred with M9.1
 
 **Mechanics**: When boss is eliminated via raid, distribute captured planets
 
@@ -1196,9 +1207,10 @@ Add depth and replayability through sector traits and unified victory tracking.
 
 ### 10.1 Sector Traits
 
-**Status**: 💡 PROPOSED (P2)
+**Status**: ✅ COMPLETE
+**Implemented**: 2025-12-31
+**Files**: `src/lib/game/services/sector-traits-service.ts`, `src/lib/game/services/__tests__/sector-traits-service.test.ts`
 **Feature Flag**: `FEATURE_SECTOR_TRAITS`
-**Estimated**: 1 day
 
 **Sector Types**:
 | Trait | Bonus | Strategic Appeal |
@@ -1278,8 +1290,9 @@ export function assignSectorTraits(sectorCount: number): Map<string, SectorTrait
 
 ### 10.2 Victory Points System
 
-**Status**: 💡 PROPOSED (P2)
-**Estimated**: 1.5 days
+**Status**: ✅ COMPLETE
+**Implemented**: 2025-12-31
+**Files**: `src/lib/game/services/victory-points-service.ts`, `src/lib/game/services/__tests__/victory-points-service.test.ts`
 
 **Purpose**: Unified metric for measuring empire power across multiple dimensions
 
@@ -1346,8 +1359,9 @@ At 7+ VP, coalition penalties apply (already implemented, just wire up VP calcul
 
 ### 10.3 Shared Victory Rewards
 
-**Status**: 💡 PROPOSED (P2)
-**Estimated**: 0.5 day
+**Status**: ✅ COMPLETE
+**Implemented**: 2025-12-31
+**Files**: `src/lib/game/services/shared-victory-service.ts`, `src/lib/game/services/__tests__/shared-victory-service.test.ts`
 
 **Purpose**: Make raid participation valuable for all participants
 
@@ -1485,18 +1499,48 @@ After M9 (Coalition Raids):
 
 ---
 
-## Approval Request
+## Implementation Summary
 
-This plan implements the features researched earlier, organized for:
-- **Quick playtesting** (M6-M8 gets us there)
-- **Logical grouping** (related features together)
-- **Safe rollout** (feature flags for experimental mechanics)
+### Completed Milestones
 
-**Total Estimated Time**: 10-14 days
+| Milestone | Status | Date |
+|-----------|--------|------|
+| M6.1 Sector Balancing | ✅ Complete | 2025-12-30 |
+| M6.2 Border Discovery | ✅ Complete | 2025-12-30 |
+| M6.3 Wormhole UI | ✅ Complete | 2025-12-30 |
+| M7.1 Boss Detection | ✅ Complete | 2025-12-30 |
+| M7.2 Boss UI | ✅ Complete | 2025-12-30 |
+| M7.3 Containment Bonus | ✅ Complete | 2025-12-30 |
+| M8.1 Threat Panel | ✅ Complete | 2025-12-30 |
+| M8.2 Expansion Panel | ✅ Complete | 2025-12-30 |
+| M9.* Coalition Raids | ⏸️ Deferred | - |
+| M10.1 Sector Traits | ✅ Complete | 2025-12-31 |
+| M10.2 Victory Points | ✅ Complete | 2025-12-31 |
+| M10.3 Shared Rewards | ✅ Complete | 2025-12-31 |
 
-Ready for review and approval.
+### Notes
+
+- **M9 Scope Change**: Original coalition raid mechanics were replaced with an onboarding tutorial system (TutorialOverlay.tsx). Coalition raids remain as future work.
+- **Test Coverage**: 881+ tests passing across all service modules
+
+### Security Review (2025-12-31)
+
+A comprehensive security review was conducted. Key findings:
+
+**Critical Issues (Pre-existing, architectural):**
+- No user authentication system
+- Admin endpoints lack authorization
+- SQL injection risk in admin-actions.ts via `sql.raw()`
+
+**Recommendations:**
+- Implement authentication before production deployment
+- Add rate limiting to game actions
+- Set sameSite: "strict" on cookies
+
+See security review documentation for full details.
 
 ---
 
 *Plan created: 2025-12-30*
-*Status: AWAITING APPROVAL*
+*Last updated: 2025-12-31*
+*Status: IMPLEMENTATION COMPLETE (M6, M7, M8, M10)*
