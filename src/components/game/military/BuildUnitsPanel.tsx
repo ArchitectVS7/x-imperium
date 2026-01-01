@@ -139,56 +139,91 @@ export function BuildUnitsPanel({
           const isSelected = selectedUnit === unitType;
 
           return (
-            <button
-              key={unitType}
-              onClick={() => {
-                if (!isLocked) {
-                  setSelectedUnit(unitType);
-                  setQuantity(1);
-                  setError(null);
-                  setSuccess(null);
-                }
-              }}
-              disabled={isLocked}
-              className={`w-full text-left p-3 rounded border transition-colors ${
-                isSelected
-                  ? "border-lcars-amber bg-lcars-amber/10"
-                  : isLocked
-                  ? "border-gray-700 bg-gray-900/50 opacity-50 cursor-not-allowed"
-                  : "border-gray-700 bg-black/30 hover:border-gray-500"
-              }`}
-              data-testid={`unit-select-${unitType}`}
-            >
-              <div className="flex justify-between items-start">
-                <div>
-                  <div className={`font-semibold ${isLocked ? "text-gray-500" : color}`}>
-                    {UNIT_LABELS[unitType]}
-                    {isLocked && <span className="ml-2 text-xs text-red-400">LOCKED</span>}
-                  </div>
-                  <div className="text-xs text-gray-400 mt-1">
-                    {UNIT_DESCRIPTIONS[unitType]}
-                  </div>
-                  {lockReason && (
-                    <div className="text-xs text-red-400 mt-1">
-                      {lockReason}
+            <div key={unitType} className="relative group">
+              <button
+                onClick={() => {
+                  if (!isLocked) {
+                    setSelectedUnit(unitType);
+                    setQuantity(1);
+                    setError(null);
+                    setSuccess(null);
+                  }
+                }}
+                disabled={isLocked}
+                className={`w-full text-left p-3 rounded border transition-all ${
+                  isSelected
+                    ? "border-lcars-amber bg-lcars-amber/10 scale-[1.02]"
+                    : isLocked
+                    ? "border-gray-700 bg-gray-900/50 opacity-50 cursor-not-allowed"
+                    : "border-gray-700 bg-black/30 hover:border-gray-500 hover:scale-[1.01]"
+                }`}
+                data-testid={`unit-select-${unitType}`}
+              >
+                <div className="flex justify-between items-start">
+                  <div>
+                    <div className={`font-semibold ${isLocked ? "text-gray-500" : color}`}>
+                      {UNIT_LABELS[unitType]}
+                      {isLocked && <span className="ml-2 text-xs text-red-400">LOCKED</span>}
                     </div>
-                  )}
-                </div>
-                <div className="text-right text-xs">
-                  <div className="text-gray-400">
-                    {UNIT_COSTS[unitType].toLocaleString()} cr | {UNIT_POPULATION[unitType]} pop
-                  </div>
-                  <div className="text-gray-500">
-                    {UNIT_BUILD_TIMES[unitType]} turn{UNIT_BUILD_TIMES[unitType] !== 1 ? "s" : ""}
-                  </div>
-                  {!isLocked && (
-                    <div className="text-lcars-amber mt-1">
-                      Max: {maxAffordable.toLocaleString()}
+                    <div className="text-xs text-gray-400 mt-1">
+                      {UNIT_DESCRIPTIONS[unitType]}
                     </div>
-                  )}
+                    {lockReason && (
+                      <div className="text-xs text-red-400 mt-1">
+                        {lockReason}
+                      </div>
+                    )}
+                  </div>
+                  <div className="text-right text-xs">
+                    <div className="text-gray-400">
+                      {UNIT_COSTS[unitType].toLocaleString()} cr | {UNIT_POPULATION[unitType]} pop
+                    </div>
+                    <div className="text-gray-500">
+                      {UNIT_BUILD_TIMES[unitType]} turn{UNIT_BUILD_TIMES[unitType] !== 1 ? "s" : ""}
+                    </div>
+                    {!isLocked && (
+                      <div className="text-lcars-amber mt-1">
+                        Max: {maxAffordable.toLocaleString()}
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </div>
-            </button>
+              </button>
+
+              {/* Hover Preview Tooltip - only show if not locked */}
+              {!isLocked && (
+                <div className="absolute left-full ml-3 top-0 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10 bg-gray-900 border-2 border-gray-700 group-hover:border-lcars-amber/50 p-4 rounded-lg shadow-2xl w-72">
+                  <div className="space-y-2">
+                    <div className="font-display text-lcars-amber border-b border-gray-700 pb-2">
+                      {UNIT_LABELS[unitType]} Details
+                    </div>
+                    <div className="grid grid-cols-2 gap-2 text-sm">
+                      <div>
+                        <div className="text-xs text-gray-500">Cost per unit</div>
+                        <div className="text-lcars-amber font-mono">{UNIT_COSTS[unitType].toLocaleString()} cr</div>
+                      </div>
+                      <div>
+                        <div className="text-xs text-gray-500">Population</div>
+                        <div className="text-blue-400 font-mono">{UNIT_POPULATION[unitType]} pop</div>
+                      </div>
+                      <div>
+                        <div className="text-xs text-gray-500">Build time</div>
+                        <div className="text-gray-300 font-mono">{UNIT_BUILD_TIMES[unitType]} turn{UNIT_BUILD_TIMES[unitType] !== 1 ? "s" : ""}</div>
+                      </div>
+                      <div>
+                        <div className="text-xs text-gray-500">Max affordable</div>
+                        <div className="text-green-400 font-mono">{maxAffordable.toLocaleString()}</div>
+                      </div>
+                    </div>
+                    <div className="pt-2 border-t border-gray-700">
+                      <div className="text-xs text-gray-400 leading-relaxed">
+                        {UNIT_DESCRIPTIONS[unitType]}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
           );
         })}
       </div>

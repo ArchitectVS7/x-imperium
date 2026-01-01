@@ -25,6 +25,7 @@ import { MobileBottomBar } from "./MobileBottomBar";
 import { MobileActionSheet } from "./MobileActionSheet";
 import { OnboardingManager } from "./onboarding";
 import { TutorialOverlay } from "./tutorial";
+import { PhaseIndicator } from "./PhaseIndicator";
 import {
   getGameLayoutDataAction,
   endTurnEnhancedAction,
@@ -210,6 +211,12 @@ export function GameShell({ children, initialLayoutData }: GameShellProps) {
     <div className="flex flex-col h-[calc(100vh-56px)]">
       {/* Onboarding Hints (first 5 turns) */}
       <OnboardingManager currentTurn={data.currentTurn} />
+
+      {/* Phase Indicator - shows current turn phase */}
+      <PhaseIndicator
+        currentPhase={null} // null = player action phase (will be enhanced later for turn processing)
+        isProcessing={isProcessing}
+      />
 
       {/* Main content area with sidebar */}
       <div className="flex flex-1 overflow-hidden">

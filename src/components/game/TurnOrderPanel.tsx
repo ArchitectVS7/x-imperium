@@ -129,6 +129,13 @@ export function TurnOrderPanel({
             style={{ width: `${turnProgress}%` }}
           />
         </div>
+        {/* Current Phase Indicator */}
+        <div className="mt-3 px-3 py-2 bg-lcars-amber/10 border-l-2 border-lcars-amber rounded">
+          <div className="text-xs text-gray-500 uppercase">Current Phase</div>
+          <div className="text-sm font-display text-lcars-amber mt-0.5">
+            {isProcessing ? "Processing Turn..." : "Your Actions"}
+          </div>
+        </div>
         {/* Protection period notice */}
         {protectionTurnsLeft && protectionTurnsLeft > 0 && (
           <div className="mt-2 text-xs text-cyan-400 bg-cyan-900/20 px-2 py-1 rounded flex items-center gap-1">
@@ -256,10 +263,10 @@ export function TurnOrderPanel({
         </button>
         <div className="mt-2 text-center">
           <Link
-            href="/game"
+            href="/game/starmap"
             className="text-xs text-gray-500 hover:text-gray-300 transition-colors"
           >
-            ← Back to {UI_LABELS.dashboard}
+            ← Back to Star Map
           </Link>
         </div>
       </div>

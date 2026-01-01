@@ -7,7 +7,8 @@
  * Food consumption: 0.05 per citizen per turn.
  */
 
-import { Siren, AlertTriangle, Apple } from "lucide-react";
+import Link from "next/link";
+import { Siren, AlertTriangle, Apple, ShoppingCart, Store } from "lucide-react";
 
 interface FoodWarningProps {
   food: number;
@@ -91,9 +92,24 @@ export function FoodWarning({ food, population, foodProduction }: FoodWarningPro
             </div>
           </div>
           {(willStarve || criticalFood) && (
-            <p className="mt-2 text-xs text-gray-400">
-              Tip: Buy Food planets in the Planets page or buy food on the Market.
-            </p>
+            <div className="mt-3 flex gap-2">
+              <Link
+                href="/game/planets?filter=food"
+                className="flex items-center gap-2 px-3 py-2 bg-yellow-600 hover:bg-yellow-500 rounded text-sm font-medium transition-colors"
+                data-testid="buy-agriculture-button"
+              >
+                <ShoppingCart className="w-4 h-4" />
+                <span>Buy Agriculture</span>
+              </Link>
+              <Link
+                href="/game/market?resource=food&action=buy"
+                className="flex items-center gap-2 px-3 py-2 bg-blue-600 hover:bg-blue-500 rounded text-sm font-medium transition-colors"
+                data-testid="buy-food-market-button"
+              >
+                <Store className="w-4 h-4" />
+                <span>Buy Food Now</span>
+              </Link>
+            </div>
           )}
         </div>
       </div>
