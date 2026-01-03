@@ -21,27 +21,36 @@ import {
   calculateCombatEffectivenessChange,
 } from "../formulas/army-effectiveness";
 import { isFeatureEnabled } from "@/lib/config/feature-flags";
+import {
+  getUnifiedConfig,
+  getUnifiedDefenderBonus,
+  getUnifiedPowerMultiplier,
+  getUnderdogBonus as getUnderdogBonusConfig,
+  getPlanetCaptureConfig,
+  getUnifiedCasualtyRates,
+} from "@/lib/game/config/combat-loader";
 
 // =============================================================================
-// CONSTANTS
+// CONSTANTS - Now loaded from config
 // =============================================================================
 
 /** Base power values per unit type */
 export const UNIT_BASE_POWER = {
-  soldiers: 1,
-  fighters: 3,
-  stations: 30,
-  lightCruisers: 5,
-  heavyCruisers: 8,
-  carriers: 2, // Carriers contribute minimally to combat power
+  soldiers: getUnifiedPowerMultiplier('soldiers'),
+  fighters: getUnifiedPowerMultiplier('fighters'),
+  stations: getUnifiedPowerMultiplier('stations'),
+  lightCruisers: getUnifiedPowerMultiplier('lightCruisers'),
+  heavyCruisers: getUnifiedPowerMultiplier('heavyCruisers'),
+  carriers: getUnifiedPowerMultiplier('carriers'),
 };
 
 /** Defender gets a home turf bonus */
-export const DEFENDER_BONUS = 1.10; // 10% bonus (reduced from 20%)
+export const DEFENDER_BONUS = getUnifiedDefenderBonus();
 
 /** Underdog bonus when outpowered 2:1 or more */
-export const UNDERDOG_BONUS_THRESHOLD = 0.5; // power ratio below this triggers bonus
-export const UNDERDOG_BONUS_MAX = 1.25; // max 25% bonus for severe underdogs
+const underdogConfig = getUnderdogBonusConfig();
+export const UNDERDOG_BONUS_THRESHOLD = underdogConfig.threshold;
+export const UNDERDOG_BONUS_MAX = underdogConfig.maxBonus;
 
 /**
  * M4: Networth-based underdog bonus (feature-flagged)
@@ -62,8 +71,9 @@ export const PUNCHUP_EXTRA_PLANET_MAX = 3; // maximum extra planets (for severe 
 export const PUNCHUP_NETWORTH_THRESHOLD = 0.75; // attacker must be weaker than this ratio
 
 /** Planet capture percentages */
-export const PLANET_CAPTURE_MIN_PERCENT = 0.05;
-export const PLANET_CAPTURE_MAX_PERCENT = 0.15;
+const planetCaptureConfig = getPlanetCaptureConfig();
+export const PLANET_CAPTURE_MIN_PERCENT = planetCaptureConfig.minPercent;
+export const PLANET_CAPTURE_MAX_PERCENT = planetCaptureConfig.maxPercent;
 
 /** Soldiers per carrier for transport */
 export const SOLDIERS_PER_CARRIER = 100;
@@ -82,17 +92,17 @@ export function calculateUnifiedPower(
 ): number {
   let power = 0;
 
-  // Sum all unit contributions
-  power += forces.soldiers * UNIT_BASE_POWER.soldiers;
-  power += forces.fighters * UNIT_BASE_POWER.fighters;
-  power += forces.stations * UNIT_BASE_POWER.stations;
-  power += forces.lightCruisers * UNIT_BASE_POWER.lightCruisers;
-  power += forces.heavyCruisers * UNIT_BASE_POWER.heavyCruisers;
-  power += forces.carriers * UNIT_BASE_POWER.carriers;
+  // Sum all unit contributions using config values
+  power += forces.soldiers * getUnifiedPowerMultiplier('soldiers');
+  power += forces.fighters * getUnifiedPowerMultiplier('fighters');
+  power += forces.stations * getUnifiedPowerMultiplier('stations');
+  power += forces.lightCruisers * getUnifiedPowerMultiplier('lightCruisers');
+  power += forces.heavyCruisers * getUnifiedPowerMultiplier('heavyCruisers');
+  power += forces.carriers * getUnifiedPowerMultiplier('carriers');
 
   // Apply defender bonus
   if (isDefender) {
-    power *= DEFENDER_BONUS;
+    power *= getUnifiedDefenderBonus();
   }
 
   return power;
@@ -288,9 +298,10 @@ export function calculateUnifiedCasualties(
   const defenderLossRate = calculateLossRate(attackerPower, defenderPower);
 
   // Winner takes 50% normal casualties, loser takes 150%
-  const winnerMultiplier = 0.5;
-  const loserMultiplier = 1.5;
-  const drawMultiplier = 1.0;
+  const casualtyRates = getUnifiedCasualtyRates();
+  const winnerMultiplier = casualtyRates.winnerMultiplier;
+  const loserMultiplier = casualtyRates.loserMultiplier;
+  const drawMultiplier = casualtyRates.drawMultiplier;
 
   const attackerMultiplier =
     winner === "attacker" ? winnerMultiplier :

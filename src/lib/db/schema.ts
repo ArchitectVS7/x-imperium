@@ -234,6 +234,15 @@ export const combatOutcomeEnum = pgEnum("combat_outcome", [
   "stalemate",
 ]);
 
+
+// Game Configuration Override Types
+export const gameConfigTypeEnum = pgEnum("game_config_type", [
+  "combat",
+  "units",
+  "archetypes",
+  "resources",
+  "victory",
+]);
 // ============================================
 // GAMES TABLE
 // ============================================
@@ -450,6 +459,34 @@ export const gameSaves = pgTable(
   ]
 );
 
+
+// ============================================
+// GAME CONFIGS TABLE (Per-Game Overrides)
+// ============================================
+
+export const gameConfigs = pgTable(
+  "game_configs",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    gameId: uuid("game_id")
+      .notNull()
+      .references(() => games.id, { onDelete: "cascade" }),
+
+    // Configuration type
+    configType: gameConfigTypeEnum("config_type").notNull(),
+
+    // Override values (JSONB for flexibility)
+    overrides: json("overrides").notNull(),
+
+    // Timestamps
+    createdAt: timestamp("created_at").notNull().defaultNow(),
+  },
+  (table) => [
+    index("game_configs_game_idx").on(table.gameId),
+    index("game_configs_type_idx").on(table.configType),
+    index("game_configs_game_type_idx").on(table.gameId, table.configType),
+  ]
+);
 // ============================================
 // PERFORMANCE LOGS TABLE
 // ============================================
@@ -747,6 +784,7 @@ export const gamesRelations = relations(games, ({ many }) => ({
   galaxyRegions: many(galaxyRegions),
   regionConnections: many(regionConnections),
   empireInfluences: many(empireInfluence),
+  gameConfigs: many(gameConfigs),
 }));
 
 export const gameSessionsRelations = relations(gameSessions, ({ one }) => ({
@@ -795,6 +833,15 @@ export const planetsRelations = relations(planets, ({ one }) => ({
 export const gameSavesRelations = relations(gameSaves, ({ one }) => ({
   game: one(games, {
     fields: [gameSaves.gameId],
+    references: [games.id],
+  }),
+}));
+
+
+
+export const gameConfigsRelations = relations(gameConfigs, ({ one }) => ({
+  game: one(games, {
+    fields: [gameConfigs.gameId],
     references: [games.id],
   }),
 }));

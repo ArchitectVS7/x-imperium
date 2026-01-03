@@ -5,6 +5,10 @@
  * Each archetype defines a distinct playstyle with unique behaviors,
  * passive abilities, and communication patterns.
  *
+ * NOTE: Archetype configurations are now loaded from JSON for easier management.
+ * This module maintains backward compatibility with existing exports.
+ *
+ * @see data/archetype-configs.json
  * @see docs/PRD.md Section 7.6 (Bot Archetypes)
  * @see docs/PRD.md Section 7.10 (Player Readability / Tell System)
  */
@@ -48,46 +52,40 @@ export {
 } from "./crafting-profiles";
 
 // =============================================================================
-// INDIVIDUAL ARCHETYPE EXPORTS
+// ARCHETYPE CONFIGURATION (loaded from JSON)
 // =============================================================================
 
-export { WARLORD_BEHAVIOR } from "./warlord";
-export { DIPLOMAT_BEHAVIOR } from "./diplomat";
-export { MERCHANT_BEHAVIOR } from "./merchant";
-export { SCHEMER_BEHAVIOR } from "./schemer";
-export { TURTLE_BEHAVIOR } from "./turtle";
-export { BLITZKRIEG_BEHAVIOR } from "./blitzkrieg";
-export { TECH_RUSH_BEHAVIOR } from "./tech-rush";
-export { OPPORTUNIST_BEHAVIOR } from "./opportunist";
+import type { ArchetypeName, ArchetypeBehavior, PassiveAbility } from "./types";
+import { PASSIVE_ABILITY_EFFECTS } from "./types";
+import { getArchetypeConfigs } from "@/lib/game/config/archetype-loader";
+
+/**
+ * Load archetype configurations from JSON.
+ */
+const LOADED_CONFIGS = getArchetypeConfigs();
+
+// =============================================================================
+// INDIVIDUAL ARCHETYPE EXPORTS (for backward compatibility)
+// =============================================================================
+
+export const WARLORD_BEHAVIOR = LOADED_CONFIGS.warlord;
+export const DIPLOMAT_BEHAVIOR = LOADED_CONFIGS.diplomat;
+export const MERCHANT_BEHAVIOR = LOADED_CONFIGS.merchant;
+export const SCHEMER_BEHAVIOR = LOADED_CONFIGS.schemer;
+export const TURTLE_BEHAVIOR = LOADED_CONFIGS.turtle;
+export const BLITZKRIEG_BEHAVIOR = LOADED_CONFIGS.blitzkrieg;
+export const TECH_RUSH_BEHAVIOR = LOADED_CONFIGS.techRush;
+export const OPPORTUNIST_BEHAVIOR = LOADED_CONFIGS.opportunist;
 
 // =============================================================================
 // ARCHETYPE REGISTRY
 // =============================================================================
 
-import type { ArchetypeName, ArchetypeBehavior, PassiveAbility } from "./types";
-import { PASSIVE_ABILITY_EFFECTS } from "./types";
-import { WARLORD_BEHAVIOR } from "./warlord";
-import { DIPLOMAT_BEHAVIOR } from "./diplomat";
-import { MERCHANT_BEHAVIOR } from "./merchant";
-import { SCHEMER_BEHAVIOR } from "./schemer";
-import { TURTLE_BEHAVIOR } from "./turtle";
-import { BLITZKRIEG_BEHAVIOR } from "./blitzkrieg";
-import { TECH_RUSH_BEHAVIOR } from "./tech-rush";
-import { OPPORTUNIST_BEHAVIOR } from "./opportunist";
-
 /**
  * Registry of all archetype behaviors indexed by name.
+ * Now loaded from JSON configuration.
  */
-export const ARCHETYPE_BEHAVIORS: Record<ArchetypeName, ArchetypeBehavior> = {
-  warlord: WARLORD_BEHAVIOR,
-  diplomat: DIPLOMAT_BEHAVIOR,
-  merchant: MERCHANT_BEHAVIOR,
-  schemer: SCHEMER_BEHAVIOR,
-  turtle: TURTLE_BEHAVIOR,
-  blitzkrieg: BLITZKRIEG_BEHAVIOR,
-  techRush: TECH_RUSH_BEHAVIOR,
-  opportunist: OPPORTUNIST_BEHAVIOR,
-} as const;
+export const ARCHETYPE_BEHAVIORS: Record<ArchetypeName, ArchetypeBehavior> = LOADED_CONFIGS;
 
 // =============================================================================
 // HELPER FUNCTIONS

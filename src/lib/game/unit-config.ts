@@ -3,23 +3,32 @@
  *
  * Defines costs, population requirements, and combat stats for all military units.
  * All values sourced directly from PRD 6.1 Unit Types table.
+ *
+ * NOTE: This module now uses data-driven configuration from data/unit-stats.json.
+ * Exported constants and functions are maintained for backward compatibility.
  */
+
+import {
+  getUnitStats,
+  getAllUnitTypes,
+  getUnitCost,
+  getUnitMaintenance,
+  getUnitPopulationCost,
+  getUnitAttack,
+  getUnitDefense,
+  getUnitLabel,
+  getUnitDescription,
+  type UnitType as LoaderUnitType,
+} from "./config/unit-loader";
 
 // =============================================================================
 // UNIT TYPES
 // =============================================================================
 
-export const UNIT_TYPES = [
-  "soldiers",
-  "fighters",
-  "stations",
-  "lightCruisers",
-  "heavyCruisers",
-  "carriers",
-  "covertAgents",
-] as const;
+const allUnitTypes = getAllUnitTypes();
+export const UNIT_TYPES = allUnitTypes as readonly LoaderUnitType[];
 
-export type UnitType = (typeof UNIT_TYPES)[number];
+export type UnitType = LoaderUnitType;
 
 // =============================================================================
 // UNIT COSTS (PRD 6.1)
@@ -28,14 +37,15 @@ export type UnitType = (typeof UNIT_TYPES)[number];
 /**
  * Credit cost to purchase one unit.
  */
+const unitStats = getUnitStats();
 export const UNIT_COSTS: Record<UnitType, number> = {
-  soldiers: 50,
-  fighters: 200,
-  stations: 5_000,
-  lightCruisers: 500,
-  heavyCruisers: 1_000,
-  carriers: 2_500,
-  covertAgents: 4_090,
+  soldiers: unitStats.soldiers.cost.credits,
+  fighters: unitStats.fighters.cost.credits,
+  stations: unitStats.stations.cost.credits,
+  lightCruisers: unitStats.lightCruisers.cost.credits,
+  heavyCruisers: unitStats.heavyCruisers.cost.credits,
+  carriers: unitStats.carriers.cost.credits,
+  covertAgents: unitStats.covertAgents.cost.credits,
 } as const;
 
 // =============================================================================
@@ -46,13 +56,13 @@ export const UNIT_COSTS: Record<UnitType, number> = {
  * Population consumed per unit when training.
  */
 export const UNIT_POPULATION: Record<UnitType, number> = {
-  soldiers: 0.2,
-  fighters: 0.4,
-  stations: 0.5,
-  lightCruisers: 1.0,
-  heavyCruisers: 2.0,
-  carriers: 3.0,
-  covertAgents: 1.0,
+  soldiers: unitStats.soldiers.populationCost,
+  fighters: unitStats.fighters.populationCost,
+  stations: unitStats.stations.populationCost,
+  lightCruisers: unitStats.lightCruisers.populationCost,
+  heavyCruisers: unitStats.heavyCruisers.populationCost,
+  carriers: unitStats.carriers.populationCost,
+  covertAgents: unitStats.covertAgents.populationCost,
 } as const;
 
 // =============================================================================
@@ -64,12 +74,12 @@ export const UNIT_POPULATION: Record<UnitType, number> = {
  * Note: Covert agents don't participate in direct combat.
  */
 export const UNIT_ATTACK: Record<Exclude<UnitType, "covertAgents">, number> = {
-  soldiers: 1,
-  fighters: 3,
-  stations: 50,
-  lightCruisers: 5,
-  heavyCruisers: 8,
-  carriers: 12,
+  soldiers: unitStats.soldiers.attack,
+  fighters: unitStats.fighters.attack,
+  stations: unitStats.stations.attack,
+  lightCruisers: unitStats.lightCruisers.attack,
+  heavyCruisers: unitStats.heavyCruisers.attack,
+  carriers: unitStats.carriers.attack,
 } as const;
 
 // =============================================================================
@@ -82,12 +92,12 @@ export const UNIT_ATTACK: Record<Exclude<UnitType, "covertAgents">, number> = {
  * Note: Covert agents don't participate in direct combat.
  */
 export const UNIT_DEFENSE: Record<Exclude<UnitType, "covertAgents">, number> = {
-  soldiers: 1,
-  fighters: 2,
-  stations: 50,
-  lightCruisers: 4,
-  heavyCruisers: 6,
-  carriers: 10,
+  soldiers: unitStats.soldiers.defense,
+  fighters: unitStats.fighters.defense,
+  stations: unitStats.stations.defense,
+  lightCruisers: unitStats.lightCruisers.defense,
+  heavyCruisers: unitStats.heavyCruisers.defense,
+  carriers: unitStats.carriers.defense,
 } as const;
 
 // =============================================================================
@@ -99,13 +109,13 @@ export const UNIT_DEFENSE: Record<Exclude<UnitType, "covertAgents">, number> = {
  * Approximate values based on unit complexity and cost.
  */
 export const UNIT_MAINTENANCE: Record<UnitType, number> = {
-  soldiers: 0.5,
-  fighters: 2,
-  stations: 50,
-  lightCruisers: 5,
-  heavyCruisers: 10,
-  carriers: 25,
-  covertAgents: 40,
+  soldiers: unitStats.soldiers.maintenance.credits ?? 0,
+  fighters: unitStats.fighters.maintenance.credits ?? 0,
+  stations: unitStats.stations.maintenance.credits ?? 0,
+  lightCruisers: unitStats.lightCruisers.maintenance.credits ?? 0,
+  heavyCruisers: unitStats.heavyCruisers.maintenance.credits ?? 0,
+  carriers: unitStats.carriers.maintenance.credits ?? 0,
+  covertAgents: unitStats.covertAgents.maintenance.credits ?? 0,
 } as const;
 
 // =============================================================================
@@ -113,13 +123,13 @@ export const UNIT_MAINTENANCE: Record<UnitType, number> = {
 // =============================================================================
 
 export const UNIT_LABELS: Record<UnitType, string> = {
-  soldiers: "Soldiers",
-  fighters: "Fighters",
-  stations: "Stations",
-  lightCruisers: "Light Cruisers",
-  heavyCruisers: "Heavy Cruisers",
-  carriers: "Carriers",
-  covertAgents: "Covert Agents",
+  soldiers: unitStats.soldiers.label,
+  fighters: unitStats.fighters.label,
+  stations: unitStats.stations.label,
+  lightCruisers: unitStats.lightCruisers.label,
+  heavyCruisers: unitStats.heavyCruisers.label,
+  carriers: unitStats.carriers.label,
+  covertAgents: unitStats.covertAgents.label,
 } as const;
 
 // =============================================================================
@@ -127,13 +137,13 @@ export const UNIT_LABELS: Record<UnitType, string> = {
 // =============================================================================
 
 export const UNIT_DESCRIPTIONS: Record<UnitType, string> = {
-  soldiers: "Ground combat infantry for planet capture",
-  fighters: "Orbital combat craft for space superiority",
-  stations: "Defensive orbital platforms (2× on defense)",
-  lightCruisers: "Fast space combat vessels",
-  heavyCruisers: "Heavy space battleships",
-  carriers: "Troop transports required for invasions",
-  covertAgents: "Espionage specialists for covert operations",
+  soldiers: unitStats.soldiers.description,
+  fighters: unitStats.fighters.description,
+  stations: unitStats.stations.description,
+  lightCruisers: unitStats.lightCruisers.description,
+  heavyCruisers: unitStats.heavyCruisers.description,
+  carriers: unitStats.carriers.description,
+  covertAgents: unitStats.covertAgents.description,
 } as const;
 
 // =============================================================================

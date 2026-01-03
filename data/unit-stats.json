@@ -1,0 +1,100 @@
+{
+  "soldiers": {
+    "cost": {
+      "credits": 50
+    },
+    "buildTime": 0,
+    "maintenance": {
+      "credits": 0.5
+    },
+    "populationCost": 0.2,
+    "attack": 1,
+    "defense": 1,
+    "label": "Soldiers",
+    "description": "Ground combat infantry for planet capture"
+  },
+  "fighters": {
+    "cost": {
+      "credits": 200
+    },
+    "buildTime": 0,
+    "maintenance": {
+      "credits": 2
+    },
+    "populationCost": 0.4,
+    "attack": 3,
+    "defense": 2,
+    "label": "Fighters",
+    "description": "Orbital combat craft for space superiority"
+  },
+  "stations": {
+    "cost": {
+      "credits": 5000
+    },
+    "buildTime": 0,
+    "maintenance": {
+      "credits": 50
+    },
+    "populationCost": 0.5,
+    "attack": 50,
+    "defense": 50,
+    "label": "Stations",
+    "description": "Defensive orbital platforms (2x on defense)"
+  },
+  "lightCruisers": {
+    "cost": {
+      "credits": 500
+    },
+    "buildTime": 0,
+    "maintenance": {
+      "credits": 5
+    },
+    "populationCost": 1.0,
+    "attack": 5,
+    "defense": 4,
+    "label": "Light Cruisers",
+    "description": "Fast space combat vessels"
+  },
+  "heavyCruisers": {
+    "cost": {
+      "credits": 1000
+    },
+    "buildTime": 0,
+    "maintenance": {
+      "credits": 10
+    },
+    "populationCost": 2.0,
+    "attack": 8,
+    "defense": 6,
+    "label": "Heavy Cruisers",
+    "description": "Heavy space battleships"
+  },
+  "carriers": {
+    "cost": {
+      "credits": 2500
+    },
+    "buildTime": 0,
+    "maintenance": {
+      "credits": 25
+    },
+    "populationCost": 3.0,
+    "attack": 12,
+    "defense": 10,
+    "label": "Carriers",
+    "description": "Troop transports required for invasions"
+  },
+  "covertAgents": {
+    "cost": {
+      "credits": 4090
+    },
+    "buildTime": 0,
+    "maintenance": {
+      "credits": 40
+    },
+    "populationCost": 1.0,
+    "attack": 0,
+    "defense": 0,
+    "label": "Covert Agents",
+    "description": "Espionage specialists for covert operations"
+  }
+}

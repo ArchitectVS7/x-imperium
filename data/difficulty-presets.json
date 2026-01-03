@@ -1,0 +1,114 @@
+{
+  "easy": {
+    "name": "Easy",
+    "description": "Recommended for new players. Player advantages make early game forgiving.",
+    "player": {
+      "startingCreditsBonus": 2000,
+      "incomeMultiplier": 1.20,
+      "planetCostReduction": 0.85,
+      "unitCostReduction": 0.90,
+      "researchSpeedBonus": 1.15
+    },
+    "bots": {
+      "incomeMultiplier": 1.00,
+      "attackThresholdModifier": 0.10,
+      "suboptimalChance": 0.50,
+      "targetWeakest": false,
+      "combatPowerMultiplier": 1.00,
+      "buildSpeedMultiplier": 1.00,
+      "researchSpeedMultiplier": 1.00
+    },
+    "combat": {
+      "defenderBonus": 1.15,
+      "playerDefenseBonus": 1.05
+    },
+    "economy": {
+      "marketPriceVolatility": 0.80,
+      "maintenanceCostMultiplier": 0.90
+    }
+  },
+  "normal": {
+    "name": "Normal",
+    "description": "Balanced gameplay. Default settings for a fair challenge.",
+    "player": {
+      "startingCreditsBonus": 0,
+      "incomeMultiplier": 1.00,
+      "planetCostReduction": 1.00,
+      "unitCostReduction": 1.00,
+      "researchSpeedBonus": 1.00
+    },
+    "bots": {
+      "incomeMultiplier": 1.00,
+      "attackThresholdModifier": 0.00,
+      "suboptimalChance": 0.00,
+      "targetWeakest": false,
+      "combatPowerMultiplier": 1.00,
+      "buildSpeedMultiplier": 1.00,
+      "researchSpeedMultiplier": 1.00
+    },
+    "combat": {
+      "defenderBonus": 1.10,
+      "playerDefenseBonus": 1.00
+    },
+    "economy": {
+      "marketPriceVolatility": 1.00,
+      "maintenanceCostMultiplier": 1.00
+    }
+  },
+  "hard": {
+    "name": "Hard",
+    "description": "Challenging gameplay. Bots are more aggressive and coordinated.",
+    "player": {
+      "startingCreditsBonus": 0,
+      "incomeMultiplier": 1.00,
+      "planetCostReduction": 1.00,
+      "unitCostReduction": 1.00,
+      "researchSpeedBonus": 1.00
+    },
+    "bots": {
+      "incomeMultiplier": 1.15,
+      "attackThresholdModifier": -0.10,
+      "suboptimalChance": 0.00,
+      "targetWeakest": true,
+      "combatPowerMultiplier": 1.05,
+      "buildSpeedMultiplier": 1.10,
+      "researchSpeedMultiplier": 1.10
+    },
+    "combat": {
+      "defenderBonus": 1.10,
+      "playerDefenseBonus": 1.00
+    },
+    "economy": {
+      "marketPriceVolatility": 1.10,
+      "maintenanceCostMultiplier": 1.05
+    }
+  },
+  "nightmare": {
+    "name": "Nightmare",
+    "description": "Brutal difficulty for veterans. Bots have major advantages and will hunt you relentlessly.",
+    "player": {
+      "startingCreditsBonus": -1000,
+      "incomeMultiplier": 1.00,
+      "planetCostReduction": 1.00,
+      "unitCostReduction": 1.00,
+      "researchSpeedBonus": 1.00
+    },
+    "bots": {
+      "incomeMultiplier": 1.30,
+      "attackThresholdModifier": -0.20,
+      "suboptimalChance": 0.00,
+      "targetWeakest": true,
+      "combatPowerMultiplier": 1.10,
+      "buildSpeedMultiplier": 1.20,
+      "researchSpeedMultiplier": 1.15
+    },
+    "combat": {
+      "defenderBonus": 1.10,
+      "playerDefenseBonus": 0.95
+    },
+    "economy": {
+      "marketPriceVolatility": 1.20,
+      "maintenanceCostMultiplier": 1.10
+    }
+  }
+}

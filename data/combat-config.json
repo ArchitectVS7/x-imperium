@@ -1,0 +1,54 @@
+{
+  "unified": {
+    "defenderBonus": 1.10,
+    "powerMultipliers": {
+      "soldiers": 1,
+      "fighters": 3,
+      "stations": 30,
+      "lightCruisers": 5,
+      "heavyCruisers": 8,
+      "carriers": 2
+    },
+    "underdogBonus": {
+      "threshold": 0.5,
+      "maxBonus": 1.25
+    },
+    "planetCapture": {
+      "minPercent": 0.05,
+      "maxPercent": 0.15
+    },
+    "casualtyRates": {
+      "winnerMultiplier": 0.5,
+      "loserMultiplier": 1.5,
+      "drawMultiplier": 1.0
+    }
+  },
+  "legacy": {
+    "defenderAdvantage": 1.2,
+    "stationDefenseMultiplier": 2,
+    "powerMultipliers": {
+      "soldiers": 1,
+      "fighters": 1,
+      "stations": 50,
+      "lightCruisers": 4,
+      "heavyCruisers": 4,
+      "carriers": 12
+    },
+    "diversityBonus": {
+      "minUnitTypes": 4,
+      "bonusMultiplier": 1.15
+    }
+  },
+  "casualties": {
+    "baseRate": 0.25,
+    "minRate": 0.15,
+    "maxRate": 0.35,
+    "badAttackPenalty": 0.1,
+    "overwhelmingBonus": 0.1,
+    "badAttackThreshold": 2.0,
+    "overwhelmingThreshold": 0.5,
+    "varianceMin": 0.8,
+    "varianceMax": 1.2,
+    "retreatRate": 0.15
+  }
+}

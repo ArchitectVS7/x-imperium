@@ -8,6 +8,14 @@
  * - Station defense bonus (2× on defense)
  */
 
+import {
+  getLegacyConfig,
+  getLegacyDefenderAdvantage,
+  getLegacyStationDefenseMultiplier,
+  getLegacyPowerMultiplier,
+  getLegacyDiversityBonus,
+} from '@/lib/game/config/combat-loader';
+
 // =============================================================================
 // TYPES
 // =============================================================================
@@ -22,33 +30,26 @@ export interface FleetComposition {
 }
 
 // =============================================================================
-// CONSTANTS (PRD 6.2)
+// CONSTANTS (PRD 6.2) - Now loaded from config
 // =============================================================================
 
 /**
  * Power multipliers per unit type.
  * Based on PRD 6.2 combat power calculation.
  */
-export const POWER_MULTIPLIERS = {
-  soldiers: 1, // Ground combat only, not counted in fleet power
-  fighters: 1, // PRD: fighters * 1
-  stations: 50, // PRD: stations * 50 (base, 2× on defense)
-  lightCruisers: 4, // PRD: cruisers * 4 (light)
-  heavyCruisers: 4, // PRD: cruisers * 4 (heavy)
-  carriers: 12, // PRD: carriers * 12
-} as const;
+export const POWER_MULTIPLIERS = getLegacyConfig().powerMultipliers;
 
 /** Number of different unit types required for diversity bonus */
-export const DIVERSITY_THRESHOLD = 4;
+export const DIVERSITY_THRESHOLD = getLegacyDiversityBonus().minUnitTypes;
 
 /** Multiplier applied when fleet has 4+ unit types */
-export const DIVERSITY_BONUS = 1.15;
+export const DIVERSITY_BONUS = getLegacyDiversityBonus().bonusMultiplier;
 
 /** Multiplier applied to defending forces */
-export const DEFENDER_ADVANTAGE = 1.2;
+export const DEFENDER_ADVANTAGE = getLegacyDefenderAdvantage();
 
 /** Stations get 2× effectiveness when defending */
-export const STATION_DEFENSE_MULTIPLIER = 2;
+export const STATION_DEFENSE_MULTIPLIER = getLegacyStationDefenseMultiplier();
 
 // =============================================================================
 // HELPER FUNCTIONS
@@ -115,17 +116,24 @@ export function calculateFleetPower(
   fleet: FleetComposition,
   isDefender: boolean = false
 ): number {
+  // Get power multipliers from config
+  const fighterPower = getLegacyPowerMultiplier('fighters');
+  const lightCruiserPower = getLegacyPowerMultiplier('lightCruisers');
+  const heavyCruiserPower = getLegacyPowerMultiplier('heavyCruisers');
+  const carrierPower = getLegacyPowerMultiplier('carriers');
+  const stationPower = getLegacyPowerMultiplier('stations');
+
   // Calculate base power from space combat units
   let basePower =
-    fleet.fighters * POWER_MULTIPLIERS.fighters +
-    fleet.lightCruisers * POWER_MULTIPLIERS.lightCruisers +
-    fleet.heavyCruisers * POWER_MULTIPLIERS.heavyCruisers +
-    fleet.carriers * POWER_MULTIPLIERS.carriers;
+    fleet.fighters * fighterPower +
+    fleet.lightCruisers * lightCruiserPower +
+    fleet.heavyCruisers * heavyCruiserPower +
+    fleet.carriers * carrierPower;
 
   // Add station power (2× on defense)
   const stationMultiplier = isDefender
-    ? POWER_MULTIPLIERS.stations * STATION_DEFENSE_MULTIPLIER
-    : POWER_MULTIPLIERS.stations;
+    ? stationPower * STATION_DEFENSE_MULTIPLIER
+    : stationPower;
   basePower += fleet.stations * stationMultiplier;
 
   // Apply diversity bonus
