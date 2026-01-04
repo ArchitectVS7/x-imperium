@@ -220,7 +220,7 @@ async function executeAttack(
   context: BotDecisionContext
 ): Promise<ExecutionResult> {
   const { empire, gameId, currentTurn, protectionTurns } = context;
-  const { targetId, forces } = decision;
+  const { targetId, forces, stance } = decision;
 
   // Verify protection period has ended
   if (currentTurn <= protectionTurns) {
@@ -262,6 +262,7 @@ async function executeAttack(
     defenderId: targetId,
     attackType: "invasion", // Default to invasion for bot attacks
     forces: combatForces,
+    attackerStance: stance, // Pass bot's combat stance for D20 volley combat
   });
 
   if (!result.success) {

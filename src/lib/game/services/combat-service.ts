@@ -21,6 +21,7 @@ import {
 } from "@/lib/combat/phases";
 import { resolveUnifiedInvasion } from "@/lib/combat/unified-combat";
 import { resolveVolleyInvasion } from "@/lib/combat/volley-combat-v2";
+import type { CombatStance } from "@/lib/combat/stances";
 
 /**
  * Feature flag for the new D20 volley combat system.
@@ -49,6 +50,8 @@ export interface AttackParams {
   defenderId: string;
   attackType: AttackType;
   forces: Forces;
+  /** Combat stance for D20 volley combat (optional, defaults to balanced) */
+  attackerStance?: CombatStance;
 }
 
 export interface AttackValidation {
@@ -254,7 +257,7 @@ export async function validateAttack(params: AttackParams): Promise<AttackValida
  * Includes full authorization and validation.
  */
 export async function executeAttack(params: AttackParams): Promise<AttackResult> {
-  const { gameId, attackerId, defenderId, attackType, forces } = params;
+  const { gameId, attackerId, defenderId, attackType, forces, attackerStance } = params;
 
   // Validate attack (includes authorization)
   const validation = await validateAttack(params);
@@ -298,7 +301,8 @@ export async function executeAttack(params: AttackParams): Promise<AttackResult>
     result = resolveVolleyInvasion(
       forces,
       defenderForces,
-      defender.planetCount
+      defender.planetCount,
+      { attackerStance }
     );
   } else {
     // Legacy unified combat resolution
