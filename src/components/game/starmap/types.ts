@@ -2,6 +2,8 @@
  * Starmap Type Definitions
  */
 
+import type { TellType, TellPerception } from "@/lib/tells";
+
 /**
  * Intel levels for fog of war system
  * - unknown: Only empire name visible (default for new rivals)
@@ -12,12 +14,27 @@
 export type IntelLevel = "unknown" | "basic" | "moderate" | "full";
 
 /**
+ * Empire tell data for starmap display
+ */
+export interface EmpireTellData {
+  displayType: TellType;
+  displayConfidence: number;
+  perceivedTruth: boolean;
+  signalDetected: boolean;
+  /** Target empire ID if this tell is targeted */
+  targetEmpireId?: string;
+}
+
+export type { TellType, TellPerception };
+
+/**
  * Threat level indicators based on recent activity
  */
 export type ThreatLevel = "peaceful" | "neutral" | "hostile" | "at_war";
 
 /**
  * Empire archetype for visual differentiation
+ * Uses snake_case to match database schema (botArchetypeEnum)
  */
 export type EmpireArchetype =
   | "warlord"
@@ -54,6 +71,8 @@ export interface EmpireMapData {
   bossEmergenceTurn?: number | null;
   battleWins?: number;
   networthRatio?: number;
+  // PRD 7.10: Bot tell system - behavioral signals
+  activeTell?: EmpireTellData;
   // Computed for visualization
   x?: number;
   y?: number;

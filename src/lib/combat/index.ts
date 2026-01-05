@@ -41,3 +41,22 @@ export {
   calculatePhaseEffectivePower,
   getPhaseRoleDescription,
 } from "./effectiveness";
+
+// D20 Volley Combat System v2
+export {
+  type D20Stats,
+  type CombatUnitType as VolleyCombatUnitType,
+  type AttackRoll,
+  type VolleyResult,
+  type BattleOutcome,
+  type BattleResult,
+  type BattleOptions,
+  type VolleySummary,
+  summarizeVolley,
+  resolveBattle,
+  processRetreat,
+  getOutcomeDisplay,
+  estimateWinProbability,
+  convertToLegacyCombatResult,
+  resolveVolleyInvasion,
+} from "./volley-combat-v2";

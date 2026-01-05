@@ -10,15 +10,24 @@ import {
   regionConnections,
   empireInfluence,
   galaxyRegions,
+  botTells,
 } from "@/lib/db/schema";
 import { eq, and, or, desc, gte } from "drizzle-orm";
 import type {
   EmpireMapData,
+  EmpireTellData,
   TreatyConnection,
   IntelLevel,
   ThreatLevel,
   EmpireArchetype,
 } from "@/components/game/starmap/types";
+import {
+  filterTellsByIntel,
+  applyPerceptionToTells,
+  type BotTell,
+  type IntelLevel as TellIntelLevel,
+} from "@/lib/tells";
+import type { ArchetypeName } from "@/lib/bots/archetypes/types";
 import {
   canStabilizeWormhole,
   stabilizeWormhole,
@@ -793,6 +802,166 @@ export async function getGalaxyViewDataAction(): Promise<GalaxyViewData | null> 
     };
   } catch (error) {
     console.error("Failed to fetch galaxy view data:", error);
+    return null;
+  }
+}
+
+// =============================================================================
+// BOT TELLS (PRD 7.10)
+// =============================================================================
+
+export interface PlayerTellData {
+  /** Map of empire ID to their active tell */
+  tellsByEmpire: Record<string, EmpireTellData>;
+}
+
+/**
+ * Fetch active tells for the current player with intel-based filtering.
+ * Returns tells visible based on player's intel level for each empire.
+ *
+ * PRD 7.10: Player Readability / Tell System
+ */
+export async function getTellsForPlayerAction(): Promise<PlayerTellData | null> {
+  const { gameId, empireId } = await getGameCookies();
+
+  if (!gameId || !empireId) {
+    return null;
+  }
+
+  try {
+    // Fetch game info
+    const game = await db.query.games.findFirst({
+      where: eq(games.id, gameId),
+    });
+
+    if (!game) {
+      return null;
+    }
+
+    // Fetch all active (non-expired) tells for this game
+    const activeTells = await db.query.botTells.findMany({
+      where: and(
+        eq(botTells.gameId, gameId),
+        gte(botTells.expiresAtTurn, game.currentTurn)
+      ),
+    });
+
+    if (activeTells.length === 0) {
+      return { tellsByEmpire: {} };
+    }
+
+    // Fetch all empires to get archetypes and intel levels
+    const allEmpires = await db.query.empires.findMany({
+      where: eq(empires.gameId, gameId),
+    });
+
+    // Fetch active treaties for intel calculation
+    const activeTreaties = await db.query.treaties.findMany({
+      where: and(eq(treaties.gameId, gameId), eq(treaties.status, "active")),
+    });
+
+    // Build treaty map
+    const treatyMap = new Map<string, "alliance" | "nap">();
+    for (const treaty of activeTreaties) {
+      if (treaty.proposerId === empireId) {
+        treatyMap.set(treaty.recipientId, treaty.treatyType as "alliance" | "nap");
+      } else if (treaty.recipientId === empireId) {
+        treatyMap.set(treaty.proposerId, treaty.treatyType as "alliance" | "nap");
+      }
+    }
+
+    // Fetch recent attacks for intel calculation
+    const recentTurnThreshold = Math.max(1, game.currentTurn - 10);
+    const recentAttacks = await db.query.attacks.findMany({
+      where: and(
+        eq(attacks.gameId, gameId),
+        gte(attacks.turn, recentTurnThreshold),
+        or(eq(attacks.attackerId, empireId), eq(attacks.defenderId, empireId))
+      ),
+    });
+
+    const recentCombatIds = new Set<string>();
+    for (const attack of recentAttacks) {
+      if (attack.attackerId === empireId) {
+        recentCombatIds.add(attack.defenderId);
+      } else if (attack.defenderId === empireId) {
+        recentCombatIds.add(attack.attackerId);
+      }
+    }
+
+    // Build intel levels map
+    const intelLevels = new Map<string, TellIntelLevel>();
+    const archetypes = new Map<string, ArchetypeName>();
+
+    for (const empire of allEmpires) {
+      const intelLevel = calculateIntelLevel(
+        empire.id,
+        empireId,
+        treatyMap,
+        recentCombatIds
+      );
+      intelLevels.set(empire.id, intelLevel as TellIntelLevel);
+
+      if (empire.botArchetype) {
+        archetypes.set(empire.id, empire.botArchetype as ArchetypeName);
+      }
+    }
+
+    // Convert DB tells to BotTell type
+    const tells: BotTell[] = activeTells.map((t) => ({
+      id: t.id,
+      gameId: t.gameId,
+      empireId: t.empireId,
+      tellType: t.tellType as BotTell["tellType"],
+      targetEmpireId: t.targetEmpireId ?? undefined,
+      isBluff: t.isBluff,
+      trueIntention: t.trueIntention as BotTell["trueIntention"],
+      confidence: parseFloat(t.confidence),
+      createdAtTurn: t.createdAtTurn,
+      expiresAtTurn: t.expiresAtTurn,
+      createdAt: t.createdAt,
+    }));
+
+    // Filter tells by intel level
+    const filteredTells = filterTellsByIntel(
+      tells,
+      empireId,
+      intelLevels,
+      game.currentTurn
+    );
+
+    // Apply perception checks to potentially reveal bluffs
+    // Research bonus would come from player's covert tech tree
+    // For now, default to 0
+    const researchBonus = 0;
+    const perceptions = applyPerceptionToTells(
+      filteredTells,
+      intelLevels,
+      archetypes,
+      researchBonus
+    );
+
+    // Group by empire (take most recent per empire)
+    const tellsByEmpire: Record<string, EmpireTellData> = {};
+
+    for (const perception of perceptions) {
+      const existing = tellsByEmpire[perception.tell.empireId];
+
+      // Keep the most recent tell per empire
+      if (!existing || perception.tell.createdAtTurn > (existing as unknown as { createdAtTurn: number }).createdAtTurn) {
+        tellsByEmpire[perception.tell.empireId] = {
+          displayType: perception.displayType,
+          displayConfidence: perception.displayConfidence,
+          perceivedTruth: perception.perceivedTruth,
+          signalDetected: perception.signalDetected,
+          targetEmpireId: perception.tell.targetEmpireId,
+        };
+      }
+    }
+
+    return { tellsByEmpire };
+  } catch (error) {
+    console.error("Failed to fetch tells for player:", error);
     return null;
   }
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import type { EmpireMapData, IntelLevel } from "./types";
+import type { EmpireMapData, IntelLevel, TellType } from "./types";
 
 interface EmpireTooltipProps {
   empire: EmpireMapData;
@@ -91,6 +91,49 @@ function getThreatBadge(threatLevel: string | undefined): { label: string; color
     default:
       return null;
   }
+}
+
+// PRD 7.10: Get tell description for tooltip
+function getTellDescription(tellType: TellType): string {
+  switch (tellType) {
+    case "military_buildup":
+      return "Military buildup detected";
+    case "fleet_movement":
+      return "Fleet movement observed";
+    case "target_fixation":
+      return "Focused on a target";
+    case "diplomatic_overture":
+      return "Seeking diplomatic relations";
+    case "economic_preparation":
+      return "Economic preparation underway";
+    case "silence":
+      return "Unusually quiet";
+    case "aggression_spike":
+      return "Aggressive behavior detected";
+    case "treaty_interest":
+      return "Interest in treaties";
+    default:
+      return "Unknown activity";
+  }
+}
+
+// Get tell confidence label
+function getConfidenceLabel(confidence: number): string {
+  if (confidence >= 0.8) return "High";
+  if (confidence >= 0.5) return "Medium";
+  return "Low";
+}
+
+// Check if tell is threatening
+function isThreatTell(tellType: TellType): boolean {
+  return ["military_buildup", "target_fixation", "aggression_spike", "fleet_movement"].includes(
+    tellType
+  );
+}
+
+// Check if tell is diplomatic
+function isDiplomaticTell(tellType: TellType): boolean {
+  return ["diplomatic_overture", "treaty_interest"].includes(tellType);
 }
 
 export function EmpireTooltip({ empire, isProtected, x, y }: EmpireTooltipProps) {
@@ -290,6 +333,67 @@ export function EmpireTooltip({ empire, isProtected, x, y }: EmpireTooltipProps)
                 </span>
               </div>
             </>
+          )}
+
+          {/* PRD 7.10: Behavioral Signals section */}
+          {!isPlayer && empire.activeTell && empire.activeTell.signalDetected && (
+            <div className="mt-2 pt-2 border-t border-gray-700">
+              <div className="text-gray-500 text-[10px] uppercase tracking-wider mb-1">
+                Behavioral Signals
+              </div>
+              {effectiveIntel === "basic" ? (
+                // Basic intel - generic signal
+                <div className={`text-xs ${
+                  isThreatTell(empire.activeTell.displayType)
+                    ? "text-red-400"
+                    : isDiplomaticTell(empire.activeTell.displayType)
+                      ? "text-green-400"
+                      : "text-gray-400"
+                }`}>
+                  {isThreatTell(empire.activeTell.displayType)
+                    ? "Hostile activity detected"
+                    : isDiplomaticTell(empire.activeTell.displayType)
+                      ? "Diplomatic signals detected"
+                      : "Activity detected"}
+                </div>
+              ) : effectiveIntel !== "unknown" && (
+                // Moderate/Full intel - specific signal
+                <div className="space-y-1">
+                  <div className={`text-xs flex items-center gap-1 ${
+                    isThreatTell(empire.activeTell.displayType)
+                      ? "text-red-400"
+                      : isDiplomaticTell(empire.activeTell.displayType)
+                        ? "text-green-400"
+                        : "text-yellow-400"
+                  }`}>
+                    <span className="text-sm">
+                      {isThreatTell(empire.activeTell.displayType) ? "⚠" :
+                       isDiplomaticTell(empire.activeTell.displayType) ? "✉" : "◆"}
+                    </span>
+                    {getTellDescription(empire.activeTell.displayType)}
+                  </div>
+                  <div className="flex justify-between text-[10px]">
+                    <span className="text-gray-500">Confidence:</span>
+                    <span className={
+                      empire.activeTell.displayConfidence >= 0.8
+                        ? "text-lcars-amber"
+                        : empire.activeTell.displayConfidence >= 0.5
+                          ? "text-yellow-400"
+                          : "text-gray-400"
+                    }>
+                      {getConfidenceLabel(empire.activeTell.displayConfidence)}
+                    </span>
+                  </div>
+                  {/* Truth revealed indicator */}
+                  {empire.activeTell.perceivedTruth && (
+                    <div className="text-[10px] text-yellow-300 flex items-center gap-1">
+                      <span>★</span>
+                      <span className="italic">Deception detected!</span>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
           )}
 
           {/* Protection warning */}

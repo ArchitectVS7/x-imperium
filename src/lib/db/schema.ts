@@ -785,6 +785,8 @@ export const gamesRelations = relations(games, ({ many }) => ({
   regionConnections: many(regionConnections),
   empireInfluences: many(empireInfluence),
   gameConfigs: many(gameConfigs),
+  // Bot Tell System Relations
+  botTells: many(botTells),
 }));
 
 export const gameSessionsRelations = relations(gameSessions, ({ one }) => ({
@@ -817,6 +819,9 @@ export const empiresRelations = relations(empires, ({ one, many }) => ({
   // Geography System Relations
   influence: many(empireInfluence),
   discoveredWormholes: many(regionConnections, { relationName: "wormholeDiscoverer" }),
+  // Bot Tell System Relations
+  emittedTells: many(botTells, { relationName: "tellEmitter" }),
+  targetedByTells: many(botTells, { relationName: "tellTarget" }),
 }));
 
 export const planetsRelations = relations(planets, ({ one }) => ({
@@ -1034,6 +1039,21 @@ export const memoryTypeEnum = pgEnum("memory_type", [
   "battle_won",
   "battle_lost",
   "message_received",
+]);
+
+// ============================================
+// BOT TELLS ENUM
+// ============================================
+
+export const tellTypeEnum = pgEnum("tell_type", [
+  "military_buildup",
+  "fleet_movement",
+  "target_fixation",
+  "diplomatic_overture",
+  "economic_preparation",
+  "silence",
+  "aggression_spike",
+  "treaty_interest",
 ]);
 
 // ============================================
@@ -1573,6 +1593,55 @@ export const botEmotionalStates = pgTable(
     index("bot_emotional_game_idx").on(table.gameId),
     index("bot_emotional_empire_idx").on(table.empireId),
     index("bot_emotional_state_idx").on(table.state),
+  ]
+);
+
+// ============================================
+// BOT TELLS TABLE (PRD 7.10)
+// ============================================
+
+export const botTells = pgTable(
+  "bot_tells",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    gameId: uuid("game_id")
+      .notNull()
+      .references(() => games.id, { onDelete: "cascade" }),
+
+    // The bot emitting this tell
+    empireId: uuid("empire_id")
+      .notNull()
+      .references(() => empires.id, { onDelete: "cascade" }),
+
+    // Optional target of the tell (e.g., who they're focused on)
+    targetEmpireId: uuid("target_empire_id").references(() => empires.id, {
+      onDelete: "set null",
+    }),
+
+    // Tell details
+    tellType: tellTypeEnum("tell_type").notNull(),
+    isBluff: boolean("is_bluff").notNull().default(false),
+    trueIntention: tellTypeEnum("true_intention"), // Actual intention if bluffing
+
+    // Confidence level (0.0 - 1.0)
+    confidence: decimal("confidence", { precision: 3, scale: 2 })
+      .notNull()
+      .default("0.60"),
+
+    // Timing
+    createdAtTurn: integer("created_at_turn").notNull(),
+    expiresAtTurn: integer("expires_at_turn").notNull(),
+
+    // Timestamps
+    createdAt: timestamp("created_at").notNull().defaultNow(),
+  },
+  (table) => [
+    index("bot_tells_game_idx").on(table.gameId),
+    index("bot_tells_empire_idx").on(table.empireId),
+    index("bot_tells_target_idx").on(table.targetEmpireId),
+    index("bot_tells_type_idx").on(table.tellType),
+    index("bot_tells_turn_idx").on(table.createdAtTurn),
+    index("bot_tells_expires_idx").on(table.expiresAtTurn),
   ]
 );
 
@@ -2163,6 +2232,23 @@ export const botEmotionalStatesRelations = relations(botEmotionalStates, ({ one 
   }),
 }));
 
+export const botTellsRelations = relations(botTells, ({ one }) => ({
+  game: one(games, {
+    fields: [botTells.gameId],
+    references: [games.id],
+  }),
+  empire: one(empires, {
+    fields: [botTells.empireId],
+    references: [empires.id],
+    relationName: "tellEmitter",
+  }),
+  targetEmpire: one(empires, {
+    fields: [botTells.targetEmpireId],
+    references: [empires.id],
+    relationName: "tellTarget",
+  }),
+}));
+
 // ============================================
 // M11: GALACTIC EVENTS & COALITION RELATIONS
 // ============================================
@@ -2472,3 +2558,7 @@ export type NewRegionConnection = typeof regionConnections.$inferInsert;
 
 export type EmpireInfluence = typeof empireInfluence.$inferSelect;
 export type NewEmpireInfluence = typeof empireInfluence.$inferInsert;
+
+// Bot Tell Types
+export type BotTell = typeof botTells.$inferSelect;
+export type NewBotTell = typeof botTells.$inferInsert;

@@ -4,6 +4,7 @@ import { useMemo } from "react";
 import { cn } from "@/lib/utils";
 import type { EmpireMapData, TreatyConnection } from "./types";
 import type { GalaxyRegion } from "./GalaxyView";
+import { TellIndicator } from "./TellIndicator";
 
 interface SectorBoxProps {
   region: GalaxyRegion;
@@ -319,6 +320,17 @@ export function SectorBox({
                 >
                   ?
                 </text>
+              )}
+
+              {/* PRD 7.10: Tell indicator for bot empires */}
+              {!isPlayer && empire.activeTell && (
+                <TellIndicator
+                  tell={empire.activeTell}
+                  cx={cx}
+                  cy={cy}
+                  size={size}
+                  intelLevel={empire.intelLevel}
+                />
               )}
             </g>
           );

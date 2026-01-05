@@ -20,7 +20,7 @@
  */
 
 import { db } from "@/lib/db";
-import { games, type Empire, type Planet } from "@/lib/db/schema";
+import { games, botTells, type Empire, type Planet } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 import { perfLogger } from "@/lib/performance/logger";
 import type {
@@ -44,6 +44,9 @@ import {
 import type { EmotionalStateName, GameEventType } from "./emotions";
 // M9: Tell system imports
 import { triggerThreatWarning, type TriggerContext, type BotInfo } from "@/lib/messages";
+// Tell generation system (PRD 7.10)
+import { generateTellsForTurn, type TellGenerationContext } from "@/lib/tells";
+import type { ArchetypeName } from "./archetypes/types";
 
 // =============================================================================
 // BOT TURN PROCESSING
@@ -123,6 +126,58 @@ export async function processBotTurn(
         })
       )
     );
+
+    // ==========================================================================
+    // PRD 7.10: TELL GENERATION
+    // ==========================================================================
+    // Generate and store tells for each bot based on their decisions
+    const tellInserts: Array<typeof botTells.$inferInsert> = [];
+
+    for (const result of decisionResults) {
+      if (!result.bot.botArchetype) continue;
+
+      const tellContext: TellGenerationContext = {
+        archetype: result.bot.botArchetype as ArchetypeName,
+        currentTurn,
+        emotionalState: result.context.emotionalState,
+      };
+
+      // Generate tells for this bot's decision
+      const tellResults = generateTellsForTurn(
+        [result.decision],
+        result.bot.id,
+        gameId,
+        tellContext
+      );
+
+      // Collect tells for batch insert
+      for (const tellResult of tellResults) {
+        if (tellResult.generated && tellResult.tell) {
+          const tell = tellResult.tell;
+          tellInserts.push({
+            gameId: tell.gameId,
+            empireId: tell.empireId,
+            targetEmpireId: tell.targetEmpireId ?? null,
+            tellType: tell.tellType,
+            isBluff: tell.isBluff,
+            trueIntention: tell.trueIntention ?? null,
+            confidence: tell.confidence.toFixed(2),
+            createdAtTurn: tell.createdAtTurn,
+            expiresAtTurn: tell.expiresAtTurn,
+          });
+        }
+      }
+    }
+
+    // Batch insert all tells
+    if (tellInserts.length > 0) {
+      try {
+        await db.insert(botTells).values(tellInserts);
+      } catch (error) {
+        // Tell generation failure shouldn't break bot processing
+        console.error("Failed to insert bot tells:", error);
+      }
+    }
 
     // Step 2: Separate attack vs non-attack decisions
     const attackDecisions: Array<{
