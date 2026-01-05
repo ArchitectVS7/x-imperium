@@ -12,3 +12,7 @@ export { BattleReport } from "./BattleReport";
 export { AttackInterface } from "./AttackInterface";
 export { CombatPreview } from "./CombatPreview";
 export { CasualtyReport, CasualtyReportInline } from "./CasualtyReport";
+export { StanceSelector } from "./StanceSelector";
+export { BonusDisplay, CombinedBonusDisplay } from "./BonusDisplay";
+export { VolleySummaryCard, VolleySummaryInline } from "./VolleySummaryCard";
+export { CombatNarrativeModal } from "./CombatNarrativeModal";

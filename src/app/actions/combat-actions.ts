@@ -28,8 +28,12 @@ import {
   type AttackWithLogs,
 } from "@/lib/game/repositories/combat-repository";
 import type { Forces, AttackType } from "@/lib/combat/phases";
+import type { CombatStance } from "@/lib/combat/stances";
 import type { Attack } from "@/lib/db/schema";
 import { checkRateLimit } from "@/lib/security/rate-limiter";
+
+// Valid combat stances for validation
+const VALID_STANCES: CombatStance[] = ["aggressive", "balanced", "defensive", "evasive"];
 
 // =============================================================================
 // COOKIE HELPERS
@@ -106,11 +110,17 @@ function isValidAttackType(type: unknown): type is AttackType {
 
 /**
  * Launch an attack against another empire.
+ *
+ * @param defenderId - Target empire ID
+ * @param attackType - "invasion" or "guerilla"
+ * @param forces - Forces to commit to the attack
+ * @param attackerStance - Combat stance for D20 volley combat (optional, defaults to "balanced")
  */
 export async function launchAttackAction(
   defenderId: string,
   attackType: AttackType,
-  forces: Forces
+  forces: Forces,
+  attackerStance?: CombatStance
 ): Promise<AttackResult> {
   try {
     // Get session cookies
@@ -144,12 +154,19 @@ export async function launchAttackAction(
       return { success: false, error: "Invalid forces data" };
     }
 
+    // Validate stance if provided
+    const validatedStance: CombatStance | undefined =
+      attackerStance && VALID_STANCES.includes(attackerStance)
+        ? attackerStance
+        : undefined;
+
     const params: AttackParams = {
       gameId,
       attackerId: empireId,
       defenderId,
       attackType,
       forces: sanitizedForces,
+      attackerStance: validatedStance,
     };
 
     const result = await executeAttack(params);

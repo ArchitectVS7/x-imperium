@@ -8,7 +8,10 @@ import {
   processRetreat,
   estimateWinProbability,
   getOutcomeDisplay,
+  summarizeVolley,
   type BattleOptions,
+  type VolleyResult,
+  type AttackRoll,
 } from "../volley-combat-v2";
 import {
   getStanceModifiers,
@@ -546,5 +549,161 @@ describe("Balance", () => {
 
     // Attacker should win less often against stations
     expect(winsVsStations).toBeLessThanOrEqual(winsVsNoStations + 10);
+  });
+});
+
+// =============================================================================
+// SUMMARIZE VOLLEY TESTS (UI SUPPORT)
+// =============================================================================
+
+describe("summarizeVolley", () => {
+  /**
+   * Create a mock AttackRoll for testing
+   */
+  function makeRoll(overrides: Partial<AttackRoll> = {}): AttackRoll {
+    return {
+      unitType: "lightCruisers",
+      roll: 10,
+      modifier: 4,
+      total: 14,
+      targetDEF: 15,
+      hit: false,
+      critical: false,
+      fumble: false,
+      damage: 0,
+      ...overrides,
+    };
+  }
+
+  /**
+   * Create a mock VolleyResult for testing
+   */
+  function makeVolley(
+    attackerRolls: AttackRoll[],
+    defenderRolls: AttackRoll[]
+  ): VolleyResult {
+    return {
+      volleyNumber: 1,
+      attackerRolls,
+      defenderRolls,
+      attackerHits: attackerRolls.filter((r) => r.hit).length,
+      defenderHits: defenderRolls.filter((r) => r.hit).length,
+      attackerDamage: attackerRolls.reduce((sum, r) => sum + r.damage, 0),
+      defenderDamage: defenderRolls.reduce((sum, r) => sum + r.damage, 0),
+      volleyWinner: "tie",
+      attackerCasualties: {},
+      defenderCasualties: {},
+      canRetreat: true,
+    };
+  }
+
+  it("should count total rolls correctly", () => {
+    const attackerRolls = [makeRoll(), makeRoll(), makeRoll()];
+    const defenderRolls = [makeRoll(), makeRoll()];
+    const volley = makeVolley(attackerRolls, defenderRolls);
+
+    const attackerSummary = summarizeVolley(volley, "attacker");
+    const defenderSummary = summarizeVolley(volley, "defender");
+
+    expect(attackerSummary.totalRolls).toBe(3);
+    expect(defenderSummary.totalRolls).toBe(2);
+  });
+
+  it("should count hits correctly", () => {
+    const attackerRolls = [
+      makeRoll({ hit: true, damage: 10 }),
+      makeRoll({ hit: false, damage: 0 }),
+      makeRoll({ hit: true, damage: 8 }),
+    ];
+    const volley = makeVolley(attackerRolls, []);
+
+    const summary = summarizeVolley(volley, "attacker");
+
+    expect(summary.hits).toBe(2);
+    expect(summary.totalDamage).toBe(18);
+  });
+
+  it("should count criticals correctly", () => {
+    const attackerRolls = [
+      makeRoll({ roll: 20, critical: true, hit: true, damage: 20 }),
+      makeRoll({ roll: 15, critical: false, hit: true, damage: 10 }),
+      makeRoll({ roll: 20, critical: true, hit: true, damage: 25 }),
+    ];
+    const volley = makeVolley(attackerRolls, []);
+
+    const summary = summarizeVolley(volley, "attacker");
+
+    expect(summary.criticals).toBe(2);
+    expect(summary.hits).toBe(3);
+  });
+
+  it("should count fumbles correctly", () => {
+    const attackerRolls = [
+      makeRoll({ roll: 1, fumble: true, hit: false, damage: 0 }),
+      makeRoll({ roll: 15, fumble: false, hit: true, damage: 10 }),
+      makeRoll({ roll: 1, fumble: true, hit: false, damage: 0 }),
+    ];
+    const volley = makeVolley(attackerRolls, []);
+
+    const summary = summarizeVolley(volley, "attacker");
+
+    expect(summary.fumbles).toBe(2);
+    expect(summary.hits).toBe(1);
+  });
+
+  it("should calculate total damage correctly", () => {
+    const attackerRolls = [
+      makeRoll({ hit: true, damage: 15 }),
+      makeRoll({ hit: true, damage: 25 }),
+      makeRoll({ hit: false, damage: 0 }),
+      makeRoll({ hit: true, damage: 10 }),
+    ];
+    const volley = makeVolley(attackerRolls, []);
+
+    const summary = summarizeVolley(volley, "attacker");
+
+    expect(summary.totalDamage).toBe(50);
+  });
+
+  it("should return zeros for empty rolls", () => {
+    const volley = makeVolley([], []);
+
+    const summary = summarizeVolley(volley, "attacker");
+
+    expect(summary.totalRolls).toBe(0);
+    expect(summary.hits).toBe(0);
+    expect(summary.criticals).toBe(0);
+    expect(summary.fumbles).toBe(0);
+    expect(summary.totalDamage).toBe(0);
+  });
+
+  it("should work with real battle volley data", () => {
+    const attacker = makeForces({ lightCruisers: 10 });
+    const defender = makeForces({ lightCruisers: 10 });
+
+    const result = resolveBattle(attacker, defender, {
+      defenderSectorCount: 20,
+    });
+
+    // Get first volley
+    const firstVolley = result.volleys[0];
+    expect(firstVolley).toBeDefined();
+
+    if (firstVolley) {
+      const attackerSummary = summarizeVolley(firstVolley, "attacker");
+      const defenderSummary = summarizeVolley(firstVolley, "defender");
+
+      // Should have positive roll counts
+      expect(attackerSummary.totalRolls).toBeGreaterThan(0);
+      expect(defenderSummary.totalRolls).toBeGreaterThan(0);
+
+      // Hits should be <= total rolls
+      expect(attackerSummary.hits).toBeLessThanOrEqual(attackerSummary.totalRolls);
+      expect(defenderSummary.hits).toBeLessThanOrEqual(defenderSummary.totalRolls);
+
+      // Criticals + fumbles should be rare
+      expect(attackerSummary.criticals).toBeLessThanOrEqual(attackerSummary.totalRolls);
+      expect(attackerSummary.fumbles).toBeLessThanOrEqual(attackerSummary.totalRolls);
+    }
   });
 });

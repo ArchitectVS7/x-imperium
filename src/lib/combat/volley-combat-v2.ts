@@ -104,6 +104,38 @@ export interface BattleOptions {
   randomOverride?: number;
 }
 
+/** Summary of a volley's rolls for UI display */
+export interface VolleySummary {
+  totalRolls: number;
+  hits: number;
+  criticals: number;
+  fumbles: number;
+  totalDamage: number;
+}
+
+/**
+ * Summarize a volley's rolls for UI display.
+ * Extracts hit/critical/fumble counts from the detailed roll data.
+ *
+ * @param volley - The volley result to summarize
+ * @param side - Which side to summarize ('attacker' or 'defender')
+ * @returns Summary statistics for the specified side
+ */
+export function summarizeVolley(
+  volley: VolleyResult,
+  side: "attacker" | "defender"
+): VolleySummary {
+  const rolls = side === "attacker" ? volley.attackerRolls : volley.defenderRolls;
+
+  return {
+    totalRolls: rolls.length,
+    hits: rolls.filter((r) => r.hit).length,
+    criticals: rolls.filter((r) => r.critical).length,
+    fumbles: rolls.filter((r) => r.fumble).length,
+    totalDamage: rolls.reduce((sum, r) => sum + r.damage, 0),
+  };
+}
+
 // =============================================================================
 // CONSTANTS
 // =============================================================================

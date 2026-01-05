@@ -10,7 +10,9 @@
 import { useState, useMemo } from "react";
 import type { Forces } from "@/lib/combat";
 import { SOLDIERS_PER_CARRIER } from "@/lib/combat";
+import type { CombatStance } from "@/lib/combat/stances";
 import { CombatPreview } from "./CombatPreview";
+import { StanceSelector } from "./StanceSelector";
 import { UnitIcons, UIIcons, ActionIcons } from "@/lib/theme/icons";
 import { Swords } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
@@ -36,7 +38,7 @@ interface AttackInterfaceProps {
   /** Defender effectiveness (if known) */
   defenderEffectiveness?: number;
   /** Callback when attack is launched */
-  onLaunchAttack: (forces: Forces, attackType: "invasion" | "guerilla") => void;
+  onLaunchAttack: (forces: Forces, attackType: "invasion" | "guerilla", stance: CombatStance) => void;
   /** Callback when cancelled */
   onCancel: () => void;
 }
@@ -76,6 +78,9 @@ export function AttackInterface({
 
   // State for attack type
   const [attackType, setAttackType] = useState<AttackType>("invasion");
+
+  // State for combat stance
+  const [selectedStance, setSelectedStance] = useState<CombatStance>("balanced");
 
   // State for showing preview
   const [showPreview, setShowPreview] = useState(false);
@@ -149,7 +154,7 @@ export function AttackInterface({
       soldiers: attackType === "invasion" ? effectiveSoldiers : selectedForces.soldiers,
     };
 
-    onLaunchAttack(attackForces, attackType);
+    onLaunchAttack(attackForces, attackType, selectedStance);
   };
 
   // Show preview
@@ -239,6 +244,14 @@ export function AttackInterface({
             </div>
           </button>
         </div>
+      </div>
+
+      {/* Combat Stance Selection */}
+      <div className="mb-6">
+        <StanceSelector
+          selectedStance={selectedStance}
+          onStanceChange={setSelectedStance}
+        />
       </div>
 
       {/* Force Selection */}

@@ -20,7 +20,11 @@ import {
   SOLDIERS_PER_CARRIER,
 } from "@/lib/combat/phases";
 import { resolveUnifiedInvasion } from "@/lib/combat/unified-combat";
-import { resolveVolleyInvasion } from "@/lib/combat/volley-combat-v2";
+import {
+  resolveBattle,
+  convertToLegacyCombatResult,
+  type BattleResult,
+} from "@/lib/combat/volley-combat-v2";
 import type { CombatStance } from "@/lib/combat/stances";
 
 /**
@@ -63,6 +67,8 @@ export interface AttackResult {
   success: boolean;
   error?: string;
   result?: CombatResult;
+  /** Full D20 battle result with volley details (only for volley combat) */
+  battleResult?: BattleResult;
   attackId?: string;
 }
 
@@ -289,6 +295,7 @@ export async function executeAttack(params: AttackParams): Promise<AttackResult>
 
   // Execute combat based on attack type
   let result: CombatResult;
+  let battleResult: BattleResult | undefined;
 
   if (attackType === "guerilla") {
     // Guerilla attack - soldiers only, single phase
@@ -298,12 +305,17 @@ export async function executeAttack(params: AttackParams): Promise<AttackResult>
     );
   } else if (USE_VOLLEY_COMBAT_V2) {
     // New D20 3-volley combat system
-    result = resolveVolleyInvasion(
-      forces,
-      defenderForces,
-      defender.planetCount,
-      { attackerStance }
+    // Resolve battle to get full D20 details
+    battleResult = resolveBattle(
+      { ...forces },
+      { ...defenderForces },
+      {
+        attackerStance,
+        defenderSectorCount: defender.planetCount,
+      }
     );
+    // Convert to legacy format for backward compatibility
+    result = convertToLegacyCombatResult(battleResult, forces, defenderForces);
   } else {
     // Legacy unified combat resolution
     // M4: Pass networth for feature-flagged underdog bonus
@@ -350,6 +362,7 @@ export async function executeAttack(params: AttackParams): Promise<AttackResult>
     return {
       success: true,
       result,
+      battleResult,
       attackId: attack.id,
     };
   } catch (error) {

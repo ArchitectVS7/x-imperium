@@ -112,11 +112,81 @@ npm run db:migrate       # Run migrations
 
 | Milestone | Status |
 |-----------|--------|
-| M0-M8: Core Game | ✅ Complete |
-| M9: Bot Decision Trees | ✅ Complete |
-| M10: Emotional States | ✅ Complete |
-| M11: Mid-Game Systems | ✅ Complete |
-| M12: LLM Bots | 🔲 In Progress |
+| M0-M8: Core Game | Complete |
+| M9: Bot Decision Trees | Complete |
+| M10: Emotional States | Complete |
+| M11: Mid-Game Systems | Complete |
+| M12: LLM Bots | In Progress |
+
+---
+
+## OPEN ITEMS - Three-Tier Redesign Plan
+
+**Last Updated:** January 5, 2026
+**Overall Progress:** 88% (Phases 1-4: 98%, Phase 5: 25%)
+
+### Verified Complete
+
+| Feature | Status | Location |
+|---------|--------|----------|
+| D20 Combat Engine | DONE | `src/lib/combat/volley-combat-v2.ts` |
+| 3-Volley System | DONE | `resolveBattle()` function |
+| True D20 Mechanics | DONE | `d20 + TAR >= DEF` |
+| Critical/Fumble | DONE | Natural 20/1 detection |
+| Theater Bonuses | DONE | `src/lib/combat/theater-control.ts` |
+| Combat Stances | DONE | `src/lib/combat/stances.ts` |
+| Combat Service Integration | DONE | `combat-service.ts:301` uses volley system |
+| Sector Terminology | DONE | 32 files rebranded from "planet" |
+
+### Outstanding Items
+
+#### 1. D20 Combat Narrative UI (Priority: HIGH)
+
+**Status:** Engine complete, UI does not surface roll details
+**Location:** `src/components/game/combat/BattleReport.tsx`
+
+**Problem:** The D20 engine tracks roll data (`roll`, `modifier`, `total`, `targetDEF`, `critical`, `fumble`) but `convertToLegacyCombatResult()` discards this detail, sending only power numbers to UI.
+
+**Required Work:**
+1. Extend `CombatResult` or create `DetailedCombatResult` to include roll data
+2. Update `BattleReport.tsx` to show per-volley roll breakdowns
+3. Add collapsible "Roll Details" section per volley
+
+**Effort:** 2-3 hours
+
+#### 2. Starmap Bot Personality Tells (Priority: HIGH)
+
+**Status:** Not implemented
+**Location:** `src/components/game/starmap/GalaxyView.tsx`, `SectorBox.tsx`
+
+**Problem:** GalaxyView shows intel levels and empire counts, but no visual indicators for military strength %, research doctrine hints, or archetype-based visual tells.
+
+**Required Work:**
+1. Add `militaryPercent` and `researchDoctrine` to `EmpireMapData` type
+2. Update `SectorBox.tsx` to render visual indicators
+3. Gate indicators behind intel level (need moderate+ to see)
+
+**Effort:** 1-2 hours
+
+#### 3. Phase 5 Validation Tasks (Priority: MEDIUM)
+
+**Status:** 25% complete
+
+**Required Work:**
+- [ ] Run 50 AI-only games for balance verification
+- [ ] Execute E2E tests in CI (all scenarios passing)
+- [ ] Performance profiling (turn processing <2s target)
+- [ ] Update game manual documentation
+
+**Effort:** 4-6 hours total
+
+### Implementation Priority Order
+
+1. **D20 Combat Narrative** - Users need to see the dice drama
+2. **Starmap Bot Tells** - Strategic visibility of opponent types
+3. **Phase 5 Validation** - Quality assurance and documentation
+
+---
 
 ## License
 
