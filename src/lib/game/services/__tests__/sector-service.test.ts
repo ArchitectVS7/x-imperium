@@ -8,9 +8,9 @@
 
 import { describe, it, expect } from "vitest";
 import {
-  calculatePlanetCost,
+  calculateSectorCost,
   calculateReleaseRefund,
-} from "@/lib/formulas/planet-costs";
+} from "@/lib/formulas/sector-costs";
 import { PLANET_COSTS } from "../../constants";
 import { calculateNetworth } from "../../networth";
 
@@ -18,13 +18,13 @@ import { calculateNetworth } from "../../networth";
 // UNIT TESTS FOR BUSINESS LOGIC
 // =============================================================================
 
-describe("Planet Service Business Logic", () => {
-  describe("Planet Purchase Cost Calculation", () => {
-    it("should calculate correct cost for first planet at 9 owned", () => {
-      // With 9 starting planets, cost multiplier is 1.45
+describe("Sector Service Business Logic", () => {
+  describe("Sector Purchase Cost Calculation", () => {
+    it("should calculate correct cost for first sector at 9 owned", () => {
+      // With 9 starting sectors, cost multiplier is 1.45
       const baseCost = PLANET_COSTS.food; // 8,000
       const currentOwned = 9;
-      const cost = calculatePlanetCost(baseCost, currentOwned);
+      const cost = calculateSectorCost(baseCost, currentOwned);
 
       // 8,000 × 1.45 = 11,600
       expect(cost).toBe(11_600);
@@ -33,26 +33,26 @@ describe("Planet Service Business Logic", () => {
     it("should calculate escalating costs for sequential purchases", () => {
       const baseCost = PLANET_COSTS.food; // 8,000
 
-      // 9 planets → 10: 8,000 × 1.45 = 11,600
-      expect(calculatePlanetCost(baseCost, 9)).toBe(11_600);
+      // 9 sectors → 10: 8,000 × 1.45 = 11,600
+      expect(calculateSectorCost(baseCost, 9)).toBe(11_600);
 
-      // 10 planets → 11: 8,000 × 1.50 = 12,000
-      expect(calculatePlanetCost(baseCost, 10)).toBe(12_000);
+      // 10 sectors → 11: 8,000 × 1.50 = 12,000
+      expect(calculateSectorCost(baseCost, 10)).toBe(12_000);
 
-      // 11 planets → 12: 8,000 × 1.55 = 12,400
-      expect(calculatePlanetCost(baseCost, 11)).toBe(12_400);
+      // 11 sectors → 12: 8,000 × 1.55 = 12,400
+      expect(calculateSectorCost(baseCost, 11)).toBe(12_400);
     });
 
-    it("should use different base costs for different planet types", () => {
+    it("should use different base costs for different sector types", () => {
       const currentOwned = 9;
 
-      expect(calculatePlanetCost(PLANET_COSTS.food, currentOwned)).toBe(11_600); // 8,000 × 1.45
-      expect(calculatePlanetCost(PLANET_COSTS.ore, currentOwned)).toBe(8_700);   // 6,000 × 1.45
-      expect(calculatePlanetCost(PLANET_COSTS.research, currentOwned)).toBe(33_350); // 23,000 × 1.45
+      expect(calculateSectorCost(PLANET_COSTS.food, currentOwned)).toBe(11_600); // 8,000 × 1.45
+      expect(calculateSectorCost(PLANET_COSTS.ore, currentOwned)).toBe(8_700);   // 6,000 × 1.45
+      expect(calculateSectorCost(PLANET_COSTS.research, currentOwned)).toBe(33_350); // 23,000 × 1.45
     });
   });
 
-  describe("Planet Release Refund Calculation", () => {
+  describe("Sector Release Refund Calculation", () => {
     it("should refund 50% of current price", () => {
       const baseCost = PLANET_COSTS.food; // 8,000
       const currentOwned = 9;
@@ -73,8 +73,8 @@ describe("Planet Service Business Logic", () => {
     });
   });
 
-  describe("Networth Update on Planet Change", () => {
-    it("should increase networth by 10 per planet purchased", () => {
+  describe("Networth Update on Sector Change", () => {
+    it("should increase networth by 10 per sector purchased", () => {
       const baseNetworth = calculateNetworth({
         planetCount: 9,
         soldiers: 100,
@@ -97,11 +97,11 @@ describe("Planet Service Business Logic", () => {
         covertAgents: 0,
       });
 
-      // Each planet adds 10 to networth
+      // Each sector adds 10 to networth
       expect(newNetworth - baseNetworth).toBe(10);
     });
 
-    it("should decrease networth by 10 per planet released", () => {
+    it("should decrease networth by 10 per sector released", () => {
       const baseNetworth = calculateNetworth({
         planetCount: 10,
         soldiers: 100,
@@ -128,8 +128,8 @@ describe("Planet Service Business Logic", () => {
     });
   });
 
-  describe("PRD Compliance - Planet Costs", () => {
-    it("should have correct base costs for all planet types (PRD 5.2)", () => {
+  describe("PRD Compliance - Sector Costs", () => {
+    it("should have correct base costs for all sector types (PRD 5.2)", () => {
       expect(PLANET_COSTS.food).toBe(8_000);
       expect(PLANET_COSTS.ore).toBe(6_000);
       expect(PLANET_COSTS.petroleum).toBe(11_500);
@@ -142,19 +142,19 @@ describe("Planet Service Business Logic", () => {
       expect(PLANET_COSTS.anti_pollution).toBe(10_500);
     });
 
-    it("should apply 5% cost scaling per owned planet (PRD 5.3)", () => {
+    it("should apply 5% cost scaling per owned sector (PRD 5.3)", () => {
       const baseCost = 10_000;
 
-      // Formula: BaseCost × (1 + OwnedPlanets × 0.05)
-      expect(calculatePlanetCost(baseCost, 0)).toBe(10_000);  // × 1.00
-      expect(calculatePlanetCost(baseCost, 1)).toBe(10_500);  // × 1.05
-      expect(calculatePlanetCost(baseCost, 10)).toBe(15_000); // × 1.50
-      expect(calculatePlanetCost(baseCost, 20)).toBe(20_000); // × 2.00
+      // Formula: BaseCost × (1 + OwnedSectors × 0.05)
+      expect(calculateSectorCost(baseCost, 0)).toBe(10_000);  // × 1.00
+      expect(calculateSectorCost(baseCost, 1)).toBe(10_500);  // × 1.05
+      expect(calculateSectorCost(baseCost, 10)).toBe(15_000); // × 1.50
+      expect(calculateSectorCost(baseCost, 20)).toBe(20_000); // × 2.00
     });
 
     it("should refund exactly 50% on release (PRD 5.3)", () => {
       const baseCost = 10_000;
-      const currentPrice = calculatePlanetCost(baseCost, 10); // 15,000
+      const currentPrice = calculateSectorCost(baseCost, 10); // 15,000
       const refund = calculateReleaseRefund(baseCost, 10);
 
       expect(refund).toBe(7_500); // 50% of 15,000
@@ -167,44 +167,44 @@ describe("Planet Service Business Logic", () => {
 // VALIDATION TESTS (logic that would be tested with mocks)
 // =============================================================================
 
-describe("Planet Service Validation Logic", () => {
-  describe("Buy Planet Validation", () => {
+describe("Sector Service Validation Logic", () => {
+  describe("Colonize Sector Validation", () => {
     it("should reject purchase with insufficient credits", () => {
       const credits = 10_000;
-      const planetCost = 11_600; // Food at 9 planets
+      const sectorCost = 11_600; // Food at 9 sectors
 
-      const canAfford = credits >= planetCost;
+      const canAfford = credits >= sectorCost;
       expect(canAfford).toBe(false);
     });
 
     it("should allow purchase with exact credits", () => {
       const credits = 11_600;
-      const planetCost = 11_600;
+      const sectorCost = 11_600;
 
-      const canAfford = credits >= planetCost;
+      const canAfford = credits >= sectorCost;
       expect(canAfford).toBe(true);
     });
 
     it("should correctly calculate credits after purchase", () => {
       const credits = 100_000;
-      const planetCost = 11_600;
+      const sectorCost = 11_600;
 
-      const remainingCredits = credits - planetCost;
+      const remainingCredits = credits - sectorCost;
       expect(remainingCredits).toBe(88_400);
     });
   });
 
-  describe("Release Planet Validation", () => {
-    it("should not allow releasing last planet", () => {
-      const planetCount = 1;
-      const canRelease = planetCount > 1;
+  describe("Release Sector Validation", () => {
+    it("should not allow releasing last sector", () => {
+      const sectorCount = 1;
+      const canRelease = sectorCount > 1;
 
       expect(canRelease).toBe(false);
     });
 
-    it("should allow releasing when multiple planets owned", () => {
-      const planetCount = 9;
-      const canRelease = planetCount > 1;
+    it("should allow releasing when multiple sectors owned", () => {
+      const sectorCount = 9;
+      const canRelease = sectorCount > 1;
 
       expect(canRelease).toBe(true);
     });
@@ -218,8 +218,8 @@ describe("Planet Service Validation Logic", () => {
     });
   });
 
-  describe("Planet Type Validation", () => {
-    it("should recognize all valid planet types", () => {
+  describe("Sector Type Validation", () => {
+    it("should recognize all valid sector types", () => {
       const validTypes = [
         "food", "ore", "petroleum", "tourism", "urban",
         "education", "government", "research", "supply", "anti_pollution"
@@ -237,11 +237,11 @@ describe("Planet Service Validation Logic", () => {
 // EDGE CASE TESTS
 // =============================================================================
 
-describe("Planet Service Edge Cases", () => {
-  it("should handle very high planet counts", () => {
+describe("Sector Service Edge Cases", () => {
+  it("should handle very high sector counts", () => {
     const baseCost = PLANET_COSTS.food;
-    const ownedPlanets = 100;
-    const cost = calculatePlanetCost(baseCost, ownedPlanets);
+    const ownedSectors = 100;
+    const cost = calculateSectorCost(baseCost, ownedSectors);
 
     // 8,000 × (1 + 100 × 0.05) = 8,000 × 6 = 48,000
     expect(cost).toBe(48_000);
@@ -249,7 +249,7 @@ describe("Planet Service Edge Cases", () => {
 
   it("should floor fractional costs", () => {
     // 7,500 × 1.45 = 10,875
-    const cost = calculatePlanetCost(7_500, 9);
+    const cost = calculateSectorCost(7_500, 9);
     expect(cost).toBe(10_875);
     expect(Number.isInteger(cost)).toBe(true);
   });
@@ -261,13 +261,13 @@ describe("Planet Service Edge Cases", () => {
     expect(Number.isInteger(refund)).toBe(true);
   });
 
-  it("should handle bulk planet purchases calculation", () => {
+  it("should handle bulk sector purchases calculation", () => {
     const baseCost = PLANET_COSTS.food;
 
-    // Calculate cost of buying 3 planets starting at 9 owned
-    const cost1 = calculatePlanetCost(baseCost, 9);  // 11,600
-    const cost2 = calculatePlanetCost(baseCost, 10); // 12,000
-    const cost3 = calculatePlanetCost(baseCost, 11); // 12,400
+    // Calculate cost of buying 3 sectors starting at 9 owned
+    const cost1 = calculateSectorCost(baseCost, 9);  // 11,600
+    const cost2 = calculateSectorCost(baseCost, 10); // 12,000
+    const cost3 = calculateSectorCost(baseCost, 11); // 12,400
     const totalCost = cost1 + cost2 + cost3;
 
     expect(totalCost).toBe(36_000);

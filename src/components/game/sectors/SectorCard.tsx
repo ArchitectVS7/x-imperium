@@ -1,18 +1,18 @@
 "use client";
 
 /**
- * Planet Card Component
+ * Sector Card Component
  *
- * Displays a single planet with its production info and release option.
+ * Displays a single sector with its production info and release option.
  */
 
 import { PLANET_TYPE_LABELS, PLANET_PRODUCTION } from "@/lib/game/constants";
 import type { Planet } from "@/lib/db/schema";
-import { ReleasePlanetButton } from "./ReleasePlanetButton";
+import { ReleaseSectorButton } from "./ReleaseSectorButton";
 import { SectorIcons } from "@/lib/theme/icons";
 import { Globe } from "lucide-react";
 
-const PLANET_TYPE_COLORS: Record<string, string> = {
+const SECTOR_TYPE_COLORS: Record<string, string> = {
   food: "border-green-500",
   ore: "border-gray-500",
   petroleum: "border-yellow-500",
@@ -25,20 +25,20 @@ const PLANET_TYPE_COLORS: Record<string, string> = {
   anti_pollution: "border-green-300",
 };
 
-interface PlanetCardProps {
-  planet: Planet;
-  planetCount: number;
+interface SectorCardProps {
+  sector: Planet;  // Still uses Planet type from DB schema
+  sectorCount: number;
   onRelease?: () => void;
 }
 
-export function PlanetCard({ planet, planetCount, onRelease }: PlanetCardProps) {
-  const borderColor = PLANET_TYPE_COLORS[planet.type] || "border-gray-600";
-  const IconComponent = SectorIcons[planet.type as keyof typeof SectorIcons] || Globe;
-  const label = PLANET_TYPE_LABELS[planet.type as keyof typeof PLANET_TYPE_LABELS] || planet.type;
-  const production = PLANET_PRODUCTION[planet.type as keyof typeof PLANET_PRODUCTION] || 0;
+export function SectorCard({ sector, sectorCount, onRelease }: SectorCardProps) {
+  const borderColor = SECTOR_TYPE_COLORS[sector.type] || "border-gray-600";
+  const IconComponent = SectorIcons[sector.type as keyof typeof SectorIcons] || Globe;
+  const label = PLANET_TYPE_LABELS[sector.type as keyof typeof PLANET_TYPE_LABELS] || sector.type;
+  const production = PLANET_PRODUCTION[sector.type as keyof typeof PLANET_PRODUCTION] || 0;
 
   const productionUnit = (() => {
-    switch (planet.type) {
+    switch (sector.type) {
       case "tourism":
       case "urban":
         return "credits/turn";
@@ -60,14 +60,14 @@ export function PlanetCard({ planet, planetCount, onRelease }: PlanetCardProps) 
   return (
     <div
       className={`lcars-panel border-l-4 ${borderColor}`}
-      data-testid={`planet-card-${planet.id}`}
+      data-testid={`sector-card-${sector.id}`}
     >
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-2">
           <IconComponent className="w-6 h-6" />
           <h3 className="text-lg font-semibold text-lcars-lavender">{label}</h3>
         </div>
-        <span className="text-sm text-gray-500">#{planet.id.slice(-6)}</span>
+        <span className="text-sm text-gray-500">#{sector.id.slice(-6)}</span>
       </div>
       <div className="text-gray-300 space-y-1">
         <div className="flex justify-between">
@@ -79,17 +79,17 @@ export function PlanetCard({ planet, planetCount, onRelease }: PlanetCardProps) 
         <div className="flex justify-between">
           <span>Base Value:</span>
           <span className="font-mono text-gray-400">
-            {planet.purchasePrice.toLocaleString()} credits
+            {sector.purchasePrice.toLocaleString()} credits
           </span>
         </div>
       </div>
       {/* Release Button */}
       <div className="mt-3 pt-2 border-t border-gray-700/50 flex justify-end">
-        <ReleasePlanetButton
-          planetId={planet.id}
-          planetType={label}
-          purchasePrice={planet.purchasePrice}
-          planetCount={planetCount}
+        <ReleaseSectorButton
+          sectorId={sector.id}
+          sectorType={label}
+          purchasePrice={sector.purchasePrice}
+          sectorCount={sectorCount}
           onRelease={onRelease}
         />
       </div>

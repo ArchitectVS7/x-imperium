@@ -307,7 +307,7 @@ test.describe("Milestone 4: Combat System", () => {
 
       const pages = [
         { href: "/game/combat", selector: '[data-testid="combat-page"]' },
-        { href: "/game/planets", selector: '[data-testid="planets-page"]' },
+        { href: "/game/sectors", selector: '[data-testid="sectors-page"]' },
         { href: "/game/military", selector: "h1" },
         { href: "/game/research", selector: "h1" },
         { href: "/game", selector: '[data-testid="dashboard"]' },

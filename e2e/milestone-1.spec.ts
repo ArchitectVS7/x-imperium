@@ -31,17 +31,17 @@ const EXPECTED_STARTING_STATE = {
   ore: 500,
   petroleum: 200,
   researchPoints: 0,
-  planetCount: 5, // Reduced from 9 for faster eliminations
+  sectorCount: 5, // Reduced from 9 for faster eliminations
   population: 10000,
   soldiers: 100,
   civilStatus: "Content",
-  // Networth: 5 planets × 10 + 100 soldiers × 0.0005 = 50.05 (stored as 50)
+  // Networth: 5 sectors × 10 + 100 soldiers × 0.0005 = 50.05 (stored as 50)
   networth: 50,
 };
 
-// Updated planet distribution: 5 planets (down from 9)
-// Research planet removed - players must purchase it
-const EXPECTED_PLANET_DISTRIBUTION = {
+// Updated sector distribution: 5 sectors (down from 9)
+// Research sector removed - players must purchase it
+const EXPECTED_SECTOR_DISTRIBUTION = {
   food: 1,      // Reduced from 2
   ore: 1,       // Reduced from 2
   petroleum: 1,
@@ -78,7 +78,7 @@ test.describe("Milestone 1: Static Empire View", () => {
       expect(state.ore).toBe(EXPECTED_STARTING_STATE.ore);
       expect(state.petroleum).toBe(EXPECTED_STARTING_STATE.petroleum);
       expect(state.researchPoints).toBe(EXPECTED_STARTING_STATE.researchPoints);
-      expect(state.planetCount).toBe(EXPECTED_STARTING_STATE.planetCount);
+      expect(state.sectorCount).toBe(EXPECTED_STARTING_STATE.sectorCount);
       expect(state.turn).toBe(1);
     });
   });
@@ -112,38 +112,38 @@ test.describe("Milestone 1: Static Empire View", () => {
     });
   });
 
-  test.describe("Planet System", () => {
-    test("planet list shows exactly 5 planets", async ({ gamePage }) => {
-      await ensureGameExists(gamePage, "Planet Count Test Empire");
+  test.describe("Sector System", () => {
+    test("sector list shows exactly 5 sectors", async ({ gamePage }) => {
+      await ensureGameExists(gamePage, "Sector Count Test Empire");
 
       const state = await getEmpireState(gamePage);
-      expect(state.planetCount).toBe(5);
+      expect(state.sectorCount).toBe(5);
 
-      const planetList = gamePage.locator('[data-testid="planet-list"]');
-      await expect(planetList).toContainText("Planets (5)");
+      const sectorList = gamePage.locator('[data-testid="sector-list"]');
+      await expect(sectorList).toContainText("Sectors (5)");
     });
 
-    test("planet distribution matches PRD specification", async ({ gamePage }) => {
-      await ensureGameExists(gamePage, "Planet Distribution Test Empire");
+    test("sector distribution matches PRD specification", async ({ gamePage }) => {
+      await ensureGameExists(gamePage, "Sector Distribution Test Empire");
 
-      const planetList = gamePage.locator('[data-testid="planet-list"]');
-      await expect(planetList).toBeVisible();
+      const sectorList = gamePage.locator('[data-testid="sector-list"]');
+      await expect(sectorList).toBeVisible();
 
-      // FUNCTIONAL: Verify exact planet type counts
-      for (const [type, count] of Object.entries(EXPECTED_PLANET_DISTRIBUTION)) {
-        const planetTypeLocator = planetList.locator(`[data-testid="planet-type-${type}"]`);
-        await expect(planetTypeLocator).toContainText(String(count));
+      // FUNCTIONAL: Verify exact sector type counts
+      for (const [type, count] of Object.entries(EXPECTED_SECTOR_DISTRIBUTION)) {
+        const sectorTypeLocator = sectorList.locator(`[data-testid="sector-type-${type}"]`);
+        await expect(sectorTypeLocator).toContainText(String(count));
       }
     });
 
-    test("can navigate to planets page and see all planet cards", async ({ gamePage }) => {
-      await ensureGameExists(gamePage, "Planets Page Test Empire");
+    test("can navigate to sectors page and see all sector cards", async ({ gamePage }) => {
+      await ensureGameExists(gamePage, "Sectors Page Test Empire");
 
-      await navigateToGamePage(gamePage, "planets");
+      await navigateToGamePage(gamePage, "sectors");
 
-      // FUNCTIONAL: Verify exactly 5 planet cards exist (reduced from 9)
-      const planetCards = gamePage.locator('[data-testid^="planet-card-"]');
-      await expect(planetCards).toHaveCount(5);
+      // FUNCTIONAL: Verify exactly 5 sector cards exist (reduced from 9)
+      const sectorCards = gamePage.locator('[data-testid^="sector-card-"]');
+      await expect(sectorCards).toHaveCount(5);
     });
   });
 
@@ -153,7 +153,7 @@ test.describe("Milestone 1: Static Empire View", () => {
 
       const state = await getEmpireState(gamePage);
 
-      // FUNCTIONAL: Networth = 5 planets × 10 + 100 soldiers × 0.0005 = 50.05 → 50
+      // FUNCTIONAL: Networth = 5 sectors × 10 + 100 soldiers × 0.0005 = 50.05 → 50
       // Allow small tolerance for floating point
       expect(state.networth).toBeGreaterThanOrEqual(49);
       expect(state.networth).toBeLessThanOrEqual(51);
@@ -247,7 +247,7 @@ test.describe("Milestone 1: Static Empire View", () => {
       expect(after.turn).toBe(before.turn + 1);
 
       // Resources should change (production minus maintenance)
-      // Food planets produce food, research planets produce RP, etc.
+      // Food sectors produce food, research sectors produce RP, etc.
       // At minimum, some resource should change
       const resourcesChanged =
         after.credits !== before.credits ||
@@ -264,10 +264,10 @@ test.describe("Milestone 1: Static Empire View", () => {
     test("can navigate to all main game pages", async ({ gamePage }) => {
       await ensureGameExists(gamePage, "Navigation Test Empire");
 
-      // Test navigation to planets page
-      await gamePage.click('a[href="/game/planets"]');
+      // Test navigation to sectors page
+      await gamePage.click('a[href="/game/sectors"]');
       await gamePage.waitForLoadState("networkidle");
-      await expect(gamePage.locator('[data-testid="planets-page"]')).toBeVisible({ timeout: 10000 });
+      await expect(gamePage.locator('[data-testid="sectors-page"]')).toBeVisible({ timeout: 10000 });
 
       // Return to dashboard
       await gamePage.click('a[href="/game"]');

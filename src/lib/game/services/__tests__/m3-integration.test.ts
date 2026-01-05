@@ -24,7 +24,7 @@ import {
 
 // Config imports
 import { UNIT_BUILD_TIMES } from "../../build-config";
-import { calculatePlanetCost, calculateReleaseRefund } from "@/lib/formulas/planet-costs";
+import { calculateSectorCost, calculateReleaseRefund } from "@/lib/formulas/sector-costs";
 import {
   UNIT_COSTS,
   UNIT_POPULATION,
@@ -37,27 +37,27 @@ import { calculateResearchCost } from "@/lib/formulas/research-costs";
 // PLANET MANAGEMENT INTEGRATION TESTS
 // =============================================================================
 
-describe("M3 Integration: Planet Management", () => {
+describe("M3 Integration: Sector Management", () => {
   describe("Cost Scaling", () => {
-    it("should increase cost with more owned planets", () => {
-      // Base cost for food planet is 1000
+    it("should increase cost with more owned sectors", () => {
+      // Base cost for food sector is 1000
       const baseCost = 1000;
 
-      // Costs should increase with more planets
-      const cost0Planets = calculatePlanetCost(baseCost, 0);
-      const cost5Planets = calculatePlanetCost(baseCost, 5);
-      const cost10Planets = calculatePlanetCost(baseCost, 10);
-      const cost20Planets = calculatePlanetCost(baseCost, 20);
+      // Costs should increase with more sectors
+      const cost0Sectors = calculateSectorCost(baseCost, 0);
+      const cost5Sectors = calculateSectorCost(baseCost, 5);
+      const cost10Sectors = calculateSectorCost(baseCost, 10);
+      const cost20Sectors = calculateSectorCost(baseCost, 20);
 
-      expect(cost5Planets).toBeGreaterThan(cost0Planets);
-      expect(cost10Planets).toBeGreaterThan(cost5Planets);
-      expect(cost20Planets).toBeGreaterThan(cost10Planets);
+      expect(cost5Sectors).toBeGreaterThan(cost0Sectors);
+      expect(cost10Sectors).toBeGreaterThan(cost5Sectors);
+      expect(cost20Sectors).toBeGreaterThan(cost10Sectors);
     });
 
     it("should apply 50% refund on release", () => {
       // Refund should be 50% of current cost
       const baseCost = 1000;
-      const currentCost = calculatePlanetCost(baseCost, 10);
+      const currentCost = calculateSectorCost(baseCost, 10);
       const refund = calculateReleaseRefund(baseCost, 10);
 
       expect(refund).toBe(Math.floor(currentCost * 0.5));
@@ -386,12 +386,12 @@ describe("M3 Integration: Full Turn Processing", () => {
 // =============================================================================
 
 describe("M3 PRD Compliance Verification", () => {
-  describe("PRD 5.3: Planet Costs", () => {
-    it("should have 5% scaling per owned planet", () => {
+  describe("PRD 5.3: Sector Costs", () => {
+    it("should have 5% scaling per owned sector", () => {
       // Verify scaling factor
       const baseCost = 1000;
-      const cost0 = calculatePlanetCost(baseCost, 0);
-      const cost1 = calculatePlanetCost(baseCost, 1);
+      const cost0 = calculateSectorCost(baseCost, 0);
+      const cost1 = calculateSectorCost(baseCost, 1);
       const expectedIncrease = cost0 * 0.05;
 
       expect(cost1 - cost0).toBe(expectedIncrease);
@@ -399,7 +399,7 @@ describe("M3 PRD Compliance Verification", () => {
 
     it("should have 50% refund on release", () => {
       const baseCost = 1000;
-      const cost = calculatePlanetCost(baseCost, 5);
+      const cost = calculateSectorCost(baseCost, 5);
       const refund = calculateReleaseRefund(baseCost, 5);
 
       expect(refund).toBe(Math.floor(cost * 0.5));

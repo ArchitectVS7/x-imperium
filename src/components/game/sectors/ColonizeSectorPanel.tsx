@@ -1,11 +1,11 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { buyPlanetAction, getAllPlanetPurchaseInfoAction } from "@/app/actions/planet-actions";
-import type { PlanetPurchaseInfo } from "@/lib/game/services/planet-service";
+import { colonizeSectorAction, getAllSectorPurchaseInfoAction } from "@/app/actions/sector-actions";
+import type { SectorPurchaseInfo } from "@/lib/game/services/sector-service";
 import { UI_LABELS, getSectorTypeLabel } from "@/lib/game/constants";
 
-const PLANET_TYPE_COLORS: Record<string, string> = {
+const SECTOR_TYPE_COLORS: Record<string, string> = {
   food: "text-green-400",
   ore: "text-gray-400",
   petroleum: "text-yellow-500",
@@ -18,13 +18,13 @@ const PLANET_TYPE_COLORS: Record<string, string> = {
   anti_pollution: "text-green-300",
 };
 
-interface BuyPlanetPanelProps {
+interface ColonizeSectorPanelProps {
   credits: number;
-  onPurchase?: () => void;
+  onColonize?: () => void;
 }
 
-export function BuyPlanetPanel({ credits, onPurchase }: BuyPlanetPanelProps) {
-  const [purchaseInfo, setPurchaseInfo] = useState<PlanetPurchaseInfo[] | null>(null);
+export function ColonizeSectorPanel({ credits, onColonize }: ColonizeSectorPanelProps) {
+  const [purchaseInfo, setPurchaseInfo] = useState<SectorPurchaseInfo[] | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isPurchasing, startPurchase] = useTransition();
   const [error, setError] = useState<string | null>(null);
@@ -34,7 +34,7 @@ export function BuyPlanetPanel({ credits, onPurchase }: BuyPlanetPanelProps) {
     setIsLoading(true);
     setError(null);
     try {
-      const info = await getAllPlanetPurchaseInfoAction();
+      const info = await getAllSectorPurchaseInfoAction();
       setPurchaseInfo(info);
     } catch {
       setError("Failed to load sector prices");
@@ -43,17 +43,17 @@ export function BuyPlanetPanel({ credits, onPurchase }: BuyPlanetPanelProps) {
     }
   };
 
-  const handleBuyPlanet = async (planetType: string) => {
+  const handleColonizeSector = async (sectorType: string) => {
     setError(null);
     setSuccess(null);
 
     startPurchase(async () => {
-      const result = await buyPlanetAction(planetType as Parameters<typeof buyPlanetAction>[0]);
+      const result = await colonizeSectorAction(sectorType as Parameters<typeof colonizeSectorAction>[0]);
       if (result.success) {
-        setSuccess(`Colonized ${getSectorTypeLabel(planetType as Parameters<typeof getSectorTypeLabel>[0])} for ${result.creditsDeducted?.toLocaleString()} credits`);
+        setSuccess(`Colonized ${getSectorTypeLabel(sectorType as Parameters<typeof getSectorTypeLabel>[0])} for ${result.creditsDeducted?.toLocaleString()} credits`);
         // Refresh purchase info
         await loadPurchaseInfo();
-        onPurchase?.();
+        onColonize?.();
       } else {
         setError(result.error || "Failed to colonize sector");
       }
@@ -62,7 +62,7 @@ export function BuyPlanetPanel({ credits, onPurchase }: BuyPlanetPanelProps) {
 
   if (!purchaseInfo) {
     return (
-      <div className="lcars-panel" data-testid="buy-planet-panel">
+      <div className="lcars-panel" data-testid="colonize-sector-panel">
         <h2 className="text-lg font-semibold text-lcars-lavender mb-4">
           {UI_LABELS.colonizeSector}
         </h2>
@@ -78,7 +78,7 @@ export function BuyPlanetPanel({ credits, onPurchase }: BuyPlanetPanelProps) {
   }
 
   return (
-    <div className="lcars-panel" data-testid="buy-planet-panel">
+    <div className="lcars-panel" data-testid="colonize-sector-panel">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-lg font-semibold text-lcars-lavender">
           {UI_LABELS.colonizeSector}
@@ -102,15 +102,15 @@ export function BuyPlanetPanel({ credits, onPurchase }: BuyPlanetPanelProps) {
 
       <div className="space-y-2 max-h-96 overflow-y-auto">
         {purchaseInfo.map((info) => {
-          const label = getSectorTypeLabel(info.planetType as Parameters<typeof getSectorTypeLabel>[0]);
-          const color = PLANET_TYPE_COLORS[info.planetType] || "text-gray-300";
+          const label = getSectorTypeLabel(info.sectorType as Parameters<typeof getSectorTypeLabel>[0]);
+          const color = SECTOR_TYPE_COLORS[info.sectorType] || "text-gray-300";
           const canAfford = credits >= info.currentCost;
 
           return (
             <div
-              key={info.planetType}
+              key={info.sectorType}
               className="flex items-center justify-between p-2 bg-black/30 rounded border border-gray-700"
-              data-testid={`buy-planet-${info.planetType}`}
+              data-testid={`colonize-sector-${info.sectorType}`}
             >
               <div className="flex-1">
                 <div className={`font-semibold ${color}`}>{label}</div>
@@ -125,7 +125,7 @@ export function BuyPlanetPanel({ credits, onPurchase }: BuyPlanetPanelProps) {
                 <div className="text-xs text-gray-500">credits</div>
               </div>
               <button
-                onClick={() => handleBuyPlanet(info.planetType)}
+                onClick={() => handleColonizeSector(info.sectorType)}
                 disabled={!canAfford || isPurchasing}
                 className={`px-3 py-1 rounded font-semibold text-sm transition-colors ${
                   canAfford
@@ -133,7 +133,7 @@ export function BuyPlanetPanel({ credits, onPurchase }: BuyPlanetPanelProps) {
                     : "bg-gray-700 text-gray-500 cursor-not-allowed"
                 }`}
               >
-                {isPurchasing ? "..." : "Buy"}
+                {isPurchasing ? "..." : "Colonize"}
               </button>
             </div>
           );

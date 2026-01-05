@@ -39,16 +39,16 @@ export {
   RETREAT_CASUALTY_RATE,
 } from "./casualties";
 
-// Planet Cost Calculations (PRD 5.3)
+// Sector Cost Calculations (PRD 5.3)
 export {
-  calculatePlanetCost,
+  calculateSectorCost,
   calculateReleaseRefund,
-  getPlanetCostMultiplier,
-  calculateBulkPlanetCost,
-  calculateAffordablePlanets,
-  PLANET_COST_SCALING,
-  PLANET_RELEASE_REFUND,
-} from "./planet-costs";
+  getSectorCostMultiplier,
+  calculateBulkSectorCost,
+  calculateAffordableSectors,
+  SECTOR_COST_SCALING,
+  SECTOR_RELEASE_REFUND,
+} from "./sector-costs";
 
 // Population Mechanics (PRD 4.4)
 export {

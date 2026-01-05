@@ -111,7 +111,7 @@ test.describe("Game Controls Validation", () => {
     // Test each control surface
     const controls = {
       military: false,
-      planets: false,
+      sectors: false,
       research: false,
       market: false,
       diplomacy: false,
@@ -138,11 +138,11 @@ test.describe("Game Controls Validation", () => {
             break;
 
           case 2:
-            if (await navigateTo(page, "planets", turn)) {
+            if (await navigateTo(page, "sectors", turn)) {
               // Look for planet-related content
               const hasContent = await page.locator('text=/planet|sector|agricultural|industrial|colonize/i').first().isVisible({ timeout: 1000 }).catch(() => false);
               if (hasContent) {
-                controls.planets = true;
+                controls.sectors = true;
                 log(turn, "Planet controls VALIDATED");
               }
             }

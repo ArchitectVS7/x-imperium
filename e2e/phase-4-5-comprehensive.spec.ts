@@ -118,11 +118,11 @@ test.describe("Phase 4-5: 10-Turn Game with 10 Bots", () => {
     await expect(page.locator('[data-testid="turn-counter"]')).toContainText("Turn 11");
 
     // Verify navigation still works
-    const planetsLink = page.locator('a[href="/game/planets"]');
+    const planetsLink = page.locator('a[href="/game/sectors"]');
     if (await planetsLink.count() > 0) {
       await planetsLink.click();
       await page.waitForURL(/\/game\/planets/);
-      await expect(page.locator('[data-testid="planets-page"]')).toBeVisible();
+      await expect(page.locator('[data-testid="sectors-page"]')).toBeVisible();
     }
 
     const militaryLink = page.locator('a[href="/game/military"]');

@@ -127,7 +127,7 @@ test.describe("Template: Navigation Test Pattern", () => {
     const dashboardState = await getEmpireState(gamePage);
 
     // Navigate to another page
-    await navigateToGamePage(gamePage, "planets");
+    await navigateToGamePage(gamePage, "sectors");
 
     // Navigate back to dashboard
     await gamePage.click('a[href="/game"]');

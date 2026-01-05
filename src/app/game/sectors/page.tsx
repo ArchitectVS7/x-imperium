@@ -6,11 +6,11 @@ import {
 } from "@/app/actions/game-actions";
 import { getSectorTypeLabel, UI_LABELS } from "@/lib/game/constants";
 import type { Planet } from "@/lib/db/schema";
-import { BuyPlanetPanel } from "@/components/game/planets/BuyPlanetPanel";
-import { PlanetsList } from "@/components/game/planets/PlanetsList";
+import { ColonizeSectorPanel } from "@/components/game/sectors/ColonizeSectorPanel";
+import { SectorsList } from "@/components/game/sectors/SectorsList";
 import { SectorIcons } from "@/lib/theme/icons";
 
-async function PlanetsContent() {
+async function SectorsContent() {
   const hasGame = await hasActiveGameAction();
 
   if (!hasGame) {
@@ -43,27 +43,27 @@ async function PlanetsContent() {
   );
 
   return (
-    <div data-testid="planets-page">
+    <div data-testid="sectors-page">
       {/* Summary Section */}
       <div className="lcars-panel mb-6">
         <h2 className="text-lg font-semibold text-lcars-lavender mb-4">
           Empire Holdings
         </h2>
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
-          {sortedTypes.map(([type, planets]) => {
+          {sortedTypes.map(([type, sectors]) => {
             const label = getSectorTypeLabel(type as Parameters<typeof getSectorTypeLabel>[0]);
             const IconComponent = SectorIcons[type as keyof typeof SectorIcons];
             return (
               <div
                 key={type}
                 className="text-center p-2 bg-gray-800/50 rounded"
-                data-testid={`planet-summary-${type}`}
+                data-testid={`sector-summary-${type}`}
               >
                 <div className="text-2xl mb-1 flex justify-center">
                   {IconComponent ? <IconComponent className="w-7 h-7" /> : <span>?</span>}
                 </div>
                 <div className="text-lcars-amber font-mono text-xl">
-                  {planets.length}
+                  {sectors.length}
                 </div>
                 <div className="text-gray-400 text-sm">{label}</div>
               </div>
@@ -72,18 +72,18 @@ async function PlanetsContent() {
         </div>
       </div>
 
-      {/* Buy Planet Section */}
+      {/* Colonize Sector Section */}
       <div className="mb-6">
-        <BuyPlanetPanel credits={data.resources.credits} />
+        <ColonizeSectorPanel credits={data.resources.credits} />
       </div>
 
-      {/* Detailed Planet Cards with Release Option */}
-      <PlanetsList planets={data.planets} planetCount={data.stats.planetCount} />
+      {/* Detailed Sector Cards with Release Option */}
+      <SectorsList planets={data.planets} planetCount={data.stats.planetCount} />
     </div>
   );
 }
 
-function PlanetsSkeleton() {
+function SectorsSkeleton() {
   return (
     <div className="animate-pulse">
       <div className="lcars-panel h-32 bg-gray-800/50 mb-6" />
@@ -96,14 +96,14 @@ function PlanetsSkeleton() {
   );
 }
 
-export default function PlanetsPage() {
+export default function SectorsPage() {
   return (
     <div className="max-w-6xl mx-auto">
       <h1 className="text-3xl font-display text-lcars-amber mb-8">
         {UI_LABELS.sectors}
       </h1>
-      <Suspense fallback={<PlanetsSkeleton />}>
-        <PlanetsContent />
+      <Suspense fallback={<SectorsSkeleton />}>
+        <SectorsContent />
       </Suspense>
     </div>
   );

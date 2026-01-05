@@ -2,14 +2,14 @@
 
 import { cookies } from "next/headers";
 import {
-  buyPlanet,
-  releasePlanet,
-  getPlanetPurchaseInfo,
-  getAllPlanetPurchaseInfo,
-  type BuyPlanetResult,
-  type ReleasePlanetResult,
-  type PlanetPurchaseInfo,
-} from "@/lib/game/services/planet-service";
+  colonizeSector,
+  releaseSector,
+  getSectorPurchaseInfo,
+  getAllSectorPurchaseInfo,
+  type ColonizeSectorResult,
+  type ReleaseSectorResult,
+  type SectorPurchaseInfo,
+} from "@/lib/game/services/sector-service";
 import { getGameById } from "@/lib/game/repositories/game-repository";
 import type { PlanetType } from "@/lib/game/constants";
 import {
@@ -37,20 +37,20 @@ async function getGameCookies(): Promise<{
 }
 
 // =============================================================================
-// PLANET ACTIONS
+// SECTOR ACTIONS
 // =============================================================================
 
 /**
- * Buy a planet of the specified type.
+ * Colonize a sector of the specified type.
  *
- * SECURITY: Validates planet type at runtime and verifies empire ownership.
+ * SECURITY: Validates sector type at runtime and verifies empire ownership.
  */
-export async function buyPlanetAction(
-  planetType: PlanetType
-): Promise<BuyPlanetResult> {
-  // Validate planet type at runtime (TypeScript types are compile-time only)
-  if (!isValidPlanetType(planetType)) {
-    return { success: false, error: "Invalid planet type" };
+export async function colonizeSectorAction(
+  sectorType: PlanetType
+): Promise<ColonizeSectorResult> {
+  // Validate sector type at runtime (TypeScript types are compile-time only)
+  if (!isValidPlanetType(sectorType)) {
+    return { success: false, error: "Invalid sector type" };
   }
 
   const { gameId, empireId } = await getGameCookies();
@@ -72,27 +72,27 @@ export async function buyPlanetAction(
   }
 
   try {
-    return await buyPlanet(empireId, planetType, gameId, game.currentTurn);
+    return await colonizeSector(empireId, sectorType, gameId, game.currentTurn);
   } catch (error) {
-    console.error("Failed to buy planet:", error);
+    console.error("Failed to colonize sector:", error);
     return {
       success: false,
-      error: error instanceof Error ? error.message : "Failed to buy planet",
+      error: error instanceof Error ? error.message : "Failed to colonize sector",
     };
   }
 }
 
 /**
- * Release (sell) a planet by ID.
+ * Release (sell) a sector by ID.
  *
- * SECURITY: Validates planet ID format and verifies empire ownership.
+ * SECURITY: Validates sector ID format and verifies empire ownership.
  */
-export async function releasePlanetAction(
-  planetId: string
-): Promise<ReleasePlanetResult> {
-  // Validate planet ID format
-  if (!isValidUUID(planetId)) {
-    return { success: false, error: "Invalid planet ID format" };
+export async function releaseSectorAction(
+  sectorId: string
+): Promise<ReleaseSectorResult> {
+  // Validate sector ID format
+  if (!isValidUUID(sectorId)) {
+    return { success: false, error: "Invalid sector ID format" };
   }
 
   const { gameId, empireId } = await getGameCookies();
@@ -108,26 +108,26 @@ export async function releasePlanetAction(
   }
 
   try {
-    return await releasePlanet(empireId, planetId);
+    return await releaseSector(empireId, sectorId);
   } catch (error) {
-    console.error("Failed to release planet:", error);
+    console.error("Failed to release sector:", error);
     return {
       success: false,
-      error: error instanceof Error ? error.message : "Failed to release planet",
+      error: error instanceof Error ? error.message : "Failed to release sector",
     };
   }
 }
 
 /**
- * Get purchase info for a specific planet type.
+ * Get purchase info for a specific sector type.
  *
- * SECURITY: Validates planet type at runtime.
+ * SECURITY: Validates sector type at runtime.
  */
-export async function getPlanetPurchaseInfoAction(
-  planetType: PlanetType
-): Promise<PlanetPurchaseInfo | null> {
-  // Validate planet type at runtime
-  if (!isValidPlanetType(planetType)) {
+export async function getSectorPurchaseInfoAction(
+  sectorType: PlanetType
+): Promise<SectorPurchaseInfo | null> {
+  // Validate sector type at runtime
+  if (!isValidPlanetType(sectorType)) {
     return null;
   }
 
@@ -138,17 +138,17 @@ export async function getPlanetPurchaseInfoAction(
   }
 
   try {
-    return await getPlanetPurchaseInfo(empireId, planetType);
+    return await getSectorPurchaseInfo(empireId, sectorType);
   } catch (error) {
-    console.error("Failed to get planet purchase info:", error);
+    console.error("Failed to get sector purchase info:", error);
     return null;
   }
 }
 
 /**
- * Get purchase info for all planet types.
+ * Get purchase info for all sector types.
  */
-export async function getAllPlanetPurchaseInfoAction(): Promise<PlanetPurchaseInfo[] | null> {
+export async function getAllSectorPurchaseInfoAction(): Promise<SectorPurchaseInfo[] | null> {
   const { empireId } = await getGameCookies();
 
   if (!empireId) {
@@ -156,9 +156,9 @@ export async function getAllPlanetPurchaseInfoAction(): Promise<PlanetPurchaseIn
   }
 
   try {
-    return await getAllPlanetPurchaseInfo(empireId);
+    return await getAllSectorPurchaseInfo(empireId);
   } catch (error) {
-    console.error("Failed to get all planet purchase info:", error);
+    console.error("Failed to get all sector purchase info:", error);
     return null;
   }
 }

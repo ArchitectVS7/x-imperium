@@ -149,8 +149,6 @@ async function testBuildUnits(page: Page): Promise<void> {
     return;
   }
 
-  await page.waitForTimeout(500);
-
   // Try to build soldiers (cheapest)
   const soldierBuild = page.locator('[data-testid="build-soldiers"]').first();
   if (await soldierBuild.isVisible({ timeout: 1000 }).catch(() => false)) {
@@ -177,26 +175,24 @@ async function testBuildUnits(page: Page): Promise<void> {
 }
 
 async function testBuyPlanets(page: Page): Promise<void> {
-  log("Testing planet purchase...");
+  log("Testing sector colonization...");
 
-  if (!await navigateTo(page, "planets")) {
+  if (!await navigateTo(page, "sectors")) {
     logWarning("Could not access planets page");
     return;
   }
-
-  await page.waitForTimeout(500);
 
   // Try to buy an agricultural planet (cheapest, produces food)
   const buyAgri = page.locator('[data-testid="buy-agricultural"]').first();
   if (await buyAgri.isVisible({ timeout: 1000 }).catch(() => false)) {
     await buyAgri.click();
-    log("Bought agricultural planet");
+    log("Colonized agricultural sector");
   } else {
     // Try generic buy button
     const anyBuy = page.locator('button:has-text("Buy"), button:has-text("Colonize")').first();
     if (await anyBuy.isVisible({ timeout: 500 }).catch(() => false)) {
       await anyBuy.click();
-      log("Used generic planet purchase");
+      log("Used generic sector colonization");
     }
   }
 }
@@ -208,8 +204,6 @@ async function testResearch(page: Page): Promise<void> {
     logWarning("Could not access research page");
     return;
   }
-
-  await page.waitForTimeout(500);
 
   // Try to allocate research funds
   const fundInput = page.locator('[data-testid="research-allocation"], input[type="number"]').first();
@@ -229,8 +223,6 @@ async function testMarket(page: Page): Promise<void> {
     logWarning("Could not access market page");
     return;
   }
-
-  await page.waitForTimeout(1000);
 
   // Check market panel - try multiple selectors
   const marketPanel = page.locator('[data-testid="market-panel"], .market-panel, [class*="market"]').first();
@@ -273,8 +265,6 @@ async function testCombat(page: Page): Promise<void> {
     return;
   }
 
-  await page.waitForTimeout(500);
-
   // Check if we have attack interface
   const attackInterface = page.locator('[data-testid="attack-interface"]');
   if (!await attackInterface.isVisible({ timeout: 2000 }).catch(() => false)) {
@@ -305,8 +295,8 @@ async function testCombat(page: Page): Promise<void> {
     await attackButton.click();
     log("Launched attack!");
 
-    // Wait for result
-    await page.waitForTimeout(2000);
+    // Wait briefly for result
+    await page.waitForLoadState("networkidle", { timeout: 3000 }).catch(() => {});
 
     // Check for victory/defeat message
     const victory = await page.locator('text=/victory|won|captured/i').isVisible({ timeout: 1000 }).catch(() => false);
@@ -329,8 +319,6 @@ async function testDiplomacy(page: Page): Promise<void> {
     logWarning("Could not access diplomacy page");
     return;
   }
-
-  await page.waitForTimeout(500);
 
   // Try to propose a NAP
   const proposeNap = page.locator('[data-testid="propose-nap"], button:has-text("Non-Aggression")').first();
@@ -355,8 +343,6 @@ async function testCovertOps(page: Page): Promise<void> {
     return;
   }
 
-  await page.waitForTimeout(500);
-
   // Try to run a spy mission
   const spyButton = page.locator('[data-testid="spy-mission"], button:has-text("Spy")').first();
   if (await spyButton.isVisible({ timeout: 1000 }).catch(() => false)) {
@@ -372,8 +358,6 @@ async function testStarmap(page: Page): Promise<void> {
     logWarning("Could not access starmap page");
     return;
   }
-
-  await page.waitForTimeout(2000); // Give more time for visualization to render
 
   // Check for visualization with multiple selectors
   const visualizationSelectors = [
@@ -443,7 +427,7 @@ async function endTurn(page: Page): Promise<boolean> {
         log("End turn clicked");
 
         // Wait for turn processing
-        await page.waitForTimeout(2000);
+        await page.waitForLoadState("networkidle", { timeout: 5000 }).catch(() => {});
 
         // Dismiss any turn summary modal
         await clickIfVisible(page, '[data-testid="turn-summary-continue"]', "Turn summary continue");
@@ -514,7 +498,6 @@ test.describe("Full 50-Turn Game Simulation", () => {
       log("Setup form visible - attempting to dismiss");
       // Press escape or click outside
       await page.keyboard.press("Escape");
-      await page.waitForTimeout(500);
     }
 
     // Verify game is active by checking for NEXT CYCLE button or turn counter
@@ -605,9 +588,6 @@ test.describe("Full 50-Turn Game Simulation", () => {
           await page.waitForLoadState("networkidle");
           await dismissTutorialOverlays(page);
         }
-
-        // Brief pause between turns
-        await page.waitForTimeout(500);
 
       } catch (error) {
         logError(`Turn ${turn} error: ${String(error).substring(0, 100)}`);

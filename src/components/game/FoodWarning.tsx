@@ -94,12 +94,12 @@ export function FoodWarning({ food, population, foodProduction }: FoodWarningPro
           {(willStarve || criticalFood) && (
             <div className="mt-3 flex gap-2">
               <Link
-                href="/game/planets?filter=food"
+                href="/game/sectors?filter=food"
                 className="flex items-center gap-2 px-3 py-2 bg-yellow-600 hover:bg-yellow-500 rounded text-sm font-medium transition-colors"
-                data-testid="buy-agriculture-button"
+                data-testid="colonize-agriculture-button"
               >
                 <ShoppingCart className="w-4 h-4" />
-                <span>Buy Agriculture</span>
+                <span>Colonize Agriculture</span>
               </Link>
               <Link
                 href="/game/market?resource=food&action=buy"

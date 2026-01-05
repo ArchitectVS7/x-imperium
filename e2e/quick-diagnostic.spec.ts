@@ -103,7 +103,7 @@ test.describe("Quick 5-Turn Diagnostic", () => {
     console.log("Step 6: Testing navigation");
 
     const pagesToTest = [
-      { name: "Planets", url: "/game/planets", selector: 'a[href="/game/planets"]' },
+      { name: "Planets", url: "/game/sectors", selector: 'a[href="/game/sectors"]' },
       { name: "Military", url: "/game/military", selector: 'a[href="/game/military"]' },
       { name: "Research", url: "/game/research", selector: 'a[href="/game/research"]' },
       { name: "Market", url: "/game/market", selector: 'a[href="/game/market"]' },

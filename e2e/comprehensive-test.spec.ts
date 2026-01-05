@@ -204,7 +204,7 @@ test.describe("10-Turn Comprehensive Game Test", () => {
 
         switch (actionIndex) {
           case 1:
-            // Turn 1, 11, 21, 31, 41: Buy planets
+            // Turn 1, 11, 21, 31, 41: Colonize sectors
             await testBuyPlanets(page, turn);
             break;
 
@@ -306,31 +306,31 @@ test.describe("10-Turn Comprehensive Game Test", () => {
 // Helper functions for testing different game features
 
 async function testBuyPlanets(page: Page, turn: number) {
-  logDebug(`Turn ${turn}: Testing planet purchase`);
+  logDebug(`Turn ${turn}: Testing sector colonization`);
 
   try {
     // Navigate to planets page
-    const planetsLink = page.locator('a[href="/game/planets"]').first();
-    if (!await planetsLink.isVisible({ timeout: 2000 }).catch(() => false)) {
+    const sectorsLink = page.locator('a[href="/game/sectors"]').first();
+    if (!await sectorsLink.isVisible({ timeout: 2000 }).catch(() => false)) {
       logDebug("Planets navigation link not visible - skipping");
       return;
     }
 
-    await planetsLink.click({ timeout: 1000 }).catch(() => {
+    await sectorsLink.click({ timeout: 1000 }).catch(() => {
       logDebug("Failed to click planets link - skipping");
       return;
     });
     await waitForNavigation(page, "Planets page");
 
-    // Find buy planet button
+    // Find colonize sector button
     const buyButton = page.locator('button:has-text("Buy"), button:has-text("Purchase")').first();
     if (await buyButton.count() === 0) {
-      logDebug("No buy planet button found (might be out of credits)");
+      logDebug("No colonize sector button found (might be out of credits)");
       return;
     }
 
     await buyButton.click({ timeout: 1000 });
-    logSuccess(`Turn ${turn}: Attempted to buy planet`);
+    logSuccess(`Turn ${turn}: Attempted to colonize sector`);
   } catch (error) {
     logDebug(`Turn ${turn}: Planet purchase test skipped (${String(error).substring(0, 50)})`);
   }

@@ -23,7 +23,7 @@ export interface EmpireState {
   networth: number;
   population: number;
   civilStatus: string;
-  planetCount: number;
+  sectorCount: number;
   turn: number;
   soldiers: number;
   fighters: number;
@@ -79,10 +79,10 @@ export async function getEmpireState(page: Page): Promise<EmpireState> {
   const populationText = await page.locator('[data-testid="population-count"]').textContent() ?? "0";
   const civilStatusText = await page.locator('[data-testid="civil-status"]').textContent() ?? "Unknown";
 
-  // Extract planet count from planet list header
-  const planetHeaderText = await page.locator('[data-testid="planet-list"]').textContent() ?? "Planets (0)";
-  const planetMatch = planetHeaderText.match(/Planets\s*\((\d+)\)/);
-  const planetCount = planetMatch && planetMatch[1] ? parseInt(planetMatch[1], 10) : 0;
+  // Extract sector count from sector list header
+  const sectorHeaderText = await page.locator('[data-testid="sector-list"]').textContent() ?? "Sectors (0)";
+  const sectorMatch = sectorHeaderText.match(/Sectors\s*\((\d+)\)/);
+  const sectorCount = sectorMatch && sectorMatch[1] ? parseInt(sectorMatch[1], 10) : 0;
 
   // Extract turn number
   const turnText = await page.locator('[data-testid="turn-counter"]').textContent() ?? "Turn 1";
@@ -121,7 +121,7 @@ export async function getEmpireState(page: Page): Promise<EmpireState> {
     networth: parseNumber(networthText),
     population: parseNumber(populationText),
     civilStatus: civilStatusText.trim(),
-    planetCount,
+    sectorCount,
     turn,
     soldiers,
     fighters,
@@ -493,7 +493,7 @@ export async function startNewGameWithDifficulty(
  */
 export async function navigateToGamePage(
   page: Page,
-  path: "planets" | "military" | "research" | "combat" | "market" | "diplomacy" | "covert" | "messages" | "starmap"
+  path: "sectors" | "military" | "research" | "combat" | "market" | "diplomacy" | "covert" | "messages" | "starmap"
 ): Promise<void> {
   // Dismiss any tutorial overlays that might block navigation
   await dismissTutorialOverlays(page);

@@ -12,7 +12,7 @@ import type { BotDecision, BotDecisionContext, Forces, UnitType } from "./types"
 import { calculateUnitPurchaseCost } from "@/lib/game/unit-config";
 import { UNIT_BUILD_TIMES, toDbUnitType } from "@/lib/game/build-config";
 import { PLANET_COSTS, PLANET_PRODUCTION } from "@/lib/game/constants";
-import { calculatePlanetCost } from "@/lib/formulas/planet-costs";
+import { calculateSectorCost } from "@/lib/formulas/sector-costs";
 import { TIER_1_RECIPES, TIER_2_RECIPES, TIER_3_RECIPES, RESOURCE_TIERS } from "@/lib/game/constants/crafting";
 import type { CraftedResource, Tier1Resource, Tier2Resource, Tier3Resource } from "@/lib/game/constants/crafting";
 import { CONTRACT_CONFIGS } from "@/lib/game/constants/syndicate";
@@ -166,7 +166,7 @@ async function executeBuyPlanet(
 
   // Calculate planet cost with scaling
   const baseCost = PLANET_COSTS[planetType];
-  const totalCost = calculatePlanetCost(baseCost, empire.planetCount);
+  const totalCost = calculateSectorCost(baseCost, empire.planetCount);
 
   // Check if bot can afford it
   if (empire.credits < totalCost) {

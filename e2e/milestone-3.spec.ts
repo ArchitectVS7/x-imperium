@@ -25,7 +25,7 @@ import {
 // CONSTANTS
 // =============================================================================
 
-const RESEARCH_POINTS_PER_PLANET = 100; // 100 RP per research planet per turn
+const RESEARCH_POINTS_PER_PLANET = 100; // 100 RP per research sector per turn
 const STARTING_RESEARCH_PLANETS = 1;
 
 // =============================================================================
@@ -107,7 +107,7 @@ test.describe("Milestone 3: Planet, Units & Research", () => {
       // Advance turn
       const { after } = await advanceTurn(gamePage);
 
-      // FUNCTIONAL: Research points should increase by 100 (1 research planet × 100 RP)
+      // FUNCTIONAL: Research points should increase by 100 (1 research sector × 100 RP)
       expect(after.researchPoints).toBeGreaterThan(before.researchPoints);
       expect(after.researchPoints).toBe(RESEARCH_POINTS_PER_PLANET * STARTING_RESEARCH_PLANETS);
     });
@@ -184,24 +184,24 @@ test.describe("Milestone 3: Planet, Units & Research", () => {
   });
 
   test.describe("Planets System", () => {
-    test("planets page loads with 5 starting planets", async ({ gamePage }) => {
+    test("sectors page loads with 5 starting sectors", async ({ gamePage }) => {
       await ensureGameExists(gamePage, "M3 Planets Load Empire");
 
-      await navigateToGamePage(gamePage, "planets");
+      await navigateToGamePage(gamePage, "sectors");
 
       // FUNCTIONAL: Verify exactly 5 planet cards (reduced from 9)
-      const planetCards = gamePage.locator('[data-testid^="planet-card-"]');
+      const planetCards = gamePage.locator('[data-testid^="sector-card-"]');
       await expect(planetCards).toHaveCount(5);
     });
 
-    test("research planet must be purchased (not in starting config)", async ({ gamePage }) => {
+    test("research sector must be purchased (not in starting config)", async ({ gamePage }) => {
       await ensureGameExists(gamePage, "M3 Research Planet Empire");
 
-      await navigateToGamePage(gamePage, "planets");
+      await navigateToGamePage(gamePage, "sectors");
 
-      // FUNCTIONAL: Research planet is no longer in starting configuration
+      // FUNCTIONAL: Research sector is no longer in starting configuration
       // Players must purchase it - this is a strategic choice
-      const researchPlanet = gamePage.locator('[data-testid="planet-type-research"]');
+      const researchPlanet = gamePage.locator('[data-testid="sector-type-research"]');
       await expect(researchPlanet).toHaveCount(0);
     });
 
@@ -211,11 +211,11 @@ test.describe("Milestone 3: Planet, Units & Research", () => {
       const state = await getEmpireState(gamePage);
 
       // FUNCTIONAL: Verify planet count (reduced from 9 to 5)
-      expect(state.planetCount).toBe(5);
+      expect(state.sectorCount).toBe(5);
 
-      await navigateToGamePage(gamePage, "planets");
+      await navigateToGamePage(gamePage, "sectors");
 
-      // Verify each planet type count (reduced distribution - 5 planets)
+      // Verify each planet type count (reduced distribution - 5 sectors)
       // Urban and Research removed - players must purchase them
       const expectedCounts: Record<string, number> = {
         food: 1,       // Reduced from 2
@@ -226,7 +226,7 @@ test.describe("Milestone 3: Planet, Units & Research", () => {
       };
 
       for (const [type, count] of Object.entries(expectedCounts)) {
-        const typeIndicator = gamePage.locator(`[data-testid="planet-type-${type}"]`);
+        const typeIndicator = gamePage.locator(`[data-testid="sector-type-${type}"]`);
         if (await typeIndicator.isVisible()) {
           await expect(typeIndicator).toContainText(String(count));
         }
@@ -253,8 +253,8 @@ test.describe("Milestone 3: Planet, Units & Research", () => {
       const { after } = await advanceTurn(gamePage);
 
       // FUNCTIONAL: Multiple resources should change after turn
-      // Food planets produce food
-      // Research planets produce RP
+      // Food sectors produce food
+      // Research sectors produce RP
       // Tourism/Urban produce credits
       const changesDetected =
         after.credits !== before.credits ||
@@ -270,7 +270,7 @@ test.describe("Milestone 3: Planet, Units & Research", () => {
       await ensureGameExists(gamePage, "M3 Navigation Empire");
 
       const pages = [
-        { href: "/game/planets", check: "planets-page" },
+        { href: "/game/sectors", check: "sectors-page" },
         { href: "/game/military", check: "h1" },
         { href: "/game/research", check: "h1" },
         { href: "/game", check: "dashboard" },
@@ -294,7 +294,7 @@ test.describe("Milestone 3: Planet, Units & Research", () => {
       const beforeNav = await getEmpireState(gamePage);
 
       // Navigate to planets and back
-      await navigateToGamePage(gamePage, "planets");
+      await navigateToGamePage(gamePage, "sectors");
       await gamePage.click('a[href="/game"]');
       await gamePage.waitForLoadState("networkidle");
 

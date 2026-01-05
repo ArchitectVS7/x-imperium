@@ -48,7 +48,7 @@ test.describe("Milestone 6: Victory & Persistence", () => {
       await ensureGameExists(gamePage);
 
       // Navigate away
-      await gamePage.click('a[href="/game/planets"]');
+      await gamePage.click('a[href="/game/sectors"]');
       await gamePage.waitForLoadState("networkidle");
 
       // Reload
@@ -157,13 +157,13 @@ test.describe("Milestone 6: Victory & Persistence", () => {
     }) => {
       await ensureGameExists(gamePage);
 
-      // Navigate to planets page
-      await gamePage.click('a[href="/game/planets"]');
+      // Navigate to sectors page
+      await gamePage.click('a[href="/game/sectors"]');
       await gamePage.waitForLoadState("networkidle");
 
       // Planet list should show planets (0 planets = elimination)
       await expect(
-        gamePage.locator('[data-testid="planets-page"]').or(gamePage.locator("text=Planets"))
+        gamePage.locator('[data-testid="sectors-page"]').or(gamePage.locator("text=Planets"))
       ).toBeVisible();
     });
   });
