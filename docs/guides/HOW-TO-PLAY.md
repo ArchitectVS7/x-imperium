@@ -26,6 +26,9 @@ Welcome to **Nexus Dominion**, a turn-based 4X space empire strategy game. This 
 
 Nexus Dominion is a **4X strategy game** (eXplore, eXpand, eXploit, eXterminate) where you command a fledgling space empire competing against 25 AI opponents. Each game lasts up to 200 turns, with victory going to the empire that achieves one of six victory conditions.
 
+>**Dev note:** Neither "25 AI opponents" not "up to 200 turns" is correct. We are configured for different scales of games, from 25 up to 100 opponents. There should be no maximum number of turns.
+>
+
 ### The 4X Pillars
 
 | Pillar | Description |
@@ -45,6 +48,8 @@ When you start a new game, you receive:
 - A small empire with **5 starting planets**
 - Basic resources to begin building
 - **20 turns of protection** (no one can attack you)
+
+> **Dev Note** We should not be using "Planets" for reference. We have twoce done a sweep for rebranding, and this is a critical failure of the redesign
 
 > **Use protection wisely!** Build your economy and military before turn 20.
 
@@ -66,6 +71,8 @@ Each turn follows this order:
 5. **Bot Phase** - AI empires take their actions
 6. **Action Phase** - Your queued actions resolve
 
+> **Dev Note** There is no "Bot Phase". All players are taking their turns simultaneously. This is a compromise between turn based and real time strategy games. When it comes to action phases that affect other players such as trading and combat, we will process them in some sort of order. I want this to feel like a single player playing an MMO, and calling out a "Bot phase" breaks this immersion
+> 
 Click **"End Turn"** when you're ready to advance.
 
 ---
