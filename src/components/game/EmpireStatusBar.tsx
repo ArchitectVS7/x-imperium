@@ -17,7 +17,18 @@ import {
 import { ResourceIconWithValue, CivilStatusIcons, UnitIcons } from "@/lib/theme/icons";
 import { MapPin } from "lucide-react";
 
-export type PanelType = "resources" | "military" | "planets" | "population" | null;
+export type PanelType =
+  | "resources"
+  | "military"
+  | "planets"
+  | "population"
+  | "combat"
+  | "market"
+  | "research"
+  | "diplomacy"
+  | "covert"
+  | "messages"
+  | null;
 
 interface EmpireStatusBarProps {
   // Resources

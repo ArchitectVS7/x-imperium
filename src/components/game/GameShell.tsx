@@ -34,6 +34,18 @@ import {
 import type { TurnEvent, ResourceDelta } from "@/lib/game/types/turn-types";
 import type { CivilStatusKey } from "@/lib/theme/names";
 import { ResourcePanel } from "./ResourcePanel";
+import {
+  MilitaryPanelContent,
+  SectorsPanelContent,
+  CombatPanelContent,
+  MarketPanelContent,
+  ResearchPanelContent,
+  DiplomacyPanelContent,
+  CovertPanelContent,
+  MessagesPanelContent,
+} from "./panels";
+import { useGameKeyboardShortcuts } from "@/hooks/useGameKeyboardShortcuts";
+import { PanelProvider, type PanelContextData } from "@/contexts/PanelContext";
 
 interface GameShellProps {
   children: React.ReactNode;
@@ -68,6 +80,7 @@ export function GameShell({ children, initialLayoutData }: GameShellProps) {
 
   // Slide-out panel state (desktop)
   const [activePanel, setActivePanel] = useState<PanelType>(null);
+  const [panelContext, setPanelContext] = useState<PanelContextData | null>(null);
 
   // Mobile action sheet state
   const [mobileSheetOpen, setMobileSheetOpen] = useState(false);
@@ -180,10 +193,27 @@ export function GameShell({ children, initialLayoutData }: GameShellProps) {
     router.refresh();
   }, [router]);
 
-  // Handle panel toggle
-  const handlePanelToggle = useCallback((panel: PanelType) => {
+  // Handle panel toggle with optional context
+  const handlePanelToggle = useCallback((panel: PanelType, context?: PanelContextData) => {
     setActivePanel(panel);
+    setPanelContext(context ?? null);
   }, []);
+
+  // Handle panel close
+  const handlePanelClose = useCallback(() => {
+    setActivePanel(null);
+    setPanelContext(null);
+  }, []);
+
+  // Keyboard shortcuts for panel navigation
+  useGameKeyboardShortcuts({
+    onOpenPanel: handlePanelToggle,
+    onClosePanel: handlePanelClose,
+    activePanel,
+    onEndTurn: handleEndTurn,
+    isProcessing,
+    enabled: true,
+  });
 
   // Default layout data if not loaded
   const data = layoutData ?? {
@@ -208,6 +238,12 @@ export function GameShell({ children, initialLayoutData }: GameShellProps) {
   };
 
   return (
+    <PanelProvider
+      activePanel={activePanel}
+      panelContext={panelContext}
+      openPanel={handlePanelToggle}
+      closePanel={handlePanelClose}
+    >
     <div className="flex flex-col h-[calc(100vh-56px)]">
       {/* Onboarding Hints (first 5 turns) */}
       <OnboardingManager currentTurn={data.currentTurn} />
@@ -236,6 +272,7 @@ export function GameShell({ children, initialLayoutData }: GameShellProps) {
           protectionTurnsLeft={data.protectionTurnsLeft}
           onEndTurn={handleEndTurn}
           isProcessing={isProcessing}
+          onOpenPanel={handlePanelToggle}
         />
       </div>
 
@@ -282,7 +319,7 @@ export function GameShell({ children, initialLayoutData }: GameShellProps) {
         protectionTurnsLeft={data.protectionTurnsLeft}
       />
 
-      {/* Slide-out Panels - Desktop only */}
+      {/* Slide-out Panels */}
       <SlideOutPanel
         isOpen={activePanel === "resources"}
         onClose={() => setActivePanel(null)}
@@ -301,22 +338,18 @@ export function GameShell({ children, initialLayoutData }: GameShellProps) {
         isOpen={activePanel === "military"}
         onClose={() => setActivePanel(null)}
         title="Military Forces"
+        width="lg"
       >
-        <div className="text-gray-300">
-          <p className="mb-4">Total Military Power: <span className="text-lcars-amber font-mono">{data.militaryPower.toLocaleString()}</span></p>
-          <p className="text-sm text-gray-500">Visit the Forces page for full details and unit management.</p>
-        </div>
+        <MilitaryPanelContent onClose={() => setActivePanel(null)} />
       </SlideOutPanel>
 
       <SlideOutPanel
         isOpen={activePanel === "planets"}
         onClose={() => setActivePanel(null)}
         title="Sectors"
+        width="lg"
       >
-        <div className="text-gray-300">
-          <p className="mb-4">Total Sectors: <span className="text-lcars-amber font-mono">{data.sectorCount}</span></p>
-          <p className="text-sm text-gray-500">Visit the Sectors page to buy or manage territories.</p>
-        </div>
+        <SectorsPanelContent onClose={() => setActivePanel(null)} />
       </SlideOutPanel>
 
       <SlideOutPanel
@@ -329,6 +362,68 @@ export function GameShell({ children, initialLayoutData }: GameShellProps) {
           <p className="mb-2">Civil Status: <span className="text-lcars-lavender">{data.civilStatus}</span></p>
           <p className="text-sm text-gray-500">Population grows when fed. Happy citizens produce more.</p>
         </div>
+      </SlideOutPanel>
+
+      <SlideOutPanel
+        isOpen={activePanel === "combat"}
+        onClose={handlePanelClose}
+        title="Combat"
+        width="lg"
+        variant="combat"
+        side="right"
+      >
+        <CombatPanelContent
+          targetEmpireId={panelContext?.targetEmpireId}
+          onClose={handlePanelClose}
+        />
+      </SlideOutPanel>
+
+      <SlideOutPanel
+        isOpen={activePanel === "market"}
+        onClose={() => setActivePanel(null)}
+        title="Market"
+        width="lg"
+      >
+        <MarketPanelContent onClose={() => setActivePanel(null)} />
+      </SlideOutPanel>
+
+      <SlideOutPanel
+        isOpen={activePanel === "research"}
+        onClose={() => setActivePanel(null)}
+        title="Research"
+        width="lg"
+      >
+        <ResearchPanelContent onClose={() => setActivePanel(null)} />
+      </SlideOutPanel>
+
+      <SlideOutPanel
+        isOpen={activePanel === "diplomacy"}
+        onClose={() => setActivePanel(null)}
+        title="Diplomacy"
+        width="lg"
+      >
+        <DiplomacyPanelContent onClose={() => setActivePanel(null)} />
+      </SlideOutPanel>
+
+      <SlideOutPanel
+        isOpen={activePanel === "covert"}
+        onClose={handlePanelClose}
+        title="Covert Operations"
+        width="lg"
+      >
+        <CovertPanelContent
+          targetEmpireId={panelContext?.targetEmpireId}
+          onClose={handlePanelClose}
+        />
+      </SlideOutPanel>
+
+      <SlideOutPanel
+        isOpen={activePanel === "messages"}
+        onClose={() => setActivePanel(null)}
+        title="Messages"
+        width="lg"
+      >
+        <MessagesPanelContent onClose={() => setActivePanel(null)} />
       </SlideOutPanel>
 
       {/* Turn Summary Modal */}
@@ -362,6 +457,7 @@ export function GameShell({ children, initialLayoutData }: GameShellProps) {
         }}
       />
     </div>
+    </PanelProvider>
   );
 }
 

@@ -21,6 +21,8 @@ import { ActionIcons } from "@/lib/theme/icons";
 import { Shield, Mail, Check, AlertCircle, AlertTriangle, Eye, Lightbulb } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
+import type { PanelType } from "./EmpireStatusBar";
+
 export interface TurnOrderPanelProps {
   currentTurn: number;
   turnLimit: number;
@@ -35,6 +37,8 @@ export interface TurnOrderPanelProps {
   // Callback when End Turn clicked
   onEndTurn?: () => void;
   isProcessing?: boolean;
+  // Panel trigger callback (starmap-centric UI)
+  onOpenPanel?: (panel: PanelType) => void;
 }
 
 interface ActionItem {
@@ -43,17 +47,17 @@ interface ActionItem {
   href: string;
   icon: string;
   description: string;
+  panelType?: PanelType;
 }
 
 const ACTIONS: ActionItem[] = [
-  { id: "military", label: UI_LABELS.military, href: "/game/military", icon: "military", description: "Build units, manage forces" },
-  { id: "sectors", label: UI_LABELS.planets, href: "/game/sectors", icon: "planets", description: "Colonize or release sectors" },
-  { id: "combat", label: UI_LABELS.combat, href: "/game/combat", icon: "combat", description: "Launch attacks" },
-  { id: "diplomacy", label: UI_LABELS.diplomacy, href: "/game/diplomacy", icon: "diplomacy", description: "Treaties and alliances" },
-  { id: "market", label: UI_LABELS.market, href: "/game/market", icon: "market", description: "Buy and sell resources" },
-  { id: "covert", label: UI_LABELS.covert, href: "/game/covert", icon: "covert", description: "Spy operations" },
-  { id: "crafting", label: UI_LABELS.crafting, href: "/game/crafting", icon: "crafting", description: "Manufacture components" },
-  { id: "research", label: UI_LABELS.research, href: "/game/research", icon: "research", description: "Advance technology" },
+  { id: "military", label: UI_LABELS.military, href: "/game/military", icon: "military", description: "Build units, manage forces", panelType: "military" },
+  { id: "sectors", label: UI_LABELS.planets, href: "/game/sectors", icon: "planets", description: "Colonize or release sectors", panelType: "planets" },
+  { id: "combat", label: UI_LABELS.combat, href: "/game/combat", icon: "combat", description: "Launch attacks", panelType: "combat" },
+  { id: "diplomacy", label: UI_LABELS.diplomacy, href: "/game/diplomacy", icon: "diplomacy", description: "Treaties and alliances", panelType: "diplomacy" },
+  { id: "market", label: UI_LABELS.market, href: "/game/market", icon: "market", description: "Buy and sell resources", panelType: "market" },
+  { id: "covert", label: UI_LABELS.covert, href: "/game/covert", icon: "covert", description: "Spy operations", panelType: "covert" },
+  { id: "research", label: UI_LABELS.research, href: "/game/research", icon: "research", description: "Advance technology", panelType: "research" },
   { id: "starmap", label: "Starmap", href: "/game/starmap", icon: "starmap", description: "View galaxy map" },
 ];
 
@@ -77,9 +81,13 @@ export function TurnOrderPanel({
   protectionTurnsLeft,
   onEndTurn,
   isProcessing = false,
+  onOpenPanel,
 }: TurnOrderPanelProps) {
   const pathname = usePathname();
   const [visitedActions, setVisitedActions] = useState<Set<string>>(new Set());
+
+  // Use panel mode when onOpenPanel is provided
+  const usePanelMode = !!onOpenPanel;
 
   // Track which pages the player has visited this turn
   useEffect(() => {
@@ -155,6 +163,34 @@ export function TurnOrderPanel({
 
             const IconComponent = ActionIcons[action.icon as keyof typeof ActionIcons];
 
+            // In panel mode, use buttons that trigger panels
+            if (usePanelMode && action.panelType) {
+              return (
+                <button
+                  key={action.id}
+                  onClick={() => onOpenPanel(action.panelType!)}
+                  className={`w-full flex items-center gap-3 p-2 rounded transition-colors ${
+                    isVisited
+                      ? "bg-gray-800/50 hover:bg-gray-800"
+                      : "hover:bg-gray-800/50"
+                  }`}
+                >
+                  <IconComponent className="w-4 h-4 text-gray-400" />
+                  <div className="flex-1 min-w-0 text-left">
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm text-gray-300">
+                        {action.label}
+                      </span>
+                      {isVisited && (
+                        <Check className="w-3 h-3 text-green-400" />
+                      )}
+                    </div>
+                  </div>
+                </button>
+              );
+            }
+
+            // Fallback to Link for items without panelType (like starmap)
             return (
               <Link
                 key={action.id}
@@ -183,27 +219,46 @@ export function TurnOrderPanel({
           })}
         </div>
 
-        {/* Messages link with badge */}
-        <Link
-          href="/game/messages"
-          className={`flex items-center gap-3 p-2 rounded mt-2 transition-colors ${
-            pathname === "/game/messages"
-              ? "bg-lcars-amber/20 border border-lcars-amber/50"
-              : "hover:bg-gray-800/50"
-          }`}
-        >
-          <Mail className={`w-4 h-4 ${pathname === "/game/messages" ? "text-lcars-amber" : "text-gray-400"}`} />
-          <div className="flex-1">
-            <span className={`text-sm ${pathname === "/game/messages" ? "text-lcars-amber" : "text-gray-300"}`}>
-              {UI_LABELS.messages}
-            </span>
-          </div>
-          {unreadMessages > 0 && (
-            <span className="px-2 py-0.5 text-xs bg-red-500 text-white rounded-full">
-              {unreadMessages}
-            </span>
-          )}
-        </Link>
+        {/* Messages link/button with badge */}
+        {usePanelMode ? (
+          <button
+            onClick={() => onOpenPanel("messages")}
+            className="w-full flex items-center gap-3 p-2 rounded mt-2 transition-colors hover:bg-gray-800/50"
+          >
+            <Mail className="w-4 h-4 text-gray-400" />
+            <div className="flex-1 text-left">
+              <span className="text-sm text-gray-300">
+                {UI_LABELS.messages}
+              </span>
+            </div>
+            {unreadMessages > 0 && (
+              <span className="px-2 py-0.5 text-xs bg-red-500 text-white rounded-full">
+                {unreadMessages}
+              </span>
+            )}
+          </button>
+        ) : (
+          <Link
+            href="/game/messages"
+            className={`flex items-center gap-3 p-2 rounded mt-2 transition-colors ${
+              pathname === "/game/messages"
+                ? "bg-lcars-amber/20 border border-lcars-amber/50"
+                : "hover:bg-gray-800/50"
+            }`}
+          >
+            <Mail className={`w-4 h-4 ${pathname === "/game/messages" ? "text-lcars-amber" : "text-gray-400"}`} />
+            <div className="flex-1">
+              <span className={`text-sm ${pathname === "/game/messages" ? "text-lcars-amber" : "text-gray-300"}`}>
+                {UI_LABELS.messages}
+              </span>
+            </div>
+            {unreadMessages > 0 && (
+              <span className="px-2 py-0.5 text-xs bg-red-500 text-white rounded-full">
+                {unreadMessages}
+              </span>
+            )}
+          </Link>
+        )}
       </div>
 
       {/* Quick Status */}

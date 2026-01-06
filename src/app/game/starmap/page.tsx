@@ -1,11 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { GalaxyView } from "@/components/game/starmap/GalaxyView";
 import { SectorDetail } from "@/components/game/starmap/SectorDetail";
 import { getGalaxyViewDataAction } from "@/app/actions/starmap-actions";
 import { hasActiveGameAction } from "@/app/actions/game-actions";
+import { usePanelContextSafe } from "@/contexts/PanelContext";
 import type { GalaxyRegion } from "@/components/game/starmap/GalaxyView";
 import type { GalaxyViewData } from "@/app/actions/starmap-actions";
 
@@ -20,10 +21,36 @@ function StarmapSkeleton() {
 
 export default function StarmapPage() {
   const router = useRouter();
+  const panelContext = usePanelContextSafe();
   const [data, setData] = useState<GalaxyViewData | null>(null);
   const [selectedRegion, setSelectedRegion] = useState<GalaxyRegion | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isTransitioning, setIsTransitioning] = useState(false);
+
+  // Handle attack - opens combat panel with target pre-selected
+  const handleAttack = useCallback((targetEmpireId: string) => {
+    if (panelContext) {
+      panelContext.openPanel("combat", { targetEmpireId });
+    } else {
+      // Fallback to page navigation if not in GameShell
+      router.push(`/game/combat?target=${targetEmpireId}`);
+    }
+  }, [panelContext, router]);
+
+  // Handle message - opens messages panel
+  const handleMessage = useCallback((targetEmpireId: string) => {
+    if (panelContext) {
+      panelContext.openPanel("messages", { targetEmpireId });
+    } else {
+      router.push(`/game/messages?to=${targetEmpireId}`);
+    }
+  }, [panelContext, router]);
+
+  // Handle view profile - could open a profile panel or navigate
+  const handleViewProfile = useCallback((targetEmpireId: string) => {
+    // For now, we don't have a profile panel, so just log
+    console.log("View profile for:", targetEmpireId);
+  }, []);
 
   useEffect(() => {
     async function loadData() {
@@ -168,6 +195,9 @@ export default function StarmapPage() {
                     currentTurn={data.currentTurn}
                     protectionTurns={data.protectionTurns}
                     onClose={handleBackToGalaxy}
+                    onAttack={handleAttack}
+                    onMessage={handleMessage}
+                    onViewProfile={handleViewProfile}
                   />
                 </div>
               </div>
