@@ -98,6 +98,11 @@ npm run db:migrate       # Run migrations
 
 ## Documentation
 
+### For Players (Alpha Testers)
+- **[How to Play Guide](docs/guides/HOW-TO-PLAY.md)** - Comprehensive game manual
+- **[Quick Start Guide](docs/guides/QUICK-START.md)** - Get playing in 5 minutes
+
+### For Developers
 - **[Current Implementation Plan](.claude/plans/recursive-dazzling-chipmunk.md)** - Active redesign plan (Phases 1-3: 93% complete)
 - [CLAUDE.md](CLAUDE.md) - AI assistant context and codebase guide
 - [docs/PRD.md](docs/PRD.md) - Product Requirements Document (v3.0)
@@ -185,6 +190,42 @@ npm run db:migrate       # Run migrations
 1. **D20 Combat Narrative** - Users need to see the dice drama
 2. **Starmap Bot Tells** - Strategic visibility of opponent types
 3. **Phase 5 Validation** - Quality assurance and documentation
+
+---
+
+## Human Action Items (Between Claude Sessions)
+
+**Last Updated:** January 6, 2026
+
+These tasks require human judgment, external access, or manual verification:
+
+### Alpha Tester Distribution
+- [ ] **Share guides with testers** - Send `docs/guides/HOW-TO-PLAY.md` and `QUICK-START.md`
+- [ ] **Set up feedback channel** - Create Discord/Slack channel or GitHub Discussions for tester feedback
+- [ ] **Recruit alpha testers** - Identify 5-10 people willing to play and provide feedback
+
+### Content & Screenshots
+- [ ] **Capture game screenshots** - Needed for:
+  - Landing page carousel (`/public/screenshots/`)
+  - How to Play guide illustrations
+  - Marketing materials
+- [ ] **Record gameplay video** - Short (2-3 min) demo for onboarding
+
+### External Services
+- [ ] **Verify Neon DB limits** - Check usage against free tier before inviting testers
+- [ ] **Set up error monitoring** - Consider Sentry or similar for production error tracking
+- [ ] **Configure analytics** - PostHog/Plausible to understand player behavior
+
+### Pre-Release Checklist
+- [ ] **Playtest full game yourself** - Play through Turn 50+ to validate balance
+- [ ] **Test on mobile** - Verify responsive design works acceptably
+- [ ] **Review bot difficulty** - Are bots too hard/easy for new players?
+- [ ] **Update version number** - Bump to v0.7 for alpha release
+
+### Documentation Gaps
+- [ ] **Write FAQ** - Collect common questions from early testers
+- [ ] **Add visual diagrams** - Combat flow, resource cycle, etc.
+- [ ] **Localization planning** - Consider i18n if targeting non-English players
 
 ---
 
