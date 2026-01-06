@@ -7,7 +7,7 @@
  * Phases: Pre-Battle → Volley 1 → Volley 2 → Volley 3 → Outcome
  */
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { cn } from "@/lib/utils";
 import type { BattleResult, VolleyResult } from "@/lib/combat/volley-combat-v2";
 import type { CombatStance } from "@/lib/combat/stances";
@@ -95,6 +95,44 @@ export function CombatNarrativeModal({
   const [attackerWins, setAttackerWins] = useState(0);
   const [defenderWins, setDefenderWins] = useState(0);
 
+  // Modal ref for focus trap
+  const modalRef = useRef<HTMLDivElement>(null);
+
+  // ACCESSIBILITY: Focus trap - prevents Tab from escaping the modal
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        onClose();
+        return;
+      }
+
+      // Focus trap: cycle Tab within modal
+      if (e.key === "Tab" && modalRef.current) {
+        const focusableElements = modalRef.current.querySelectorAll<HTMLElement>(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
+        const focusableArray = Array.from(focusableElements);
+
+        // If no focusable elements, do nothing
+        if (focusableArray.length === 0) return;
+
+        const firstElement = focusableArray[0];
+        const lastElement = focusableArray[focusableArray.length - 1];
+
+        if (e.shiftKey && document.activeElement === firstElement) {
+          // Shift+Tab on first element -> go to last
+          e.preventDefault();
+          lastElement?.focus();
+        } else if (!e.shiftKey && document.activeElement === lastElement) {
+          // Tab on last element -> go to first
+          e.preventDefault();
+          firstElement?.focus();
+        }
+      }
+    },
+    [onClose]
+  );
+
   // Reset state when modal opens
   useEffect(() => {
     if (isOpen) {
@@ -103,6 +141,24 @@ export function CombatNarrativeModal({
       setDefenderWins(0);
     }
   }, [isOpen]);
+
+  // ACCESSIBILITY: Manage keyboard listeners and focus restoration
+  useEffect(() => {
+    if (isOpen) {
+      // Save currently focused element to restore later
+      const previouslyFocused = document.activeElement as HTMLElement;
+
+      // Add keyboard listeners
+      document.addEventListener("keydown", handleKeyDown);
+
+      // Restore focus when modal closes
+      return () => {
+        document.removeEventListener("keydown", handleKeyDown);
+        previouslyFocused?.focus();
+      };
+    }
+    return undefined;
+  }, [isOpen, handleKeyDown]);
 
   // Get current volley data
   const getCurrentVolley = useCallback((): VolleyResult | null => {
@@ -162,6 +218,9 @@ export function CombatNarrativeModal({
 
       {/* Modal */}
       <div
+        ref={modalRef}
+        role="dialog"
+        aria-modal="true"
         className={cn(
           "relative w-full max-w-2xl max-h-[90vh] overflow-y-auto",
           "bg-gray-950 border-2 rounded-lg shadow-2xl",
@@ -424,6 +483,7 @@ export function CombatNarrativeModal({
             <button
               onClick={onClose}
               className="px-6 py-2 bg-amber-500 text-black font-semibold rounded-lg hover:bg-amber-400 transition-colors flex items-center gap-2"
+              autoFocus
             >
               Dismiss
             </button>
@@ -431,6 +491,7 @@ export function CombatNarrativeModal({
             <button
               onClick={handleContinue}
               className="px-6 py-2 bg-amber-500 text-black font-semibold rounded-lg hover:bg-amber-400 transition-colors flex items-center gap-2"
+              autoFocus
             >
               {currentPhase === "pre-battle" ? "Begin Battle" : "Continue"}
               <ChevronRight className="h-4 w-4" />

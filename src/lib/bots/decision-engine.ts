@@ -604,6 +604,10 @@ export function selectDecisionType(
     ["craft_component", weights.craft_component],
     ["accept_contract", weights.accept_contract],
     ["purchase_black_market", weights.purchase_black_market],
+    // Additional game systems
+    ["covert_operation", weights.covert_operation],
+    ["fund_research", weights.fund_research],
+    ["upgrade_units", weights.upgrade_units],
   ];
 
   for (const [type, weight] of entries) {
@@ -651,6 +655,9 @@ export function generateBotDecision(
       "craft_component",
       "accept_contract",
       "purchase_black_market",
+      "covert_operation",
+      "fund_research",
+      "upgrade_units",
     ];
     const validTypes = allTypes.filter((t) => {
       if (t === "attack" && context.currentTurn <= context.protectionTurns) {
@@ -683,6 +690,16 @@ export function generateBotDecision(
       return generateAcceptContractDecision(context, randomDecision);
     case "purchase_black_market":
       return generatePurchaseBlackMarketDecision(context, randomDecision);
+    // Additional game systems (TODO: Implement when features are ready)
+    case "covert_operation":
+      // TODO: Implement covert operation decision generation
+      return { type: "do_nothing" };
+    case "fund_research":
+      // TODO: Implement research funding decision generation
+      return { type: "do_nothing" };
+    case "upgrade_units":
+      // TODO: Implement unit upgrade decision generation
+      return { type: "do_nothing" };
     case "do_nothing":
     default:
       return { type: "do_nothing" };
@@ -793,8 +810,11 @@ function generateAttackDecision(
     );
     if (grudgeTargets.length > 0) {
       // Prioritize grudge targets (70% chance to attack grudge target if available)
-      if ((random ?? Math.random()) < 0.7) {
-        target = grudgeTargets[Math.floor((random ?? Math.random()) * grudgeTargets.length)];
+      const grudgeRoll = random ?? Math.random();
+      if (grudgeRoll < 0.7) {
+        // Use a separate random value for target selection to avoid double random call
+        const targetRoll = random !== undefined ? (grudgeRoll + 0.3) % 1 : Math.random();
+        target = grudgeTargets[Math.floor(targetRoll * grudgeTargets.length)];
       }
     }
   }
@@ -1256,16 +1276,10 @@ export async function generateTier1Decision(
   );
 
   if (cached) {
-    console.log(
-      `[Tier 1] Using cached decision for ${context.empire.name}: ${cached.decision.type}`
-    );
     return cached.decision;
   }
 
   // Step 2: Cache miss - attempt synchronous LLM call
-  console.warn(
-    `[Tier 1] Cache miss for ${context.empire.name} turn ${context.currentTurn}. Attempting sync LLM call...`
-  );
 
   try {
     const { callLlmWithFailover } = await import("@/lib/llm/client");
@@ -1314,14 +1328,7 @@ export async function generateTier1Decision(
       const parsed = parseLlmResponse(llmResponse.content, context);
 
       if (parsed.success && parsed.decision) {
-        console.log(
-          `[Tier 1] Sync LLM success for ${context.empire.name}: ${parsed.decision.type}`
-        );
         return parsed.decision;
-      } else {
-        console.warn(
-          `[Tier 1] LLM response parsing failed for ${context.empire.name}: ${parsed.error}`
-        );
       }
     }
   } catch (error) {
@@ -1332,8 +1339,5 @@ export async function generateTier1Decision(
   }
 
   // Step 3: Fallback to Tier 2 scripted logic
-  console.warn(
-    `[Tier 1] Falling back to Tier 2 scripted logic for ${context.empire.name}`
-  );
   return generateBotDecision(context);
 }

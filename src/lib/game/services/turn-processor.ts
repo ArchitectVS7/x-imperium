@@ -969,41 +969,6 @@ export function processPhase3_CivilStatus(
   return evaluateCivilStatus(currentStatus, events);
 }
 
-/**
- * Phase 4: Market processing (stub for M3)
- */
-export async function processPhase4_Market(): Promise<void> {
-  // Stub: Market processing will be implemented in M3
-}
-
-/**
- * Phase 5: Bot decisions (stub for M5)
- */
-export async function processPhase5_BotDecisions(): Promise<void> {
-  // Stub: Bot AI will be implemented in M5
-}
-
-/**
- * Phase 6: Actions (stub for M4+)
- */
-export async function processPhase6_Actions(): Promise<void> {
-  // Stub: Combat, covert, diplomacy will be implemented in M4+
-}
-
-/**
- * Phase 7: Maintenance (already handled in Phase 1 via resource engine)
- */
-export async function processPhase7_Maintenance(): Promise<void> {
-  // Maintenance is calculated as part of resource production in Phase 1
-}
-
-/**
- * Phase 8: Victory check (stub for M6)
- */
-export async function processPhase8_VictoryCheck(): Promise<void> {
-  // Stub: Victory conditions will be implemented in M6
-}
-
 // =============================================================================
 // CRAFTING SYSTEM HELPERS
 // =============================================================================
@@ -1351,7 +1316,19 @@ async function processWormholesForGame(
     return events;
   }
 
-  // Each active empire attempts discovery
+  // PERFORMANCE: Collect all discoveries first, then batch database updates
+  type DiscoveryData = {
+    connectionId: string;
+    empireId: string;
+    influenceRecordId: string | null;
+    knownWormholes: string[];
+    message: string;
+    isPlayer: boolean;
+  };
+
+  const discoveries: DiscoveryData[] = [];
+
+  // Attempt discovery for each active empire
   for (const empire of allEmpires) {
     if (empire.isEliminated) continue;
 
@@ -1365,44 +1342,69 @@ async function processWormholesForGame(
     );
 
     if (discoveryResult.discovered && discoveryResult.connectionId) {
-      // Update the wormhole as discovered
-      await db
-        .update(regionConnections)
-        .set({
-          wormholeStatus: "discovered",
-          discoveredByEmpireId: empire.id,
-          discoveredAtTurn: currentTurn,
-          updatedAt: new Date(),
-        })
-        .where(eq(regionConnections.id, discoveryResult.connectionId));
-
-      // Update empire's known wormholes
+      // Find influence record
       const influenceRecord = influenceRecords.find((r) => r.empireId === empire.id);
-      if (influenceRecord) {
-        const knownWormholes = JSON.parse(influenceRecord.knownWormholeIds as string) as string[];
-        knownWormholes.push(discoveryResult.connectionId);
-        await db
-          .update(empireInfluence)
-          .set({
-            knownWormholeIds: JSON.stringify(knownWormholes),
-            updatedAt: new Date(),
-          })
-          .where(eq(empireInfluence.id, influenceRecord.id));
-      }
+      const knownWormholes = influenceRecord
+        ? (JSON.parse(influenceRecord.knownWormholeIds as string) as string[])
+        : [];
+
+      // Add to known wormholes
+      knownWormholes.push(discoveryResult.connectionId);
+
+      discoveries.push({
+        connectionId: discoveryResult.connectionId,
+        empireId: empire.id,
+        influenceRecordId: influenceRecord?.id ?? null,
+        knownWormholes,
+        message: discoveryResult.message,
+        isPlayer: empire.type === "player",
+      });
 
       // Remove from undiscovered list (so others can't discover same one this turn)
       const idx = undiscoveredWormholes.findIndex((w) => w.id === discoveryResult.connectionId);
       if (idx !== -1) {
         undiscoveredWormholes.splice(idx, 1);
       }
+    }
+  }
 
-      // Only show event to player (bot discoveries are hidden)
-      if (empire.type === "player") {
+  // PERFORMANCE: Batch update discovered wormholes and empire influence in parallel
+  if (discoveries.length > 0) {
+    await Promise.all([
+      // Batch update all discovered wormholes
+      ...discoveries.map((discovery) =>
+        db
+          .update(regionConnections)
+          .set({
+            wormholeStatus: "discovered",
+            discoveredByEmpireId: discovery.empireId,
+            discoveredAtTurn: currentTurn,
+            updatedAt: new Date(),
+          })
+          .where(eq(regionConnections.id, discovery.connectionId))
+      ),
+      // Batch update all empire influence records
+      ...discoveries
+        .filter((d) => d.influenceRecordId !== null)
+        .map((discovery) =>
+          db
+            .update(empireInfluence)
+            .set({
+              knownWormholeIds: JSON.stringify(discovery.knownWormholes),
+              updatedAt: new Date(),
+            })
+            .where(eq(empireInfluence.id, discovery.influenceRecordId!))
+        ),
+    ]);
+
+    // Add events for discoveries
+    for (const discovery of discoveries) {
+      if (discovery.isPlayer) {
         events.push({
           type: "other",
-          message: `🌀 ${discoveryResult.message}`,
+          message: `🌀 ${discovery.message}`,
           severity: "info",
-          empireId: empire.id,
+          empireId: discovery.empireId,
         });
       } else {
         // For bots, just log that a wormhole was discovered (anonymously)

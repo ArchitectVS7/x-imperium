@@ -6,8 +6,8 @@
  */
 
 import { db } from "@/lib/db";
-import { empires, buildQueue, planets, type NewPlanet, craftingQueue, syndicateContracts } from "@/lib/db/schema";
-import { eq, sql } from "drizzle-orm";
+import { empires, buildQueue, planets, type NewPlanet, craftingQueue, syndicateContracts, resourceInventory } from "@/lib/db/schema";
+import { eq, sql, and, inArray } from "drizzle-orm";
 import type { BotDecision, BotDecisionContext, Forces, UnitType } from "./types";
 import { calculateUnitPurchaseCost } from "@/lib/game/unit-config";
 import { UNIT_BUILD_TIMES, toDbUnitType } from "@/lib/game/build-config";
@@ -16,6 +16,7 @@ import { calculateSectorCost } from "@/lib/formulas/sector-costs";
 import { TIER_1_RECIPES, TIER_2_RECIPES, TIER_3_RECIPES, RESOURCE_TIERS } from "@/lib/game/constants/crafting";
 import type { CraftedResource, Tier1Resource, Tier2Resource, Tier3Resource } from "@/lib/game/constants/crafting";
 import { CONTRACT_CONFIGS } from "@/lib/game/constants/syndicate";
+import { TIER_TO_ENUM } from "@/lib/game/services/resource-tier-service";
 import { executeAttack as executeCombatAttack } from "@/lib/game/services/combat-service";
 import type { Forces as CombatForces } from "@/lib/combat/phases";
 import { proposeTreaty, type TreatyType } from "@/lib/diplomacy";
@@ -517,9 +518,36 @@ async function executePurchaseBlackMarket(
     })
     .where(eq(empires.id, empire.id));
 
-  // Note: In a full implementation, we would add the purchased resources
-  // to the empire's inventory. This requires the resource_inventory table update.
-  // For now, we just deduct the credits.
+  // Add purchased items to inventory
+  // Check if resource already exists in inventory
+  const existingInventory = await db.query.resourceInventory.findFirst({
+    where: and(
+      eq(resourceInventory.empireId, empire.id),
+      eq(resourceInventory.resourceType, resourceType)
+    ),
+  });
+
+  const tierValue = TIER_TO_ENUM[tier];
+
+  if (existingInventory) {
+    // Update existing inventory
+    await db
+      .update(resourceInventory)
+      .set({
+        quantity: existingInventory.quantity + quantity,
+        updatedAt: new Date(),
+      })
+      .where(eq(resourceInventory.id, existingInventory.id));
+  } else {
+    // Insert new inventory record
+    await db.insert(resourceInventory).values({
+      empireId: empire.id,
+      gameId: empire.gameId,
+      resourceType,
+      tier: tierValue,
+      quantity,
+    });
+  }
 
   return {
     success: true,

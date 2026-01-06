@@ -7,7 +7,7 @@
  * Supports pre-selecting a target from starmap context.
  */
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useTransition } from "react";
 import { BattleReport } from "@/components/game/combat/BattleReport";
 import { CombatPreview } from "@/components/game/combat/CombatPreview";
 import {
@@ -54,7 +54,7 @@ export function CombatPanelContent({
 
   // Combat result
   const [lastResult, setLastResult] = useState<CombatResult | null>(null);
-  const [isAttacking, setIsAttacking] = useState(false);
+  const [isPending, startTransition] = useTransition();
 
   // Load initial data
   useEffect(() => {
@@ -90,43 +90,42 @@ export function CombatPanelContent({
   }, [targetEmpireId]);
 
   // Handle attack
-  const handleAttack = async () => {
+  const handleAttack = () => {
     if (!selectedTarget) return;
 
-    setIsAttacking(true);
-    try {
-      const result = await launchAttackAction(
-        selectedTarget.id,
-        attackType,
-        selectedForces
-      );
+    startTransition(async () => {
+      try {
+        const result = await launchAttackAction(
+          selectedTarget.id,
+          attackType,
+          selectedForces
+        );
 
-      if (result.success && result.result) {
-        setLastResult(result.result);
-        onBattleComplete?.(result.result);
-        // Refresh forces
-        const forcesResult = await getMyForcesAction();
-        if (forcesResult.success && forcesResult.forces) {
-          setMyForces(forcesResult.forces);
+        if (result.success && result.result) {
+          setLastResult(result.result);
+          onBattleComplete?.(result.result);
+          // Refresh forces
+          const forcesResult = await getMyForcesAction();
+          if (forcesResult.success && forcesResult.forces) {
+            setMyForces(forcesResult.forces);
+          }
+          // Reset selection
+          setSelectedForces({
+            soldiers: 0,
+            fighters: 0,
+            stations: 0,
+            lightCruisers: 0,
+            heavyCruisers: 0,
+            carriers: 0,
+          });
+        } else {
+          setError(result.error ?? "Attack failed");
         }
-        // Reset selection
-        setSelectedForces({
-          soldiers: 0,
-          fighters: 0,
-          stations: 0,
-          lightCruisers: 0,
-          heavyCruisers: 0,
-          carriers: 0,
-        });
-      } else {
-        setError(result.error ?? "Attack failed");
+      } catch (err) {
+        console.error("Attack failed:", err);
+        setError(err instanceof Error ? err.message : "Attack failed");
       }
-    } catch (err) {
-      console.error("Attack failed:", err);
-      setError(err instanceof Error ? err.message : "Attack failed");
-    } finally {
-      setIsAttacking(false);
-    }
+    });
   };
 
   if (isLoading) {
@@ -266,8 +265,8 @@ export function CombatPanelContent({
 
       {/* Combat Preview / Attack Button */}
       {selectedTarget && myForces && (
-        <div className={isAttacking ? "opacity-50 pointer-events-none" : ""}>
-          {isAttacking && (
+        <div className={isPending ? "opacity-50 pointer-events-none" : ""}>
+          {isPending && (
             <div className="text-center text-lcars-amber mb-2 animate-pulse font-semibold text-sm">
               ATTACKING...
             </div>

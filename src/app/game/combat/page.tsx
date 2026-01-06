@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useTransition } from "react";
 import { BattleReport } from "@/components/game/combat/BattleReport";
 import { CombatPreview } from "@/components/game/combat/CombatPreview";
 import {
@@ -40,7 +40,7 @@ export default function CombatPage() {
 
   // Combat result
   const [lastResult, setLastResult] = useState<CombatResult | null>(null);
-  const [isAttacking, setIsAttacking] = useState(false);
+  const [isPending, startTransition] = useTransition();
 
   // Load initial data
   useEffect(() => {
@@ -73,48 +73,47 @@ export default function CombatPage() {
   }, []);
 
   // Handle attack
-  const handleAttack = async () => {
+  const handleAttack = () => {
     if (!selectedTarget) return;
 
-    setIsAttacking(true);
-    try {
-      const result = await launchAttackAction(
-        selectedTarget.id,
-        attackType,
-        selectedForces
-      );
+    startTransition(async () => {
+      try {
+        const result = await launchAttackAction(
+          selectedTarget.id,
+          attackType,
+          selectedForces
+        );
 
-      if (result.success && result.result) {
-        setLastResult(result.result);
-        // Refresh forces and history
-        const [forcesResult, historyResult] = await Promise.all([
-          getMyForcesAction(),
-          getAttackHistoryAction(10),
-        ]);
-        if (forcesResult.success && forcesResult.forces) {
-          setMyForces(forcesResult.forces);
+        if (result.success && result.result) {
+          setLastResult(result.result);
+          // Refresh forces and history
+          const [forcesResult, historyResult] = await Promise.all([
+            getMyForcesAction(),
+            getAttackHistoryAction(10),
+          ]);
+          if (forcesResult.success && forcesResult.forces) {
+            setMyForces(forcesResult.forces);
+          }
+          if (historyResult.success && historyResult.attacks) {
+            setAttackHistory(historyResult.attacks);
+          }
+          // Reset selection
+          setSelectedForces({
+            soldiers: 0,
+            fighters: 0,
+            stations: 0,
+            lightCruisers: 0,
+            heavyCruisers: 0,
+            carriers: 0,
+          });
+        } else {
+          setError(result.error ?? "Attack failed");
         }
-        if (historyResult.success && historyResult.attacks) {
-          setAttackHistory(historyResult.attacks);
-        }
-        // Reset selection
-        setSelectedForces({
-          soldiers: 0,
-          fighters: 0,
-          stations: 0,
-          lightCruisers: 0,
-          heavyCruisers: 0,
-          carriers: 0,
-        });
-      } else {
-        setError(result.error ?? "Attack failed");
+      } catch (err) {
+        console.error("Attack failed:", err);
+        setError(err instanceof Error ? err.message : "Attack failed");
       }
-    } catch (err) {
-      console.error("Attack failed:", err);
-      setError(err instanceof Error ? err.message : "Attack failed");
-    } finally {
-      setIsAttacking(false);
-    }
+    });
   };
 
   if (isLoading) {
@@ -248,8 +247,8 @@ export default function CombatPage() {
 
           {/* Combat Preview */}
           {selectedTarget && myForces && (
-            <div className={isAttacking ? "opacity-50 pointer-events-none" : ""}>
-              {isAttacking && (
+            <div className={isPending ? "opacity-50 pointer-events-none" : ""}>
+              {isPending && (
                 <div className="text-center text-lcars-amber mb-4 animate-pulse font-semibold">
                   ATTACKING...
                 </div>

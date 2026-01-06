@@ -6,7 +6,7 @@
  * Panel version of the covert ops page for starmap-centric UI.
  */
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useTransition } from "react";
 import { CovertStatusPanel, TargetSelector, OperationCard } from "@/components/game/covert";
 import {
   getCovertStatusAction,
@@ -62,6 +62,7 @@ export function CovertPanelContent({ targetEmpireId }: CovertPanelContentProps) 
   const [previews, setPreviews] = useState<Map<OperationType, OperationPreview>>(new Map());
   const [loading, setLoading] = useState(true);
   const [executing, setExecuting] = useState<OperationType | null>(null);
+  const [isPending, startTransition] = useTransition();
   const [lastResult, setLastResult] = useState<{
     success: boolean;
     message: string;
@@ -130,37 +131,39 @@ export function CovertPanelContent({ targetEmpireId }: CovertPanelContentProps) 
 
   // Execute operation
   const handleExecute = useCallback(
-    async (operationType: OperationType) => {
+    (operationType: OperationType) => {
       if (!selectedTarget) return;
 
       setExecuting(operationType);
       setLastResult(null);
 
-      const result = await executeCovertOpAction(selectedTarget.id, operationType);
+      startTransition(async () => {
+        const result = await executeCovertOpAction(selectedTarget.id, operationType);
 
-      if (result.success && result.result) {
-        setLastResult({
-          success: result.result.success,
-          message: result.result.message,
-          effects: result.result.appliedEffects,
-        });
+        if (result.success && result.result) {
+          setLastResult({
+            success: result.result.success,
+            message: result.result.message,
+            effects: result.result.appliedEffects,
+          });
 
-        // Refresh status
-        const statusResult = await getCovertStatusAction();
-        if (statusResult.success && statusResult.status) {
-          setStatus(statusResult.status);
+          // Refresh status
+          const statusResult = await getCovertStatusAction();
+          if (statusResult.success && statusResult.status) {
+            setStatus(statusResult.status);
+          }
+        } else {
+          setLastResult({
+            success: false,
+            message: result.error || "Operation failed",
+            effects: [],
+          });
         }
-      } else {
-        setLastResult({
-          success: false,
-          message: result.error || "Operation failed",
-          effects: [],
-        });
-      }
 
-      setExecuting(null);
+        setExecuting(null);
+      });
     },
-    [selectedTarget]
+    [selectedTarget, startTransition]
   );
 
   if (loading) {
