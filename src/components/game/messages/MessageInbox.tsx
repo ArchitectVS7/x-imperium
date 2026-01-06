@@ -10,7 +10,7 @@
  * - Filtering options
  */
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import {
   getInboxAction,
   getInboxSummaryAction,
@@ -235,17 +235,67 @@ function MessageDetail({
   message: StoredMessage;
   onClose: () => void;
 }) {
+  const modalRef = useRef<HTMLDivElement>(null);
   const archetypeColor = message.senderArchetype
     ? ARCHETYPE_COLORS[message.senderArchetype]
     : "text-gray-400";
 
+  // ACCESSIBILITY: Focus trap and keyboard handling
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        onClose();
+        return;
+      }
+
+      // Focus trap: cycle Tab within modal
+      if (e.key === "Tab" && modalRef.current) {
+        const focusableElements = modalRef.current.querySelectorAll<HTMLElement>(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
+        const focusableArray = Array.from(focusableElements);
+
+        // If no focusable elements, do nothing
+        if (focusableArray.length === 0) return;
+
+        const firstElement = focusableArray[0];
+        const lastElement = focusableArray[focusableArray.length - 1];
+
+        if (e.shiftKey && document.activeElement === firstElement) {
+          // Shift+Tab on first element -> go to last
+          e.preventDefault();
+          lastElement?.focus();
+        } else if (!e.shiftKey && document.activeElement === lastElement) {
+          // Tab on last element -> go to first
+          e.preventDefault();
+          firstElement?.focus();
+        }
+      }
+    };
+
+    // Save currently focused element to restore later
+    const previouslyFocused = document.activeElement as HTMLElement;
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      previouslyFocused?.focus();
+    };
+  }, [onClose]);
+
   return (
     <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
-      <div className="bg-gray-900 border border-lcars-amber rounded-lg max-w-lg w-full p-6">
+      <div
+        ref={modalRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="message-title"
+        className="bg-gray-900 border border-lcars-amber rounded-lg max-w-lg w-full p-6"
+      >
         {/* Header */}
         <div className="flex justify-between items-start mb-4">
           <div>
-            <h3 className={`text-lg font-display ${archetypeColor}`}>
+            <h3 id="message-title" className={`text-lg font-display ${archetypeColor}`}>
               {message.senderName || "Unknown Empire"}
             </h3>
             <p className="text-sm text-gray-500">

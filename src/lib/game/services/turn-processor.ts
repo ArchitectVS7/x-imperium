@@ -42,7 +42,7 @@ import {
   type Planet,
   type CraftingQueue,
 } from "@/lib/db/schema";
-import { eq, and } from "drizzle-orm";
+import { eq, and, inArray } from "drizzle-orm";
 import type {
   TurnResult,
   EmpireResult,
@@ -124,7 +124,6 @@ import { detectBosses } from "./boss-detection-service";
 export async function processTurn(gameId: string): Promise<TurnResult> {
   const startTime = performance.now();
   const globalEvents: TurnEvent[] = [];
-  const empireResults: EmpireResult[] = [];
 
   try {
     // Load game with all empires and planets
@@ -159,23 +158,24 @@ export async function processTurn(gameId: string): Promise<TurnResult> {
     const currentTurn = game.currentTurn;
     const nextTurn = currentTurn + 1;
 
-    // Process each empire
-    for (const empire of game.empires) {
-      try {
-        const empireResult = await processEmpireTurn(
-          empire,
-          empire.planets,
-          gameId,
-          nextTurn,
-          game.difficulty as Difficulty
-        );
-        empireResults.push(empireResult);
-      } catch (error) {
-        // Log error but continue processing other empires
-        console.error(`Error processing empire ${empire.id}:`, error);
-        empireResults.push(createErrorEmpireResult(empire, error));
-      }
-    }
+    // PERFORMANCE: Process all empires in parallel (they don't have dependencies on each other)
+    const empireResults = await Promise.all(
+      game.empires.map(async (empire) => {
+        try {
+          return await processEmpireTurn(
+            empire,
+            empire.planets,
+            gameId,
+            nextTurn,
+            game.difficulty as Difficulty
+          );
+        } catch (error) {
+          // Log error but continue processing other empires
+          console.error(`Error processing empire ${empire.id}:`, error);
+          return createErrorEmpireResult(empire, error);
+        }
+      })
+    );
 
     // ==========================================================================
     // PHASE 5: BOT DECISIONS (M5)
@@ -1014,6 +1014,11 @@ export async function processPhase8_VictoryCheck(): Promise<void> {
  * Adds the specified resources to the empire's inventory.
  * Creates new inventory records if they don't exist.
  *
+ * PERFORMANCE: Uses batch operations to minimize database queries:
+ * - 1 query to fetch all existing inventory
+ * - 1 batch insert for new resources
+ * - 1 batch update for existing resources
+ *
  * @param empireId - Empire UUID
  * @param gameId - Game UUID
  * @param resources - Resources to add (keyed by resource type)
@@ -1023,32 +1028,41 @@ async function updateResourceInventory(
   gameId: string,
   resources: Partial<Record<CraftedResource, number>>
 ): Promise<void> {
-  for (const [resourceType, quantity] of Object.entries(resources)) {
-    if (quantity <= 0) continue;
+  const resourceEntries = Object.entries(resources).filter(([, qty]) => qty > 0);
+  if (resourceEntries.length === 0) return;
 
-    const tier = RESOURCE_TIERS[resourceType as CraftedResource];
-    const tierValue = TIER_TO_ENUM[tier];
+  const resourceTypes = resourceEntries.map(([type]) => type as CraftedResource);
 
-    // Try to find existing inventory record
-    const existing = await db.query.resourceInventory.findFirst({
-      where: and(
-        eq(resourceInventory.empireId, empireId),
-        eq(resourceInventory.resourceType, resourceType as CraftedResource)
-      ),
-    });
+  // PERFORMANCE: Fetch all existing inventory in one query
+  const existingInventory = await db.query.resourceInventory.findMany({
+    where: and(
+      eq(resourceInventory.empireId, empireId),
+      inArray(resourceInventory.resourceType, resourceTypes)
+    ),
+  });
+
+  // Build lookup map for existing inventory
+  const existingMap = new Map(
+    existingInventory.map((inv) => [inv.resourceType, inv])
+  );
+
+  // Separate into updates and inserts
+  const toUpdate: Array<{ id: string; newQuantity: number }> = [];
+  const toInsert: Array<typeof resourceInventory.$inferInsert> = [];
+
+  for (const [resourceType, quantity] of resourceEntries) {
+    const existing = existingMap.get(resourceType as CraftedResource);
 
     if (existing) {
-      // Update existing record
-      await db
-        .update(resourceInventory)
-        .set({
-          quantity: existing.quantity + quantity,
-          updatedAt: new Date(),
-        })
-        .where(eq(resourceInventory.id, existing.id));
+      toUpdate.push({
+        id: existing.id,
+        newQuantity: existing.quantity + quantity,
+      });
     } else {
-      // Create new record
-      await db.insert(resourceInventory).values({
+      const tier = RESOURCE_TIERS[resourceType as CraftedResource];
+      const tierValue = TIER_TO_ENUM[tier];
+
+      toInsert.push({
         empireId,
         gameId,
         resourceType: resourceType as CraftedResource,
@@ -1057,6 +1071,22 @@ async function updateResourceInventory(
       });
     }
   }
+
+  // PERFORMANCE: Execute updates and inserts in parallel
+  await Promise.all([
+    // Batch insert new resources
+    toInsert.length > 0 ? db.insert(resourceInventory).values(toInsert) : Promise.resolve(),
+    // Batch update existing resources (parallel updates)
+    ...toUpdate.map((update) =>
+      db
+        .update(resourceInventory)
+        .set({
+          quantity: update.newQuantity,
+          updatedAt: new Date(),
+        })
+        .where(eq(resourceInventory.id, update.id))
+    ),
+  ]);
 }
 
 /**
@@ -1234,70 +1264,73 @@ async function processWormholesForGame(
 
   const turnResult = processWormholesTurn(wormholesWithDates, currentTurn);
 
-  // Update collapsed wormholes
-  for (const connectionId of turnResult.collapsed) {
-    await db
-      .update(regionConnections)
-      .set({
-        wormholeStatus: "collapsed",
-        updatedAt: new Date(),
-      })
-      .where(eq(regionConnections.id, connectionId));
+  // PERFORMANCE: Parallelize wormhole status updates (independent operations)
+  await Promise.all([
+    // Update collapsed wormholes
+    ...turnResult.collapsed.map(async (connectionId) => {
+      await db
+        .update(regionConnections)
+        .set({
+          wormholeStatus: "collapsed",
+          updatedAt: new Date(),
+        })
+        .where(eq(regionConnections.id, connectionId));
 
-    const wormhole = wormholes.find((w) => w.id === connectionId);
-    if (wormhole) {
-      const fromRegion = regionMap.get(wormhole.fromRegionId);
-      const toRegion = regionMap.get(wormhole.toRegionId);
+      const wormhole = wormholes.find((w) => w.id === connectionId);
+      if (wormhole) {
+        const fromRegion = regionMap.get(wormhole.fromRegionId);
+        const toRegion = regionMap.get(wormhole.toRegionId);
+        events.push({
+          type: "other",
+          message: `⚠️ Wormhole between ${fromRegion?.name ?? "Unknown"} and ${toRegion?.name ?? "Unknown"} has collapsed!`,
+          severity: "warning",
+        });
+      }
+    }),
+
+    // Update reopened wormholes
+    ...turnResult.reopened.map(async (connectionId) => {
+      await db
+        .update(regionConnections)
+        .set({
+          wormholeStatus: "undiscovered",
+          collapseChance: "0.05",
+          discoveredAtTurn: null,
+          discoveredByEmpireId: null,
+          updatedAt: new Date(),
+        })
+        .where(eq(regionConnections.id, connectionId));
+
       events.push({
         type: "other",
-        message: `⚠️ Wormhole between ${fromRegion?.name ?? "Unknown"} and ${toRegion?.name ?? "Unknown"} has collapsed!`,
-        severity: "warning",
-      });
-    }
-  }
-
-  // Update reopened wormholes
-  for (const connectionId of turnResult.reopened) {
-    await db
-      .update(regionConnections)
-      .set({
-        wormholeStatus: "undiscovered",
-        collapseChance: "0.05",
-        discoveredAtTurn: null,
-        discoveredByEmpireId: null,
-        updatedAt: new Date(),
-      })
-      .where(eq(regionConnections.id, connectionId));
-
-    events.push({
-      type: "other",
-      message: `🌀 A collapsed wormhole has reopened and awaits rediscovery!`,
-      severity: "info",
-    });
-  }
-
-  // Update auto-stabilized wormholes
-  for (const connectionId of turnResult.autoStabilized) {
-    await db
-      .update(regionConnections)
-      .set({
-        wormholeStatus: "stabilized",
-        collapseChance: "0.00",
-        updatedAt: new Date(),
-      })
-      .where(eq(regionConnections.id, connectionId));
-
-    const wormhole = wormholes.find((w) => w.id === connectionId);
-    if (wormhole) {
-      const fromRegion = regionMap.get(wormhole.fromRegionId);
-      const toRegion = regionMap.get(wormhole.toRegionId);
-      events.push({
-        type: "other",
-        message: `✨ Wormhole between ${fromRegion?.name ?? "Unknown"} and ${toRegion?.name ?? "Unknown"} has naturally stabilized!`,
+        message: `🌀 A collapsed wormhole has reopened and awaits rediscovery!`,
         severity: "info",
       });
-    }
-  }
+    }),
+
+    // Update auto-stabilized wormholes
+    ...turnResult.autoStabilized.map(async (connectionId) => {
+      await db
+        .update(regionConnections)
+        .set({
+          wormholeStatus: "stabilized",
+          collapseChance: "0.00",
+          updatedAt: new Date(),
+        })
+        .where(eq(regionConnections.id, connectionId));
+
+      const wormhole = wormholes.find((w) => w.id === connectionId);
+      if (wormhole) {
+        const fromRegion = regionMap.get(wormhole.fromRegionId);
+        const toRegion = regionMap.get(wormhole.toRegionId);
+        events.push({
+          type: "other",
+          message: `✨ Wormhole between ${fromRegion?.name ?? "Unknown"} and ${toRegion?.name ?? "Unknown"} has naturally stabilized!`,
+          severity: "info",
+        });
+      }
+    }),
+  ]);
 
   // ============================================================================
   // PHASE 2: WORMHOLE DISCOVERY ATTEMPTS

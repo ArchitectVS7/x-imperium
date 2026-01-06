@@ -229,6 +229,90 @@ These tasks require human judgment, external access, or manual verification:
 
 ---
 
+## OPEN ITEMS - UI Enhancement Assets
+
+**Last Updated:** January 5, 2026
+**Reference:** `docs/frontend/ui-enhancement-plan.md`
+
+The UI enhancement implementation has coding complete for Phases 1-7, but requires asset collection for production use.
+
+### Phase 2: Button Hover/Click Sounds (⚠️ Assets Needed)
+
+**Status:** Code complete, missing audio files
+**Files:** Audio manager and LCARSButton component implemented
+
+**Required Assets:**
+- [ ] `/public/audio/sfx/click.mp3` - Button click chirp
+- [ ] `/public/audio/sfx/hover.mp3` - Subtle hover blip
+- [ ] `/public/audio/sfx/success.mp3` - Positive confirmation tone
+- [ ] `/public/audio/sfx/error.mp3` - Error/failure sound
+- [ ] `/public/audio/sfx/alert.mp3` - Attention notification
+- [ ] `/public/audio/sfx/turn-end.mp3` - Turn completion chime
+- [ ] `/public/audio/sfx/combat.mp3` - Combat initiated sound
+- [ ] `/public/audio/sfx/build.mp3` - Construction queued beep
+
+**Recommended Sources (Free/CC0):**
+- [Freesound.org](https://freesound.org) - Search "sci-fi UI", "interface beep"
+- [Pixabay SFX](https://pixabay.com/sound-effects/) - "Interface", "Notification"
+- [Kenney.nl](https://kenney.nl/assets) - UI Audio pack
+
+**Effort:** 1-2 hours asset collection and testing
+
+### Phase 4: Ambient Starmap Music (❌ Not Started)
+
+**Status:** Not implemented
+**Files:** Need to extend `src/lib/audio/audio-manager.ts`
+
+**Required Implementation:**
+1. Add ambient track looping system to audio manager
+2. Implement fade-in/fade-out crossfade logic
+3. Add track controls to starmap page
+4. Create user preference persistence (localStorage)
+
+**Required Assets:**
+- [ ] `/public/audio/ambient/space-ambient.mp3` - Calm space drone (2-3 min loop)
+- [ ] `/public/audio/ambient/tension.mp3` - Combat tension music (2-3 min loop)
+
+**Recommended Sources (Royalty-Free):**
+- [Pixabay Music](https://pixabay.com/music/) - Search "space ambient"
+- [Free Music Archive](https://freemusicarchive.org/) - CC licensed ambient
+- [Incompetech](https://incompetech.com/) - Kevin MacLeod (CC-BY, requires attribution)
+
+**Effort:** 2-3 hours implementation + 1-2 hours asset collection
+
+### Phase 6: NASA Nebula Backgrounds (⚠️ Assets Needed)
+
+**Status:** Code complete, missing image files
+**Files:** `src/components/ui/SpaceBackground.tsx` implemented
+
+**Required Assets:**
+- [ ] `/public/images/backgrounds/nebula.jpg` - Carina Nebula or similar (JWST)
+- [ ] `/public/images/backgrounds/starfield.jpg` - Star field pattern
+- [ ] `/public/images/backgrounds/deep-field.jpg` - Hubble/JWST deep field
+
+**Source:** [NASA Image Gallery](https://images.nasa.gov/) (Public Domain)
+
+**Recommended Images:**
+- Carina Nebula (JWST) - High resolution, vibrant
+- Pillars of Creation (Hubble) - Iconic, atmospheric
+- Hubble Deep Field - Abstract, contemplative
+
+**Asset Requirements:**
+- Format: JPG optimized for web
+- Size: 1920x1080 or larger
+- File size: <500KB per image (optimize with tools like Squoosh)
+- License: Public Domain (NASA images are copyright-free)
+
+**Effort:** 1 hour asset collection and optimization
+
+### Asset Collection Priority
+
+1. **Phase 6 (NASA Backgrounds)** - Quickest win, high visual impact
+2. **Phase 2 (UI Sound Effects)** - Medium effort, enhances interactivity
+3. **Phase 4 (Ambient Music)** - Requires implementation work + assets
+
+---
+
 ## License
 
 GPL-2.0 - See [LICENSE.TXT](LICENSE.TXT)

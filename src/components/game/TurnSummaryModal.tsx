@@ -9,7 +9,7 @@
  * This is what makes the player feel connected to the simulation.
  */
 
-import { useEffect, useCallback } from "react";
+import { useEffect, useCallback, useRef } from "react";
 import type { TurnEvent, ResourceDelta } from "@/lib/game/types/turn-types";
 import { RESOURCE_NAMES, GAME_TERMS, UI_LABELS } from "@/lib/theme/names";
 import { ResourceIcons } from "@/lib/theme/icons";
@@ -93,11 +93,38 @@ export function TurnSummaryModal({
   empiresEliminated = [],
   victoryResult,
 }: TurnSummaryModalProps) {
-  // Close on Escape key
+  const modalRef = useRef<HTMLDivElement>(null);
+
+  // ACCESSIBILITY: Focus trap - prevents Tab from escaping the modal
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         onClose();
+        return;
+      }
+
+      // Focus trap: cycle Tab within modal
+      if (e.key === "Tab" && modalRef.current) {
+        const focusableElements = modalRef.current.querySelectorAll<HTMLElement>(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
+        const focusableArray = Array.from(focusableElements);
+
+        // If no focusable elements, do nothing
+        if (focusableArray.length === 0) return;
+
+        const firstElement = focusableArray[0];
+        const lastElement = focusableArray[focusableArray.length - 1];
+
+        if (e.shiftKey && document.activeElement === firstElement) {
+          // Shift+Tab on first element -> go to last
+          e.preventDefault();
+          lastElement?.focus();
+        } else if (!e.shiftKey && document.activeElement === lastElement) {
+          // Tab on last element -> go to first
+          e.preventDefault();
+          firstElement?.focus();
+        }
       }
     },
     [onClose]
@@ -105,8 +132,17 @@ export function TurnSummaryModal({
 
   useEffect(() => {
     if (isOpen) {
+      // Save currently focused element to restore later
+      const previouslyFocused = document.activeElement as HTMLElement;
+
+      // Add keyboard listeners
       document.addEventListener("keydown", handleKeyDown);
-      return () => document.removeEventListener("keydown", handleKeyDown);
+
+      // Restore focus when modal closes
+      return () => {
+        document.removeEventListener("keydown", handleKeyDown);
+        previouslyFocused?.focus();
+      };
     }
     return undefined;
   }, [isOpen, handleKeyDown]);
@@ -138,7 +174,12 @@ export function TurnSummaryModal({
       />
 
       {/* Modal */}
-      <div role="dialog" aria-modal="true" className="relative bg-gray-900 border border-lcars-amber/50 rounded-lg shadow-2xl max-w-lg w-full mx-4 max-h-[80vh] overflow-hidden flex flex-col">
+      <div
+        ref={modalRef}
+        role="dialog"
+        aria-modal="true"
+        className="relative bg-gray-900 border border-lcars-amber/50 rounded-lg shadow-2xl max-w-lg w-full mx-4 max-h-[80vh] overflow-hidden flex flex-col"
+      >
         {/* Header */}
         <div className="p-6 border-b border-gray-800 bg-gradient-to-r from-gray-900 to-gray-800">
           <div className="flex items-center justify-between">

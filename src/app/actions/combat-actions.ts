@@ -369,6 +369,8 @@ export async function getAttackHistoryAction(
 
 /**
  * Get detailed attack with combat logs.
+ *
+ * SECURITY: Verifies the requesting user is either the attacker or defender.
  */
 export async function getAttackDetailsAction(
   attackId: string
@@ -378,6 +380,13 @@ export async function getAttackDetailsAction(
   error?: string;
 }> {
   try {
+    // Get session cookies
+    const { empireId } = await getGameCookies();
+
+    if (!empireId) {
+      return { success: false, error: "No active game session" };
+    }
+
     // Validate input
     if (!isValidUUID(attackId)) {
       return { success: false, error: "Invalid attack ID" };
@@ -387,6 +396,11 @@ export async function getAttackDetailsAction(
 
     if (!attack) {
       return { success: false, error: "Attack not found" };
+    }
+
+    // SECURITY: Verify the requesting user is involved in this attack
+    if (attack.attackerId !== empireId && attack.defenderId !== empireId) {
+      return { success: false, error: "Unauthorized: You are not involved in this attack" };
     }
 
     return { success: true, attack };

@@ -499,7 +499,7 @@ export function resolveBattle(
   let totalAttackerCasualties: Partial<Forces> = {};
   let totalDefenderCasualties: Partial<Forces> = {};
   let battleDecided = false;
-  const rollIndex = 0;
+  let rollIndex = 0; // BUGFIX: Changed from const to let to track roll consumption
 
   // Resolve up to 3 volleys
   for (let v = 1; v <= 3 && !battleDecided; v++) {
@@ -519,6 +519,27 @@ export function resolveBattle(
     );
 
     volleys.push(volley);
+
+    // BUGFIX: Advance rollIndex by number of rolls consumed in this volley
+    // Count active attacker units (5 unit types max)
+    const attackerRollCount = [
+      attackerRemaining.soldiers,
+      attackerRemaining.fighters,
+      attackerRemaining.lightCruisers,
+      attackerRemaining.heavyCruisers,
+      attackerRemaining.carriers,
+    ].filter((count) => (count ?? 0) > 0).length;
+
+    // Count active defender units (5 unit types max, stations don't attack)
+    const defenderRollCount = [
+      defenderRemaining.soldiers,
+      defenderRemaining.fighters,
+      defenderRemaining.lightCruisers,
+      defenderRemaining.heavyCruisers,
+      defenderRemaining.carriers,
+    ].filter((count) => (count ?? 0) > 0).length;
+
+    rollIndex += attackerRollCount + defenderRollCount;
 
     // Apply casualties
     applyCasualties(attackerRemaining, volley.attackerCasualties);

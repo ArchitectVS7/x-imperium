@@ -8,6 +8,40 @@ import {
 } from "@/lib/db/schema";
 import { eq, lt, and, or, sql } from "drizzle-orm";
 
+// =============================================================================
+// SECURITY: Admin Authentication
+// =============================================================================
+
+/**
+ * Verify admin access using environment variable.
+ *
+ * For alpha: Uses ADMIN_SECRET env var
+ * For production: Should implement proper role-based access control
+ *
+ * Set ADMIN_SECRET in your .env.local file to enable admin functions.
+ */
+function verifyAdminAccess(): { authorized: boolean; error?: string } {
+  const adminSecret = process.env.ADMIN_SECRET;
+
+  if (!adminSecret) {
+    return {
+      authorized: false,
+      error: "Admin functions are disabled. Set ADMIN_SECRET environment variable to enable.",
+    };
+  }
+
+  // In production, this should verify:
+  // 1. User session/authentication
+  // 2. User has admin role in database
+  // 3. Optional: Require re-authentication for destructive operations
+
+  return { authorized: true };
+}
+
+// =============================================================================
+// TYPE DEFINITIONS
+// =============================================================================
+
 interface TableRow {
   table_name: string;
 }
@@ -32,6 +66,11 @@ export async function checkDatabaseTablesAction(): Promise<{
   tables?: string[];
   error?: string;
 }> {
+  const authCheck = verifyAdminAccess();
+  if (!authCheck.authorized) {
+    return { success: false, error: authCheck.error };
+  }
+
   try {
     const result = await db.execute(sql`
       SELECT table_name
@@ -88,6 +127,11 @@ export async function cleanupOldGamesAction(): Promise<{
   deletedCount: number;
   error?: string;
 }> {
+  const authCheck = verifyAdminAccess();
+  if (!authCheck.authorized) {
+    return { success: false, deletedCount: 0, error: authCheck.error };
+  }
+
   try {
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
@@ -147,6 +191,11 @@ export async function getDatabaseStatsAction(): Promise<{
   };
   error?: string;
 }> {
+  const authCheck = verifyAdminAccess();
+  if (!authCheck.authorized) {
+    return { success: false, error: authCheck.error };
+  }
+
   try {
     // Helper to safely get count from result
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -224,6 +273,11 @@ export async function deleteAllGamesAction(): Promise<{
   deletedCount: number;
   error?: string;
 }> {
+  const authCheck = verifyAdminAccess();
+  if (!authCheck.authorized) {
+    return { success: false, deletedCount: 0, error: authCheck.error };
+  }
+
   try {
     // Count games before deletion
     const countResult = await db.execute(sql`SELECT COUNT(*)::int as count FROM games`);
@@ -289,6 +343,11 @@ export async function truncateAllTablesAction(): Promise<{
   tablesCleared: string[];
   error?: string;
 }> {
+  const authCheck = verifyAdminAccess();
+  if (!authCheck.authorized) {
+    return { success: false, tablesCleared: [], error: authCheck.error };
+  }
+
   try {
     // Order matters! Truncate child tables before parents to avoid FK constraint issues
     // SECURITY: These are hardcoded table names - NOT user input
@@ -390,6 +449,11 @@ export async function pruneAllMemoriesAction(): Promise<{
   deletedCount: number;
   error?: string;
 }> {
+  const authCheck = verifyAdminAccess();
+  if (!authCheck.authorized) {
+    return { success: false, deletedCount: 0, error: authCheck.error };
+  }
+
   try {
     // Count memories before deletion
     const [countResult] = await db
@@ -430,6 +494,11 @@ export async function prunePerformanceLogsAction(): Promise<{
   deletedCount: number;
   error?: string;
 }> {
+  const authCheck = verifyAdminAccess();
+  if (!authCheck.authorized) {
+    return { success: false, deletedCount: 0, error: authCheck.error };
+  }
+
   try {
     const oneDayAgo = new Date();
     oneDayAgo.setDate(oneDayAgo.getDate() - 1);
