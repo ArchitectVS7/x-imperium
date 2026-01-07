@@ -27,8 +27,9 @@ import {
   type TriggerContext,
 } from "@/lib/messages";
 import { db } from "@/lib/db";
-import { empires, games } from "@/lib/db/schema";
+import { empires, games, messages } from "@/lib/db/schema";
 import { eq, and } from "drizzle-orm";
+import { verifyEmpireOwnership } from "@/lib/security/validation";
 
 // =============================================================================
 // COOKIE HELPERS
@@ -125,6 +126,15 @@ export async function getInboxAction(
       };
     }
 
+    // SECURITY: Verify the requesting user owns this empire
+    const ownership = await verifyEmpireOwnership(parsed.data.playerId, parsed.data.gameId);
+    if (!ownership.valid) {
+      return {
+        success: false,
+        error: ownership.error ?? "Authorization failed",
+      };
+    }
+
     const messages = await getPlayerInbox(
       parsed.data.gameId,
       parsed.data.playerId,
@@ -160,6 +170,15 @@ export async function getInboxSummaryAction(
       return {
         success: false,
         error: parsed.error.issues[0]?.message || "Invalid input",
+      };
+    }
+
+    // SECURITY: Verify the requesting user owns this empire
+    const ownership = await verifyEmpireOwnership(parsed.data.playerId, parsed.data.gameId);
+    if (!ownership.valid) {
+      return {
+        success: false,
+        error: ownership.error ?? "Authorization failed",
       };
     }
 
@@ -234,6 +253,27 @@ export async function markMessageReadAction(
       };
     }
 
+    // SECURITY: Get current session and verify message ownership
+    const { gameId, empireId } = await getGameCookies();
+    if (!gameId || !empireId) {
+      return { success: false, error: "No active game session" };
+    }
+
+    // Verify message exists and belongs to this empire
+    const message = await db.query.messages.findFirst({
+      where: eq(messages.id, parsed.data.messageId),
+      columns: { recipientId: true },
+    });
+
+    if (!message) {
+      return { success: false, error: "Message not found" };
+    }
+
+    // Only the recipient can mark a message as read
+    if (message.recipientId !== empireId) {
+      return { success: false, error: "Unauthorized - not your message" };
+    }
+
     const result = await markMessageRead(parsed.data.messageId);
 
     return { success: true, data: result };
@@ -257,6 +297,15 @@ export async function markAllMessagesReadAction(
       return {
         success: false,
         error: parsed.error.issues[0]?.message || "Invalid input",
+      };
+    }
+
+    // SECURITY: Verify the requesting user owns this empire
+    const ownership = await verifyEmpireOwnership(parsed.data.playerId, parsed.data.gameId);
+    if (!ownership.valid) {
+      return {
+        success: false,
+        error: ownership.error ?? "Authorization failed",
       };
     }
 
@@ -290,6 +339,15 @@ export async function triggerGreetingsAction(
       return {
         success: false,
         error: parsed.error.issues[0]?.message || "Invalid input",
+      };
+    }
+
+    // SECURITY: Verify the requesting user owns this empire
+    const ownership = await verifyEmpireOwnership(parsed.data.playerId, parsed.data.gameId);
+    if (!ownership.valid) {
+      return {
+        success: false,
+        error: ownership.error ?? "Authorization failed",
       };
     }
 

@@ -94,6 +94,7 @@ export function TurnSummaryModal({
   victoryResult,
 }: TurnSummaryModalProps) {
   const modalRef = useRef<HTMLDivElement>(null);
+  const continueButtonRef = useRef<HTMLButtonElement>(null);
 
   // ACCESSIBILITY: Focus trap - prevents Tab from escaping the modal
   const handleKeyDown = useCallback(
@@ -138,9 +139,16 @@ export function TurnSummaryModal({
       // Add keyboard listeners
       document.addEventListener("keydown", handleKeyDown);
 
+      // ACCESSIBILITY: Focus the Continue button when modal opens
+      // Use setTimeout to ensure DOM is ready
+      const focusTimeout = setTimeout(() => {
+        continueButtonRef.current?.focus();
+      }, 0);
+
       // Restore focus when modal closes
       return () => {
         document.removeEventListener("keydown", handleKeyDown);
+        clearTimeout(focusTimeout);
         previouslyFocused?.focus();
       };
     }
@@ -178,13 +186,15 @@ export function TurnSummaryModal({
         ref={modalRef}
         role="dialog"
         aria-modal="true"
+        aria-labelledby="turn-summary-title"
+        aria-describedby="turn-summary-content"
         className="relative bg-gray-900 border border-lcars-amber/50 rounded-lg shadow-2xl max-w-lg w-full mx-4 max-h-[80vh] overflow-hidden flex flex-col"
       >
         {/* Header */}
         <div className="p-6 border-b border-gray-800 bg-gradient-to-r from-gray-900 to-gray-800">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-2xl font-display text-lcars-amber">
+              <h2 id="turn-summary-title" className="text-2xl font-display text-lcars-amber">
                 {GAME_TERMS.turn} {turn} Complete
               </h2>
               <p className="text-sm text-gray-400 mt-1">
@@ -197,6 +207,7 @@ export function TurnSummaryModal({
 
         {/* Content - Scrollable */}
         <div
+          id="turn-summary-content"
           className="flex-1 overflow-y-auto p-6 space-y-4"
           aria-live="polite"
           aria-atomic="false"
@@ -331,10 +342,10 @@ export function TurnSummaryModal({
         {/* Footer */}
         <div className="p-4 border-t border-gray-800 bg-gray-900/50">
           <button
+            ref={continueButtonRef}
             onClick={onClose}
             className="w-full py-3 bg-lcars-amber text-gray-900 font-display text-lg rounded-lg hover:bg-lcars-amber/90 transition-colors"
             data-testid="turn-summary-continue"
-            autoFocus
           >
             CONTINUE
           </button>

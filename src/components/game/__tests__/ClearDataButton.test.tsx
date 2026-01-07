@@ -4,7 +4,6 @@ import { ClearDataButton } from "../ClearDataButton";
 
 describe("ClearDataButton", () => {
   const mockFetch = vi.fn();
-  const mockConfirm = vi.fn();
   const mockLocation = { href: "" };
 
   beforeEach(() => {
@@ -12,9 +11,6 @@ describe("ClearDataButton", () => {
 
     // Mock fetch
     global.fetch = mockFetch;
-
-    // Mock confirm
-    global.confirm = mockConfirm;
 
     // Mock window.location
     Object.defineProperty(window, "location", {
@@ -29,7 +25,7 @@ describe("ClearDataButton", () => {
 
   it("renders without crashing", () => {
     render(<ClearDataButton />);
-    expect(screen.getByRole("button")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /clear corrupted data/i })).toBeInTheDocument();
   });
 
   it("displays correct button text", () => {
@@ -40,29 +36,37 @@ describe("ClearDataButton", () => {
   it("has correct button styling", () => {
     render(<ClearDataButton />);
 
-    const button = screen.getByRole("button");
+    const button = screen.getByRole("button", { name: /clear corrupted data/i });
     expect(button).toHaveClass("text-red-400");
     expect(button).toHaveClass("underline");
   });
 
   describe("Confirmation dialog", () => {
-    it("shows confirmation dialog when clicked", () => {
-      mockConfirm.mockReturnValue(false);
+    it("shows confirmation modal when clicked", async () => {
       render(<ClearDataButton />);
 
-      fireEvent.click(screen.getByRole("button"));
+      fireEvent.click(screen.getByRole("button", { name: /clear corrupted data/i }));
 
-      expect(mockConfirm).toHaveBeenCalledTimes(1);
-      expect(mockConfirm).toHaveBeenCalledWith(
-        "Are you sure you want to clear all game data and start fresh? This cannot be undone."
-      );
+      // Modal should appear with title and message
+      await waitFor(() => {
+        expect(screen.getByText("Clear All Game Data")).toBeInTheDocument();
+        expect(screen.getByText("Are you sure you want to clear all game data and start fresh?")).toBeInTheDocument();
+      });
     });
 
-    it("does not make API calls if user cancels", () => {
-      mockConfirm.mockReturnValue(false);
+    it("does not make API calls if user cancels", async () => {
       render(<ClearDataButton />);
 
-      fireEvent.click(screen.getByRole("button"));
+      // Open modal
+      fireEvent.click(screen.getByRole("button", { name: /clear corrupted data/i }));
+
+      // Wait for modal to appear
+      await waitFor(() => {
+        expect(screen.getByText("Clear All Game Data")).toBeInTheDocument();
+      });
+
+      // Click cancel button
+      fireEvent.click(screen.getByRole("button", { name: /cancel/i }));
 
       expect(mockFetch).not.toHaveBeenCalled();
     });
@@ -70,11 +74,20 @@ describe("ClearDataButton", () => {
 
   describe("API calls", () => {
     it("calls both clear endpoints when confirmed", async () => {
-      mockConfirm.mockReturnValue(true);
       mockFetch.mockResolvedValue({ ok: true });
 
       render(<ClearDataButton />);
-      fireEvent.click(screen.getByRole("button"));
+
+      // Open modal
+      fireEvent.click(screen.getByRole("button", { name: /clear corrupted data/i }));
+
+      // Wait for modal to appear
+      await waitFor(() => {
+        expect(screen.getByText("Clear All Game Data")).toBeInTheDocument();
+      });
+
+      // Click confirm button
+      fireEvent.click(screen.getByRole("button", { name: /clear data/i }));
 
       await waitFor(() => {
         expect(mockFetch).toHaveBeenCalledTimes(2);
@@ -85,11 +98,18 @@ describe("ClearDataButton", () => {
     });
 
     it("redirects to game page with newGame param on success", async () => {
-      mockConfirm.mockReturnValue(true);
       mockFetch.mockResolvedValue({ ok: true });
 
       render(<ClearDataButton />);
-      fireEvent.click(screen.getByRole("button"));
+
+      // Open modal
+      fireEvent.click(screen.getByRole("button", { name: /clear corrupted data/i }));
+
+      // Wait for modal to appear and click confirm
+      await waitFor(() => {
+        expect(screen.getByText("Clear All Game Data")).toBeInTheDocument();
+      });
+      fireEvent.click(screen.getByRole("button", { name: /clear data/i }));
 
       await waitFor(() => {
         expect(mockLocation.href).toBe("/game?newGame=true");
@@ -98,8 +118,7 @@ describe("ClearDataButton", () => {
   });
 
   describe("Loading state", () => {
-    it("shows loading text while clearing", async () => {
-      mockConfirm.mockReturnValue(true);
+    it("shows loading state while clearing", async () => {
       // Create a promise that we can control
       let resolvePromise: (value: { ok: boolean }) => void;
       const pendingPromise = new Promise<{ ok: boolean }>((resolve) => {
@@ -108,8 +127,17 @@ describe("ClearDataButton", () => {
       mockFetch.mockReturnValue(pendingPromise);
 
       render(<ClearDataButton />);
-      fireEvent.click(screen.getByRole("button"));
 
+      // Open modal
+      fireEvent.click(screen.getByRole("button", { name: /clear corrupted data/i }));
+
+      // Wait for modal to appear and click confirm
+      await waitFor(() => {
+        expect(screen.getByText("Clear All Game Data")).toBeInTheDocument();
+      });
+      fireEvent.click(screen.getByRole("button", { name: /clear data/i }));
+
+      // The trigger button should show loading state
       expect(screen.getByText("Clearing...")).toBeInTheDocument();
 
       // Resolve the promise to cleanup
@@ -117,7 +145,6 @@ describe("ClearDataButton", () => {
     });
 
     it("disables button while clearing", async () => {
-      mockConfirm.mockReturnValue(true);
       let resolvePromise: (value: { ok: boolean }) => void;
       const pendingPromise = new Promise<{ ok: boolean }>((resolve) => {
         resolvePromise = resolve;
@@ -125,9 +152,19 @@ describe("ClearDataButton", () => {
       mockFetch.mockReturnValue(pendingPromise);
 
       render(<ClearDataButton />);
-      fireEvent.click(screen.getByRole("button"));
 
-      expect(screen.getByRole("button")).toBeDisabled();
+      // Open modal
+      fireEvent.click(screen.getByRole("button", { name: /clear corrupted data/i }));
+
+      // Wait for modal to appear and click confirm
+      await waitFor(() => {
+        expect(screen.getByText("Clear All Game Data")).toBeInTheDocument();
+      });
+      fireEvent.click(screen.getByRole("button", { name: /clear data/i }));
+
+      // The trigger button should be disabled
+      const triggerButton = screen.getByText("Clearing...").closest("button");
+      expect(triggerButton).toBeDisabled();
 
       // Resolve the promise to cleanup
       resolvePromise!({ ok: true });
@@ -136,14 +173,21 @@ describe("ClearDataButton", () => {
 
   describe("Error handling", () => {
     it("shows alert on API failure", async () => {
-      mockConfirm.mockReturnValue(true);
       mockFetch.mockResolvedValue({ ok: false });
 
       const mockAlert = vi.fn();
       global.alert = mockAlert;
 
       render(<ClearDataButton />);
-      fireEvent.click(screen.getByRole("button"));
+
+      // Open modal
+      fireEvent.click(screen.getByRole("button", { name: /clear corrupted data/i }));
+
+      // Wait for modal to appear and click confirm
+      await waitFor(() => {
+        expect(screen.getByText("Clear All Game Data")).toBeInTheDocument();
+      });
+      fireEvent.click(screen.getByRole("button", { name: /clear data/i }));
 
       await waitFor(() => {
         expect(mockAlert).toHaveBeenCalledWith("Failed to clear data. Check console for details.");
@@ -151,7 +195,6 @@ describe("ClearDataButton", () => {
     });
 
     it("shows alert on network error", async () => {
-      mockConfirm.mockReturnValue(true);
       mockFetch.mockRejectedValue(new Error("Network error"));
 
       const mockAlert = vi.fn();
@@ -160,7 +203,15 @@ describe("ClearDataButton", () => {
       const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
 
       render(<ClearDataButton />);
-      fireEvent.click(screen.getByRole("button"));
+
+      // Open modal
+      fireEvent.click(screen.getByRole("button", { name: /clear corrupted data/i }));
+
+      // Wait for modal to appear and click confirm
+      await waitFor(() => {
+        expect(screen.getByText("Clear All Game Data")).toBeInTheDocument();
+      });
+      fireEvent.click(screen.getByRole("button", { name: /clear data/i }));
 
       await waitFor(() => {
         expect(mockAlert).toHaveBeenCalledWith("Failed to clear data. Check console for details.");
@@ -171,7 +222,6 @@ describe("ClearDataButton", () => {
     });
 
     it("re-enables button after error", async () => {
-      mockConfirm.mockReturnValue(true);
       mockFetch.mockRejectedValue(new Error("Network error"));
 
       const mockAlert = vi.fn();
@@ -179,13 +229,20 @@ describe("ClearDataButton", () => {
       vi.spyOn(console, "error").mockImplementation(() => {});
 
       render(<ClearDataButton />);
-      fireEvent.click(screen.getByRole("button"));
+
+      // Open modal
+      fireEvent.click(screen.getByRole("button", { name: /clear corrupted data/i }));
+
+      // Wait for modal to appear and click confirm
+      await waitFor(() => {
+        expect(screen.getByText("Clear All Game Data")).toBeInTheDocument();
+      });
+      fireEvent.click(screen.getByRole("button", { name: /clear data/i }));
 
       await waitFor(() => {
-        expect(screen.getByRole("button")).not.toBeDisabled();
+        const triggerButton = screen.getByText("Clear corrupted data").closest("button");
+        expect(triggerButton).not.toBeDisabled();
       });
-
-      expect(screen.getByText("Clear corrupted data")).toBeInTheDocument();
     });
   });
 
@@ -193,7 +250,7 @@ describe("ClearDataButton", () => {
     it("has type button to prevent form submission", () => {
       render(<ClearDataButton />);
 
-      const button = screen.getByRole("button");
+      const button = screen.getByRole("button", { name: /clear corrupted data/i });
       expect(button).toHaveAttribute("type", "button");
     });
   });

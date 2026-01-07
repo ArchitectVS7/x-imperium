@@ -64,6 +64,14 @@ import {
 } from "./archetypes";
 // Combat stance selection
 import { getBotCombatStance } from "./research-preferences";
+// M12: LLM Tier 1 imports (static to avoid hot-path dynamic import overhead)
+import { getCachedDecision } from "@/lib/llm/cache";
+import { callLlmWithFailover } from "@/lib/llm/client";
+import { buildDecisionPrompt } from "@/lib/llm/prompts/tier1-prompt";
+import { parseLlmResponse } from "@/lib/llm/response-parser";
+import { logLlmCall } from "@/lib/llm/cost-tracker";
+import { TIER1_BOT_CONFIG } from "@/lib/llm/constants";
+import personas from "@/data/personas.json";
 
 // =============================================================================
 // BASE DECISION WEIGHTS
@@ -1266,8 +1274,6 @@ export function getPersonaForBot(
 export async function generateTier1Decision(
   context: BotDecisionContext
 ): Promise<BotDecision> {
-  const { getCachedDecision } = await import("@/lib/llm/cache");
-
   // Step 1: Check cache for pre-computed decision
   const cached = await getCachedDecision(
     context.gameId,
@@ -1282,15 +1288,8 @@ export async function generateTier1Decision(
   // Step 2: Cache miss - attempt synchronous LLM call
 
   try {
-    const { callLlmWithFailover } = await import("@/lib/llm/client");
-    const { buildDecisionPrompt } = await import("@/lib/llm/prompts/tier1-prompt");
-    const { parseLlmResponse } = await import("@/lib/llm/response-parser");
-    const { logLlmCall } = await import("@/lib/llm/cost-tracker");
-    const { TIER1_BOT_CONFIG } = await import("@/lib/llm/constants");
-
-    // Load personas dynamically
-    const personas = await import("@/data/personas.json");
-    const persona = getPersonaForBot(context.empire, personas.default);
+    // Use static imports (moved to top of file for performance)
+    const persona = getPersonaForBot(context.empire, personas);
 
     if (!persona) {
       throw new Error(

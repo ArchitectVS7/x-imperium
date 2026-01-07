@@ -324,6 +324,9 @@ export async function getTurnOrderPanelDataAction(): Promise<TurnOrderPanelData 
 // =============================================================================
 
 export interface GameLayoutData extends TurnOrderPanelData {
+  // Session IDs for SSE connection
+  gameId: string;
+  empireId: string;
   // Resources for header/status bar
   credits: number;
   food: number;
@@ -455,6 +458,9 @@ export async function getGameLayoutDataAction(): Promise<GameLayoutData | null> 
     const protectionTurnsLeft = Math.max(0, GAME_SETTINGS.protectionTurns - game.currentTurn + 1);
 
     return {
+      // Session IDs for SSE connection
+      gameId,
+      empireId,
       // Turn order panel data
       currentTurn: game.currentTurn,
       turnLimit: game.turnLimit,
@@ -519,6 +525,25 @@ export async function endTurnEnhancedAction(): Promise<EnhancedTurnActionResult>
 
     if (!gameId || !empireId) {
       return { success: false, error: "No active game found" };
+    }
+
+    // SECURITY: Verify empire ownership
+    const ownership = await verifyEmpireOwnership(empireId, gameId);
+    if (!ownership.valid) {
+      return {
+        success: false,
+        error: ownership.error ?? "Authorization failed",
+      };
+    }
+
+    // SECURITY: Rate limiting to prevent turn spam
+    const rateLimit = checkRateLimit(empireId, "GAME_ACTION");
+    if (!rateLimit.allowed) {
+      const waitSeconds = Math.ceil((rateLimit.resetAt - Date.now()) / 1000);
+      return {
+        success: false,
+        error: `Rate limit exceeded. Please wait ${waitSeconds} seconds.`,
+      };
     }
 
     // Get population before turn

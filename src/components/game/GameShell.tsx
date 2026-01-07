@@ -46,6 +46,7 @@ import {
 } from "./panels";
 import { useGameKeyboardShortcuts } from "@/hooks/useGameKeyboardShortcuts";
 import { PanelProvider, type PanelContextData } from "@/contexts/PanelContext";
+import { useGameStateStream, type GameStateUpdate } from "@/hooks/useGameStateStream";
 
 interface GameShellProps {
   children: React.ReactNode;
@@ -85,7 +86,22 @@ export function GameShell({ children, initialLayoutData }: GameShellProps) {
   // Mobile action sheet state
   const [mobileSheetOpen, setMobileSheetOpen] = useState(false);
 
-  // Refresh layout data
+  // Toast notification state for errors
+  const [toast, setToast] = useState<{ message: string; type: "error" | "success" } | null>(null);
+  const toastTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Show toast notification with auto-dismiss
+  const showToast = useCallback((message: string, type: "error" | "success" = "error") => {
+    if (toastTimeoutRef.current) {
+      clearTimeout(toastTimeoutRef.current);
+    }
+    setToast({ message, type });
+    toastTimeoutRef.current = setTimeout(() => {
+      setToast(null);
+    }, 5000); // Auto-dismiss after 5 seconds
+  }, []);
+
+  // Refresh layout data (used for initial load and SSE fallback)
   const refreshLayoutData = useCallback(async () => {
     const data = await getGameLayoutDataAction();
     if (data) {
@@ -93,60 +109,61 @@ export function GameShell({ children, initialLayoutData }: GameShellProps) {
     }
   }, []);
 
-  // Refresh on mount and periodically
+  // SSE connection for real-time game state updates
+  const { isConnected: sseConnected, error: sseError } = useGameStateStream({
+    gameId: layoutData?.gameId ?? null,
+    empireId: layoutData?.empireId ?? null,
+    onUpdate: useCallback((update: GameStateUpdate) => {
+      // Merge SSE updates into layout data
+      setLayoutData((prev) => {
+        if (!prev) return prev;
+        return {
+          ...prev,
+          currentTurn: update.currentTurn,
+          turnLimit: update.turnLimit,
+          credits: update.credits,
+          food: update.food,
+          ore: update.ore,
+          petroleum: update.petroleum,
+          population: update.population,
+          networth: update.networth,
+        };
+      });
+    }, []),
+    onGameEnded: useCallback((status: string, finalTurn: number) => {
+      console.log(`Game ended: ${status} at turn ${finalTurn}`);
+      router.refresh();
+    }, [router]),
+    enabled: !!layoutData?.gameId && !!layoutData?.empireId,
+    fallbackPollingInterval: 30000,
+  });
+
+  // Listen for fallback polling events from the SSE hook
+  useEffect(() => {
+    const handlePollNeeded = () => {
+      refreshLayoutData();
+    };
+    window.addEventListener("game-state-poll-needed", handlePollNeeded);
+    return () => {
+      window.removeEventListener("game-state-poll-needed", handlePollNeeded);
+    };
+  }, [refreshLayoutData]);
+
+  // Initial load if no server-side data provided
   useEffect(() => {
     if (!initialLayoutData) {
       refreshLayoutData();
     }
-
-    /**
-     * POLLING STRATEGY (Current Implementation)
-     *
-     * Polls every 30 seconds to catch external changes (bot attacks, market prices, etc.)
-     * This ensures the UI stays in sync without requiring page refreshes.
-     *
-     * WHY 30 SECONDS:
-     * - Balance between freshness and server load
-     * - Most game changes happen on turn end (manual trigger)
-     * - External events (bot attacks) are relatively infrequent
-     * - Mobile/slow connections can handle 30s intervals
-     *
-     * LIMITATIONS:
-     * - Creates unnecessary load when game state hasn't changed
-     * - 30-second delay before showing external changes
-     * - Multiple tabs = multiple polling requests
-     * - Doesn't scale well with many concurrent players
-     *
-     * FUTURE: PUSH UPDATE STRATEGY
-     *
-     * For production deployments, consider replacing with server-sent events (SSE)
-     * or WebSockets for real-time updates:
-     *
-     * Option 1: Server-Sent Events (SSE) - Recommended for Next.js
-     * - Use Next.js Route Handlers with ReadableStream
-     * - Push updates only when game state changes
-     * - Lower latency, lower server load
-     * - Example: /api/game/[gameId]/stream
-     *
-     * Option 2: WebSockets via Socket.io
-     * - Requires custom server setup
-     * - Bidirectional communication
-     * - Best for real-time multiplayer features
-     * - More complex deployment (need WebSocket support)
-     *
-     * Option 3: Polling with ETag/Last-Modified headers
-     * - Interim solution: still polls but with 304 Not Modified
-     * - Reduces bandwidth, but still makes requests
-     * - Easy to implement with Next.js middleware
-     *
-     * Implementation Priority:
-     * 1. Add ETag support (quick win, reduces bandwidth)
-     * 2. Implement SSE for game state updates (production ready)
-     * 3. Consider WebSockets only if adding real-time multiplayer
-     */
-    const interval = setInterval(refreshLayoutData, 30000);
-    return () => clearInterval(interval);
   }, [initialLayoutData, refreshLayoutData]);
+
+  // Log SSE connection status for debugging
+  useEffect(() => {
+    if (sseConnected) {
+      console.log("[GameShell] SSE connected - real-time updates active");
+    } else if (sseError) {
+      console.warn("[GameShell] SSE error, using polling fallback:", sseError);
+    }
+  }, [sseConnected, sseError]);
 
   // Track if we've shown the initial welcome modal (using ref to persist across re-renders)
   const hasShownWelcomeModal = useRef(false);
@@ -219,15 +236,16 @@ export function GameShell({ children, initialLayoutData }: GameShellProps) {
         // Refresh layout data after turn
         await refreshLayoutData();
       } else {
-        // TODO: Show error toast
+        showToast(result.error ?? "Turn processing failed", "error");
         console.error("Turn failed:", result.error);
       }
     } catch (error) {
+      showToast("An unexpected error occurred while processing turn", "error");
       console.error("End turn error:", error);
     } finally {
       setIsProcessing(false);
     }
-  }, [isProcessing, refreshLayoutData]);
+  }, [isProcessing, refreshLayoutData, showToast]);
 
   // Handle modal close
   const handleCloseModal = useCallback(() => {
@@ -261,6 +279,8 @@ export function GameShell({ children, initialLayoutData }: GameShellProps) {
 
   // Default layout data if not loaded
   const data = layoutData ?? {
+    gameId: "",
+    empireId: "",
     currentTurn: 1,
     turnLimit: 200,
     foodStatus: "stable" as const,
@@ -500,6 +520,33 @@ export function GameShell({ children, initialLayoutData }: GameShellProps) {
           );
         }}
       />
+
+      {/* Toast Notification */}
+      {toast && (
+        <div
+          role="alert"
+          aria-live="assertive"
+          className={`fixed bottom-24 lg:bottom-20 left-1/2 -translate-x-1/2 z-50 px-4 py-3 rounded-lg shadow-lg max-w-md transition-opacity duration-300 ${
+            toast.type === "error"
+              ? "bg-lcars-red/90 text-white border border-lcars-red"
+              : "bg-lcars-green/90 text-white border border-lcars-green"
+          }`}
+        >
+          <div className="flex items-center gap-3">
+            <span className="text-lg">
+              {toast.type === "error" ? "⚠" : "✓"}
+            </span>
+            <span className="text-sm font-medium">{toast.message}</span>
+            <button
+              onClick={() => setToast(null)}
+              className="ml-auto text-white/80 hover:text-white"
+              aria-label="Dismiss notification"
+            >
+              ✕
+            </button>
+          </div>
+        </div>
+      )}
     </div>
     </PanelProvider>
   );

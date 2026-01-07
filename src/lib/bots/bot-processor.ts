@@ -31,7 +31,7 @@ import type {
   Difficulty,
   EmpireTarget,
 } from "./types";
-import { generateBotDecision } from "./decision-engine";
+import { generateBotDecision, generateTier1Decision } from "./decision-engine";
 import { executeBotDecision } from "./bot-actions";
 import { applyNightmareBonus } from "./difficulty";
 // M10: Emotional state imports
@@ -354,7 +354,7 @@ async function generateBotDecisionWithContext(
 
   if (empire.botTier === "tier1_llm" && empire.llmEnabled) {
     // Tier 1: Use LLM-powered decision (with cache + fallback)
-    const { generateTier1Decision } = await import("./decision-engine");
+    // Uses static import (moved to top of file for performance)
     decision = await generateTier1Decision(decisionContext);
   } else {
     // Tier 2-4: Use scripted decision
