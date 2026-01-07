@@ -61,7 +61,7 @@ npm run db:migrate       # Run migrations
 ## Game Features
 
 ### Core Gameplay
-- Turn-based empire management (200-turn games)
+- Turn-based empire management (50-500 turns based on game mode)
 - 5 resource types: Credits, Food, Ore, Petroleum, Research
 - 8 sector types with unique production profiles
 - Progressive unlock system (features unlock as you advance)
@@ -103,13 +103,10 @@ npm run db:migrate       # Run migrations
 - **[Quick Start Guide](docs/guides/QUICK-START.md)** - Get playing in 5 minutes
 
 ### For Developers
-- **[Current Implementation Plan](.claude/plans/recursive-dazzling-chipmunk.md)** - Active redesign plan (Phases 1-3: 93% complete)
 - [CLAUDE.md](CLAUDE.md) - AI assistant context and codebase guide
-- [docs/PRD.md](docs/PRD.md) - Product Requirements Document (v3.0)
-- [docs/VISION.md](docs/VISION.md) - Game vision and design philosophy
-- [docs/PHASE-1-3-AUDIT.md](docs/PHASE-1-3-AUDIT.md) - Implementation audit report
-- [docs/MILESTONES.md](docs/MILESTONES.md) - Development roadmap
-- [docs/design/BOT_ARCHITECTURE.md](docs/design/BOT_ARCHITECTURE.md) - Bot AI system design
+- [docs/index.md](docs/index.md) - Documentation hub and navigation
+- [docs/core/GAME-DESIGN.md](docs/core/GAME-DESIGN.md) - Game vision and design
+- [docs/development/TERMINOLOGY.md](docs/development/TERMINOLOGY.md) - CRITICAL terminology rules
 
 ## Project Status
 
@@ -231,7 +228,7 @@ These tasks require human judgment, external access, or manual verification:
 ## OPEN ITEMS - UI Enhancement Assets
 
 **Last Updated:** January 5, 2026
-**Reference:** `docs/frontend/ui-enhancement-plan.md`
+**Reference:** `docs/brainstorm/ux-improvements.md`
 
 The UI enhancement implementation has coding complete for Phases 1-7, but requires asset collection for production use.
 

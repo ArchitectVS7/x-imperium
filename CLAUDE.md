@@ -163,7 +163,7 @@ Bot decisions defined in `src/lib/bots/types.ts`:
 ```typescript
 type BotDecision =
   | { type: "build_units"; unitType: UnitType; quantity: number }
-  | { type: "buy_planet"; sectorType: PlanetType }
+  | { type: "buy_sector"; sectorType: SectorType }
   | { type: "attack"; targetId: string; forces: Forces }
   | { type: "diplomacy"; action: "propose_nap" | "propose_alliance"; targetId: string }
   | { type: "trade"; resource: ResourceType; quantity: number; action: "buy" | "sell" }
@@ -190,7 +190,7 @@ describe("calculateCombatPower", () => {
 
 ## Development Notes
 
-- **Milestone-based development**: See `docs/MILESTONES.md` for implementation roadmap
+- **Milestone-based development**: See `README.md` Project Status section for implementation roadmap
 - **PRD reference**: `docs/PRD.md` contains game design specifications
 - **Bot personas**: 100 unique personas in `data/personas.json`
 - **TypeScript strict mode** with `noUncheckedIndexedAccess`, `noImplicitReturns`

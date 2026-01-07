@@ -56,7 +56,7 @@
 1. Select target empire
 2. Choose forces to send
 3. Pick stance (Balanced is safe)
-4. Combat resolves in 3 phases: Space → Orbital → Ground
+4. Unified D20 roll determines outcome (~48% attacker win rate)
 5. **Must have Marines to capture sectors!**
 
 ---

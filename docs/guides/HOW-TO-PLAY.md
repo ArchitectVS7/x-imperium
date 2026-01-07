@@ -158,22 +158,31 @@ The galaxy contains **10 sectors** arranged in a network:
 | **Defense Stations** | Orbital | High | High | Cannot attack, only defend |
 | **Covert Agents** | Special | N/A | High | Spies for intel and sabotage |
 
-### Combat Phases
+### Unified Combat Resolution
 
-Combat resolves in three phases:
+Combat resolves in a **single unified roll** where all your forces contribute:
 
 ```
 ┌─────────────────────────────────────────────────┐
-│  PHASE 1: SPACE BATTLE                          │
-│  Drones, Frigates, Cruisers, Carriers engage    │
-├─────────────────────────────────────────────────┤
-│  PHASE 2: ORBITAL BOMBARDMENT                   │
-│  Surviving ships bombard sector defenses        │
-├─────────────────────────────────────────────────┤
-│  PHASE 3: GROUND ASSAULT                        │
-│  Marines invade and capture the sector          │
+│  COMBAT RESOLUTION                              │
+│                                                 │
+│  1. All forces calculate combined power         │
+│  2. Defender gets 10% home turf advantage       │
+│  3. D20-style roll determines outcome           │
+│  4. Casualties calculated for both sides        │
+│  5. Victor captures 5-15% of defender sectors   │
+│                                                 │
+│  Win Rate: ~48% attacker with equal forces      │
 └─────────────────────────────────────────────────┘
 ```
+
+**Outcome Types:**
+- **Total Victory** - Rout the enemy, capture 40% sectors
+- **Victory** - Win and capture 25% sectors
+- **Costly Victory** - Win but heavy losses both sides
+- **Stalemate** - No sectors change, both sides lose units
+- **Repelled** - Attacker retreats with losses
+- **Disaster** - Attacker routed, 2× losses
 
 ### Army Diversity Bonus
 
