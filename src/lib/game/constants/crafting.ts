@@ -68,7 +68,7 @@ export const TIER_1_RECIPES: Record<Tier1Resource, Tier1Recipe> = {
   polymers: {
     inputs: { petroleum: 30, ore: 20 },
     craftingTime: 1,
-    // Only from Industrial Planets
+    // Only from Industrial Sectors
   },
   processed_food: {
     inputs: { food: 200 },
@@ -328,7 +328,7 @@ export const MILITARY_CRAFTING_COSTS: Record<string, MilitaryCraftingCost> = {
   },
 
   // Tier 5 Units (Research 7)
-  planetary_shield: {
+  sector_shield: {
     credits: 100_000,
     components: { shield_generators: 3, reactor_cores: 2, singularity_containment: 1 },
     researchRequired: 7,
@@ -481,10 +481,10 @@ export const RESEARCH_BRANCH_BONUSES = {
 export type ResearchBranch = keyof typeof RESEARCH_BRANCH_BONUSES;
 
 // =============================================================================
-// INDUSTRIAL PLANET CONFIGURATION
+// INDUSTRIAL SECTOR CONFIGURATION
 // =============================================================================
 
-export const INDUSTRIAL_PLANET = {
+export const INDUSTRIAL_SECTOR = {
   baseCost: 15_000,
   productionRate: 0, // Special processing function
   craftingTimeReductionPerResearchLevel: 0.05, // 5% faster per research level

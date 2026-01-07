@@ -13,7 +13,7 @@ import {
   TIER_2_EXTENDED_RECIPES,
   TIER_3_RECIPES,
   TIER_3_EXTENDED_RECIPES,
-  INDUSTRIAL_PLANET,
+  INDUSTRIAL_SECTOR,
   type Tier1Resource,
   type Tier2Resource,
   type Tier3Resource,
@@ -250,7 +250,7 @@ export function calculateCraftingTime(
   let time = baseCraftingTime;
 
   // Research level bonus: 5% faster per level (from Industrial sector config)
-  const researchBonus = researchLevel * INDUSTRIAL_PLANET.craftingTimeReductionPerResearchLevel;
+  const researchBonus = researchLevel * INDUSTRIAL_SECTOR.craftingTimeReductionPerResearchLevel;
   time *= 1 - researchBonus;
 
   // Economy branch bonus: up to 10% faster at 20%+ investment
