@@ -10,7 +10,7 @@ interface Target {
   id: string;
   name: string;
   networth: number;
-  planetCount: number;
+  sectorCount: number;
 }
 
 interface TargetSelectorProps {
@@ -60,7 +60,7 @@ export function TargetSelector({
         <option value="">-- Select an empire --</option>
         {targets.map((target) => (
           <option key={target.id} value={target.id}>
-            {target.name} ({target.planetCount} planets, NW: {target.networth.toLocaleString()})
+            {target.name} ({target.sectorCount} sectors, NW: {target.networth.toLocaleString()})
           </option>
         ))}
       </select>
@@ -73,7 +73,7 @@ export function TargetSelector({
           <div className="grid grid-cols-2 gap-2 text-sm">
             <div>
               <span className="text-gray-500">Planets:</span>{" "}
-              <span className="text-gray-300">{selectedTarget.planetCount}</span>
+              <span className="text-gray-300">{selectedTarget.sectorCount}</span>
             </div>
             <div>
               <span className="text-gray-500">Networth:</span>{" "}

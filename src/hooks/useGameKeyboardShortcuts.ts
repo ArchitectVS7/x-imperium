@@ -34,7 +34,7 @@ interface UseGameKeyboardShortcutsOptions {
 
 const PANEL_SHORTCUTS: Record<string, PanelType> = {
   m: "military",
-  s: "planets", // sectors
+  s: "sectors", // sectors
   c: "combat",
   t: "market", // trade
   r: "research",

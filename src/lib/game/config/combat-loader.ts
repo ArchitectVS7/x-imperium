@@ -61,7 +61,7 @@ export function getUnderdogBonus() {
 }
 
 /**
- * Get the planet capture configuration.
+ * Get the sector capture configuration.
  * @returns Object with minPercent and maxPercent
  */
 export function getPlanetCaptureConfig() {

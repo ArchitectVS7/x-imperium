@@ -265,7 +265,7 @@ describe("M5.2: Extended Balance Verification", () => {
 
     console.log(`\n25-Bot System Coverage:`);
     console.log(`  Build units: ${result.coverage.buildUnits.count} (${result.coverage.buildUnits.unitTypes.size} types)`);
-    console.log(`  Buy planets: ${result.coverage.buyPlanet.count} (${result.coverage.buyPlanet.planetTypes.size} types)`);
+    console.log(`  Buy planets: ${result.coverage.buyPlanet.count} (${result.coverage.buyPlanet.sectorTypes.size} types)`);
     console.log(`  Attacks: ${result.coverage.attacks.count} (${result.coverage.attacks.invasions} invasions)`);
     console.log(`  Combat resolved: ${result.coverage.combatResolved}`);
     console.log(`  Research advanced: ${result.coverage.researchAdvanced}`);

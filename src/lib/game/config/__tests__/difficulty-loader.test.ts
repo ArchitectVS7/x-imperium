@@ -113,9 +113,9 @@ describe("Player Modifiers", () => {
     expect(preset.player.incomeMultiplier).toBeGreaterThan(1.0);
   });
 
-  it("easy difficulty should reduce planet costs", () => {
+  it("easy difficulty should reduce sector costs", () => {
     const preset = getDifficultyPreset("easy");
-    expect(preset.player.planetCostReduction).toBeLessThan(1.0);
+    expect(preset.player.sectorCostReduction).toBeLessThan(1.0);
   });
 
   it("easy difficulty should reduce unit costs", () => {
@@ -126,7 +126,7 @@ describe("Player Modifiers", () => {
   it("normal difficulty should have no player bonuses", () => {
     const preset = getDifficultyPreset("normal");
     expect(preset.player.incomeMultiplier).toBe(1.0);
-    expect(preset.player.planetCostReduction).toBe(1.0);
+    expect(preset.player.sectorCostReduction).toBe(1.0);
     expect(preset.player.unitCostReduction).toBe(1.0);
     expect(preset.player.startingCreditsBonus).toBe(0);
   });
@@ -240,18 +240,18 @@ describe("Income Calculations", () => {
   });
 });
 
-describe("Planet Cost Calculations", () => {
-  it("should reduce planet costs on easy", () => {
+describe("Sector Cost Calculations", () => {
+  it("should reduce sector costs on easy", () => {
     const preset = getDifficultyPreset("easy");
     const baseCost = 10000;
-    const reducedCost = baseCost * preset.player.planetCostReduction;
+    const reducedCost = baseCost * preset.player.sectorCostReduction;
     expect(reducedCost).toBe(8500); // -15%
   });
 
-  it("should not change planet costs on normal", () => {
+  it("should not change sector costs on normal", () => {
     const preset = getDifficultyPreset("normal");
     const baseCost = 10000;
-    const finalCost = baseCost * preset.player.planetCostReduction;
+    const finalCost = baseCost * preset.player.sectorCostReduction;
     expect(finalCost).toBe(10000);
   });
 });

@@ -24,7 +24,7 @@ interface Target {
   id: string;
   name: string;
   networth: number;
-  planetCount: number;
+  sectorCount: number;
 }
 
 interface Operation {

@@ -46,7 +46,7 @@ export const botArchetypeEnum = pgEnum("bot_archetype", [
   "opportunist",
 ]);
 
-export const planetTypeEnum = pgEnum("planet_type", [
+export const sectorTypeEnum = pgEnum("planet_type", [
   "food",
   "ore",
   "petroleum",
@@ -374,7 +374,7 @@ export const empires = pgTable(
 
     // Computed stats (updated each turn)
     networth: bigint("networth", { mode: "number" }).notNull().default(0),
-    planetCount: integer("planet_count").notNull().default(5), // Reduced from 9 for faster eliminations
+    sectorCount: integer("planet_count").notNull().default(5), // Reduced from 9 for faster eliminations
 
     // M7: Diplomacy reputation (0-100, starts at 50 = neutral)
     reputation: integer("reputation").notNull().default(50),
@@ -416,7 +416,7 @@ export const sectors = pgTable(
       .references(() => games.id, { onDelete: "cascade" }),
 
     // Sector info
-    type: planetTypeEnum("type").notNull(),
+    type: sectorTypeEnum("type").notNull(),
     name: varchar("name", { length: 255 }),
 
     // Production rates (base values from PRD)
@@ -671,7 +671,7 @@ export const attacks = pgTable(
     defenderId: uuid("defender_id")
       .notNull()
       .references(() => empires.id, { onDelete: "cascade" }),
-    targetPlanetId: uuid("target_planet_id").references(() => planets.id, {
+    targetPlanetId: uuid("target_planet_id").references(() => sectors.id, {
       onDelete: "set null",
     }),
 
@@ -701,7 +701,7 @@ export const attacks = pgTable(
 
     // Outcome
     outcome: combatOutcomeEnum("outcome").notNull(),
-    planetCaptured: boolean("planet_captured").notNull().default(false),
+    sectorCaptured: boolean("sector_captured").notNull().default(false),
 
     // Casualty summary
     attackerCasualties: json("attacker_casualties").notNull(), // { soldiers: N, fighters: N, ... }
@@ -779,7 +779,6 @@ export const combatLogs = pgTable(
 export const gamesRelations = relations(games, ({ many }) => ({
   empires: many(empires),
   sectors: many(sectors),
-  planets: many(sectors), // Legacy alias
   saves: many(gameSaves),
   sessions: many(gameSessions),
   performanceLogs: many(performanceLogs),
@@ -805,7 +804,6 @@ export const empiresRelations = relations(empires, ({ one, many }) => ({
     references: [games.id],
   }),
   sectors: many(sectors),
-  planets: many(sectors), // Legacy alias
   civilStatusHistory: many(civilStatusHistory),
   buildQueue: many(buildQueue),
   researchProgress: many(researchProgress),
@@ -838,9 +836,6 @@ export const sectorsRelations = relations(sectors, ({ one }) => ({
     references: [games.id],
   }),
 }));
-
-// Legacy relation alias for backward compatibility
-export const planetsRelations = sectorsRelations;
 
 export const gameSavesRelations = relations(gameSaves, ({ one }) => ({
   game: one(games, {
@@ -927,9 +922,9 @@ export const attacksRelations = relations(attacks, ({ one, many }) => ({
     references: [empires.id],
     relationName: "defender",
   }),
-  targetPlanet: one(planets, {
+  targetPlanet: one(sectors, {
     fields: [attacks.targetPlanetId],
-    references: [planets.id],
+    references: [sectors.id],
   }),
   combatLogs: many(combatLogs),
 }));
@@ -1031,8 +1026,8 @@ export const emotionalStateEnum = pgEnum("emotional_state", [
 ]);
 
 export const memoryTypeEnum = pgEnum("memory_type", [
-  "planet_captured",
-  "planet_lost",
+  "sector_captured",
+  "sector_lost",
   "ally_saved",
   "ally_betrayed",
   "trade_completed",
@@ -1269,7 +1264,7 @@ export const empireInfluence = pgTable(
 
     // Influence sphere (calculated from territory)
     baseInfluenceRadius: integer("base_influence_radius").notNull().default(3), // Base neighbors
-    bonusInfluenceRadius: integer("bonus_influence_radius").notNull().default(0), // From planets/tech
+    bonusInfluenceRadius: integer("bonus_influence_radius").notNull().default(0), // From sectors/tech
     totalInfluenceRadius: integer("total_influence_radius").notNull().default(3),
 
     // Cached neighbor data (updated when territory changes)
@@ -2482,13 +2477,6 @@ export type NewEmpire = typeof empires.$inferInsert;
 
 export type Sector = typeof sectors.$inferSelect;
 export type NewSector = typeof sectors.$inferInsert;
-// Legacy type aliases for backward compatibility during migration
-export type Planet = Sector;
-export type NewPlanet = NewSector;
-
-// Legacy table alias for backward compatibility during Phase 2-3 migration
-// TODO: Remove after Phase 3 codebase sweep is complete
-export const planets = sectors;
 
 export type GameSave = typeof gameSaves.$inferSelect;
 export type NewGameSave = typeof gameSaves.$inferInsert;

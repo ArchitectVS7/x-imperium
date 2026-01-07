@@ -18,7 +18,7 @@ interface Stats {
   empireCount: number;
   activeGames: number;
   completedGames: number;
-  planetCount: number;
+  sectorCount: number;
   memoryCount: number;
   messageCount: number;
   attackCount: number;
@@ -139,7 +139,7 @@ export default function AdminPage() {
 
   const totalRecords = stats
     ? stats.empireCount +
-      stats.planetCount +
+      stats.sectorCount +
       stats.memoryCount +
       stats.messageCount +
       stats.attackCount +
@@ -226,7 +226,7 @@ export default function AdminPage() {
                 <div>
                   <span className="text-gray-500">Planets:</span>
                   <span className="ml-2 font-mono text-lcars-mint">
-                    {stats.planetCount.toLocaleString()}
+                    {stats.sectorCount.toLocaleString()}
                   </span>
                 </div>
                 <div>
@@ -346,7 +346,7 @@ export default function AdminPage() {
               </p>
               <p className="text-gray-400 text-sm mb-2">
                 Truncate ALL tables individually. Use this ONLY if CASCADE isn&apos;t working.
-                This will clear: games, empires, planets, research_progress, market_prices,
+                This will clear: games, empires, sectors, research_progress, market_prices,
                 and 18 other tables.
               </p>
               <button

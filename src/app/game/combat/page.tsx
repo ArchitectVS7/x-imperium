@@ -16,7 +16,7 @@ interface Target {
   id: string;
   name: string;
   networth: number;
-  planetCount: number;
+  sectorCount: number;
 }
 
 export default function CombatPage() {
@@ -165,7 +165,7 @@ export default function CombatPage() {
                   >
                     <div className="font-semibold">{target.name}</div>
                     <div className="text-sm text-gray-400">
-                      Networth: {target.networth.toLocaleString()} | Planets: {target.planetCount}
+                      Networth: {target.networth.toLocaleString()} | Planets: {target.sectorCount}
                     </div>
                   </button>
                 ))}
@@ -259,7 +259,7 @@ export default function CombatPage() {
                   // Estimate defender forces based on networth
                   soldiers: Math.floor(selectedTarget.networth * 0.001),
                   fighters: Math.floor(selectedTarget.networth * 0.0002),
-                  stations: selectedTarget.planetCount * 50,
+                  stations: selectedTarget.sectorCount * 50,
                   lightCruisers: Math.floor(selectedTarget.networth * 0.00001),
                   heavyCruisers: Math.floor(selectedTarget.networth * 0.000002),
                   carriers: Math.floor(selectedTarget.networth * 0.000005),
@@ -329,7 +329,7 @@ export default function CombatPage() {
                       </span>
                     </div>
                     <div className="text-gray-400 text-xs mt-1">
-                      {attack.attackType} | Captured: {attack.planetCaptured ? "Yes" : "No"}
+                      {attack.attackType} | Captured: {attack.sectorCaptured ? "Yes" : "No"}
                     </div>
                   </div>
                 ))}
@@ -345,11 +345,11 @@ export default function CombatPage() {
             <div className="space-y-2 text-sm text-gray-300">
               <div>
                 <span className="text-lcars-amber">Invasion:</span> 3-phase combat
-                (Space → Orbital → Ground). Win all phases to capture planets.
+                (Space → Orbital → Ground). Win all phases to capture sectors.
               </div>
               <div>
                 <span className="text-lcars-amber">Guerilla:</span> Hit-and-run
-                with soldiers only. Damages enemy forces but no planet capture.
+                with soldiers only. Damages enemy forces but no sector capture.
               </div>
               <div>
                 <span className="text-lcars-amber">Carriers:</span> Required to

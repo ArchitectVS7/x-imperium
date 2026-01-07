@@ -282,7 +282,7 @@ export async function retreatAction(
  */
 export async function getAvailableTargetsAction(): Promise<{
   success: boolean;
-  targets?: Array<{ id: string; name: string; networth: number; planetCount: number }>;
+  targets?: Array<{ id: string; name: string; networth: number; sectorCount: number }>;
   error?: string;
 }> {
   try {

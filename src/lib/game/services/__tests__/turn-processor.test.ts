@@ -180,20 +180,20 @@ describe("Turn Processor - Maintenance Calculations", () => {
   it("should calculate correct maintenance costs", async () => {
     const { calculateMaintenanceCost, PLANET_MAINTENANCE_COST } = await import("../resource-engine");
 
-    // Single planet maintenance
+    // Single sector maintenance
     const single = calculateMaintenanceCost(1);
     expect(single.totalCost).toBe(PLANET_MAINTENANCE_COST);
 
-    // Multiple planets
+    // Multiple sectors
     const nine = calculateMaintenanceCost(9);
     expect(nine.totalCost).toBe(PLANET_MAINTENANCE_COST * 9);
-    expect(nine.planetCount).toBe(9);
+    expect(nine.sectorCount).toBe(9);
   });
 
   it("should have correct maintenance value per PRD", async () => {
     const { PLANET_MAINTENANCE_COST } = await import("../resource-engine");
 
-    // PRD 4.3: 168 credits/planet/turn
+    // PRD 4.3: 168 credits/sector/turn
     expect(PLANET_MAINTENANCE_COST).toBe(168);
   });
 });
@@ -203,8 +203,8 @@ describe("Turn Processor - Resource Production", () => {
     const { processTurnResources, PLANET_MAINTENANCE_COST } = await import("../resource-engine");
     const { PLANET_PRODUCTION } = await import("../../constants");
 
-    // Create mock tourism planet
-    const planets = [
+    // Create mock tourism sector
+    const sectors = [
       {
         id: "test-1",
         empireId: "empire-1",
@@ -219,13 +219,13 @@ describe("Turn Processor - Resource Production", () => {
     ];
 
     // Test with neutral (1×) multiplier
-    const result1 = processTurnResources(planets, 1.0);
+    const result1 = processTurnResources(sectors, 1.0);
     // production is base amount, final has multiplier applied minus maintenance
     expect(result1.production.credits).toBe(PLANET_PRODUCTION.tourism);
     expect(result1.final.credits).toBe(PLANET_PRODUCTION.tourism - PLANET_MAINTENANCE_COST);
 
     // Test with ecstatic (4×) multiplier
-    const result4 = processTurnResources(planets, 4.0);
+    const result4 = processTurnResources(sectors, 4.0);
     // production is still base amount, multiplier only affects final credits
     expect(result4.production.credits).toBe(PLANET_PRODUCTION.tourism);
     // final = (base × multiplier) - maintenance
@@ -235,7 +235,7 @@ describe("Turn Processor - Resource Production", () => {
   it("should produce correct resource amounts per PRD", async () => {
     const { PLANET_PRODUCTION } = await import("../../constants");
 
-    // PRD 5.2: Planet Production values (as defined in constants.ts)
+    // PRD 5.2: Sector Production values (as defined in constants.ts)
     expect(PLANET_PRODUCTION.food).toBe(160);
     expect(PLANET_PRODUCTION.ore).toBe(112);
     expect(PLANET_PRODUCTION.petroleum).toBe(92);
@@ -247,7 +247,7 @@ describe("Turn Processor - Resource Production", () => {
 });
 
 describe("Turn Processor - Edge Cases", () => {
-  it("should handle empty empire (no planets)", async () => {
+  it("should handle empty empire (no sectors)", async () => {
     const { processTurnResources } = await import("../resource-engine");
 
     const result = processTurnResources([], 1.0);
@@ -280,7 +280,7 @@ describe("Turn Processor - Integration Scenarios", () => {
 
     // Starting with 10,000 population
     const population = 10_000;
-    const foodProduction = PLANET_PRODUCTION.food * 5; // 5 food planets = 800
+    const foodProduction = PLANET_PRODUCTION.food * 5; // 5 food sectors = 800
     const foodConsumption = population * 0.05; // 500
 
     // Food check

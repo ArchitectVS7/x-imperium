@@ -20,7 +20,7 @@ import { MapPin } from "lucide-react";
 export type PanelType =
   | "resources"
   | "military"
-  | "planets"
+  | "sectors"
   | "population"
   | "combat"
   | "market"
@@ -101,9 +101,9 @@ export function EmpireStatusBar({
 
         {/* Sectors - clickable */}
         <button
-          onClick={() => onPanelToggle?.(activePanel === "planets" ? null : "planets")}
+          onClick={() => onPanelToggle?.(activePanel === "sectors" ? null : "sectors")}
           className={`flex items-center gap-2 px-3 py-1 rounded transition-colors ${
-            activePanel === "planets"
+            activePanel === "sectors"
               ? "bg-lcars-amber/20 border border-lcars-amber/50"
               : "hover:bg-gray-800"
           }`}

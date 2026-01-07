@@ -115,7 +115,7 @@ export async function checkDatabaseTablesAction(): Promise<{
  * - OR older than 7 days and inactive
  *
  * Due to cascade deletes, this also removes all related:
- * - empires, planets, attacks, combat logs
+ * - empires, sectors, attacks, combat logs
  * - messages, treaties, bot memories
  * - market orders, research progress, etc.
  */
@@ -180,7 +180,7 @@ export async function getDatabaseStatsAction(): Promise<{
     empireCount: number;
     activeGames: number;
     completedGames: number;
-    planetCount: number;
+    sectorCount: number;
     memoryCount: number;
     messageCount: number;
     attackCount: number;
@@ -230,7 +230,7 @@ export async function getDatabaseStatsAction(): Promise<{
     const gameStats = getGameStats(gameStatsResult as unknown as DbQueryResult<GameStatsRow>);
 
     const empireStatsResult = await db.execute(sql`SELECT COUNT(*)::int as total FROM empires`) as unknown as DbQueryResult<CountRow>;
-    const planetStatsResult = await db.execute(sql`SELECT COUNT(*)::int as total FROM planets`) as unknown as DbQueryResult<CountRow>;
+    const planetStatsResult = await db.execute(sql`SELECT COUNT(*)::int as total FROM sectors`) as unknown as DbQueryResult<CountRow>;
     const memoryStatsResult = await db.execute(sql`SELECT COUNT(*)::int as total FROM bot_memories`) as unknown as DbQueryResult<CountRow>;
     const messageStatsResult = await db.execute(sql`SELECT COUNT(*)::int as total FROM messages`) as unknown as DbQueryResult<CountRow>;
     const attackStatsResult = await db.execute(sql`SELECT COUNT(*)::int as total FROM attacks`) as unknown as DbQueryResult<CountRow>;
@@ -243,7 +243,7 @@ export async function getDatabaseStatsAction(): Promise<{
         empireCount: getCount(empireStatsResult),
         activeGames: Number(gameStats?.active ?? 0),
         completedGames: Number(gameStats?.completed ?? 0),
-        planetCount: getCount(planetStatsResult),
+        sectorCount: getCount(planetStatsResult),
         memoryCount: getCount(memoryStatsResult),
         messageCount: getCount(messageStatsResult),
         attackCount: getCount(attackStatsResult),
@@ -361,7 +361,7 @@ export async function truncateAllTablesAction(): Promise<{
       "covert_operations",
       "research_progress",
       "market_orders",
-      "planets",
+      "sectors",
       // Then parent tables
       "empires",
       "market_prices",

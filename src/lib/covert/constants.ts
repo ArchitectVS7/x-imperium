@@ -52,7 +52,7 @@ export const COVERT_POINTS_PER_TURN = 5;
 /** Maximum covert points that can be accumulated */
 export const MAX_COVERT_POINTS = 50;
 
-/** Agent capacity per Government planet */
+/** Agent capacity per Government sector */
 export const AGENT_CAPACITY_PER_GOV_PLANET = 300;
 
 /** Base variance for success rate calculations (±20% as per PRD) */
@@ -111,7 +111,7 @@ export const COVERT_OPERATIONS: Record<OperationType, CovertOperation> = {
     cost: 5,
     risk: "low",
     description: "Reveal enemy stats and composition",
-    effect: "Reveals target empire's military composition, resources, and planet count for 5 turns",
+    effect: "Reveals target empire's military composition, resources, and sector count for 5 turns",
     baseSuccessRate: 0.8,
     minAgents: 1,
   },
@@ -155,7 +155,7 @@ export const COVERT_OPERATIONS: Record<OperationType, CovertOperation> = {
     cost: 25,
     risk: "high",
     description: "Destroy resources and production",
-    effect: "Destroys 10-20% of target's stored resources and damages 1-2 planets' production",
+    effect: "Destroys 10-20% of target's stored resources and damages 1-2 sectors' production",
     baseSuccessRate: 0.55,
     minAgents: 10,
   },
@@ -210,7 +210,7 @@ export const COVERT_OPERATIONS: Record<OperationType, CovertOperation> = {
     cost: 50,
     risk: "very_high",
     description: "Attempt to overthrow government",
-    effect: "Attempts to trigger civil collapse. If successful, target loses 30% of planets",
+    effect: "Attempts to trigger civil collapse. If successful, target loses 30% of sectors",
     baseSuccessRate: 0.2,
     minAgents: 50,
   },
@@ -283,7 +283,7 @@ export function hasEnoughAgents(
 }
 
 /**
- * Calculate agent capacity from government planet count.
+ * Calculate agent capacity from government sector count.
  */
 export function calculateAgentCapacity(governmentPlanets: number): number {
   return governmentPlanets * AGENT_CAPACITY_PER_GOV_PLANET;

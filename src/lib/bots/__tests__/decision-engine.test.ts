@@ -38,20 +38,20 @@ const mockEmpire = {
   populationCap: 50000,
   civilStatus: "content",
   networth: 1000,
-  planetCount: 9,
+  sectorCount: 9,
   isEliminated: false,
 } as Empire;
 
 const mockContext: BotDecisionContext = {
   empire: mockEmpire,
-  planets: [],
+  sectors: [],
   gameId: "test-game",
   currentTurn: 25, // After protection period
   protectionTurns: 20,
   difficulty: "normal",
   availableTargets: [
-    { id: "target-1", name: "Target 1", networth: 500, planetCount: 5, isBot: true, isEliminated: false, militaryPower: 50, hasTreaty: false },
-    { id: "target-2", name: "Target 2", networth: 800, planetCount: 7, isBot: true, isEliminated: false, militaryPower: 80, hasTreaty: false },
+    { id: "target-1", name: "Target 1", networth: 500, sectorCount: 5, isBot: true, isEliminated: false, militaryPower: 50, hasTreaty: false },
+    { id: "target-2", name: "Target 2", networth: 800, sectorCount: 7, isBot: true, isEliminated: false, militaryPower: 80, hasTreaty: false },
   ],
 };
 
@@ -223,7 +223,7 @@ describe("Decision Engine", () => {
     it("should return buy_planet decision with valid data", () => {
       const decision = generateBotDecision(mockContext, 0.35); // buy_planet range
       if (decision.type === "buy_planet") {
-        expect(decision.planetType).toBeDefined();
+        expect(decision.sectorType).toBeDefined();
       }
     });
 
@@ -515,7 +515,7 @@ describe("Decision Engine", () => {
       expect(decision.type).toBe("do_nothing");
     });
 
-    it("should return do_nothing when no affordable planets for buy", () => {
+    it("should return do_nothing when no affordable sectors for buy", () => {
       const poorContext: BotDecisionContext = {
         ...mockContext,
         empire: { ...mockEmpire, credits: 0 },
@@ -585,7 +585,7 @@ describe("Decision Engine", () => {
         ...mockContext,
         empire: { ...mockEmpire, botArchetype: "schemer", credits: 100000 },
         availableTargets: [
-          { id: "human-1", name: "Human 1", networth: 500, planetCount: 5, isBot: false, isEliminated: false, militaryPower: 50, hasTreaty: false },
+          { id: "human-1", name: "Human 1", networth: 500, sectorCount: 5, isBot: false, isEliminated: false, militaryPower: 50, hasTreaty: false },
         ],
       };
       // Schemer has high Syndicate willingness

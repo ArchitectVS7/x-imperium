@@ -94,7 +94,7 @@ function StepContent({ step }: { step: TutorialStepInfo }) {
             <li className="flex items-start gap-2">
               <span className="text-lcars-amber">•</span>
               <span>
-                <strong className="text-white">Conquest:</strong> Control 60% of all planets
+                <strong className="text-white">Conquest:</strong> Control 60% of all sectors
               </span>
             </li>
             <li className="flex items-start gap-2">

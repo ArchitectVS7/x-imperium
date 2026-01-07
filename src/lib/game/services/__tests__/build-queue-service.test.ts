@@ -218,7 +218,7 @@ describe("Build Queue Processing Logic", () => {
 describe("Networth Update on Unit Completion", () => {
   it("should increase networth when units are added", () => {
     const baseNetworth = calculateNetworth({
-      planetCount: 9,
+      sectorCount: 9,
       soldiers: 100,
       fighters: 0,
       stations: 0,
@@ -229,7 +229,7 @@ describe("Networth Update on Unit Completion", () => {
     });
 
     const newNetworth = calculateNetworth({
-      planetCount: 9,
+      sectorCount: 9,
       soldiers: 100,
       fighters: 0,
       stations: 10, // Added 10 stations
@@ -246,7 +246,7 @@ describe("Networth Update on Unit Completion", () => {
 
   it("should correctly calculate networth with multiple unit types", () => {
     const networth = calculateNetworth({
-      planetCount: 10,
+      sectorCount: 10,
       soldiers: 1000,
       fighters: 100,
       stations: 10,
@@ -256,7 +256,7 @@ describe("Networth Update on Unit Completion", () => {
       covertAgents: 5,
     });
 
-    // planetCount * 10 = 100
+    // sectorCount * 10 = 100
     // soldiers * 0.0005 = 0.5
     // fighters * 0.001 = 0.1
     // stations * 0.002 = 0.02

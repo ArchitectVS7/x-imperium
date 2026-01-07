@@ -29,11 +29,11 @@ describe("Sphere of Influence Integration", () => {
 
   // Generate a small galaxy for testing
   const empires = [
-    { id: "player", type: "player" as const, planetCount: 6 },
+    { id: "player", type: "player" as const, sectorCount: 6 },
     ...Array.from({ length: 9 }, (_, i) => ({
       id: `bot-${i}`,
       type: "bot" as const,
-      planetCount: 6,
+      sectorCount: 6,
     })),
   ];
 
@@ -105,7 +105,7 @@ describe("Sphere of Influence Integration", () => {
       }));
 
       const sphere = calculateInfluenceSphere(
-        { id: "player", planetCount: 6 },
+        { id: "player", sectorCount: 6 },
         {
           homeRegionId: playerInfluence.homeRegionId,
           primaryRegionId: playerInfluence.primaryRegionId,
@@ -139,7 +139,7 @@ describe("Sphere of Influence Integration", () => {
       }));
 
       const sphere = calculateInfluenceSphere(
-        { id: "player", planetCount: 6 },
+        { id: "player", sectorCount: 6 },
         {
           homeRegionId: playerInfluence.homeRegionId,
           primaryRegionId: playerInfluence.primaryRegionId,
@@ -172,7 +172,7 @@ describe("Sphere of Influence Integration", () => {
       }));
 
       const sphere = calculateInfluenceSphere(
-        { id: "player", planetCount: 6 },
+        { id: "player", sectorCount: 6 },
         {
           homeRegionId: playerInfluence.homeRegionId,
           primaryRegionId: playerInfluence.primaryRegionId,
@@ -195,7 +195,7 @@ describe("Sphere of Influence Integration", () => {
   });
 
   describe("Influence Sphere Expansion", () => {
-    it("should expand sphere with more planets", () => {
+    it("should expand sphere with more sectors", () => {
       const playerInfluence = galaxy.empireInfluenceRecords.find(
         (r) => r.empireId === "player"
       )!;
@@ -207,9 +207,9 @@ describe("Sphere of Influence Integration", () => {
         isEliminated: false,
       }));
 
-      // Small empire (6 planets = starting)
+      // Small empire (6 sectors = starting)
       const smallSphere = calculateInfluenceSphere(
-        { id: "player", planetCount: 6 },
+        { id: "player", sectorCount: 6 },
         {
           homeRegionId: playerInfluence.homeRegionId,
           primaryRegionId: playerInfluence.primaryRegionId,
@@ -219,9 +219,9 @@ describe("Sphere of Influence Integration", () => {
         allConnections
       );
 
-      // Large empire (20 planets)
+      // Large empire (20 sectors)
       const largeSphere = calculateInfluenceSphere(
-        { id: "player", planetCount: 20 },
+        { id: "player", sectorCount: 20 },
         {
           homeRegionId: playerInfluence.homeRegionId,
           primaryRegionId: playerInfluence.primaryRegionId,
@@ -436,12 +436,12 @@ describe("Sphere of Influence Integration", () => {
         id: e.id,
         name: e.id,
         networth: 100000,
-        planetCount: 6,
+        sectorCount: 6,
         isEliminated: false,
       }));
 
       const targets = getAttackTargetsWithInfo(
-        { id: "player", planetCount: 6 },
+        { id: "player", sectorCount: 6 },
         {
           ...playerInfluence,
           directNeighborIds: "[]",
@@ -483,11 +483,11 @@ describe("100-Empire Scalability Test", () => {
   it("should handle 100 empires without performance issues", () => {
     const gameId = "scale-test";
     const empires = [
-      { id: "player", type: "player" as const, planetCount: 6 },
+      { id: "player", type: "player" as const, sectorCount: 6 },
       ...Array.from({ length: 99 }, (_, i) => ({
         id: `bot-${i}`,
         type: "bot" as const,
-        planetCount: 6,
+        sectorCount: 6,
       })),
     ];
 
@@ -556,7 +556,7 @@ describe("100-Empire Scalability Test", () => {
 
     const sphereStartTime = Date.now();
     const sphere = calculateInfluenceSphere(
-      { id: "player", planetCount: 6 },
+      { id: "player", sectorCount: 6 },
       {
         homeRegionId: playerInfluence.homeRegionId,
         primaryRegionId: playerInfluence.primaryRegionId,

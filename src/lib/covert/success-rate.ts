@@ -4,7 +4,7 @@
  * Success rate is affected by:
  * - Base operation success rate
  * - Your agent count vs target's agent count
- * - Target's Government planet count
+ * - Target's Government sector count
  * - Operation difficulty (risk level)
  * - Random variance (±20%)
  */
@@ -27,7 +27,7 @@ export interface SuccessRateFactors {
   baseRate: number;
   /** Modifier from agent ratio (your agents / their agents) */
   agentRatioModifier: number;
-  /** Modifier from target's government planets (more = harder) */
+  /** Modifier from target's government sectors (more = harder) */
   governmentModifier: number;
   /** Modifier from operation risk level */
   riskModifier: number;
@@ -78,8 +78,8 @@ export function calculateAgentRatioModifier(
 }
 
 /**
- * Calculate the government planet modifier.
- * More government planets = better counter-intelligence = lower success.
+ * Calculate the government sector modifier.
+ * More government sectors = better counter-intelligence = lower success.
  *
  * Formula: 1.0 - (govPlanets * 0.05), min 0.5
  */
@@ -168,7 +168,7 @@ export function calculateDetectionRate(
  * @param operationId - The operation to execute
  * @param yourAgents - Your agent count
  * @param theirAgents - Target's agent count
- * @param theirGovernmentPlanets - Target's government planet count
+ * @param theirGovernmentPlanets - Target's government sector count
  * @param successRoll - Optional fixed roll for success (0-1)
  * @param detectionRoll - Optional fixed roll for detection (0-1)
  * @returns Operation outcome

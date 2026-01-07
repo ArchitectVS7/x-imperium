@@ -116,7 +116,7 @@ export async function getMyCoalitionAction() {
           id: m.empire.id,
           name: m.empire.name,
           networth: m.empire.networth,
-          planetCount: m.empire.planetCount,
+          sectorCount: m.empire.sectorCount,
           joinedAtTurn: m.joinedAtTurn,
           isLeader: m.empire.id === coalition.leaderId,
         })),
@@ -213,7 +213,7 @@ export async function getAvailableCoalitionMembersAction() {
         id: e.id,
         name: e.name,
         networth: e.networth,
-        planetCount: e.planetCount,
+        sectorCount: e.sectorCount,
         reputation: e.reputation,
       })),
     };

@@ -51,7 +51,7 @@ export function isValidUUID(id: unknown): id is string {
 // =============================================================================
 
 /**
- * Validate that a value is a valid planet type.
+ * Validate that a value is a valid sector type.
  */
 export function isValidPlanetType(type: unknown): type is ValidPlanetType {
   if (typeof type !== "string") return false;

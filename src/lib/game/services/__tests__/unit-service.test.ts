@@ -262,7 +262,7 @@ describe("calculateUnitMaintenance", () => {
 });
 
 describe("calculateTotalMaintenance", () => {
-  it("should combine planet and unit maintenance", () => {
+  it("should combine sector and unit maintenance", () => {
     const result = calculateTotalMaintenance(9, {
       soldiers: 100,
       fighters: 0,
@@ -273,12 +273,12 @@ describe("calculateTotalMaintenance", () => {
       covertAgents: 0,
     });
 
-    expect(result.planetCost).toBe(1512); // 9 * 168
+    expect(result.sectorCost).toBe(1512); // 9 * 168
     expect(result.unitCost).toBe(50); // 100 * 0.5
     expect(result.totalCost).toBe(1562);
   });
 
-  it("should handle zero planets", () => {
+  it("should handle zero sectors", () => {
     const result = calculateTotalMaintenance(0, {
       soldiers: 100,
       fighters: 0,
@@ -289,7 +289,7 @@ describe("calculateTotalMaintenance", () => {
       covertAgents: 0,
     });
 
-    expect(result.planetCost).toBe(0);
+    expect(result.sectorCost).toBe(0);
     expect(result.unitCost).toBe(50);
     expect(result.totalCost).toBe(50);
   });
@@ -305,12 +305,12 @@ describe("calculateTotalMaintenance", () => {
       covertAgents: 0,
     });
 
-    expect(result.planetCost).toBe(1512);
+    expect(result.sectorCost).toBe(1512);
     expect(result.unitCost).toBe(0);
     expect(result.totalCost).toBe(1512);
   });
 
-  it("should use custom planet maintenance cost if provided", () => {
+  it("should use custom sector maintenance cost if provided", () => {
     const result = calculateTotalMaintenance(
       10,
       {
@@ -325,7 +325,7 @@ describe("calculateTotalMaintenance", () => {
       200
     );
 
-    expect(result.planetCost).toBe(2000); // 10 * 200
+    expect(result.sectorCost).toBe(2000); // 10 * 200
   });
 });
 

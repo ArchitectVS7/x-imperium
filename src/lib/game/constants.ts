@@ -5,7 +5,7 @@
  * All values are sourced from docs/PRD.md and should match the database schema defaults.
  */
 
-import type { Planet } from "@/lib/db/schema";
+import type { Sector } from "@/lib/db/schema";
 
 // =============================================================================
 // STARTING RESOURCES (PRD 4.1 + schema.ts defaults)
@@ -83,10 +83,10 @@ export const PLANET_COSTS = {
 // STARTING PLANET DISTRIBUTION (PRD 5.1)
 // =============================================================================
 
-export type PlanetType = Planet["type"];
+export type PlanetType = Sector["type"];
 
-// Reduced from 9 to 5 planets for faster eliminations (see IMPLEMENTATION-PLAN.md M1.1)
-// Players must now purchase Research planets - encourages strategic choices early game
+// Reduced from 9 to 5 sectors for faster eliminations (see IMPLEMENTATION-PLAN.md M1.1)
+// Players must now purchase Research sectors - encourages strategic choices early game
 export const STARTING_PLANETS: Array<{ type: PlanetType; count: number }> = [
   { type: "food", count: 1 },        // Reduced from 2
   { type: "ore", count: 1 },         // Reduced from 2
@@ -223,10 +223,10 @@ export function validateTurnLimit(mode: GameMode, turnLimit: number): boolean {
 
 /**
  * User-facing terminology mappings.
- * "Planet" internally maps to "Sector" in UI for thematic consistency.
+ * "Sector" internally maps to "Sector" in UI for thematic consistency.
  */
 export const UI_LABELS = {
-  // Sector terminology (replaces "planet" in UI)
+  // Sector terminology (replaces "sector" in UI)
   sector: "Sector",
   sectors: "Sectors",
   sectorCount: "Sector Count",

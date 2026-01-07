@@ -18,7 +18,7 @@
 
 export const MEMORY_EVENT_TYPES = [
   // High weight events (60-100)
-  "planet_captured",
+  "sector_captured",
   "saved_from_destruction",
   "alliance_broken",
 
@@ -91,7 +91,7 @@ export interface MemoryWeightDefinition {
  * PRD 7.9 Table:
  * | Event                   | Weight | Decay Resistance |
  * |-------------------------|--------|------------------|
- * | Captured planet         | 80     | HIGH             |
+ * | Captured sector         | 80     | HIGH             |
  * | Saved from destruction  | 90     | HIGH             |
  * | Broke alliance          | 70     | HIGH             |
  * | Won battle              | 40     | MEDIUM           |
@@ -103,13 +103,13 @@ export const MEMORY_WEIGHTS: Record<MemoryEventType, MemoryWeightDefinition> = {
   // HIGH WEIGHT EVENTS (60-100) - Major relationship changers
   // ==========================================================================
 
-  planet_captured: {
-    event: "planet_captured",
+  sector_captured: {
+    event: "sector_captured",
     weight: 80,
     decayResistance: "high",
     isNegative: true,
-    displayName: "Planet Captured",
-    description: "They captured one of our planets",
+    displayName: "Sector Captured",
+    description: "They captured one of our sectors",
   },
 
   saved_from_destruction: {

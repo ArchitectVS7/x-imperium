@@ -11,11 +11,11 @@ import type {
 } from "./types";
 import { EmpireTooltip } from "./EmpireTooltip";
 
-// Calculate node size based on planet count and intel level
+// Calculate node size based on sector count and intel level
 function getNodeSize(empire: EmpireMapData, isPlayer: boolean): number {
   // Player always shows actual size
   if (isPlayer) {
-    return Math.max(25, Math.min(55, 18 + empire.planetCount * 2.5));
+    return Math.max(25, Math.min(55, 18 + empire.sectorCount * 2.5));
   }
 
   // For others, size visibility depends on intel
@@ -25,14 +25,14 @@ function getNodeSize(empire: EmpireMapData, isPlayer: boolean): number {
       return 30;
     case "basic":
       // Basic intel shows approximate size categories
-      if (empire.planetCount <= 3) return 25;
-      if (empire.planetCount <= 6) return 35;
-      if (empire.planetCount <= 10) return 45;
+      if (empire.sectorCount <= 3) return 25;
+      if (empire.sectorCount <= 6) return 35;
+      if (empire.sectorCount <= 10) return 45;
       return 55;
     case "moderate":
     case "full":
       // Moderate+ shows proportional size
-      return Math.max(25, Math.min(55, 18 + empire.planetCount * 2.5));
+      return Math.max(25, Math.min(55, 18 + empire.sectorCount * 2.5));
     default:
       return 30;
   }

@@ -52,7 +52,7 @@ interface ActionItem {
 
 const ACTIONS: ActionItem[] = [
   { id: "military", label: UI_LABELS.military, href: "/game/military", icon: "military", description: "Build units, manage forces", panelType: "military" },
-  { id: "sectors", label: UI_LABELS.planets, href: "/game/sectors", icon: "planets", description: "Colonize or release sectors", panelType: "planets" },
+  { id: "sectors", label: UI_LABELS.sectors, href: "/game/sectors", icon: "sectors", description: "Colonize or release sectors", panelType: "sectors" },
   { id: "combat", label: UI_LABELS.combat, href: "/game/combat", icon: "combat", description: "Launch attacks", panelType: "combat" },
   { id: "diplomacy", label: UI_LABELS.diplomacy, href: "/game/diplomacy", icon: "diplomacy", description: "Treaties and alliances", panelType: "diplomacy" },
   { id: "market", label: UI_LABELS.market, href: "/game/market", icon: "market", description: "Buy and sell resources", panelType: "market" },

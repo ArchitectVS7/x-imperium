@@ -36,7 +36,7 @@ export interface CovertTargetState {
   id: string;
   /** Current agent count */
   agents: number;
-  /** Number of government planets */
+  /** Number of government sectors */
   governmentPlanets: number;
   /** Current credits */
   credits: number;
@@ -48,8 +48,8 @@ export interface CovertTargetState {
   petroleum: number;
   /** Current carrier count */
   carriers: number;
-  /** Number of planets owned */
-  planetCount: number;
+  /** Number of sectors owned */
+  sectorCount: number;
   /** Current army effectiveness (0-100) */
   armyEffectiveness: number;
   /** Civil status level index (0 = ecstatic, 7 = revolting) */
@@ -147,7 +147,7 @@ const SPY_INTEL_DURATION = 5;
 /** Message intercept duration for communications_spying */
 const INTERCEPT_DURATION = 10;
 
-/** Planet loss percentage for setup_coup */
+/** Sector loss percentage for setup_coup */
 const COUP_PLANET_LOSS = 0.3;
 
 // =============================================================================
@@ -160,13 +160,13 @@ const COUP_PLANET_LOSS = 0.3;
  * Success rate is affected by (PRD 6.8):
  * - Base operation success rate
  * - Your agent count vs target's agent count
- * - Target's Government planet count
+ * - Target's Government sector count
  * - Operation difficulty (risk level)
  * - Random variance (±20%)
  *
  * @param attackerAgents - Number of agents the attacker has
  * @param defenderAgents - Number of agents the defender has
- * @param defenderGovPlanets - Number of government planets the defender has
+ * @param defenderGovPlanets - Number of government sectors the defender has
  * @param operation - The covert operation to calculate for
  * @returns Success calculation result
  */
@@ -310,11 +310,11 @@ function generateEffects(
       break;
 
     case "setup_coup":
-      const planetsLost = Math.floor(target.planetCount * COUP_PLANET_LOSS);
+      const planetsLost = Math.floor(target.sectorCount * COUP_PLANET_LOSS);
       effects.push({
         type: "planets_lost",
         value: planetsLost,
-        description: `Coup succeeded! ${target.id} lost ${planetsLost} planets (${Math.round(COUP_PLANET_LOSS * 100)}%)`,
+        description: `Coup succeeded! ${target.id} lost ${planetsLost} sectors (${Math.round(COUP_PLANET_LOSS * 100)}%)`,
       });
       break;
   }
@@ -331,7 +331,7 @@ function generateEffects(
  *
  * This function:
  * 1. Validates the operation can be performed
- * 2. Calculates success rate based on agent counts and government planets
+ * 2. Calculates success rate based on agent counts and government sectors
  * 3. Rolls for success and agent detection
  * 4. Generates effects if successful
  *
@@ -512,7 +512,7 @@ export function previewCovertOp(
       potentialEffects.push(`Intercept messages for ${INTERCEPT_DURATION} turns`);
       break;
     case "setup_coup":
-      potentialEffects.push(`Target loses ${Math.round(COUP_PLANET_LOSS * 100)}% of planets`);
+      potentialEffects.push(`Target loses ${Math.round(COUP_PLANET_LOSS * 100)}% of sectors`);
       break;
   }
 

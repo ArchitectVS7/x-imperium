@@ -151,7 +151,7 @@ export function calculateSectorBalances(
 /**
  * Check if sector balances are within tolerance
  *
- * Note: Uses RAW networth (planet + military value), not effective networth.
+ * Note: Uses RAW networth (sector + military value), not effective networth.
  * This matches the PRD: "Each sector's total networth within ±10% of average"
  * Wealth modifiers affect production, not networth calculation.
  */

@@ -2,12 +2,12 @@
 
 import { useState, useTransition } from "react";
 import { releaseSectorAction } from "@/app/actions/sector-actions";
-import type { Planet } from "@/lib/db/schema";
+import type { Sector } from "@/lib/db/schema";
 import { PLANET_TYPE_LABELS, PLANET_COSTS, type PlanetType } from "@/lib/game/constants";
 import { calculateReleaseRefund } from "@/lib/formulas/sector-costs";
 
 interface SectorReleaseButtonProps {
-  sector: Planet;  // Still uses Planet type from DB schema
+  sector: Sector;  // Still uses Sector type from DB schema
   totalSectors: number;
   onRelease?: () => void;
 }

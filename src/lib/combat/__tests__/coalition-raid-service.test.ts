@@ -287,7 +287,7 @@ describe("Raid Combat Bonuses (M9.2)", () => {
 
 describe("Raid Territory Distribution (M9.3)", () => {
   describe("calculateRaidDistribution", () => {
-    it("should give each participant at least 1 planet", () => {
+    it("should give each participant at least 1 sector", () => {
       const raid: CoalitionRaid = {
         targetEmpireId: "boss-1",
         targetEmpireName: "Boss Empire",
@@ -306,13 +306,13 @@ describe("Raid Territory Distribution (M9.3)", () => {
 
       const distribution = calculateRaidDistribution(raid, attacks, 10);
 
-      // Each participant should have at least 1 planet
+      // Each participant should have at least 1 sector
       for (const d of distribution) {
         expect(d.planetsAwarded).toBeGreaterThanOrEqual(1);
       }
     });
 
-    it("should distribute remaining planets by damage percentage", () => {
+    it("should distribute remaining sectors by damage percentage", () => {
       const raid: CoalitionRaid = {
         targetEmpireId: "boss-1",
         targetEmpireName: "Boss Empire",
@@ -323,7 +323,7 @@ describe("Raid Territory Distribution (M9.3)", () => {
         turn: 1,
       };
 
-      // Empire 3 dealt 50% of damage, should get more planets
+      // Empire 3 dealt 50% of damage, should get more sectors
       const attacks = [
         createAttack("emp-1", "Empire 1", "boss-1", "Boss Empire", 100), // 16.67%
         createAttack("emp-2", "Empire 2", "boss-1", "Boss Empire", 200), // 33.33%
@@ -332,15 +332,15 @@ describe("Raid Territory Distribution (M9.3)", () => {
 
       const distribution = calculateRaidDistribution(raid, attacks, 10);
 
-      // Sort by planets awarded
+      // Sort by sectors awarded
       distribution.sort((a, b) => b.planetsAwarded - a.planetsAwarded);
 
-      // Empire 3 should have the most planets
+      // Empire 3 should have the most sectors
       expect(distribution[0]?.empireId).toBe("emp-3");
       expect(distribution[0]?.planetsAwarded).toBeGreaterThan(distribution[2]?.planetsAwarded ?? 0);
     });
 
-    it("should distribute all planets (no remainder)", () => {
+    it("should distribute all sectors (no remainder)", () => {
       const raid: CoalitionRaid = {
         targetEmpireId: "boss-1",
         targetEmpireName: "Boss Empire",
@@ -415,7 +415,7 @@ describe("Raid Territory Distribution (M9.3)", () => {
       }
     });
 
-    it("should handle more participants than planets", () => {
+    it("should handle more participants than sectors", () => {
       const raid: CoalitionRaid = {
         targetEmpireId: "boss-1",
         targetEmpireName: "Boss Empire",
@@ -438,7 +438,7 @@ describe("Raid Territory Distribution (M9.3)", () => {
       const totalDistributed = distribution.reduce((sum, d) => sum + d.planetsAwarded, 0);
 
       expect(totalDistributed).toBe(3);
-      // Top 3 by damage should get planets
+      // Top 3 by damage should get sectors
       const withPlanets = distribution.filter((d) => d.planetsAwarded > 0);
       expect(withPlanets.length).toBe(3);
     });
@@ -550,7 +550,7 @@ describe("Raid Rewards", () => {
 
       expect(message).toContain("Dark Emperor");
       expect(message).toContain("3 empires");
-      expect(message).toContain("10 planets");
+      expect(message).toContain("10 sectors");
     });
   });
 });

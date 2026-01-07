@@ -20,7 +20,7 @@
  */
 
 import { db } from "@/lib/db";
-import { games, botTells, type Empire, type Planet } from "@/lib/db/schema";
+import { games, botTells, type Empire, type Sector } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 import { perfLogger } from "@/lib/performance/logger";
 import type {
@@ -72,13 +72,13 @@ export async function processBotTurn(
   const startTime = performance.now();
 
   try {
-    // Load game with all empires and their planets
+    // Load game with all empires and their sectors
     const game = await db.query.games.findFirst({
       where: eq(games.id, gameId),
       with: {
         empires: {
           with: {
-            planets: true,
+            sectors: true,
           },
         },
       },
@@ -117,7 +117,7 @@ export async function processBotTurn(
     // Step 1: Generate all decisions in parallel (for speed)
     const decisionResults = await Promise.all(
       botEmpires.map((bot) =>
-        generateBotDecisionWithContext(bot, bot.planets, {
+        generateBotDecisionWithContext(bot, bot.sectors, {
           gameId,
           currentTurn,
           protectionTurns,
@@ -182,14 +182,14 @@ export async function processBotTurn(
     // Step 2: Separate attack vs non-attack decisions
     const attackDecisions: Array<{
       bot: Empire;
-      planets: Planet[];
+      sectors: Sector[];
       decision: BotDecision;
       context: BotDecisionContext;
       networth: number;
     }> = [];
     const nonAttackDecisions: Array<{
       bot: Empire;
-      planets: Planet[];
+      sectors: Sector[];
       decision: BotDecision;
       context: BotDecisionContext;
     }> = [];
@@ -311,11 +311,11 @@ interface ProcessingContext {
  */
 async function generateBotDecisionWithContext(
   empire: Empire,
-  empirePlanets: Planet[],
+  empirePlanets: Sector[],
   context: ProcessingContext
 ): Promise<{
   bot: Empire;
-  planets: Planet[];
+  sectors: Sector[];
   decision: BotDecision;
   context: BotDecisionContext;
 }> {
@@ -339,7 +339,7 @@ async function generateBotDecisionWithContext(
   // Build decision context
   const decisionContext: BotDecisionContext = {
     empire,
-    planets: empirePlanets,
+    sectors: empirePlanets,
     gameId: context.gameId,
     currentTurn: context.currentTurn,
     protectionTurns: context.protectionTurns,
@@ -363,7 +363,7 @@ async function generateBotDecisionWithContext(
 
   return {
     bot: empire,
-    planets: empirePlanets,
+    sectors: empirePlanets,
     decision,
     context: decisionContext,
   };
@@ -492,7 +492,7 @@ function buildTargetList(allEmpires: Empire[]): EmpireTarget[] {
     id: e.id,
     name: e.name,
     networth: e.networth,
-    planetCount: e.planetCount,
+    sectorCount: e.sectorCount,
     isBot: e.type === "bot",
     isEliminated: e.isEliminated,
     militaryPower: calculateMilitaryPower(e),

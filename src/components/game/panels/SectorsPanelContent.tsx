@@ -12,7 +12,7 @@ import { fetchDashboardDataAction } from "@/app/actions/game-actions";
 import { ColonizeSectorPanel } from "@/components/game/sectors/ColonizeSectorPanel";
 import { getSectorTypeLabel } from "@/lib/game/constants";
 import { SectorIcons } from "@/lib/theme/icons";
-import type { Planet } from "@/lib/db/schema";
+import type { Sector } from "@/lib/db/schema";
 
 interface SectorsPanelContentProps {
   onClose?: () => void;
@@ -20,7 +20,7 @@ interface SectorsPanelContentProps {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function SectorsPanelContent({ onClose }: SectorsPanelContentProps) {
-  const [planets, setPlanets] = useState<Planet[]>([]);
+  const [sectors, setPlanets] = useState<Sector[]>([]);
   const [credits, setCredits] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<"holdings" | "colonize">("holdings");
@@ -28,7 +28,7 @@ export function SectorsPanelContent({ onClose }: SectorsPanelContentProps) {
   const loadData = useCallback(async () => {
     const data = await fetchDashboardDataAction();
     if (data) {
-      setPlanets(data.planets);
+      setPlanets(data.sectors);
       setCredits(data.resources.credits);
     }
     setIsLoading(false);
@@ -51,14 +51,14 @@ export function SectorsPanelContent({ onClose }: SectorsPanelContentProps) {
     );
   }
 
-  // Group planets by type
-  const planetsByType = planets.reduce<Record<string, Planet[]>>(
-    (acc, planet) => {
-      const existing = acc[planet.type];
+  // Group sectors by type
+  const sectorsByType = sectors.reduce<Record<string, Sector[]>>(
+    (acc, sector) => {
+      const existing = acc[sector.type];
       if (existing) {
-        existing.push(planet);
+        existing.push(sector);
       } else {
-        acc[planet.type] = [planet];
+        acc[sector.type] = [sector];
       }
       return acc;
     },
@@ -66,7 +66,7 @@ export function SectorsPanelContent({ onClose }: SectorsPanelContentProps) {
   );
 
   // Sort types by count (descending)
-  const sortedTypes = Object.entries(planetsByType).sort(
+  const sortedTypes = Object.entries(sectorsByType).sort(
     (a, b) => b[1].length - a[1].length
   );
 
@@ -82,7 +82,7 @@ export function SectorsPanelContent({ onClose }: SectorsPanelContentProps) {
               : "text-gray-400 hover:text-white"
           }`}
         >
-          Holdings ({planets.length})
+          Holdings ({sectors.length})
         </button>
         <button
           onClick={() => setActiveTab("colonize")}
@@ -120,7 +120,7 @@ export function SectorsPanelContent({ onClose }: SectorsPanelContentProps) {
               );
             })}
           </div>
-          {planets.length === 0 && (
+          {sectors.length === 0 && (
             <div className="text-gray-400 text-sm text-center py-4">
               No sectors owned. Colonize to expand your empire.
             </div>

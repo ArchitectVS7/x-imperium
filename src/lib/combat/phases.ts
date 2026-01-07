@@ -7,7 +7,7 @@
  * 3. Ground Combat: Soldiers capture sectors (requires carriers for transport)
  *
  * Each phase must be won to proceed to the next.
- * Attackers need to win all 3 phases for successful planet capture.
+ * Attackers need to win all 3 phases for successful sector capture.
  */
 
 // Note: FleetComposition and calculateFleetPower are available from combat-power
@@ -79,8 +79,8 @@ export interface CombatResult {
   attackerEffectivenessChange: number;
   defenderEffectivenessChange: number;
 
-  // Planet capture
-  planetsCaptured: number;
+  // Sector capture
+  sectorsCaptured: number;
 
   // Summary
   summary: string;
@@ -92,7 +92,7 @@ export type AttackType = "invasion" | "guerilla";
 // CONSTANTS
 // =============================================================================
 
-/** Percentage of defender planets captured on successful invasion */
+/** Percentage of defender sectors captured on successful invasion */
 export const PLANET_CAPTURE_MIN_PERCENT = 0.05;
 export const PLANET_CAPTURE_MAX_PERCENT = 0.15;
 
@@ -388,7 +388,7 @@ export function resolveOrbitalCombat(
 
 /**
  * Resolve Phase 3: Ground Combat
- * Soldiers capture planets (requires prior phase victories)
+ * Soldiers capture sectors (requires prior phase victories)
  */
 export function resolveGroundCombat(
   attackerForces: Forces,
@@ -448,7 +448,7 @@ export function resolveGroundCombat(
  *
  * @param attackerForces - Attacking forces
  * @param defenderForces - Defending forces
- * @param defenderPlanetCount - Number of planets defender owns
+ * @param defenderPlanetCount - Number of sectors defender owns
  * @param randomValue - Optional random value for deterministic testing
  * @returns Complete combat result
  */
@@ -497,21 +497,21 @@ export function resolveInvasion(
 
   // Determine final outcome
   let outcome: CombatResult["outcome"];
-  let planetsCaptured = 0;
+  let sectorsCaptured = 0;
 
   if (groundResult.winner === "attacker") {
     outcome = "attacker_victory";
-    // Calculate planets captured (5-15% of defender's planets)
+    // Calculate sectors captured (5-15% of defender's sectors)
     const capturePercent = PLANET_CAPTURE_MIN_PERCENT +
       (randomValue ?? Math.random()) * (PLANET_CAPTURE_MAX_PERCENT - PLANET_CAPTURE_MIN_PERCENT);
-    planetsCaptured = Math.max(1, Math.floor(defenderPlanetCount * capturePercent));
+    sectorsCaptured = Math.max(1, Math.floor(defenderPlanetCount * capturePercent));
   } else if (groundResult.winner === "defender") {
     outcome = "defender_victory";
   } else {
     outcome = "stalemate";
   }
 
-  return createCombatResult(phases, outcome, planetsCaptured);
+  return createCombatResult(phases, outcome, sectorsCaptured);
 }
 
 /**
@@ -582,7 +582,7 @@ export function resolveRetreat(attackerForces: Forces): CombatResult {
     defenderTotalCasualties: createEmptyForces(),
     attackerEffectivenessChange: -5, // Retreat penalty
     defenderEffectivenessChange: 0,
-    planetsCaptured: 0,
+    sectorsCaptured: 0,
     summary: `Forces retreat, suffering ${RETREAT_CASUALTY_RATE * 100}% casualties during withdrawal.`,
   };
 
@@ -623,7 +623,7 @@ function sumCasualties(phases: PhaseResult[], side: "attacker" | "defender"): Fo
 function createCombatResult(
   phases: PhaseResult[],
   outcome: CombatResult["outcome"],
-  planetsCaptured: number
+  sectorsCaptured: number
 ): CombatResult {
   const attackerTotalCasualties = sumCasualties(phases, "attacker");
   const defenderTotalCasualties = sumCasualties(phases, "defender");
@@ -647,7 +647,7 @@ function createCombatResult(
   const defenderEffectivenessChange = calculateCombatEffectivenessChange(defenderOutcome);
 
   // Generate summary
-  const summary = generateCombatSummary(outcome, phases, planetsCaptured);
+  const summary = generateCombatSummary(outcome, phases, sectorsCaptured);
 
   return {
     outcome,
@@ -656,7 +656,7 @@ function createCombatResult(
     defenderTotalCasualties,
     attackerEffectivenessChange,
     defenderEffectivenessChange,
-    planetsCaptured,
+    sectorsCaptured,
     summary,
   };
 }
@@ -689,11 +689,11 @@ function generatePhaseDescription(
 function generateCombatSummary(
   outcome: CombatResult["outcome"],
   phases: PhaseResult[],
-  planetsCaptured: number
+  sectorsCaptured: number
 ): string {
   switch (outcome) {
     case "attacker_victory":
-      return `Invasion successful! ${planetsCaptured} sector${planetsCaptured !== 1 ? "s" : ""} captured after ${phases.length} combat phases.`;
+      return `Invasion successful! ${sectorsCaptured} sector${sectorsCaptured !== 1 ? "s" : ""} captured after ${phases.length} combat phases.`;
     case "defender_victory":
       const failedPhase = phases.find(p => p.winner === "defender");
       return `Invasion repelled during ${failedPhase?.phase ?? "combat"}. Defender holds their territory.`;

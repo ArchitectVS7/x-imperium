@@ -4,13 +4,13 @@
  * Handles victory conditions, defeat conditions, and game completion.
  *
  * Victory Conditions (PRD 10.1):
- * - Conquest: Control 60% of total planets in game
+ * - Conquest: Control 60% of total sectors in game
  * - Economic: 1.5× networth of 2nd place empire
  * - Survival: Highest networth at turn 200
  *
  * Defeat Conditions:
  * - Bankruptcy: Credits <= 0 AND can't pay maintenance
- * - Elimination: 0 planets remaining
+ * - Elimination: 0 sectors remaining
  * - Civil Collapse: 3 consecutive turns of revolting
  *
  * @see docs/MILESTONES.md Milestone 6
@@ -63,7 +63,7 @@ export interface EmpireStanding {
   id: string;
   name: string;
   type: "player" | "bot";
-  planetCount: number;
+  sectorCount: number;
   networth: number;
   isAlive: boolean;
   rank: number;
@@ -71,7 +71,7 @@ export interface EmpireStanding {
 
 export interface GameStats {
   totalTurns: number;
-  totalPlanets: number;
+  totalSectors: number;
   winnerPlanets: number;
   winnerNetworth: number;
   empiresRemaining: number;
@@ -91,7 +91,7 @@ export interface StalemateWarning {
 // =============================================================================
 
 /** Victory thresholds */
-export const CONQUEST_THRESHOLD = 0.6; // 60% of planets
+export const CONQUEST_THRESHOLD = 0.6; // 60% of sectors
 export const ECONOMIC_THRESHOLD = 1.5; // 1.5× networth of 2nd place
 export const TURN_LIMIT = 200;
 export const STALEMATE_WARNING_TURN = 180;
@@ -100,15 +100,15 @@ export const STALEMATE_WARNING_TURN = 180;
 export const REVOLT_CONSEQUENCES = {
   1: {
     productionPenalty: 0.1, // -10% production
-    planetLossChance: 0.1, // 10% chance per planet to defect
+    planetLossChance: 0.1, // 10% chance per sector to defect
     unitLossRate: 0,
-    message: "Civil unrest grows! Production reduced by 10%, some planets may defect.",
+    message: "Civil unrest grows! Production reduced by 10%, some sectors may defect.",
   },
   2: {
     productionPenalty: 0.25, // -25% production
-    planetLossChance: 0.15, // 15% chance per planet to defect
+    planetLossChance: 0.15, // 15% chance per sector to defect
     unitLossRate: 0.1, // 10% military desertion
-    message: "Riots spread! Production down 25%, military deserting, planets rebelling!",
+    message: "Riots spread! Production down 25%, military deserting, sectors rebelling!",
   },
   3: {
     productionPenalty: 1.0, // 100% - complete collapse
@@ -137,7 +137,7 @@ export async function checkVictoryConditions(
     with: {
       empires: {
         with: {
-          planets: true,
+          sectors: true,
         },
       },
     },
@@ -146,7 +146,7 @@ export async function checkVictoryConditions(
   if (!game) return null;
 
   const aliveEmpires = game.empires.filter(
-    (e) => e.planets.length > 0 && e.credits >= 0
+    (e) => e.sectors.length > 0 && e.credits >= 0
   );
 
   if (aliveEmpires.length === 0) return null;
@@ -154,7 +154,7 @@ export async function checkVictoryConditions(
   // Calculate standings
   const standings = calculateStandings(aliveEmpires);
 
-  // Check conquest victory (60% of planets)
+  // Check conquest victory (60% of sectors)
   const conquestResult = checkConquestVictory(game, standings);
   if (conquestResult) return conquestResult;
 
@@ -170,23 +170,23 @@ export async function checkVictoryConditions(
 }
 
 /**
- * Check conquest victory: Control 60% of total planets.
+ * Check conquest victory: Control 60% of total sectors.
  */
 function checkConquestVictory(
-  game: Game & { empires: (Empire & { planets: { id: string }[] })[] },
+  game: Game & { empires: (Empire & { sectors: { id: string }[] })[] },
   standings: EmpireStanding[]
 ): VictoryResult | null {
-  const totalPlanets = game.empires.reduce(
-    (sum, e) => sum + e.planets.length,
+  const totalSectors = game.empires.reduce(
+    (sum, e) => sum + e.sectors.length,
     0
   );
 
-  if (totalPlanets === 0) return null;
+  if (totalSectors === 0) return null;
 
   const leader = standings[0];
   if (!leader) return null;
 
-  const controlPercentage = leader.planetCount / totalPlanets;
+  const controlPercentage = leader.sectorCount / totalSectors;
 
   if (controlPercentage >= CONQUEST_THRESHOLD) {
     return {
@@ -205,7 +205,7 @@ function checkConquestVictory(
  * Check economic victory: 1.5× networth of 2nd place.
  */
 function checkEconomicVictory(
-  game: Game & { empires: (Empire & { planets: { id: string }[] })[] },
+  game: Game & { empires: (Empire & { sectors: { id: string }[] })[] },
   standings: EmpireStanding[]
 ): VictoryResult | null {
   if (standings.length < 2) {
@@ -236,7 +236,7 @@ function checkEconomicVictory(
  * Check survival victory: Highest networth at turn 200.
  */
 function checkSurvivalVictory(
-  game: Game & { empires: (Empire & { planets: { id: string }[] })[] },
+  game: Game & { empires: (Empire & { sectors: { id: string }[] })[] },
   standings: EmpireStanding[]
 ): VictoryResult | null {
   if (game.currentTurn < TURN_LIMIT) return null;
@@ -261,24 +261,24 @@ function checkSurvivalVictory(
  * Check defeat conditions for an empire.
  *
  * @param empire - Empire to check
- * @param planets - Empire's planets
+ * @param sectors - Empire's sectors
  * @param turn - Current turn number
  * @param creditProduction - Net credit production this turn
  * @returns DefeatResult if defeated, null otherwise
  */
 export function checkDefeatConditions(
   empire: Empire,
-  planetCount: number,
+  sectorCount: number,
   turn: number,
   creditProduction: number
 ): DefeatResult | null {
-  // Check elimination (0 planets)
-  if (planetCount === 0) {
+  // Check elimination (0 sectors)
+  if (sectorCount === 0) {
     return {
       type: "elimination",
       empireId: empire.id,
       empireName: empire.name,
-      message: `${empire.name} has been eliminated! All planets lost.`,
+      message: `${empire.name} has been eliminated! All sectors lost.`,
       turn,
     };
   }
@@ -357,7 +357,7 @@ export async function getConsecutiveRevoltingTurns(
  */
 export function calculateRevoltConsequences(
   empire: Empire,
-  planetCount: number,
+  sectorCount: number,
   consecutiveTurns: number
 ): RevoltConsequence {
   if (consecutiveTurns <= 0) {
@@ -375,11 +375,11 @@ export function calculateRevoltConsequences(
   const level = Math.min(consecutiveTurns, 3) as 1 | 2 | 3;
   const consequence = REVOLT_CONSEQUENCES[level];
 
-  // Calculate planet losses (random chance per planet)
+  // Calculate sector losses (random chance per sector)
   let planetsLost = 0;
   if (consequence.planetLossChance > 0 && level < 3) {
     // In actual implementation, use deterministic random based on turn/empire
-    planetsLost = Math.floor(planetCount * consequence.planetLossChance * Math.random());
+    planetsLost = Math.floor(sectorCount * consequence.planetLossChance * Math.random());
   }
 
   // Calculate unit losses (percentage of total military)
@@ -461,7 +461,7 @@ export async function getGameStandings(
     with: {
       empires: {
         with: {
-          planets: true,
+          sectors: true,
         },
       },
     },
@@ -469,7 +469,7 @@ export async function getGameStandings(
 
   if (!game) return [];
 
-  const aliveEmpires = game.empires.filter((e) => e.planets.length > 0);
+  const aliveEmpires = game.empires.filter((e) => e.sectors.length > 0);
   return calculateStandings(aliveEmpires);
 }
 
@@ -477,11 +477,11 @@ export async function getGameStandings(
  * Calculate standings from empire data.
  */
 function calculateStandings(
-  empires: (Empire & { planets: { id: string }[] })[]
+  empires: (Empire & { sectors: { id: string }[] })[]
 ): EmpireStanding[] {
   const standings = empires.map((empire) => {
     const networthInput: NetworthInput = {
-      planetCount: empire.planets.length,
+      sectorCount: empire.sectors.length,
       soldiers: empire.soldiers,
       fighters: empire.fighters,
       stations: empire.stations,
@@ -495,9 +495,9 @@ function calculateStandings(
       id: empire.id,
       name: empire.name,
       type: empire.type as "player" | "bot",
-      planetCount: empire.planets.length,
+      sectorCount: empire.sectors.length,
       networth: calculateNetworth(networthInput),
-      isAlive: empire.planets.length > 0,
+      isAlive: empire.sectors.length > 0,
       rank: 0, // Will be set below
     };
   });
@@ -542,19 +542,19 @@ export async function checkStalemateWarning(
   // Check if any victory is achievable
   const game = await db.query.games.findFirst({
     where: eq(games.id, gameId),
-    with: { empires: { with: { planets: true } } },
+    with: { empires: { with: { sectors: true } } },
   });
 
   if (!game) return null;
 
-  const totalPlanets = game.empires.reduce(
-    (sum, e) => sum + e.planets.length,
+  const totalSectors = game.empires.reduce(
+    (sum, e) => sum + e.sectors.length,
     0
   );
 
-  if (totalPlanets === 0) return null;
+  if (totalSectors === 0) return null;
 
-  const leaderControlPercentage = leader.planetCount / totalPlanets;
+  const leaderControlPercentage = leader.sectorCount / totalSectors;
   const economicRatio = leader.networth / (second.networth || 1);
 
   // Check if conquest or economic victory is feasible
@@ -582,19 +582,19 @@ export async function checkStalemateWarning(
  * Build game statistics for victory screen.
  */
 function buildGameStats(
-  game: Game & { empires: (Empire & { planets: { id: string }[] })[] },
+  game: Game & { empires: (Empire & { sectors: { id: string }[] })[] },
   winner: EmpireStanding
 ): GameStats {
-  const totalPlanets = game.empires.reduce(
-    (sum, e) => sum + e.planets.length,
+  const totalSectors = game.empires.reduce(
+    (sum, e) => sum + e.sectors.length,
     0
   );
-  const aliveCount = game.empires.filter((e) => e.planets.length > 0).length;
+  const aliveCount = game.empires.filter((e) => e.sectors.length > 0).length;
 
   return {
     totalTurns: game.currentTurn,
-    totalPlanets,
-    winnerPlanets: winner.planetCount,
+    totalSectors,
+    winnerPlanets: winner.sectorCount,
     winnerNetworth: winner.networth,
     empiresRemaining: aliveCount,
     empiresDefeated: game.empires.length - aliveCount,
@@ -626,7 +626,7 @@ export async function isPlayerDefeated(gameId: string): Promise<boolean> {
     with: {
       empires: {
         with: {
-          planets: true,
+          sectors: true,
         },
       },
     },
@@ -637,5 +637,5 @@ export async function isPlayerDefeated(gameId: string): Promise<boolean> {
   const playerEmpire = game.empires.find((e) => e.type === "player");
   if (!playerEmpire) return false;
 
-  return playerEmpire.planets.length === 0 || playerEmpire.credits < 0;
+  return playerEmpire.sectors.length === 0 || playerEmpire.credits < 0;
 }

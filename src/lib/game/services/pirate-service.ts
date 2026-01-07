@@ -67,7 +67,7 @@ export interface TargetEmpireState {
   battlecruisers: number;
   dreadnoughts: number;
   stealthCruisers: number;
-  planetCount: number;
+  sectorCount: number;
   foodPlanets: number;
   orePlanets: number;
   petroleumPlanets: number;
@@ -137,7 +137,7 @@ export function executeSupplyRunMission(
 
 /**
  * Execute a disruption mission
- * Destroys 1-3 random planets
+ * Destroys 1-3 random sectors
  */
 export function executeDisruptionMission(
   targetState: TargetEmpireState,
@@ -146,8 +146,8 @@ export function executeDisruptionMission(
   const minPlanets = config.planetsDestroyedMin ?? 1;
   const maxPlanets = config.planetsDestroyedMax ?? 3;
 
-  // Don't destroy more planets than target has
-  const maxDestroyable = Math.min(maxPlanets, targetState.planetCount);
+  // Don't destroy more sectors than target has
+  const maxDestroyable = Math.min(maxPlanets, targetState.sectorCount);
   const minDestroyable = Math.min(minPlanets, maxDestroyable);
 
   // Random number between min and max
@@ -161,7 +161,7 @@ export function executeDisruptionMission(
       missionType: "disruption",
       targetEmpireId: targetState.id,
       effects: {},
-      error: "Target has no planets to destroy",
+      error: "Target has no sectors to destroy",
     };
   }
 
@@ -287,7 +287,7 @@ export type PlanetType =
   | "industrial";
 
 /**
- * Randomly select planets to destroy based on target's holdings
+ * Randomly select sectors to destroy based on target's holdings
  */
 export function selectPlanetsToDestroy(
   targetState: TargetEmpireState,
@@ -303,7 +303,7 @@ export function selectPlanetsToDestroy(
     industrial: targetState.industrialPlanets,
   };
 
-  // Create weighted list of planet types
+  // Create weighted list of sector types
   const planetPool: PlanetType[] = [];
   for (const [type, cnt] of Object.entries(planetCounts)) {
     for (let i = 0; i < cnt; i++) {
@@ -393,15 +393,15 @@ export function checkContractCompletion(
       }
       return { completed: false, reason: `Only ${(foodLossPercent * 100).toFixed(0)}% food lost (need 30%)` };
 
-    // Hostile Takeover: Capture 1 planet from target
+    // Hostile Takeover: Capture 1 sector from target
     case "hostile_takeover":
       if (
         currentState.capturedPlanetsFrom &&
         currentState.capturedPlanetsFrom.includes(state.targetEmpireId)
       ) {
-        return { completed: true, reason: "Planet captured from target" };
+        return { completed: true, reason: "Sector captured from target" };
       }
-      return { completed: false, reason: "No planet captured yet" };
+      return { completed: false, reason: "No sector captured yet" };
 
     // Kingslayer: Target falls out of top 3
     case "kingslayer":
@@ -484,7 +484,7 @@ export function generateMissionResultMessage(result: PirateMissionResult): strin
       return `Pirates disrupted supply lines! Trade income reduced by ${result.effects.incomeDebuffPercent}% for ${result.effects.incomeDebuffTurns} turns.`;
 
     case "disruption":
-      return `Pirates destroyed ${result.effects.planetsDestroyed} planet(s) in a devastating raid!`;
+      return `Pirates destroyed ${result.effects.planetsDestroyed} sector(s) in a devastating raid!`;
 
     case "salvage_op":
       return `Pirates destroyed ${result.effects.militaryDestroyedPercent}% of the fleet. Salvage value: ${result.salvageValue?.toLocaleString()} credits.`;

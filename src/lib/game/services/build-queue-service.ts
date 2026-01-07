@@ -227,7 +227,7 @@ export async function processBuildQueue(
 
     // Calculate new networth
     const newNetworth = calculateNetworth({
-      planetCount: empire.planetCount,
+      sectorCount: empire.sectorCount,
       soldiers: newSoldiers,
       fighters: newFighters,
       stations: newStations,

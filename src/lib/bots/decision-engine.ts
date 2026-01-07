@@ -10,7 +10,7 @@
  *
  * Decision Weights (PRD M5, modified by archetype/emotion):
  * - 30% build units
- * - 15% buy planets
+ * - 15% buy sectors
  * - 12% attack (0% during protection period)
  * - 8% diplomacy
  * - 8% trade
@@ -195,7 +195,7 @@ export const ARCHETYPE_WEIGHTS: Record<BotArchetype, BotDecisionWeights> = {
   },
   tech_rush: {
     build_units: 0.14,
-    buy_planet: 0.20,  // Research planets
+    buy_planet: 0.20,  // Research sectors
     attack: 0.06,
     diplomacy: 0.06,
     trade: 0.08,
@@ -460,7 +460,7 @@ export function getTellStyle(archetype: BotArchetype | null): string {
   return behavior?.tell.style ?? "minimal";
 }
 
-// Planet types that bots can purchase (excludes special types)
+// Sector types that bots can purchase (excludes special types)
 const PURCHASABLE_PLANET_TYPES: PlanetType[] = [
   "food",
   "ore",
@@ -746,7 +746,7 @@ function generateBuildUnitsDecision(
 
 /**
  * Generate a buy_planet decision.
- * Randomly selects an affordable planet type.
+ * Randomly selects an affordable sector type.
  */
 function generateBuyPlanetDecision(
   context: BotDecisionContext,
@@ -754,8 +754,8 @@ function generateBuyPlanetDecision(
 ): BotDecision {
   const { empire } = context;
 
-  // Filter to planet types the bot can afford
-  // Note: Planet cost scaling isn't applied here for simplicity
+  // Filter to sector types the bot can afford
+  // Note: Sector cost scaling isn't applied here for simplicity
   const affordableTypes = PURCHASABLE_PLANET_TYPES.filter((type) => {
     const cost = PLANET_COSTS[type];
     return empire.credits >= cost;
@@ -765,14 +765,14 @@ function generateBuyPlanetDecision(
     return { type: "do_nothing" };
   }
 
-  // Select random planet type
+  // Select random sector type
   const typeIndex = Math.floor((random ?? Math.random()) * affordableTypes.length);
-  const planetType = affordableTypes[typeIndex];
-  if (!planetType) {
+  const sectorType = affordableTypes[typeIndex];
+  if (!sectorType) {
     return { type: "do_nothing" };
   }
 
-  return { type: "buy_planet", planetType };
+  return { type: "buy_planet", sectorType };
 }
 
 /**

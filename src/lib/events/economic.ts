@@ -242,12 +242,12 @@ export const ECONOMIC_EVENTS: GalacticEvent[] = [
     description: "Interstellar tourism reaches new heights",
     narrative:
       "A cultural renaissance has swept the galaxy, drawing tourists to every corner. " +
-      "Tourism planets see record revenues as visitors flock to experience the wonders.",
+      "Tourism sectors see record revenues as visitors flock to experience the wonders.",
     effects: [
       {
         type: "production_bonus",
         bonus: 0.5, // +50% tourism income
-        planetTypes: ["tourism"],
+        sectorTypes: ["tourism"],
       },
     ],
     duration: 8,

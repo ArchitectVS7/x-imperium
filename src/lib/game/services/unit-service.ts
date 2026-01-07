@@ -190,30 +190,30 @@ export function calculateUnitMaintenance(units: UnitCounts): UnitMaintenanceBrea
 }
 
 /**
- * Calculate combined maintenance (planets + units) for an empire.
+ * Calculate combined maintenance (sectors + units) for an empire.
  *
- * @param planetCount - Number of planets owned
+ * @param sectorCount - Number of sectors owned
  * @param units - Unit counts
- * @param planetMaintenanceCost - Cost per planet (default 168)
+ * @param planetMaintenanceCost - Cost per sector (default 168)
  * @returns Combined maintenance breakdown
  */
 export function calculateTotalMaintenance(
-  planetCount: number,
+  sectorCount: number,
   units: UnitCounts,
   planetMaintenanceCost: number = 168
 ): {
-  planetCost: number;
+  sectorCost: number;
   unitCost: number;
   totalCost: number;
   unitBreakdown: UnitMaintenanceBreakdown;
 } {
-  const planetCost = planetCount * planetMaintenanceCost;
+  const sectorCost = sectorCount * planetMaintenanceCost;
   const unitBreakdown = calculateUnitMaintenance(units);
 
   return {
-    planetCost,
+    sectorCost,
     unitCost: unitBreakdown.totalCost,
-    totalCost: planetCost + unitBreakdown.totalCost,
+    totalCost: sectorCost + unitBreakdown.totalCost,
     unitBreakdown,
   };
 }

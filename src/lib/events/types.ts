@@ -39,7 +39,7 @@ export interface ResourceEffect {
 export interface ProductionEffect {
   type: "production_bonus";
   bonus: number; // Percentage bonus (0.5 = +50%)
-  planetTypes?: string[]; // Optional: only affects specific planet types
+  sectorTypes?: string[]; // Optional: only affects specific sector types
 }
 
 /** Price multiplier effect */

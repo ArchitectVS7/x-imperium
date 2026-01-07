@@ -84,7 +84,7 @@ describe("Icon System", () => {
   describe("ActionIcons", () => {
     it("exports all action icons", () => {
       expect(ActionIcons.military).toBeDefined();
-      expect(ActionIcons.planets).toBeDefined();
+      expect(ActionIcons.sectors).toBeDefined();
       expect(ActionIcons.combat).toBeDefined();
       expect(ActionIcons.diplomacy).toBeDefined();
       expect(ActionIcons.market).toBeDefined();

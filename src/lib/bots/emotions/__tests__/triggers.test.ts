@@ -20,8 +20,8 @@ describe("Emotional Triggers", () => {
     it("should have all expected combat events", () => {
       expect(GAME_EVENT_TYPES).toContain("battle_won");
       expect(GAME_EVENT_TYPES).toContain("battle_lost");
-      expect(GAME_EVENT_TYPES).toContain("planet_captured");
-      expect(GAME_EVENT_TYPES).toContain("planet_lost");
+      expect(GAME_EVENT_TYPES).toContain("sector_captured");
+      expect(GAME_EVENT_TYPES).toContain("sector_lost");
       expect(GAME_EVENT_TYPES).toContain("invasion_success");
       expect(GAME_EVENT_TYPES).toContain("invasion_failed");
       expect(GAME_EVENT_TYPES).toContain("under_attack");
@@ -93,7 +93,7 @@ describe("Emotional Triggers", () => {
     });
 
     it("should mark scarring events correctly", () => {
-      expect(EVENT_TRIGGERS.planet_lost.canScar).toBe(true);
+      expect(EVENT_TRIGGERS.sector_lost.canScar).toBe(true);
       expect(EVENT_TRIGGERS.betrayed.canScar).toBe(true);
       expect(EVENT_TRIGGERS.near_elimination.canScar).toBe(true);
       expect(EVENT_TRIGGERS.battle_won.canScar).toBeFalsy();
@@ -228,7 +228,7 @@ describe("Emotional Triggers", () => {
     it("should apply maxIntensity constraint", () => {
       state.intensity = 0.9;
       const response = { newState: "triumphant" as const, intensityChange: 0.5, maxIntensity: 0.8 };
-      const newState = applyEmotionalResponse(state, response, 5, "planet_captured");
+      const newState = applyEmotionalResponse(state, response, 5, "sector_captured");
 
       expect(newState.intensity).toBe(0.8);
     });
@@ -252,10 +252,10 @@ describe("Emotional Triggers", () => {
       }));
 
       const response = { newState: "triumphant" as const, intensityChange: 0.2 };
-      const newState = applyEmotionalResponse(state, response, 15, "planet_captured");
+      const newState = applyEmotionalResponse(state, response, 15, "sector_captured");
 
       expect(newState.recentEvents.length).toBe(10);
-      expect(newState.recentEvents[0]?.event).toBe("planet_captured");
+      expect(newState.recentEvents[0]?.event).toBe("sector_captured");
       expect(newState.recentEvents[0]?.turn).toBe(15);
     });
 

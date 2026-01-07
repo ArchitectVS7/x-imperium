@@ -9,7 +9,7 @@
  */
 
 import { db } from "@/lib/db";
-import { empires, planets, type Empire } from "@/lib/db/schema";
+import { empires, sectors, type Empire } from "@/lib/db/schema";
 import { eq, and, ne } from "drizzle-orm";
 import {
   type OperationType,
@@ -40,9 +40,9 @@ export interface CovertStatus {
   maxCovertPoints: number;
   /** Current agent count */
   agents: number;
-  /** Maximum agent capacity (gov planets × 300) */
+  /** Maximum agent capacity (gov sectors × 300) */
   agentCapacity: number;
-  /** Number of government planets */
+  /** Number of government sectors */
   governmentPlanets: number;
 }
 
@@ -50,7 +50,7 @@ export interface CovertTarget {
   id: string;
   name: string;
   networth: number;
-  planetCount: number;
+  sectorCount: number;
   /** Preview success rates for all operations against this target */
   operationPreviews?: Array<{
     operationType: OperationType;
@@ -86,13 +86,13 @@ export async function getCovertStatus(
   const empire = await db.query.empires.findFirst({
     where: eq(empires.id, empireId),
     with: {
-      planets: true,
+      sectors: true,
     },
   });
 
   if (!empire) return null;
 
-  const governmentPlanets = empire.planets.filter(
+  const governmentPlanets = empire.sectors.filter(
     (p) => p.type === "government"
   ).length;
 
@@ -109,8 +109,8 @@ export async function getCovertStatus(
  * Get agent capacity for an empire.
  */
 export async function getAgentCapacity(empireId: string): Promise<number> {
-  const govPlanets = await db.query.planets.findMany({
-    where: and(eq(planets.empireId, empireId), eq(planets.type, "government")),
+  const govPlanets = await db.query.sectors.findMany({
+    where: and(eq(sectors.empireId, empireId), eq(sectors.type, "government")),
     columns: { id: true },
   });
 
@@ -173,18 +173,18 @@ export async function getCovertTargets(
       ne(empires.id, attackerId)
     ),
     with: {
-      planets: true,
+      sectors: true,
     },
   });
 
   // Filter to alive empires only
   return allEmpires
-    .filter((e) => e.planets.length > 0)
+    .filter((e) => e.sectors.length > 0)
     .map((e) => ({
       id: e.id,
       name: e.name,
       networth: Number(e.networth),
-      planetCount: e.planets.length,
+      sectorCount: e.sectors.length,
     }));
 }
 
@@ -197,7 +197,7 @@ export async function getCovertTargetsWithPreviews(
 ): Promise<CovertTarget[]> {
   const attacker = await db.query.empires.findFirst({
     where: eq(empires.id, attackerId),
-    with: { planets: true },
+    with: { sectors: true },
   });
 
   if (!attacker) return [];
@@ -215,7 +215,7 @@ export async function getCovertTargetsWithPreviews(
     targets.map(async (target) => {
       const targetEmpire = await db.query.empires.findFirst({
         where: eq(empires.id, target.id),
-        with: { planets: true },
+        with: { sectors: true },
       });
 
       if (!targetEmpire) return target;
@@ -256,12 +256,12 @@ export async function executeCovertOperation(
   // Load attacker and defender
   const attacker = await db.query.empires.findFirst({
     where: eq(empires.id, attackerId),
-    with: { planets: true },
+    with: { sectors: true },
   });
 
   const defender = await db.query.empires.findFirst({
     where: eq(empires.id, defenderId),
-    with: { planets: true },
+    with: { sectors: true },
   });
 
   if (!attacker || !defender) {
@@ -333,12 +333,12 @@ export async function previewCovertOperation(
 ) {
   const attacker = await db.query.empires.findFirst({
     where: eq(empires.id, attackerId),
-    with: { planets: true },
+    with: { sectors: true },
   });
 
   const defender = await db.query.empires.findFirst({
     where: eq(empires.id, defenderId),
-    with: { planets: true },
+    with: { sectors: true },
   });
 
   if (!attacker || !defender) {
@@ -364,9 +364,9 @@ export async function previewCovertOperation(
  * Build target state from empire data.
  */
 function buildTargetState(
-  empire: Empire & { planets: { type: string }[] }
+  empire: Empire & { sectors: { type: string }[] }
 ): CovertTargetState {
-  const governmentPlanets = empire.planets.filter(
+  const governmentPlanets = empire.sectors.filter(
     (p) => p.type === "government"
   ).length;
 
@@ -384,7 +384,7 @@ function buildTargetState(
     ore: empire.ore,
     petroleum: empire.petroleum,
     carriers: empire.carriers,
-    planetCount: empire.planets.length,
+    sectorCount: empire.sectors.length,
     armyEffectiveness: Number(empire.armyEffectiveness),
     civilStatusIndex: civilStatusIndex >= 0 ? civilStatusIndex : 3, // Default to neutral
   };
@@ -456,7 +456,7 @@ async function applyEffectsToDefender(
         break;
 
       case "planets_lost":
-        // Major effect - would need to transfer planets
+        // Major effect - would need to transfer sectors
         // For now, just log it
         appliedEffects.push(effect.description);
         break;

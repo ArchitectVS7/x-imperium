@@ -41,7 +41,7 @@ const BotDecisionSchema = z.discriminatedUnion("type", [
   }),
   z.object({
     type: z.literal("buy_planet"),
-    planetType: z.enum([
+    sectorType: z.enum([
       "food",
       "ore",
       "petroleum",
@@ -303,11 +303,11 @@ function validateDecisionLegality(
     }
 
     case "buy_planet": {
-      const cost = PLANET_COSTS[decision.planetType] * (1 + empire.planetCount * 0.05);
+      const cost = PLANET_COSTS[decision.sectorType] * (1 + empire.sectorCount * 0.05);
       if (empire.credits < cost) {
         return {
           legal: false,
-          reason: `Cannot afford ${decision.planetType} planet (cost: ${Math.round(cost)}, have: ${empire.credits})`,
+          reason: `Cannot afford ${decision.sectorType} sector (cost: ${Math.round(cost)}, have: ${empire.credits})`,
         };
       }
       break;

@@ -17,7 +17,7 @@ import {
   attacks,
   combatLogs,
   empires,
-  planets,
+  sectors,
   type Attack,
   type CombatLog,
   type Empire,
@@ -105,7 +105,7 @@ export async function saveAttack(params: SaveAttackParams): Promise<Attack> {
     throw new Error("Invalid ID format");
   }
   if (targetPlanetId && !isValidUUID(targetPlanetId)) {
-    throw new Error("Invalid target planet ID format");
+    throw new Error("Invalid target sector ID format");
   }
   if (!validateForces(attackerForces) || !validateForces(defenderForces)) {
     throw new Error("Invalid forces: values must be non-negative finite numbers");
@@ -154,7 +154,7 @@ export async function saveAttack(params: SaveAttackParams): Promise<Attack> {
         attackerPower: String(totalAttackerPower),
         defenderPower: String(totalDefenderPower),
         outcome: result.outcome,
-        planetCaptured: result.planetsCaptured > 0,
+        sectorCaptured: result.sectorsCaptured > 0,
         // Casualties as JSON
         attackerCasualties: result.attackerTotalCasualties,
         defenderCasualties: result.defenderTotalCasualties,
@@ -235,7 +235,7 @@ async function saveCombatLogsInTransaction(
 /**
  * Apply combat results to both empires atomically.
  * Uses a transaction to prevent race conditions.
- * Updates unit counts, effectiveness, and handles planet captures.
+ * Updates unit counts, effectiveness, and handles sector captures.
  */
 export async function applyCombatResults(
   attackerId: string,
@@ -295,15 +295,15 @@ export async function applyCombatResults(
       })
       .where(eq(empires.id, defenderId));
 
-    // Handle planet captures if applicable - within same transaction
-    if (result.planetsCaptured > 0) {
-      await transferPlanetsInTransaction(tx, defenderId, attackerId, result.planetsCaptured);
+    // Handle sector captures if applicable - within same transaction
+    if (result.sectorsCaptured > 0) {
+      await transferPlanetsInTransaction(tx, defenderId, attackerId, result.sectorsCaptured);
     }
   });
 }
 
 /**
- * Transfer planets from defender to attacker within a transaction.
+ * Transfer sectors from defender to attacker within a transaction.
  * Prevents race conditions by operating within the transaction context.
  */
 async function transferPlanetsInTransaction(
@@ -317,31 +317,31 @@ async function transferPlanetsInTransaction(
     return;
   }
 
-  // Get defender's planets within transaction
-  const defenderPlanets = await tx.query.planets.findMany({
-    where: eq(planets.empireId, fromEmpireId),
+  // Get defender's sectors within transaction
+  const defenderPlanets = await tx.query.sectors.findMany({
+    where: eq(sectors.empireId, fromEmpireId),
   });
 
   if (defenderPlanets.length === 0) return;
 
-  // Don't transfer all planets - leave at least 1 (prevents elimination via combat alone)
+  // Don't transfer all sectors - leave at least 1 (prevents elimination via combat alone)
   const transferCount = Math.min(count, defenderPlanets.length - 1);
   if (transferCount <= 0) return;
 
-  // Select random planets to transfer (use crypto for better randomness if available)
+  // Select random sectors to transfer (use crypto for better randomness if available)
   const shuffled = [...defenderPlanets].sort(() => Math.random() - 0.5);
   const planetsToTransfer = shuffled.slice(0, transferCount);
   const planetIds = planetsToTransfer.map(p => p.id);
 
-  // Batch update planet ownership for efficiency
+  // Batch update sector ownership for efficiency
   if (planetIds.length > 0) {
     await tx
-      .update(planets)
+      .update(sectors)
       .set({ empireId: toEmpireId })
-      .where(sql`${planets.id} IN (${sql.join(planetIds.map(id => sql`${id}`), sql`, `)})`);
+      .where(sql`${sectors.id} IN (${sql.join(planetIds.map(id => sql`${id}`), sql`, `)})`);
   }
 
-  // Update planet counts atomically within transaction
+  // Update sector counts atomically within transaction
   // Fetch fresh counts to avoid race conditions
   const [fromEmpire, toEmpire] = await Promise.all([
     tx.query.empires.findFirst({ where: eq(empires.id, fromEmpireId) }),
@@ -352,11 +352,11 @@ async function transferPlanetsInTransaction(
     await Promise.all([
       tx
         .update(empires)
-        .set({ planetCount: Math.max(0, fromEmpire.planetCount - transferCount) })
+        .set({ sectorCount: Math.max(0, fromEmpire.sectorCount - transferCount) })
         .where(eq(empires.id, fromEmpireId)),
       tx
         .update(empires)
-        .set({ planetCount: toEmpire.planetCount + transferCount })
+        .set({ sectorCount: toEmpire.sectorCount + transferCount })
         .where(eq(empires.id, toEmpireId)),
     ]);
   }

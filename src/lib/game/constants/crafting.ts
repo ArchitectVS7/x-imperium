@@ -49,7 +49,7 @@ export interface Tier1Recipe {
   inputs: Partial<Record<Tier0Resource, number>>;
   craftingTime: number; // turns
   autoProduction?: {
-    planetType: string;
+    sectorType: string;
     percentOfOutput: number;
   };
 }
@@ -58,12 +58,12 @@ export const TIER_1_RECIPES: Record<Tier1Resource, Tier1Recipe> = {
   refined_metals: {
     inputs: { ore: 100 },
     craftingTime: 1,
-    autoProduction: { planetType: "ore", percentOfOutput: 0.10 },
+    autoProduction: { sectorType: "ore", percentOfOutput: 0.10 },
   },
   fuel_cells: {
     inputs: { petroleum: 50, credits: 20 },
     craftingTime: 1,
-    autoProduction: { planetType: "petroleum", percentOfOutput: 0.10 },
+    autoProduction: { sectorType: "petroleum", percentOfOutput: 0.10 },
   },
   polymers: {
     inputs: { petroleum: 30, ore: 20 },
@@ -73,12 +73,12 @@ export const TIER_1_RECIPES: Record<Tier1Resource, Tier1Recipe> = {
   processed_food: {
     inputs: { food: 200 },
     craftingTime: 1,
-    autoProduction: { planetType: "food", percentOfOutput: 0.05 },
+    autoProduction: { sectorType: "food", percentOfOutput: 0.05 },
   },
   labor_units: {
     inputs: { population: 1000, credits: 50 },
     craftingTime: 1,
-    autoProduction: { planetType: "urban", percentOfOutput: 0.05 },
+    autoProduction: { sectorType: "urban", percentOfOutput: 0.05 },
   },
 };
 

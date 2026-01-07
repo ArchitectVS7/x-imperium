@@ -63,13 +63,13 @@ export const NETWORTH_UNDERDOG_MAX_BONUS = 1.20; // 20% max bonus for severe dis
 /**
  * M4: Punching-up victory bonus (feature-flagged)
  * When FEATURE_PUNCHUP_BONUS is enabled, weaker empires that WIN against
- * stronger opponents get extra planet capture bonus.
+ * stronger opponents get extra sector capture bonus.
  */
-export const PUNCHUP_EXTRA_PLANET_MIN = 1; // minimum extra planets
-export const PUNCHUP_EXTRA_PLANET_MAX = 3; // maximum extra planets (for severe disparity)
+export const PUNCHUP_EXTRA_PLANET_MIN = 1; // minimum extra sectors
+export const PUNCHUP_EXTRA_PLANET_MAX = 3; // maximum extra sectors (for severe disparity)
 export const PUNCHUP_NETWORTH_THRESHOLD = 0.75; // attacker must be weaker than this ratio
 
-/** Planet capture percentages */
+/** Sector capture percentages */
 const planetCaptureConfig = getPlanetCaptureConfig();
 export const PLANET_CAPTURE_MIN_PERCENT = planetCaptureConfig.minPercent;
 export const PLANET_CAPTURE_MAX_PERCENT = planetCaptureConfig.maxPercent;
@@ -175,15 +175,15 @@ export function calculateNetworthUnderdogBonus(
 }
 
 /**
- * M4: Calculate punching-up victory bonus (extra planets captured).
+ * M4: Calculate punching-up victory bonus (extra sectors captured).
  *
  * When FEATURE_PUNCHUP_BONUS is enabled and a weaker empire (by networth)
- * WINS against a stronger empire, they capture extra planets.
+ * WINS against a stronger empire, they capture extra sectors.
  *
  * @param attackerNetworth - Attacker's total networth
  * @param defenderNetworth - Defender's total networth
  * @param attackerWon - Whether the attacker won the battle
- * @returns Extra planets to capture (0 if not applicable)
+ * @returns Extra sectors to capture (0 if not applicable)
  */
 export function calculatePunchupBonus(
   attackerNetworth: number,
@@ -213,9 +213,9 @@ export function calculatePunchupBonus(
   }
 
   // Scale bonus: weaker = bigger bonus
-  // At 0.75 ratio: 1 extra planet
-  // At 0.5 ratio: 2 extra planets
-  // At 0.25 ratio: 3 extra planets (max)
+  // At 0.75 ratio: 1 extra sector
+  // At 0.5 ratio: 2 extra sectors
+  // At 0.25 ratio: 3 extra sectors (max)
   const normalizedRatio = ratio / PUNCHUP_NETWORTH_THRESHOLD;
   const scaleFactor = 1 - normalizedRatio;
   const extraPlanets = PUNCHUP_EXTRA_PLANET_MIN +
@@ -459,7 +459,7 @@ export interface CombatOptions {
  *
  * @param attackerForces - Attacking forces
  * @param defenderForces - Defending forces
- * @param defenderPlanetCount - Number of planets defender owns
+ * @param defenderPlanetCount - Number of sectors defender owns
  * @param options - Optional combat parameters (random value, networth for underdog bonus)
  * @returns Complete combat result
  */
@@ -525,24 +525,24 @@ export function resolveUnifiedInvasion(
     defenderPower
   );
 
-  // Determine outcome and planets captured
+  // Determine outcome and sectors captured
   let outcome: CombatResult["outcome"];
-  let planetsCaptured = 0;
+  let sectorsCaptured = 0;
 
   if (winner === "attacker") {
     outcome = "attacker_victory";
     const capturePercent = PLANET_CAPTURE_MIN_PERCENT +
       (opts.randomValue ?? Math.random()) * (PLANET_CAPTURE_MAX_PERCENT - PLANET_CAPTURE_MIN_PERCENT);
-    planetsCaptured = Math.max(1, Math.floor(defenderPlanetCount * capturePercent));
+    sectorsCaptured = Math.max(1, Math.floor(defenderPlanetCount * capturePercent));
 
-    // M4: Apply punching-up bonus for extra planet capture
+    // M4: Apply punching-up bonus for extra sector capture
     if (opts.attackerNetworth !== undefined && opts.defenderNetworth !== undefined) {
       const extraPlanets = calculatePunchupBonus(
         opts.attackerNetworth,
         opts.defenderNetworth,
         true // attacker won
       );
-      planetsCaptured += extraPlanets;
+      sectorsCaptured += extraPlanets;
     }
   } else if (winner === "defender") {
     outcome = "defender_victory";
@@ -569,7 +569,7 @@ export function resolveUnifiedInvasion(
   const defenderEffectivenessChange = calculateCombatEffectivenessChange(defenderOutcome);
 
   // Generate summary
-  const summary = generateCombatSummary(outcome, planetsCaptured, attackerWinChance);
+  const summary = generateCombatSummary(outcome, sectorsCaptured, attackerWinChance);
 
   return {
     outcome,
@@ -578,7 +578,7 @@ export function resolveUnifiedInvasion(
     defenderTotalCasualties: defenderCasualties,
     attackerEffectivenessChange,
     defenderEffectivenessChange,
-    planetsCaptured,
+    sectorsCaptured,
     summary,
   };
 }
@@ -600,14 +600,14 @@ function subtractForces(forces: Forces, casualties: Partial<Forces>): Forces {
 
 function generateCombatSummary(
   outcome: CombatResult["outcome"],
-  planetsCaptured: number,
+  sectorsCaptured: number,
   winChance: number
 ): string {
   const chanceStr = `(${(winChance * 100).toFixed(1)}% win chance)`;
 
   switch (outcome) {
     case "attacker_victory":
-      return `Invasion successful! ${planetsCaptured} sector${planetsCaptured !== 1 ? "s" : ""} captured. ${chanceStr}`;
+      return `Invasion successful! ${sectorsCaptured} sector${sectorsCaptured !== 1 ? "s" : ""} captured. ${chanceStr}`;
     case "defender_victory":
       return `Invasion repelled! Defender holds their territory. ${chanceStr}`;
     case "stalemate":
@@ -646,7 +646,7 @@ export function simulateBattles(
 
     if (result.outcome === "attacker_victory") {
       attackerWins++;
-      totalPlanetsCaptured += result.planetsCaptured;
+      totalPlanetsCaptured += result.sectorsCaptured;
     } else if (result.outcome === "defender_victory") {
       defenderWins++;
     } else {

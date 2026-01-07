@@ -2,7 +2,7 @@
  * Resource Engine Service Tests
  *
  * Comprehensive test suite for resource production:
- * - Planet production calculation
+ * - Sector production calculation
  * - Income multiplier application
  * - Maintenance cost calculation
  * - Resource change calculations
@@ -18,11 +18,11 @@ import {
   processTurnResources,
   PLANET_MAINTENANCE_COST,
 } from "../resource-engine";
-import type { Planet } from "@/lib/db/schema";
+import type { Sector } from "@/lib/db/schema";
 import type { ResourceDelta } from "../../types/turn-types";
 
-// Test helper to create mock planets
-function createMockPlanet(type: Planet["type"], productionRate: string): Planet {
+// Test helper to create mock sectors
+function createMockPlanet(type: Sector["type"], productionRate: string): Sector {
   return {
     id: "test-id",
     empireId: "test-empire",
@@ -38,13 +38,13 @@ function createMockPlanet(type: Planet["type"], productionRate: string): Planet 
 
 describe("Resource Engine Service", () => {
   describe("calculateProduction", () => {
-    it("should calculate food production from food planets", () => {
-      const planets = [
+    it("should calculate food production from food sectors", () => {
+      const sectors = [
         createMockPlanet("food", "160"),
         createMockPlanet("food", "160"),
       ];
 
-      const production = calculateProduction(planets);
+      const production = calculateProduction(sectors);
 
       expect(production.food).toBe(320); // 2 × 160
       expect(production.credits).toBe(0);
@@ -53,62 +53,62 @@ describe("Resource Engine Service", () => {
       expect(production.researchPoints).toBe(0);
     });
 
-    it("should calculate ore production from ore planets", () => {
-      const planets = [
+    it("should calculate ore production from ore sectors", () => {
+      const sectors = [
         createMockPlanet("ore", "112"),
         createMockPlanet("ore", "112"),
       ];
 
-      const production = calculateProduction(planets);
+      const production = calculateProduction(sectors);
 
       expect(production.ore).toBe(224); // 2 × 112
     });
 
-    it("should calculate petroleum production from petroleum planets", () => {
-      const planets = [createMockPlanet("petroleum", "92")];
+    it("should calculate petroleum production from petroleum sectors", () => {
+      const sectors = [createMockPlanet("petroleum", "92")];
 
-      const production = calculateProduction(planets);
+      const production = calculateProduction(sectors);
 
       expect(production.petroleum).toBe(92);
     });
 
-    it("should calculate credits production from tourism planets", () => {
-      const planets = [createMockPlanet("tourism", "8000")];
+    it("should calculate credits production from tourism sectors", () => {
+      const sectors = [createMockPlanet("tourism", "8000")];
 
-      const production = calculateProduction(planets);
+      const production = calculateProduction(sectors);
 
       expect(production.credits).toBe(8000);
     });
 
-    it("should calculate credits production from urban planets", () => {
-      const planets = [createMockPlanet("urban", "1000")];
+    it("should calculate credits production from urban sectors", () => {
+      const sectors = [createMockPlanet("urban", "1000")];
 
-      const production = calculateProduction(planets);
+      const production = calculateProduction(sectors);
 
       expect(production.credits).toBe(1000);
     });
 
-    it("should calculate research points from research planets", () => {
-      const planets = [createMockPlanet("research", "100")];
+    it("should calculate research points from research sectors", () => {
+      const sectors = [createMockPlanet("research", "100")];
 
-      const production = calculateProduction(planets);
+      const production = calculateProduction(sectors);
 
       expect(production.researchPoints).toBe(100);
     });
 
-    it("should handle multiple credits-producing planets", () => {
-      const planets = [
+    it("should handle multiple credits-producing sectors", () => {
+      const sectors = [
         createMockPlanet("tourism", "8000"),
         createMockPlanet("urban", "1000"),
       ];
 
-      const production = calculateProduction(planets);
+      const production = calculateProduction(sectors);
 
       expect(production.credits).toBe(9000); // 8000 + 1000
     });
 
-    it("should handle starting planet distribution (9 planets)", () => {
-      const planets = [
+    it("should handle starting sector distribution (9 sectors)", () => {
+      const sectors = [
         createMockPlanet("food", "160"),
         createMockPlanet("food", "160"),
         createMockPlanet("ore", "112"),
@@ -120,7 +120,7 @@ describe("Resource Engine Service", () => {
         createMockPlanet("research", "100"),
       ];
 
-      const production = calculateProduction(planets);
+      const production = calculateProduction(sectors);
 
       expect(production.food).toBe(320); // 2 × 160
       expect(production.ore).toBe(224); // 2 × 112
@@ -129,17 +129,17 @@ describe("Resource Engine Service", () => {
       expect(production.researchPoints).toBe(100);
     });
 
-    it("should handle special effect planets with no production", () => {
-      const planets = [
+    it("should handle special effect sectors with no production", () => {
+      const sectors = [
         createMockPlanet("government", "300"),
         createMockPlanet("education", "0"),
         createMockPlanet("supply", "0"),
         createMockPlanet("anti_pollution", "0"),
       ];
 
-      const production = calculateProduction(planets);
+      const production = calculateProduction(sectors);
 
-      // Special planets don't produce direct resources
+      // Special sectors don't produce direct resources
       expect(production.credits).toBe(0);
       expect(production.food).toBe(0);
       expect(production.ore).toBe(0);
@@ -147,7 +147,7 @@ describe("Resource Engine Service", () => {
       expect(production.researchPoints).toBe(0);
     });
 
-    it("should handle zero planets", () => {
+    it("should handle zero sectors", () => {
       const production = calculateProduction([]);
 
       expect(production.credits).toBe(0);
@@ -158,9 +158,9 @@ describe("Resource Engine Service", () => {
     });
 
     it("should handle decimal production rates", () => {
-      const planets = [createMockPlanet("food", "160.5")];
+      const sectors = [createMockPlanet("food", "160.5")];
 
-      const production = calculateProduction(planets);
+      const production = calculateProduction(sectors);
 
       expect(production.food).toBe(160.5);
     });
@@ -265,25 +265,25 @@ describe("Resource Engine Service", () => {
   });
 
   describe("calculateMaintenanceCost", () => {
-    it("should calculate maintenance for 9 starting planets", () => {
+    it("should calculate maintenance for 9 starting sectors", () => {
       const maintenance = calculateMaintenanceCost(9);
 
       expect(maintenance.totalCost).toBe(1512); // 9 × 168
       expect(maintenance.costPerPlanet).toBe(168);
-      expect(maintenance.planetCount).toBe(9);
+      expect(maintenance.sectorCount).toBe(9);
     });
 
-    it("should calculate maintenance for various planet counts", () => {
+    it("should calculate maintenance for various sector counts", () => {
       expect(calculateMaintenanceCost(1).totalCost).toBe(168);
       expect(calculateMaintenanceCost(5).totalCost).toBe(840);
       expect(calculateMaintenanceCost(20).totalCost).toBe(3360);
     });
 
-    it("should handle zero planets", () => {
+    it("should handle zero sectors", () => {
       const maintenance = calculateMaintenanceCost(0);
 
       expect(maintenance.totalCost).toBe(0);
-      expect(maintenance.planetCount).toBe(0);
+      expect(maintenance.sectorCount).toBe(0);
     });
 
     it("should use correct PLANET_MAINTENANCE_COST constant", () => {
@@ -301,7 +301,7 @@ describe("Resource Engine Service", () => {
         researchPoints: 200,
       };
 
-      const maintenance = { totalCost: 1512, costPerPlanet: 168, planetCount: 9 };
+      const maintenance = { totalCost: 1512, costPerPlanet: 168, sectorCount: 9 };
 
       const delta = calculateNetResourceDelta(production, maintenance);
 
@@ -321,7 +321,7 @@ describe("Resource Engine Service", () => {
         researchPoints: 0,
       };
 
-      const maintenance = { totalCost: 1512, costPerPlanet: 168, planetCount: 9 };
+      const maintenance = { totalCost: 1512, costPerPlanet: 168, sectorCount: 9 };
 
       const delta = calculateNetResourceDelta(production, maintenance);
 
@@ -364,30 +364,30 @@ describe("Resource Engine Service", () => {
     });
 
     it("should process turn with ecstatic status (4× multiplier)", () => {
-      const planets = [
+      const sectors = [
         createMockPlanet("tourism", "10000"),
         createMockPlanet("research", "100"),
       ];
 
-      const result = processTurnResources(planets, 4.0); // Ecstatic
+      const result = processTurnResources(sectors, 4.0); // Ecstatic
 
       expect(result.final.credits).toBe(39664); // (10000 × 4) - (2 × 168)
       expect(result.final.researchPoints).toBe(400); // 100 × 4
     });
 
     it("should process turn with unhappy status (0× multiplier)", () => {
-      const planets = [
+      const sectors = [
         createMockPlanet("tourism", "10000"),
         createMockPlanet("food", "160"),
       ];
 
-      const result = processTurnResources(planets, 0.0); // Unhappy
+      const result = processTurnResources(sectors, 0.0); // Unhappy
 
       expect(result.final.credits).toBe(-336); // (10000 × 0) - (2 × 168)
       expect(result.final.food).toBe(160); // NOT affected by multiplier
     });
 
-    it("should handle zero planets", () => {
+    it("should handle zero sectors", () => {
       const result = processTurnResources([], 2.0);
 
       expect(result.final.credits).toBe(0);
@@ -397,10 +397,10 @@ describe("Resource Engine Service", () => {
       expect(result.final.researchPoints).toBe(0);
     });
 
-    it("should handle large empire with many planets", () => {
-      const planets = Array(50).fill(null).map(() => createMockPlanet("tourism", "8000"));
+    it("should handle large empire with many sectors", () => {
+      const sectors = Array(50).fill(null).map(() => createMockPlanet("tourism", "8000"));
 
-      const result = processTurnResources(planets, 2.0);
+      const result = processTurnResources(sectors, 2.0);
 
       // 50 × 8000 = 400,000 credits base
       // 400,000 × 2 = 800,000 after multiplier
@@ -411,23 +411,23 @@ describe("Resource Engine Service", () => {
 
   describe("Edge Cases", () => {
     it("should handle very small production rates", () => {
-      const planets = [createMockPlanet("food", "0.1")];
+      const sectors = [createMockPlanet("food", "0.1")];
 
-      const production = calculateProduction(planets);
+      const production = calculateProduction(sectors);
 
       expect(production.food).toBe(0.1);
     });
 
     it("should handle zero production rate", () => {
-      const planets = [createMockPlanet("food", "0")];
+      const sectors = [createMockPlanet("food", "0")];
 
-      const production = calculateProduction(planets);
+      const production = calculateProduction(sectors);
 
       expect(production.food).toBe(0);
     });
 
-    it("should handle mixed planet types comprehensively", () => {
-      const planets = [
+    it("should handle mixed sector types comprehensively", () => {
+      const sectors = [
         createMockPlanet("food", "100"),
         createMockPlanet("ore", "50"),
         createMockPlanet("petroleum", "25"),
@@ -436,7 +436,7 @@ describe("Resource Engine Service", () => {
         createMockPlanet("research", "75"),
       ];
 
-      const production = calculateProduction(planets);
+      const production = calculateProduction(sectors);
 
       expect(production.food).toBe(100);
       expect(production.ore).toBe(50);

@@ -23,7 +23,7 @@ interface PhaseIndicatorProps {
 }
 
 const PHASES = [
-  { id: "income", label: "Income", description: "Collect credits from planets" },
+  { id: "income", label: "Income", description: "Collect credits from sectors" },
   { id: "population", label: "Population", description: "Population growth & food consumption" },
   { id: "civil_status", label: "Civil Status", description: "Update empire morale" },
   { id: "market", label: "Market", description: "Update prices & process orders" },

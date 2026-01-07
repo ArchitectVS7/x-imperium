@@ -12,7 +12,7 @@ import { config } from "dotenv";
 config({ path: ".env.local" });
 
 import { db } from "../src/lib/db";
-import { games, empires, planets } from "../src/lib/db/schema";
+import { games, empires, sectors } from "../src/lib/db/schema";
 import { eq } from "drizzle-orm";
 
 async function testCRUD() {

@@ -73,7 +73,7 @@ export interface EmpireSnapshot {
   networth: number;
   armyEffectiveness: number;
   /** Planets */
-  planets: PlanetSnapshot[];
+  sectors: PlanetSnapshot[];
   /** Build queue */
   buildQueue: BuildQueueSnapshot[];
   /** Research */
@@ -302,7 +302,7 @@ export async function serializeGameState(
       with: {
         empires: {
           with: {
-            planets: true,
+            sectors: true,
           },
         },
       },
@@ -376,12 +376,12 @@ export async function serializeGameState(
         civilStatus: empire.civilStatus,
         networth: Number(empire.networth),
         armyEffectiveness: Number(empire.armyEffectiveness),
-        planets: empire.planets.map((planet) => ({
-          id: planet.id,
-          name: planet.name ?? `Planet ${planet.id.slice(0, 8)}`,
-          type: planet.type,
-          productionRate: Number(planet.productionRate),
-          purchasePrice: planet.purchasePrice,
+        sectors: empire.sectors.map((sector) => ({
+          id: sector.id,
+          name: sector.name ?? `Sector ${sector.id.slice(0, 8)}`,
+          type: sector.type,
+          productionRate: Number(sector.productionRate),
+          purchasePrice: sector.purchasePrice,
         })),
         buildQueue: queue.map((item) => ({
           unitType: item.unitType,

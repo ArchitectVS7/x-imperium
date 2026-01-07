@@ -9,7 +9,7 @@
  * PRD References:
  * - PRD 9.1: 8 fundamental research levels (0-7)
  * - Exponential cost: 1000 × 2^level
- * - Research planets generate 100 points/turn
+ * - Research sectors generate 100 points/turn
  * - Light Cruisers unlock at level 2
  */
 
@@ -26,7 +26,7 @@ import {
 // CONSTANTS
 // =============================================================================
 
-/** Research points generated per research planet per turn */
+/** Research points generated per research sector per turn */
 export const RESEARCH_POINTS_PER_PLANET = 100;
 
 /** Maximum research level (0-7 = 8 levels) */
@@ -180,7 +180,7 @@ export async function getResearchProgress(
  * Process research point generation for an empire during turn processing.
  *
  * @param empireId - The empire to process
- * @param researchPlanetCount - Number of research planets owned
+ * @param researchPlanetCount - Number of research sectors owned
  * @returns Result with points generated and level-up status
  */
 export async function processResearchProduction(
@@ -190,7 +190,7 @@ export async function processResearchProduction(
   const pointsGenerated = researchPlanetCount * RESEARCH_POINTS_PER_PLANET;
 
   if (pointsGenerated === 0) {
-    // No research planets, no production
+    // No research sectors, no production
     const empire = await db.query.empires.findFirst({
       where: eq(empires.id, empireId),
     });
@@ -345,9 +345,9 @@ export async function investResearchPoints(
  * Calculate how many turns until a target research level is reached.
  *
  * @param empireId - The empire to calculate for
- * @param researchPlanetCount - Number of research planets
+ * @param researchPlanetCount - Number of research sectors
  * @param targetLevel - Target research level
- * @returns Number of turns, or Infinity if no research planets
+ * @returns Number of turns, or Infinity if no research sectors
  */
 export async function calculateTurnsToLevel(
   empireId: string,

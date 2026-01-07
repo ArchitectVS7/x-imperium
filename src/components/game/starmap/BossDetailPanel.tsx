@@ -91,7 +91,7 @@ export function BossDetailPanel({
         )}
         <div className="flex justify-between">
           <span className="text-gray-400">Planets:</span>
-          <span className="text-gray-300 font-mono">{empire.planetCount}</span>
+          <span className="text-gray-300 font-mono">{empire.sectorCount}</span>
         </div>
       </div>
 

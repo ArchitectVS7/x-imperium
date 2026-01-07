@@ -1,9 +1,9 @@
 /**
- * Planet Service Tests (M3)
+ * Sector Service Tests (M3)
  *
- * Tests for planet buy/release operations.
+ * Tests for sector buy/release operations.
  * Note: These are integration-style tests that require database access.
- * For pure unit tests, see the formula tests in planet-costs.test.ts.
+ * For pure unit tests, see the formula tests in sector-costs.test.ts.
  */
 
 import { describe, it, expect } from "vitest";
@@ -65,10 +65,10 @@ describe("Sector Service Business Logic", () => {
     it("should refund based on current ownership count", () => {
       const baseCost = PLANET_COSTS.food;
 
-      // With 10 planets: price = 12,000, refund = 6,000
+      // With 10 sectors: price = 12,000, refund = 6,000
       expect(calculateReleaseRefund(baseCost, 10)).toBe(6_000);
 
-      // With 20 planets: price = 16,000, refund = 8,000
+      // With 20 sectors: price = 16,000, refund = 8,000
       expect(calculateReleaseRefund(baseCost, 20)).toBe(8_000);
     });
   });
@@ -76,7 +76,7 @@ describe("Sector Service Business Logic", () => {
   describe("Networth Update on Sector Change", () => {
     it("should increase networth by 10 per sector purchased", () => {
       const baseNetworth = calculateNetworth({
-        planetCount: 9,
+        sectorCount: 9,
         soldiers: 100,
         fighters: 0,
         stations: 0,
@@ -87,7 +87,7 @@ describe("Sector Service Business Logic", () => {
       });
 
       const newNetworth = calculateNetworth({
-        planetCount: 10,
+        sectorCount: 10,
         soldiers: 100,
         fighters: 0,
         stations: 0,
@@ -103,7 +103,7 @@ describe("Sector Service Business Logic", () => {
 
     it("should decrease networth by 10 per sector released", () => {
       const baseNetworth = calculateNetworth({
-        planetCount: 10,
+        sectorCount: 10,
         soldiers: 100,
         fighters: 0,
         stations: 0,
@@ -114,7 +114,7 @@ describe("Sector Service Business Logic", () => {
       });
 
       const newNetworth = calculateNetworth({
-        planetCount: 9,
+        sectorCount: 9,
         soldiers: 100,
         fighters: 0,
         stations: 0,

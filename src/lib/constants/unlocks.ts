@@ -70,7 +70,7 @@ export const UNLOCK_DEFINITIONS: Record<UnlockFeature, UnlockDefinition> = {
     id: "core_mechanics",
     name: "Core Mechanics",
     unlockTurn: 1,
-    description: "Build planets, recruit military, engage in basic combat",
+    description: "Build sectors, recruit military, engage in basic combat",
     unlockMessage: "Welcome, Commander. Your empire awaits.",
   },
 
@@ -123,7 +123,7 @@ export const UNLOCK_DEFINITIONS: Record<UnlockFeature, UnlockDefinition> = {
     id: "superweapons",
     name: "Superweapons",
     unlockTurn: 100,
-    description: "Nuclear weapons and planet-killing technology",
+    description: "Nuclear weapons and sector-killing technology",
     unlockMessage:
       "WARNING: Weapons of mass destruction protocols unlocked. Use with extreme caution.",
   },

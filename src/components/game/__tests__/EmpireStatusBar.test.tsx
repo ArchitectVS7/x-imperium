@@ -142,7 +142,7 @@ describe("EmpireStatusBar", () => {
       expect(mockToggle).toHaveBeenCalledWith("resources");
     });
 
-    it("calls onPanelToggle with 'planets' when sectors button clicked", () => {
+    it("calls onPanelToggle with 'sectors' when sectors button clicked", () => {
       const mockToggle = vi.fn();
       render(
         <EmpireStatusBar
@@ -152,9 +152,9 @@ describe("EmpireStatusBar", () => {
       );
 
       const buttons = screen.getAllByRole("button");
-      fireEvent.click(buttons[1]!); // Second button is planets/sectors
+      fireEvent.click(buttons[1]!); // Second button is sectors/sectors
 
-      expect(mockToggle).toHaveBeenCalledWith("planets");
+      expect(mockToggle).toHaveBeenCalledWith("sectors");
     });
 
     it("calls onPanelToggle with 'military' when military button clicked", () => {
@@ -215,9 +215,9 @@ describe("EmpireStatusBar", () => {
       expect(activeButton).toBeInTheDocument();
     });
 
-    it("highlights active planets panel", () => {
+    it("highlights active sectors panel", () => {
       const { container } = render(
-        <EmpireStatusBar {...defaultProps} activePanel="planets" />
+        <EmpireStatusBar {...defaultProps} activePanel="sectors" />
       );
 
       const activeButton = container.querySelector(".border-lcars-amber\\/50");

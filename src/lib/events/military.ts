@@ -190,7 +190,7 @@ export const MILITARY_EVENTS: GalacticEvent[] = [
       {
         type: "production_bonus",
         bonus: 0.25, // +25% military production
-        planetTypes: ["supply"],
+        sectorTypes: ["supply"],
       },
       {
         type: "military",

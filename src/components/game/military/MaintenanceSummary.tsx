@@ -11,7 +11,7 @@ interface MaintenanceSummaryProps {
 
 export function MaintenanceSummary({ refreshTrigger }: MaintenanceSummaryProps) {
   const [maintenance, setMaintenance] = useState<{
-    planetCost: number;
+    sectorCost: number;
     unitCost: number;
     totalCost: number;
     unitBreakdown: UnitMaintenanceBreakdown;
@@ -60,9 +60,9 @@ export function MaintenanceSummary({ refreshTrigger }: MaintenanceSummaryProps) 
 
       <div className="space-y-2 text-sm">
         <div className="flex justify-between text-gray-300">
-          <span>Planet Maintenance:</span>
+          <span>Sector Maintenance:</span>
           <span className="font-mono text-purple-400">
-            {maintenance.planetCost.toLocaleString()}
+            {maintenance.sectorCost.toLocaleString()}
           </span>
         </div>
         <div className="flex justify-between text-gray-300">

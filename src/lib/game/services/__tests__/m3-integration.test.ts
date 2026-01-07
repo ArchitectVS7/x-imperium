@@ -2,7 +2,7 @@
  * M3 Integration Tests
  *
  * End-to-end tests for Milestone 3 features focusing on pure functions:
- * - Planet cost scaling with ownership
+ * - Sector cost scaling with ownership
  * - Build times and unit costs
  * - Military unit validation and maintenance calculations
  * - Research system cost formulas
@@ -331,8 +331,8 @@ describe("M3 Integration: Unit Upgrades", () => {
 
 describe("M3 Integration: Full Turn Processing", () => {
   describe("Combined Maintenance", () => {
-    it("should calculate total maintenance (planets + units)", () => {
-      const planetCount = 10;
+    it("should calculate total maintenance (sectors + units)", () => {
+      const sectorCount = 10;
       const unitCounts: UnitCounts = {
         soldiers: 100,      // 100 * 0.5 = 50
         fighters: 50,       // 50 * 2 = 100
@@ -343,12 +343,12 @@ describe("M3 Integration: Full Turn Processing", () => {
         covertAgents: 5,    // 5 * 40 = 200
       };
 
-      // Planet maintenance: 10 * 168 = 1680 (default)
+      // Sector maintenance: 10 * 168 = 1680 (default)
       // Unit maintenance: 50 + 100 + 250 + 0 + 100 + 50 + 200 = 750
 
-      const totalMaint = calculateTotalMaintenance(planetCount, unitCounts);
+      const totalMaint = calculateTotalMaintenance(sectorCount, unitCounts);
       expect(totalMaint.unitCost).toBe(750);
-      expect(totalMaint.planetCost).toBe(1680);
+      expect(totalMaint.sectorCost).toBe(1680);
       expect(totalMaint.totalCost).toBe(1680 + 750);
     });
   });

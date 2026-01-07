@@ -33,7 +33,7 @@ import {
  * The database uses a different set of types than the memory module.
  */
 const MEMORY_TYPE_TO_DB: Record<MemoryEventType, string> = {
-  planet_captured: "planet_captured",
+  sector_captured: "sector_captured",
   saved_from_destruction: "ally_saved",
   alliance_broken: "treaty_broken",
   battle_won: "battle_won",
@@ -254,8 +254,8 @@ export async function getRelationshipScore(
  */
 function isNegativeMemoryType(memoryType: BotMemory["memoryType"]): boolean {
   const negativeTypes = [
-    "planet_captured",
-    "planet_lost",
+    "sector_captured",
+    "sector_lost",
     "ally_betrayed",
     "treaty_broken",
     "war_declared",
@@ -440,7 +440,7 @@ export async function recordPlanetCapturedMemory(
   return recordMemory(
     empireId,
     targetEmpireId,
-    "planet_captured",
+    "sector_captured",
     turn,
     gameId,
     planetName ? { planetName } : undefined

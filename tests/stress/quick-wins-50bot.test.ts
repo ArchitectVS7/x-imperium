@@ -205,7 +205,7 @@ describe("M5.3: Extended Campaign-Scale Tests", () => {
 
     console.log(`\n50-Bot System Coverage (100 turns):`);
     console.log(`  Build units: ${result.coverage.buildUnits.count} (${result.coverage.buildUnits.unitTypes.size} types)`);
-    console.log(`  Buy planets: ${result.coverage.buyPlanet.count} (${result.coverage.buyPlanet.planetTypes.size} types)`);
+    console.log(`  Buy planets: ${result.coverage.buyPlanet.count} (${result.coverage.buyPlanet.sectorTypes.size} types)`);
     console.log(`  Attacks: ${result.coverage.attacks.count}`);
     console.log(`  Combat resolved: ${result.coverage.combatResolved}`);
     console.log(`  Research advanced: ${result.coverage.researchAdvanced}`);

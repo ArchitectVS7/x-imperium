@@ -233,9 +233,9 @@ export function BattleReport({
           {outcomeConfig.label}
         </h2>
         <p className="text-gray-300">{outcomeConfig.description}</p>
-        {result.planetsCaptured > 0 && (
+        {result.sectorsCaptured > 0 && (
           <p className="text-green-400 mt-2 font-semibold">
-            {result.planetsCaptured} sector{result.planetsCaptured !== 1 ? "s" : ""} captured!
+            {result.sectorsCaptured} sector{result.sectorsCaptured !== 1 ? "s" : ""} captured!
           </p>
         )}
       </div>

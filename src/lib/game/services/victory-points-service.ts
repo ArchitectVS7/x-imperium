@@ -5,7 +5,7 @@
  * VP is used for coalition triggers and general power tracking.
  *
  * From IMPLEMENTATION-02.md:
- * - Territory: 1-3 VP (10/20/30 planets)
+ * - Territory: 1-3 VP (10/20/30 sectors)
  * - Networth: 1-3 VP (1.2×/1.5×/2× average)
  * - Military: 1-2 VP (1.5×/2× average military)
  * - Diplomacy: 1-2 VP (2/4 active alliances)
@@ -20,7 +20,7 @@
 // =============================================================================
 
 export interface VictoryPointBreakdown {
-  /** VP from territory/planets owned */
+  /** VP from territory/sectors owned */
   territory: number;
   /** VP from networth relative to average */
   networth: number;
@@ -37,7 +37,7 @@ export interface VictoryPointBreakdown {
 }
 
 export interface EmpireVPInput {
-  planetCount: number;
+  sectorCount: number;
   networth: number;
   militaryPower: number;
   allianceCount: number;
@@ -62,7 +62,7 @@ export interface VPTier {
 
 /**
  * Territory VP thresholds
- * 10 planets = 1 VP, 20 = 2 VP, 30 = 3 VP
+ * 10 sectors = 1 VP, 20 = 2 VP, 30 = 3 VP
  */
 export const TERRITORY_THRESHOLDS: VPTier[] = [
   { threshold: 30, points: 3 },
@@ -145,11 +145,11 @@ export function calculateTierVP(value: number, thresholds: VPTier[]): number {
 /**
  * Calculate Territory VP
  *
- * @param planetCount - Number of planets owned
- * @returns 0-3 VP based on planet count
+ * @param sectorCount - Number of sectors owned
+ * @returns 0-3 VP based on sector count
  */
-export function calculateTerritoryVP(planetCount: number): number {
-  return calculateTierVP(planetCount, TERRITORY_THRESHOLDS);
+export function calculateTerritoryVP(sectorCount: number): number {
+  return calculateTierVP(sectorCount, TERRITORY_THRESHOLDS);
 }
 
 /**
@@ -225,7 +225,7 @@ export function calculateVictoryPoints(
   empire: EmpireVPInput,
   gameStats: GameVPStats
 ): VictoryPointBreakdown {
-  const territory = calculateTerritoryVP(empire.planetCount);
+  const territory = calculateTerritoryVP(empire.sectorCount);
   const networth = calculateNetworthVP(
     empire.networth,
     gameStats.averageNetworth
@@ -288,9 +288,9 @@ export function getVPDescriptions(breakdown: VictoryPointBreakdown): string[] {
   const descriptions: string[] = [];
 
   if (breakdown.territory > 0) {
-    const planets =
+    const sectors =
       breakdown.territory === 3 ? "30+" : breakdown.territory === 2 ? "20+" : "10+";
-    descriptions.push(`Territory (${planets} planets): ${breakdown.territory} VP`);
+    descriptions.push(`Territory (${sectors} sectors): ${breakdown.territory} VP`);
   }
 
   if (breakdown.networth > 0) {

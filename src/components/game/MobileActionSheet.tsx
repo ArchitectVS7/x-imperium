@@ -37,7 +37,7 @@ interface ActionItem {
 
 const ACTIONS: ActionItem[] = [
   { id: "military", label: UI_LABELS.military, href: "/game/military", icon: ActionIcons.military },
-  { id: "sectors", label: UI_LABELS.planets, href: "/game/sectors", icon: ActionIcons.planets },
+  { id: "sectors", label: UI_LABELS.sectors, href: "/game/sectors", icon: ActionIcons.sectors },
   { id: "combat", label: UI_LABELS.combat, href: "/game/combat", icon: ActionIcons.combat },
   { id: "diplomacy", label: UI_LABELS.diplomacy, href: "/game/diplomacy", icon: ActionIcons.diplomacy },
   { id: "market", label: UI_LABELS.market, href: "/game/market", icon: ActionIcons.market },

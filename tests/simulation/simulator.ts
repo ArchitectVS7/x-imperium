@@ -67,7 +67,7 @@ export function createSimulationState(config: SimulationConfig): SimulationState
 function createEmptyCoverage(): SystemCoverage {
   return {
     buildUnits: { count: 0, unitTypes: new Set() },
-    buyPlanet: { count: 0, planetTypes: new Set() },
+    buyPlanet: { count: 0, sectorTypes: new Set() },
     attacks: { count: 0, invasions: 0, guerilla: 0 },
     diplomacy: { count: 0, naps: 0, alliances: 0 },
     trades: { count: 0, buys: 0, sells: 0 },
@@ -347,7 +347,7 @@ function generateDecision(state: SimulationState, empire: SimulatedEmpire): BotD
       id: e.id,
       name: e.name,
       networth: e.networth,
-      planetCount: e.planets.length,
+      sectorCount: e.planets.length,
       isBot: true,
       isEliminated: e.isEliminated,
       militaryPower:
@@ -378,12 +378,12 @@ function generateDecision(state: SimulationState, empire: SimulatedEmpire): BotD
       heavyCruisers: empire.heavyCruisers,
       carriers: empire.carriers,
       covertAgents: empire.covertAgents,
-      planetCount: empire.planets.length,
+      sectorCount: empire.planets.length,
       networth: empire.networth,
       isEliminated: empire.isEliminated,
       type: "bot",
     } as any,
-    planets: empire.planets.map((p) => ({
+    sectors: empire.planets.map((p) => ({
       id: p.id,
       type: p.type,
       productionRate: String(p.productionRate),
@@ -479,10 +479,10 @@ function executeBuyPlanet(
   decision: Extract<BotDecision, { type: "buy_planet" }>,
   coverage: SystemCoverage
 ): ActionOutcome {
-  const { planetType } = decision;
+  const { sectorType } = decision;
 
   // Calculate cost with scaling (5% per owned planet)
-  const baseCost = getPlanetBaseCost(planetType);
+  const baseCost = getPlanetBaseCost(sectorType);
   const scaledCost = Math.floor(baseCost * (1 + empire.planets.length * 0.05));
 
   if (empire.credits < scaledCost) {
@@ -492,14 +492,14 @@ function executeBuyPlanet(
   empire.credits -= scaledCost;
   empire.planets.push({
     id: `${empire.id}-planet-${empire.planets.length}`,
-    type: planetType,
-    productionRate: PLANET_PRODUCTION[planetType] ?? 0,
+    type: sectorType,
+    productionRate: PLANET_PRODUCTION[sectorType] ?? 0,
   });
 
   coverage.buyPlanet.count++;
-  coverage.buyPlanet.planetTypes.add(planetType);
+  coverage.buyPlanet.sectorTypes.add(sectorType);
 
-  return { type: "success", details: `Bought ${planetType} planet` };
+  return { type: "success", details: `Bought ${sectorType} planet` };
 }
 
 function getPlanetBaseCost(type: string): number {
@@ -603,9 +603,9 @@ function executeAttack(
   defender.carriers = defenderSurvivors.carriers;
 
   // Transfer planets if attacker won
-  let planetsTransferred = combatResult.planetsCaptured;
-  if (combatResult.outcome === "attacker_victory" && combatResult.planetsCaptured > 0) {
-    for (let i = 0; i < combatResult.planetsCaptured && defender.planets.length > 0; i++) {
+  let planetsTransferred = combatResult.sectorsCaptured;
+  if (combatResult.outcome === "attacker_victory" && combatResult.sectorsCaptured > 0) {
+    for (let i = 0; i < combatResult.sectorsCaptured && defender.planets.length > 0; i++) {
       const planet = defender.planets.pop()!;
       planet.id = `${attacker.id}-captured-${attacker.planets.length}`;
       attacker.planets.push(planet);

@@ -10,20 +10,20 @@ interface EmpireTooltipProps {
 }
 
 // Get approximate size description for basic intel
-function getApproximateSize(planetCount: number): string {
-  if (planetCount <= 3) return "Small";
-  if (planetCount <= 6) return "Medium";
-  if (planetCount <= 10) return "Large";
+function getApproximateSize(sectorCount: number): string {
+  if (sectorCount <= 3) return "Small";
+  if (sectorCount <= 6) return "Medium";
+  if (sectorCount <= 10) return "Large";
   return "Massive";
 }
 
-// Get planet count range for moderate intel
-function getPlanetRange(planetCount: number): string {
-  if (planetCount <= 2) return "1-2";
-  if (planetCount <= 4) return "3-4";
-  if (planetCount <= 6) return "5-6";
-  if (planetCount <= 8) return "7-8";
-  if (planetCount <= 10) return "9-10";
+// Get sector count range for moderate intel
+function getPlanetRange(sectorCount: number): string {
+  if (sectorCount <= 2) return "1-2";
+  if (sectorCount <= 4) return "3-4";
+  if (sectorCount <= 6) return "5-6";
+  if (sectorCount <= 8) return "7-8";
+  if (sectorCount <= 10) return "9-10";
   return "10+";
 }
 
@@ -215,7 +215,7 @@ export function EmpireTooltip({ empire, isProtected, x, y }: EmpireTooltipProps)
             <>
               <div className="flex justify-between">
                 <span>Size:</span>
-                <span className="text-gray-300">{getApproximateSize(empire.planetCount)}</span>
+                <span className="text-gray-300">{getApproximateSize(empire.sectorCount)}</span>
               </div>
               <div className="flex justify-between">
                 <span>Strength:</span>
@@ -238,7 +238,7 @@ export function EmpireTooltip({ empire, isProtected, x, y }: EmpireTooltipProps)
             <>
               <div className="flex justify-between">
                 <span>Planets:</span>
-                <span className="font-mono">{getPlanetRange(empire.planetCount)}</span>
+                <span className="font-mono">{getPlanetRange(empire.sectorCount)}</span>
               </div>
               <div className="flex justify-between">
                 <span>Networth:</span>
@@ -286,7 +286,7 @@ export function EmpireTooltip({ empire, isProtected, x, y }: EmpireTooltipProps)
             <>
               <div className="flex justify-between">
                 <span>Planets:</span>
-                <span className="font-mono">{empire.planetCount}</span>
+                <span className="font-mono">{empire.sectorCount}</span>
               </div>
               <div className="flex justify-between">
                 <span>Networth:</span>

@@ -20,22 +20,22 @@ describe("Bot Actions", () => {
     });
   });
 
-  describe("Buy Planet configuration", () => {
-    it("should have costs for all purchasable planet types", () => {
+  describe("Buy Sector configuration", () => {
+    it("should have costs for all purchasable sector types", () => {
       const purchasableTypes = ["food", "ore", "petroleum", "tourism", "urban", "government", "research"];
       purchasableTypes.forEach((type) => {
         expect(PLANET_COSTS[type as keyof typeof PLANET_COSTS]).toBeDefined();
       });
     });
 
-    it("should have production rates for all planet types", () => {
+    it("should have production rates for all sector types", () => {
       const purchasableTypes = ["food", "ore", "petroleum", "tourism", "urban", "government", "research"];
       purchasableTypes.forEach((type) => {
         expect(PLANET_PRODUCTION[type as keyof typeof PLANET_PRODUCTION]).toBeDefined();
       });
     });
 
-    it("should have positive planet costs", () => {
+    it("should have positive sector costs", () => {
       Object.values(PLANET_COSTS).forEach((cost) => {
         expect(cost).toBeGreaterThan(0);
       });

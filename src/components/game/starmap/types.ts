@@ -8,7 +8,7 @@ import type { TellType, TellPerception } from "@/lib/tells";
  * Intel levels for fog of war system
  * - unknown: Only empire name visible (default for new rivals)
  * - basic: Approximate size visible (shared treaty or adjacent territory)
- * - moderate: Planet count range, military tier (recon mission)
+ * - moderate: Sector count range, military tier (recon mission)
  * - full: All stats visible (active spy network, alliance, or post-combat)
  */
 export type IntelLevel = "unknown" | "basic" | "moderate" | "full";
@@ -51,7 +51,7 @@ export interface EmpireMapData {
   id: string;
   name: string;
   type: "player" | "bot";
-  planetCount: number;
+  sectorCount: number;
   networth: number;
   isEliminated: boolean;
   // Fog of war - intel level determines what's visible

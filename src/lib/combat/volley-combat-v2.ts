@@ -839,7 +839,7 @@ export function convertToLegacyCombatResult(
     defenderTotalCasualties: partialToFullForces(battleResult.defenderFinalCasualties),
     attackerEffectivenessChange: 0, // Not used in new system
     defenderEffectivenessChange: 0, // Not used in new system
-    planetsCaptured: battleResult.sectorsCaptured,
+    sectorsCaptured: battleResult.sectorsCaptured,
     summary,
   };
 }

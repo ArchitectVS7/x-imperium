@@ -29,7 +29,7 @@ interface GameResult {
 
 interface VictoryStats {
   totalTurns: number;
-  totalPlanets: number;
+  totalSectors: number;
   winnerPlanets: number;
   winnerNetworth: number;
   empiresRemaining: number;
@@ -60,8 +60,8 @@ export default function GameResultPage() {
       if (dashboardData) {
         setStats({
           totalTurns: resultData.result.turn,
-          totalPlanets: dashboardData.stats.planetCount * 26, // Estimate total planets
-          winnerPlanets: dashboardData.stats.planetCount,
+          totalSectors: dashboardData.stats.sectorCount * 26, // Estimate total sectors
+          winnerPlanets: dashboardData.stats.sectorCount,
           winnerNetworth: dashboardData.stats.networth,
           empiresRemaining: 26, // Will be updated when we have game-wide stats
           empiresDefeated: 0,
@@ -250,7 +250,7 @@ function getDefeatMessage(defeatType: string, empireName: string): string {
     case "bankruptcy":
       return `${empireName} has gone bankrupt and collapsed.`;
     case "elimination":
-      return `${empireName} has lost all its planets and been eliminated.`;
+      return `${empireName} has lost all its sectors and been eliminated.`;
     case "civil_collapse":
       return `${empireName} has fallen into civil war after prolonged unrest.`;
     default:
@@ -261,7 +261,7 @@ function getDefeatMessage(defeatType: string, empireName: string): string {
 function getDefaultStats(turn: number): VictoryStats {
   return {
     totalTurns: turn,
-    totalPlanets: 0,
+    totalSectors: 0,
     winnerPlanets: 0,
     winnerNetworth: 0,
     empiresRemaining: 0,

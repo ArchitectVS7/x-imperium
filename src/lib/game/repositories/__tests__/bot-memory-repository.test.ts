@@ -103,7 +103,7 @@ describe("calculateNetRelationship", () => {
 
   it("should subtract negative events", () => {
     const memories = [
-      createMemory("planet_captured", 5),
+      createMemory("sector_captured", 5),
       createMemory("alliance_broken", 5),
     ];
     const result = calculateNetRelationship(memories, 10);
@@ -113,7 +113,7 @@ describe("calculateNetRelationship", () => {
   it("should calculate net from mixed events", () => {
     const memories = [
       createMemory("saved_from_destruction", 5), // +90
-      createMemory("planet_captured", 5), // -80
+      createMemory("sector_captured", 5), // -80
     ];
     const result = calculateNetRelationship(memories, 10);
     // Should be positive since saved (+90) > captured (-80)
@@ -158,9 +158,9 @@ describe("getRelationshipTier", () => {
 
 describe("createMemoryRecord", () => {
   it("should create record with correct weight from definition", () => {
-    const record = createMemoryRecord("target-1", "planet_captured", 10);
-    expect(record.originalWeight).toBe(MEMORY_WEIGHTS.planet_captured.weight);
-    expect(record.currentWeight).toBe(MEMORY_WEIGHTS.planet_captured.weight);
+    const record = createMemoryRecord("target-1", "sector_captured", 10);
+    expect(record.originalWeight).toBe(MEMORY_WEIGHTS.sector_captured.weight);
+    expect(record.currentWeight).toBe(MEMORY_WEIGHTS.sector_captured.weight);
   });
 
   it("should set turn correctly", () => {
@@ -190,7 +190,7 @@ describe("updateMemoryWeight", () => {
     const memory: MemoryRecord = {
       id: "test",
       targetEmpireId: "target-1",
-      eventType: "planet_captured",
+      eventType: "sector_captured",
       originalWeight: 80,
       currentWeight: 80,
       turn: 1,
@@ -220,7 +220,7 @@ describe("updateMemoryWeight", () => {
 describe("MEMORY_WEIGHTS definitions", () => {
   it("should have all event types defined", () => {
     const expectedEvents: MemoryEventType[] = [
-      "planet_captured",
+      "sector_captured",
       "saved_from_destruction",
       "alliance_broken",
       "battle_won",
@@ -255,7 +255,7 @@ describe("MEMORY_WEIGHTS definitions", () => {
   });
 
   it("should have high weight for major events", () => {
-    expect(MEMORY_WEIGHTS.planet_captured.weight).toBeGreaterThanOrEqual(60);
+    expect(MEMORY_WEIGHTS.sector_captured.weight).toBeGreaterThanOrEqual(60);
     expect(MEMORY_WEIGHTS.saved_from_destruction.weight).toBeGreaterThanOrEqual(60);
     expect(MEMORY_WEIGHTS.alliance_broken.weight).toBeGreaterThanOrEqual(60);
   });

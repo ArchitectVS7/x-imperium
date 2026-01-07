@@ -6,7 +6,7 @@
  * Displays the player's covert status:
  * - Current covert points (5/turn, max 50)
  * - Current agents vs capacity
- * - Government planets count
+ * - Government sectors count
  */
 
 import { useEffect, useState } from "react";
@@ -96,7 +96,7 @@ export function CovertStatusPanel() {
             ></div>
           </div>
           <p className="text-xs text-gray-500 mt-1">
-            Capacity: {status.governmentPlanets} Government planets x 300
+            Capacity: {status.governmentPlanets} Government sectors x 300
           </p>
         </div>
       </div>

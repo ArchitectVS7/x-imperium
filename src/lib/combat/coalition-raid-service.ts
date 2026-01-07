@@ -7,7 +7,7 @@
  * Features:
  * - M9.1: Coalition raid detection (3+ attackers on boss)
  * - M9.2: Raid combat bonuses (+5% per attacker beyond 2)
- * - M9.3: Raid territory distribution (min 1 planet + damage %)
+ * - M9.3: Raid territory distribution (min 1 sector + damage %)
  */
 
 // =============================================================================
@@ -59,7 +59,7 @@ export interface RaidParticipant {
 export interface RaidDistribution {
   empireId: string;
   empireName: string;
-  /** Number of planets awarded */
+  /** Number of sectors awarded */
   planetsAwarded: number;
   /** Percentage of damage dealt (0-1) */
   damagePercentage: number;
@@ -240,13 +240,13 @@ export function getRaidBonusDescription(raid: CoalitionRaid): string {
  * Calculate territory distribution for a successful coalition raid.
  *
  * Distribution Model (Hybrid):
- * - Minimum 1 planet per participant (participation award)
- * - Remaining planets distributed by damage percentage
+ * - Minimum 1 sector per participant (participation award)
+ * - Remaining sectors distributed by damage percentage
  *
  * @param raid - The coalition raid
  * @param attacks - All attacks from the raid
- * @param totalPlanetsCaptured - Total planets captured from the boss
- * @returns Distribution of planets for each participant
+ * @param totalPlanetsCaptured - Total sectors captured from the boss
+ * @returns Distribution of sectors for each participant
  */
 export function calculateRaidDistribution(
   raid: CoalitionRaid,
@@ -298,7 +298,7 @@ export function calculateRaidDistribution(
   const participantCount = raid.attackerIds.length;
   const equalCredit = 1 / participantCount;
 
-  // Step 1: Each participant gets minimum 1 planet (if available)
+  // Step 1: Each participant gets minimum 1 sector (if available)
   const minimumPlanets = Math.min(participantCount, totalPlanetsCaptured);
   let remainingPlanets = totalPlanetsCaptured - minimumPlanets;
 
@@ -311,13 +311,13 @@ export function calculateRaidDistribution(
     return {
       empireId,
       empireName: raid.attackerNames[index] ?? attackerData?.name ?? "Unknown",
-      planetsAwarded: minimumPlanets > index ? 1 : 0, // Give 1 planet to first N participants
+      planetsAwarded: minimumPlanets > index ? 1 : 0, // Give 1 sector to first N participants
       damagePercentage,
       eliminationCredit: equalCredit,
     };
   });
 
-  // Step 2: Distribute remaining planets by damage percentage
+  // Step 2: Distribute remaining sectors by damage percentage
   while (remainingPlanets > 0) {
     // Find participant who is most "under-allocated" based on damage %
     let maxDeficit = -Infinity;
@@ -439,9 +439,9 @@ export function generateRaidVictoryMessage(
   const participantText =
     moreCount > 0 ? `${participantNames}, and ${moreCount} others` : participantNames;
 
-  const totalPlanets = distributions.reduce((sum, d) => sum + d.planetsAwarded, 0);
+  const totalSectors = distributions.reduce((sum, d) => sum + d.planetsAwarded, 0);
 
-  return `Coalition Victory! ${raid.attackerIds.length} empires (${participantText}) have successfully defeated the dominant power ${raid.targetEmpireName}. ${totalPlanets} planets have been distributed among the victors.`;
+  return `Coalition Victory! ${raid.attackerIds.length} empires (${participantText}) have successfully defeated the dominant power ${raid.targetEmpireName}. ${totalSectors} sectors have been distributed among the victors.`;
 }
 
 // =============================================================================

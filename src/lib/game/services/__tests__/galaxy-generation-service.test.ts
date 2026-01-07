@@ -295,8 +295,8 @@ describe("createEmpireInfluenceRecords", () => {
     ]);
 
     const empires = [
-      { id: "empire-1", planetCount: 6 },
-      { id: "empire-2", planetCount: 6 },
+      { id: "empire-1", sectorCount: 6 },
+      { id: "empire-2", sectorCount: 6 },
     ];
 
     const records = createEmpireInfluenceRecords("game-1", assignments, empires);
@@ -310,7 +310,7 @@ describe("createEmpireInfluenceRecords", () => {
 
   it("should set home and primary region correctly", () => {
     const assignments = new Map([["empire-1", "region-1"]]);
-    const empires = [{ id: "empire-1", planetCount: 6 }];
+    const empires = [{ id: "empire-1", sectorCount: 6 }];
 
     const records = createEmpireInfluenceRecords("game-1", assignments, empires);
 
@@ -322,11 +322,11 @@ describe("createEmpireInfluenceRecords", () => {
 
 describe("generateGalaxy", () => {
   const empires = [
-    { id: "player", type: "player" as const, planetCount: 6 },
+    { id: "player", type: "player" as const, sectorCount: 6 },
     ...Array.from({ length: 24 }, (_, i) => ({
       id: `bot-${i}`,
       type: "bot" as const,
-      planetCount: 6,
+      sectorCount: 6,
     })),
   ];
 

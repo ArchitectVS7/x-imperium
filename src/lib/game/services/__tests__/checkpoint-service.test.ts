@@ -88,7 +88,7 @@ describe("Checkpoint Service", () => {
           memberIds: ["e1", "e2"],
           memberNames: ["Empire 1", "Empire 2"],
           totalNetworth: 100000,
-          planetCount: 20,
+          sectorCount: 20,
           isCoalition: true,
         },
         {
@@ -97,7 +97,7 @@ describe("Checkpoint Service", () => {
           memberIds: ["e3", "e4"],
           memberNames: ["Empire 3", "Empire 4"],
           totalNetworth: 30000,
-          planetCount: 10,
+          sectorCount: 10,
           isCoalition: false,
         },
         {
@@ -106,7 +106,7 @@ describe("Checkpoint Service", () => {
           memberIds: ["e5", "e6"],
           memberNames: ["Empire 5", "Empire 6"],
           totalNetworth: 10000,
-          planetCount: 5,
+          sectorCount: 5,
           isCoalition: false,
         },
       ];
@@ -128,7 +128,7 @@ describe("Checkpoint Service", () => {
           memberIds: ["e1", "e2"],
           memberNames: ["Empire 1", "Empire 2"],
           totalNetworth: 60000,
-          planetCount: 15,
+          sectorCount: 15,
           isCoalition: true,
         },
         {
@@ -137,7 +137,7 @@ describe("Checkpoint Service", () => {
           memberIds: ["e3", "e4"],
           memberNames: ["Empire 3", "Empire 4"],
           totalNetworth: 25000,
-          planetCount: 10,
+          sectorCount: 10,
           isCoalition: false,
         },
         {
@@ -146,7 +146,7 @@ describe("Checkpoint Service", () => {
           memberIds: ["e5", "e6"],
           memberNames: ["Empire 5", "Empire 6"],
           totalNetworth: 15000,
-          planetCount: 8,
+          sectorCount: 8,
           isCoalition: false,
         },
       ];
@@ -198,7 +198,7 @@ describe("Checkpoint Service", () => {
         memberIds: ["e1", "e2"],
         memberNames: ["Empire 1", "Empire 2"],
         totalNetworth: 150000,
-        planetCount: 25,
+        sectorCount: 25,
         isCoalition: true,
       };
 
@@ -272,7 +272,7 @@ describe("Checkpoint Service", () => {
         memberIds: ["e1"],
         memberNames: ["Lonely Empire"],
         totalNetworth: 50000,
-        planetCount: 10,
+        sectorCount: 10,
         isCoalition: false,
       };
 
@@ -286,7 +286,7 @@ describe("Checkpoint Service", () => {
         memberIds: ["e1", "e2", "e3"],
         memberNames: ["E1", "E2", "E3"],
         totalNetworth: 100000,
-        planetCount: 20,
+        sectorCount: 20,
         isCoalition: true,
       };
 
@@ -296,7 +296,7 @@ describe("Checkpoint Service", () => {
         memberIds: ["e4", "e5"],
         memberNames: ["E4", "E5"],
         totalNetworth: 60000,
-        planetCount: 12,
+        sectorCount: 12,
         isCoalition: false,
       };
 
@@ -346,7 +346,7 @@ describe("Checkpoint Service", () => {
           memberIds: ["e1", "e2"],
           memberNames: ["E1", "E2"],
           totalNetworth: 100000,
-          planetCount: 20,
+          sectorCount: 20,
           isCoalition: true,
         },
       ];
@@ -376,7 +376,7 @@ describe("Checkpoint Service", () => {
           memberIds: ["e1", "e2"],
           memberNames: ["E1", "E2"],
           totalNetworth: 0,
-          planetCount: 5,
+          sectorCount: 5,
           isCoalition: true,
         },
         {
@@ -385,7 +385,7 @@ describe("Checkpoint Service", () => {
           memberIds: ["e3", "e4"],
           memberNames: ["E3", "E4"],
           totalNetworth: 50000,
-          planetCount: 10,
+          sectorCount: 10,
           isCoalition: false,
         },
       ];

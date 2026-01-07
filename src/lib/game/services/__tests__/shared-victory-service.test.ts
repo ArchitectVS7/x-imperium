@@ -116,7 +116,7 @@ describe("Shared Victory Service", () => {
   });
 
   describe("calculatePlanetAllocation", () => {
-    it("should give all planets to single member", () => {
+    it("should give all sectors to single member", () => {
       expect(calculatePlanetAllocation(10, 1, 1)).toBe(10);
     });
 
@@ -126,7 +126,7 @@ describe("Shared Victory Service", () => {
     });
 
     it("should use tiered distribution for 3+ members", () => {
-      // 10 planets, 3 members
+      // 10 sectors, 3 members
       // Rank 1: 40% = 4
       // Rank 2: 30% = 3
       // Rank 3: 20% = 2
@@ -135,7 +135,7 @@ describe("Shared Victory Service", () => {
       expect(calculatePlanetAllocation(10, 3, 3)).toBe(2);
     });
 
-    it("should handle zero planets", () => {
+    it("should handle zero sectors", () => {
       expect(calculatePlanetAllocation(0, 3, 1)).toBe(0);
     });
 

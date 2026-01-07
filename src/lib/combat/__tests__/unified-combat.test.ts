@@ -177,7 +177,7 @@ describe("resolveUnifiedInvasion", () => {
     expect(result.summary).toBeDefined();
   });
 
-  it("should capture planets on attacker victory", () => {
+  it("should capture sectors on attacker victory", () => {
     // Force attacker win with low random value
     const result = resolveUnifiedInvasion(
       { ...equalForces, soldiers: 500, fighters: 200 }, // Strong attacker
@@ -187,8 +187,8 @@ describe("resolveUnifiedInvasion", () => {
     );
 
     if (result.outcome === "attacker_victory") {
-      expect(result.planetsCaptured).toBeGreaterThan(0);
-      expect(result.planetsCaptured).toBeLessThanOrEqual(2); // 15% of 10 max
+      expect(result.sectorsCaptured).toBeGreaterThan(0);
+      expect(result.sectorsCaptured).toBeLessThanOrEqual(2); // 15% of 10 max
     }
   });
 

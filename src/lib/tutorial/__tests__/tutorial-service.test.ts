@@ -286,19 +286,19 @@ describe("Turn Goals", () => {
       const goal = TURN_GOALS.find((g) => g.turn === 5);
       expect(goal).not.toBeUndefined();
 
-      const notMet = goal!.checkCondition({ soldiers: 100, fighters: 0, planetCount: 5, credits: 1000, food: 100, researchLevel: 0, hasNAP: false, hasAttacked: false });
-      const met = goal!.checkCondition({ soldiers: 200, fighters: 0, planetCount: 5, credits: 1000, food: 100, researchLevel: 0, hasNAP: false, hasAttacked: false });
+      const notMet = goal!.checkCondition({ soldiers: 100, fighters: 0, sectorCount: 5, credits: 1000, food: 100, researchLevel: 0, hasNAP: false, hasAttacked: false });
+      const met = goal!.checkCondition({ soldiers: 200, fighters: 0, sectorCount: 5, credits: 1000, food: 100, researchLevel: 0, hasNAP: false, hasAttacked: false });
 
       expect(notMet).toBe(false);
       expect(met).toBe(true);
     });
 
-    it("should check planet count for turn 10 goal", () => {
+    it("should check sector count for turn 10 goal", () => {
       const goal = TURN_GOALS.find((g) => g.turn === 10);
       expect(goal).not.toBeUndefined();
 
-      const notMet = goal!.checkCondition({ soldiers: 0, fighters: 0, planetCount: 5, credits: 1000, food: 100, researchLevel: 0, hasNAP: false, hasAttacked: false });
-      const met = goal!.checkCondition({ soldiers: 0, fighters: 0, planetCount: 7, credits: 1000, food: 100, researchLevel: 0, hasNAP: false, hasAttacked: false });
+      const notMet = goal!.checkCondition({ soldiers: 0, fighters: 0, sectorCount: 5, credits: 1000, food: 100, researchLevel: 0, hasNAP: false, hasAttacked: false });
+      const met = goal!.checkCondition({ soldiers: 0, fighters: 0, sectorCount: 7, credits: 1000, food: 100, researchLevel: 0, hasNAP: false, hasAttacked: false });
 
       expect(notMet).toBe(false);
       expect(met).toBe(true);

@@ -37,7 +37,7 @@ describe("Bot Generator", () => {
   describe("Bot empire creation requirements", () => {
     it("should define starting resources matching player", () => {
       // This is a documentation test for the bot creation spec
-      // Reduced to 5 planets for faster eliminations (see IMPLEMENTATION-PLAN.md M1.1)
+      // Reduced to 5 sectors for faster eliminations (see IMPLEMENTATION-PLAN.md M1.1)
       const EXPECTED_STARTING_PLANETS = 5;
       const EXPECTED_BOT_TIER = "tier4_random";
 

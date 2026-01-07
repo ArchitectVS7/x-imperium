@@ -41,14 +41,14 @@ function getRegionTypeInfo(type: string) {
 }
 
 /**
- * Get planet count range for moderate intel
+ * Get sector count range for moderate intel
  */
-function getPlanetRange(planetCount: number): string {
-  if (planetCount <= 2) return "1-2";
-  if (planetCount <= 4) return "3-4";
-  if (planetCount <= 6) return "5-6";
-  if (planetCount <= 8) return "7-8";
-  if (planetCount <= 10) return "9-10";
+function getPlanetRange(sectorCount: number): string {
+  if (sectorCount <= 2) return "1-2";
+  if (sectorCount <= 4) return "3-4";
+  if (sectorCount <= 6) return "5-6";
+  if (sectorCount <= 8) return "7-8";
+  if (sectorCount <= 10) return "9-10";
   return "10+";
 }
 
@@ -194,7 +194,7 @@ function EmpireRow({
             <div>
               <span className="text-gray-500">Size:</span>{" "}
               <span className="text-gray-300">
-                {empire.planetCount <= 3 ? "Small" : empire.planetCount <= 6 ? "Medium" : "Large"}
+                {empire.sectorCount <= 3 ? "Small" : empire.sectorCount <= 6 ? "Medium" : "Large"}
               </span>
             </div>
             <div className="text-gray-500">
@@ -213,7 +213,7 @@ function EmpireRow({
             <div>
               <span className="text-gray-500">Planets:</span>{" "}
               <span className="text-gray-300 font-mono">
-                {effectiveIntel === "full" ? empire.planetCount : getPlanetRange(empire.planetCount)}
+                {effectiveIntel === "full" ? empire.sectorCount : getPlanetRange(empire.sectorCount)}
               </span>
             </div>
             <div>

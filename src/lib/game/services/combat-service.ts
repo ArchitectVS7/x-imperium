@@ -285,7 +285,7 @@ export async function executeAttack(params: AttackParams): Promise<AttackResult>
     return { success: false, error: "Attacker not found" };
   }
 
-  // Get defender for planet count
+  // Get defender for sector count
   const defender = await db.query.empires.findFirst({
     where: eq(empires.id, defenderId),
   });
@@ -311,7 +311,7 @@ export async function executeAttack(params: AttackParams): Promise<AttackResult>
       { ...defenderForces },
       {
         attackerStance,
-        defenderSectorCount: defender.planetCount,
+        defenderSectorCount: defender.sectorCount,
       }
     );
     // Convert to legacy format for backward compatibility
@@ -322,7 +322,7 @@ export async function executeAttack(params: AttackParams): Promise<AttackResult>
     result = resolveUnifiedInvasion(
       forces,
       defenderForces,
-      defender.planetCount,
+      defender.sectorCount,
       {
         attackerNetworth: attacker.networth,
         defenderNetworth: defender.networth,
@@ -445,7 +445,7 @@ export async function executeRetreat(
 export async function getTargets(
   gameId: string,
   empireId: string
-): Promise<Array<{ id: string; name: string; networth: number; planetCount: number; hasTreaty: boolean }>> {
+): Promise<Array<{ id: string; name: string; networth: number; sectorCount: number; hasTreaty: boolean }>> {
   // Input validation (getAvailableTargets also validates, but validate early)
   if (!isValidUUID(gameId) || !isValidUUID(empireId)) {
     return [];
@@ -461,7 +461,7 @@ export async function getTargets(
         id: t.id,
         name: t.name,
         networth: t.networth,
-        planetCount: t.planetCount,
+        sectorCount: t.sectorCount,
         hasTreaty: hasTreatyFlag,
       };
     })

@@ -1,16 +1,16 @@
 /**
  * Resource Engine Service
  *
- * Handles resource production from planets, maintenance costs, and income multipliers.
+ * Handles resource production from sectors, maintenance costs, and income multipliers.
  * Calculates net resource changes each turn.
  *
  * PRD References:
- * - PRD 5.2: Planet production rates
+ * - PRD 5.2: Sector production rates
  * - PRD 4.4: Civil status income multipliers
- * - Planet maintenance: 168 credits per planet per turn
+ * - Sector maintenance: 168 credits per sector per turn
  */
 
-import type { Planet } from "@/lib/db/schema";
+import type { Sector } from "@/lib/db/schema";
 import type {
   ResourceDelta,
   ResourceProduction,
@@ -21,7 +21,7 @@ import type {
 // CONSTANTS
 // =============================================================================
 
-/** Planet maintenance cost per turn (PRD: 168 credits) */
+/** Sector maintenance cost per turn (PRD: 168 credits) */
 export const PLANET_MAINTENANCE_COST = 168;
 
 // =============================================================================
@@ -29,16 +29,16 @@ export const PLANET_MAINTENANCE_COST = 168;
 // =============================================================================
 
 /**
- * Calculate resource production from planets
+ * Calculate resource production from sectors
  *
- * Sums production by planet type and returns ResourceDelta.
+ * Sums production by sector type and returns ResourceDelta.
  * Does NOT apply civil status multipliers (that's done separately).
  *
- * @param planets - Array of planets owned by empire
+ * @param sectors - Array of sectors owned by empire
  * @returns ResourceDelta with base production values
  *
  * @example
- * // 2 food planets, 1 tourism planet
+ * // 2 food sectors, 1 tourism sector
  * calculateProduction([
  *   { type: 'food', productionRate: '160' },
  *   { type: 'food', productionRate: '160' },
@@ -46,7 +46,7 @@ export const PLANET_MAINTENANCE_COST = 168;
  * ])
  * // => { credits: 8000, food: 320, ore: 0, petroleum: 0, researchPoints: 0 }
  */
-export function calculateProduction(planets: Planet[]): ResourceDelta {
+export function calculateProduction(sectors: Sector[]): ResourceDelta {
   const production: ResourceDelta = {
     credits: 0,
     food: 0,
@@ -55,10 +55,10 @@ export function calculateProduction(planets: Planet[]): ResourceDelta {
     researchPoints: 0,
   };
 
-  for (const planet of planets) {
-    const productionRate = parseFloat(planet.productionRate);
+  for (const sector of sectors) {
+    const productionRate = parseFloat(sector.productionRate);
 
-    switch (planet.type) {
+    switch (sector.type) {
       case "food":
         production.food += productionRate;
         break;
@@ -80,7 +80,7 @@ export function calculateProduction(planets: Planet[]): ResourceDelta {
         production.researchPoints += productionRate;
         break;
 
-      // Special effect planets (no direct resource production)
+      // Special effect sectors (no direct resource production)
       case "government":
       case "education":
       case "supply":
@@ -99,7 +99,7 @@ export function calculateProduction(planets: Planet[]): ResourceDelta {
  * Only applies to income resources (credits, research points).
  * Raw resources (food, ore, petroleum) are NOT multiplied.
  *
- * @param baseProduction - Base resource production from planets
+ * @param baseProduction - Base resource production from sectors
  * @param incomeMultiplier - Civil status multiplier (0× to 4×)
  * @returns ResourceProduction with multiplied income
  *
@@ -136,19 +136,19 @@ export function applyIncomeMultiplier(
 }
 
 /**
- * Calculate total maintenance costs for planets
+ * Calculate total maintenance costs for sectors
  *
- * @param planetCount - Number of planets owned
+ * @param sectorCount - Number of sectors owned
  * @returns MaintenanceCost breakdown
  *
  * @example
- * calculateMaintenanceCost(9) // => { totalCost: 1512, costPerPlanet: 168, planetCount: 9 }
+ * calculateMaintenanceCost(9) // => { totalCost: 1512, costPerPlanet: 168, sectorCount: 9 }
  */
-export function calculateMaintenanceCost(planetCount: number): MaintenanceCost {
+export function calculateMaintenanceCost(sectorCount: number): MaintenanceCost {
   return {
-    totalCost: planetCount * PLANET_MAINTENANCE_COST,
+    totalCost: sectorCount * PLANET_MAINTENANCE_COST,
     costPerPlanet: PLANET_MAINTENANCE_COST,
-    planetCount,
+    sectorCount,
   };
 }
 
@@ -165,7 +165,7 @@ export function calculateMaintenanceCost(planetCount: number): MaintenanceCost {
  * @example
  * calculateNetResourceDelta(
  *   { credits: 16000, food: 320, ore: 224, petroleum: 92, researchPoints: 200 },
- *   { totalCost: 1512, costPerPlanet: 168, planetCount: 9 }
+ *   { totalCost: 1512, costPerPlanet: 168, sectorCount: 9 }
  * )
  * // => { credits: 14488, food: 320, ore: 224, petroleum: 92, researchPoints: 200 }
  */
@@ -187,7 +187,7 @@ export function calculateNetResourceDelta(
  *
  * Helper function that combines all resource calculations.
  *
- * @param planets - Planets owned by empire
+ * @param sectors - Planets owned by empire
  * @param incomeMultiplier - Civil status income multiplier
  * @returns ResourceProduction with final resource changes
  *
@@ -199,11 +199,11 @@ export function calculateNetResourceDelta(
  * // => ResourceProduction with all calculations applied
  */
 export function processTurnResources(
-  planets: Planet[],
+  sectors: Sector[],
   incomeMultiplier: number
 ): ResourceProduction {
   // Step 1: Calculate base production
-  const baseProduction = calculateProduction(planets);
+  const baseProduction = calculateProduction(sectors);
 
   // Step 2: Apply income multiplier
   const productionWithMultiplier = applyIncomeMultiplier(
@@ -212,7 +212,7 @@ export function processTurnResources(
   );
 
   // Step 3: Deduct maintenance
-  const maintenance = calculateMaintenanceCost(planets.length);
+  const maintenance = calculateMaintenanceCost(sectors.length);
   const finalResources = calculateNetResourceDelta(
     productionWithMultiplier.final,
     maintenance

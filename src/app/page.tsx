@@ -23,7 +23,7 @@ const features: Array<{
   {
     title: "EXPAND",
     icon: Globe,
-    description: "Acquire new sectors to grow your domain. Each planet type provides unique resources and capabilities.",
+    description: "Acquire new sectors to grow your domain. Each sector type provides unique resources and capabilities.",
     color: "from-green-600 to-emerald-500",
     borderColor: "border-lcars-mint",
   },
@@ -47,20 +47,20 @@ const features: Array<{
 const howToPlaySections = [
   {
     title: "Getting Started",
-    content: `When you start a new game, you'll be given a small empire with basic resources and a few planets. You have 20 turns of protection where no one can attack you - use this time wisely to build up your economy and military.
+    content: `When you start a new game, you'll be given a small empire with basic resources and a few sectors. You have 20 turns of protection where no one can attack you - use this time wisely to build up your economy and military.
 
 Your Command Center (dashboard) shows your current resources, population, and military strength. Check it often to monitor your empire's health.`,
   },
   {
     title: "Resources & Economy",
     content: `There are 5 key resources:
-• Credits - Your currency for buying units and planets
+• Credits - Your currency for buying units and sectors
 • Food - Feeds your population (shortage causes starvation!)
 • Raw Materials (Ore) - Used for construction and crafting
 • Plasma (Petroleum) - Powers advanced units and operations
 • Research Points - Invest these to unlock new technologies
 
-Buy different planet types to produce the resources you need. Balance is key!`,
+Buy different sector types to produce the resources you need. Balance is key!`,
   },
   {
     title: "Military & Combat",
@@ -85,7 +85,7 @@ Use Intel Ops to spy on enemies, steal technology, or sabotage their operations.
   {
     title: "Victory Conditions",
     content: `There are 3 ways to win:
-• Conquest Victory - Control 60% of all planets in the galaxy
+• Conquest Victory - Control 60% of all sectors in the galaxy
 • Economic Victory - Achieve 1.5x the networth of all other empires combined
 • Survival Victory - Be the strongest empire when turn 200 ends
 

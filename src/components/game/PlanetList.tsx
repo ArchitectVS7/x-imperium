@@ -1,8 +1,8 @@
-import type { Planet } from "@/lib/db/schema";
+import type { Sector } from "@/lib/db/schema";
 import { PLANET_TYPE_LABELS } from "@/lib/game/constants";
 
 interface PlanetListProps {
-  planets: Planet[];
+  planets: Sector[];
 }
 
 const PLANET_TYPE_COLORS: Record<string, string> = {
@@ -20,7 +20,7 @@ const PLANET_TYPE_COLORS: Record<string, string> = {
 
 export function PlanetList({ planets }: PlanetListProps) {
   // Group planets by type and count
-  const planetsByType = planets.reduce(
+  const sectorsByType = planets.reduce(
     (acc, planet) => {
       acc[planet.type] = (acc[planet.type] || 0) + 1;
       return acc;
@@ -29,7 +29,7 @@ export function PlanetList({ planets }: PlanetListProps) {
   );
 
   // Sort by count (descending) then alphabetically
-  const sortedTypes = Object.entries(planetsByType).sort((a, b) => {
+  const sortedTypes = Object.entries(sectorsByType).sort((a, b) => {
     if (b[1] !== a[1]) return b[1] - a[1];
     return a[0].localeCompare(b[0]);
   });

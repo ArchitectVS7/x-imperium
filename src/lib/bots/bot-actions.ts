@@ -6,7 +6,7 @@
  */
 
 import { db } from "@/lib/db";
-import { empires, buildQueue, planets, type NewPlanet, craftingQueue, syndicateContracts, resourceInventory } from "@/lib/db/schema";
+import { empires, buildQueue, sectors, type NewSector, craftingQueue, syndicateContracts, resourceInventory } from "@/lib/db/schema";
 import { eq, sql, and } from "drizzle-orm";
 import type { BotDecision, BotDecisionContext, Forces, UnitType } from "./types";
 import { calculateUnitPurchaseCost } from "@/lib/game/unit-config";
@@ -156,18 +156,18 @@ function getBuildTime(unitType: UnitType): number {
 
 /**
  * Execute a buy_planet decision.
- * Creates a new planet and deducts credits.
+ * Creates a new sector and deducts credits.
  */
 async function executeBuyPlanet(
   decision: Extract<BotDecision, { type: "buy_planet" }>,
   context: BotDecisionContext
 ): Promise<ExecutionResult> {
   const { empire, gameId, currentTurn } = context;
-  const { planetType } = decision;
+  const { sectorType } = decision;
 
-  // Calculate planet cost with scaling
-  const baseCost = PLANET_COSTS[planetType];
-  const totalCost = calculateSectorCost(baseCost, empire.planetCount);
+  // Calculate sector cost with scaling
+  const baseCost = PLANET_COSTS[sectorType];
+  const totalCost = calculateSectorCost(baseCost, empire.sectorCount);
 
   // Check if bot can afford it
   if (empire.credits < totalCost) {
@@ -177,34 +177,34 @@ async function executeBuyPlanet(
     };
   }
 
-  // Get production rate for this planet type
-  const productionRate = PLANET_PRODUCTION[planetType];
+  // Get production rate for this sector type
+  const productionRate = PLANET_PRODUCTION[sectorType];
 
-  // Create the planet
-  const planetData: NewPlanet = {
+  // Create the sector
+  const sectorData: NewSector = {
     empireId: empire.id,
     gameId,
-    type: planetType,
+    type: sectorType,
     productionRate: String(productionRate),
     purchasePrice: totalCost,
     acquiredAtTurn: currentTurn,
   };
 
-  await db.insert(planets).values(planetData);
+  await db.insert(sectors).values(sectorData);
 
-  // Update empire: deduct credits and increment planet count
+  // Update empire: deduct credits and increment sector count
   await db
     .update(empires)
     .set({
       credits: sql`${empires.credits} - ${totalCost}`,
-      planetCount: sql`${empires.planetCount} + 1`,
+      sectorCount: sql`${empires.sectorCount} + 1`,
       updatedAt: new Date(),
     })
     .where(eq(empires.id, empire.id));
 
   return {
     success: true,
-    details: `Bought ${planetType} planet (${totalCost} credits)`,
+    details: `Bought ${sectorType} sector (${totalCost} credits)`,
   };
 }
 
@@ -272,8 +272,8 @@ async function executeAttack(
 
   // Build details message
   const outcome = result.result?.outcome ?? "unknown";
-  const planetsCaptured = result.result?.planetsCaptured ?? 0;
-  const capturedMsg = planetsCaptured > 0 ? ` (captured ${planetsCaptured} planet${planetsCaptured > 1 ? "s" : ""}!)` : "";
+  const sectorsCaptured = result.result?.sectorsCaptured ?? 0;
+  const capturedMsg = sectorsCaptured > 0 ? ` (captured ${sectorsCaptured} sector${sectorsCaptured > 1 ? "s" : ""}!)` : "";
 
   return {
     success: true,

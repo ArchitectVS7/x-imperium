@@ -46,11 +46,11 @@ describe("Agent Ratio Modifier", () => {
 // =============================================================================
 
 describe("Government Modifier", () => {
-  it("should return 1.0 for zero government planets", () => {
+  it("should return 1.0 for zero government sectors", () => {
     expect(calculateGovernmentModifier(0)).toBe(1.0);
   });
 
-  it("should decrease by 0.05 per government planet", () => {
+  it("should decrease by 0.05 per government sector", () => {
     expect(calculateGovernmentModifier(1)).toBeCloseTo(0.95, 2);
     expect(calculateGovernmentModifier(2)).toBeCloseTo(0.90, 2);
     expect(calculateGovernmentModifier(5)).toBeCloseTo(0.75, 2);
@@ -72,7 +72,7 @@ describe("Success Rate Factors", () => {
 
     expect(factors.baseRate).toBe(0.8); // send_spy base rate
     expect(factors.agentRatioModifier).toBe(1.0); // Equal agents
-    expect(factors.governmentModifier).toBeCloseTo(0.95, 2); // 1 gov planet
+    expect(factors.governmentModifier).toBeCloseTo(0.95, 2); // 1 gov sector
     expect(factors.riskModifier).toBe(1.0); // Low risk
   });
 
@@ -242,7 +242,7 @@ describe("PRD 6.8 Success Rate Factors", () => {
     expect(moreAgents.calculatedRate).toBeGreaterThan(lessAgents.calculatedRate);
   });
 
-  it("should factor in target's government planet count", () => {
+  it("should factor in target's government sector count", () => {
     const fewGov = calculateSuccessRateFactors("send_spy", 100, 100, 1);
     const manyGov = calculateSuccessRateFactors("send_spy", 100, 100, 5);
 

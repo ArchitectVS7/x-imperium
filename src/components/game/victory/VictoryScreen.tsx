@@ -11,7 +11,7 @@
 
 interface VictoryStats {
   totalTurns: number;
-  totalPlanets: number;
+  totalSectors: number;
   winnerPlanets: number;
   winnerNetworth: number;
   empiresRemaining: number;
@@ -77,7 +77,7 @@ export function VictoryScreen({
             <div>
               <span className="text-gray-500 text-sm">Your Planets</span>
               <p className="text-2xl text-gray-200">
-                {stats.winnerPlanets} / {stats.totalPlanets}
+                {stats.winnerPlanets} / {stats.totalSectors}
               </p>
             </div>
             <div>

@@ -296,7 +296,7 @@ export function printCoverageReport(results: SimulationResult[]): void {
     totalAttacks += c.attacks.count;
 
     c.buildUnits.unitTypes.forEach((t) => allUnitTypes.add(t));
-    c.buyPlanet.planetTypes.forEach((t) => allPlanetTypes.add(t));
+    c.buyPlanet.sectorTypes.forEach((t) => allPlanetTypes.add(t));
 
     if (c.combatResolved) combatResolved++;
     if (c.researchAdvanced) researchAdvanced++;

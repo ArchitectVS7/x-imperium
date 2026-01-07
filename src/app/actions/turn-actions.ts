@@ -217,7 +217,7 @@ export async function getTurnOrderPanelDataAction(): Promise<TurnOrderPanelData 
       return null;
     }
 
-    // Get game and player empire with planets
+    // Get game and player empire with sectors
     const game = await db.query.games.findFirst({
       where: eq(games.id, gameId),
     });
@@ -227,14 +227,14 @@ export async function getTurnOrderPanelDataAction(): Promise<TurnOrderPanelData 
     const playerEmpire = await db.query.empires.findFirst({
       where: eq(empires.id, empireId),
       with: {
-        planets: true,
+        sectors: true,
       },
     });
 
     if (!playerEmpire) return null;
 
     // Calculate food status
-    const foodPlanets = playerEmpire.planets.filter(p => p.type === "food").length;
+    const foodPlanets = playerEmpire.sectors.filter(p => p.type === "food").length;
     const foodProduction = foodPlanets * 160; // PLANET_PRODUCTION.food
     const foodConsumption = playerEmpire.population * 0.05;
     const foodBalance = foodProduction - foodConsumption;
@@ -359,18 +359,18 @@ export async function getGameLayoutDataAction(): Promise<GameLayoutData | null> 
 
     if (!game) return null;
 
-    // Get player empire with planets
+    // Get player empire with sectors
     const playerEmpire = await db.query.empires.findFirst({
       where: eq(empires.id, empireId),
       with: {
-        planets: true,
+        sectors: true,
       },
     });
 
     if (!playerEmpire) return null;
 
     // Calculate food status
-    const foodPlanets = playerEmpire.planets.filter(p => p.type === "food").length;
+    const foodPlanets = playerEmpire.sectors.filter(p => p.type === "food").length;
     const foodProduction = foodPlanets * 160;
     const foodConsumption = playerEmpire.population * 0.05;
     const foodBalance = foodProduction - foodConsumption;
@@ -471,7 +471,7 @@ export async function getGameLayoutDataAction(): Promise<GameLayoutData | null> 
       researchPoints: playerEmpire.researchPoints,
       // Empire stats
       population: playerEmpire.population,
-      sectorCount: playerEmpire.planets.length,
+      sectorCount: playerEmpire.sectors.length,
       militaryPower,
       networth: playerEmpire.networth,
       rank,

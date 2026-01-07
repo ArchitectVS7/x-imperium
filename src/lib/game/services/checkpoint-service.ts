@@ -31,7 +31,7 @@ export interface AllianceGroup {
   memberIds: string[];
   memberNames: string[];
   totalNetworth: number;
-  planetCount: number;
+  sectorCount: number;
   isCoalition: boolean;
 }
 
@@ -205,8 +205,8 @@ async function getCoalitionAlliances(gameId: string): Promise<AllianceGroup[]> {
       (sum, e) => sum + e.networth,
       0
     );
-    const planetCount = coalitionMembers.reduce(
-      (sum, e) => sum + e.planetCount,
+    const sectorCount = coalitionMembers.reduce(
+      (sum, e) => sum + e.sectorCount,
       0
     );
 
@@ -216,7 +216,7 @@ async function getCoalitionAlliances(gameId: string): Promise<AllianceGroup[]> {
       memberIds,
       memberNames: coalitionMembers.map((e) => e.name),
       totalNetworth,
-      planetCount,
+      sectorCount,
       isCoalition: true,
     });
   }
@@ -314,7 +314,7 @@ async function getTreatyAlliances(
       .filter((e): e is Empire => e !== undefined);
 
     const totalNetworth = members.reduce((sum, e) => sum + e.networth, 0);
-    const planetCount = members.reduce((sum, e) => sum + e.planetCount, 0);
+    const sectorCount = members.reduce((sum, e) => sum + e.sectorCount, 0);
 
     treatyAlliances.push({
       id: `treaty-alliance-${i}`,
@@ -322,7 +322,7 @@ async function getTreatyAlliances(
       memberIds: filteredGroup,
       memberNames: members.map((e) => e.name),
       totalNetworth,
-      planetCount,
+      sectorCount,
       isCoalition: false,
     });
   }

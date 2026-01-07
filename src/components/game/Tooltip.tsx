@@ -155,7 +155,7 @@ export function NetworthTooltip() {
     <div>
       <strong className="text-lcars-amber">Networth</strong>
       <p className="mt-1">
-        Your empire&apos;s total value. Calculated from planets, military units,
+        Your empire&apos;s total value. Calculated from sectors, military units,
         and special assets. Win an Economic Victory by having 1.5x the
         networth of the second-place empire!
       </p>
@@ -176,7 +176,7 @@ export function ResearchTooltip() {
         <li>Level 6: Carriers</li>
       </ul>
       <p className="mt-1 text-gray-400 text-xs">
-        Build Research planets to generate research points!
+        Build Research sectors to generate research points!
       </p>
     </div>
   );
@@ -191,7 +191,7 @@ export function FoodTooltip() {
         your population will starve and civil status will drop!
       </p>
       <p className="mt-1 text-gray-400 text-xs">
-        Food planets produce 160 food/turn each.
+        Food sectors produce 160 food/turn each.
       </p>
     </div>
   );
@@ -202,7 +202,7 @@ export function CarriersTooltip() {
     <div>
       <strong className="text-lcars-amber">Carriers</strong>
       <p className="mt-1">
-        Carriers transport soldiers to enemy planets. Each carrier holds
+        Carriers transport soldiers to enemy sectors. Each carrier holds
         100 soldiers. Without carriers, your soldiers can&apos;t participate
         in ground combat!
       </p>
@@ -217,10 +217,10 @@ export function CombatPhasesTooltip() {
       <ol className="mt-1 text-xs space-y-1 list-decimal list-inside">
         <li><strong>Space:</strong> Cruisers fight for space superiority</li>
         <li><strong>Orbital:</strong> Fighters vs Stations for orbital control</li>
-        <li><strong>Ground:</strong> Soldiers capture the planet</li>
+        <li><strong>Ground:</strong> Soldiers capture the sector</li>
       </ol>
       <p className="mt-1 text-gray-400 text-xs">
-        You must win all 3 phases to capture a planet!
+        You must win all 3 phases to capture a sector!
       </p>
     </div>
   );

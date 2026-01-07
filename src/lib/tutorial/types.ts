@@ -80,7 +80,7 @@ export const TUTORIAL_STEPS: TutorialStepInfo[] = [
     id: "first_turn",
     title: "Your First Turn",
     description:
-      "Click 'End Turn' when you're ready. Each turn, your planets produce " +
+      "Click 'End Turn' when you're ready. Each turn, your sectors produce " +
       "resources, your population grows, and the galaxy evolves. You have " +
       "20 turns of protection before others can attack you.",
     targetElement: "[data-testid='end-turn-button']",
@@ -97,7 +97,7 @@ export const VICTORY_STEP: TutorialStepInfo = {
   title: "Paths to Victory",
   description:
     "There are six ways to win:\n" +
-    "• Conquest: Control 60% of all planets\n" +
+    "• Conquest: Control 60% of all sectors\n" +
     "• Economic: Have 1.5× the networth of 2nd place\n" +
     "• Survival: Highest score at turn 200\n" +
     "• Coalition: Lead a victorious alliance\n" +
@@ -153,7 +153,7 @@ export type UIVisibilityLevel = "basic" | "intermediate" | "advanced" | "full";
  * Turn thresholds for UI progression.
  */
 export const UI_VISIBILITY_THRESHOLDS = {
-  /** Turns 1-10: Basic UI (resources, planets, basic combat) */
+  /** Turns 1-10: Basic UI (resources, sectors, basic combat) */
   basic: { minTurn: 1, maxTurn: 10 },
   /** Turns 11-20: Add threats, diplomacy basics */
   intermediate: { minTurn: 11, maxTurn: 20 },
@@ -169,14 +169,14 @@ export const UI_VISIBILITY_THRESHOLDS = {
 export const UI_PANELS_BY_LEVEL: Record<UIVisibilityLevel, string[]> = {
   basic: [
     "resource-panel",
-    "planet-list",
+    "sector-list",
     "military-overview",
     "turn-counter",
     "sector-view",
   ],
   intermediate: [
     "resource-panel",
-    "planet-list",
+    "sector-list",
     "military-overview",
     "turn-counter",
     "sector-view",
@@ -186,7 +186,7 @@ export const UI_PANELS_BY_LEVEL: Record<UIVisibilityLevel, string[]> = {
   ],
   advanced: [
     "resource-panel",
-    "planet-list",
+    "sector-list",
     "military-overview",
     "turn-counter",
     "sector-view",
@@ -200,7 +200,7 @@ export const UI_PANELS_BY_LEVEL: Record<UIVisibilityLevel, string[]> = {
   ],
   full: [
     "resource-panel",
-    "planet-list",
+    "sector-list",
     "military-overview",
     "turn-counter",
     "sector-view",
@@ -257,7 +257,7 @@ export interface TurnGoal {
 export interface TurnGoalState {
   soldiers: number;
   fighters: number;
-  planetCount: number;
+  sectorCount: number;
   credits: number;
   food: number;
   researchLevel: number;
@@ -278,8 +278,8 @@ export const TURN_GOALS: TurnGoal[] = [
   {
     turn: 10,
     title: "Expand Your Economy",
-    description: "Own at least 7 planets",
-    checkCondition: (state) => state.planetCount >= 7,
+    description: "Own at least 7 sectors",
+    checkCondition: (state) => state.sectorCount >= 7,
   },
   {
     turn: 15,

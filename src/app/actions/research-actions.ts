@@ -2,7 +2,7 @@
 
 import { cookies } from "next/headers";
 import { db } from "@/lib/db";
-import { planets, empires } from "@/lib/db/schema";
+import { sectors, empires } from "@/lib/db/schema";
 import { eq, and } from "drizzle-orm";
 import {
   getResearchStatus,
@@ -99,11 +99,11 @@ export async function getResearchInfoAction(): Promise<{
       }
     }
 
-    // Count research planets
-    const researchPlanets = await db.query.planets.findMany({
+    // Count research sectors
+    const researchPlanets = await db.query.sectors.findMany({
       where: and(
-        eq(planets.empireId, empireId),
-        eq(planets.type, "research")
+        eq(sectors.empireId, empireId),
+        eq(sectors.type, "research")
       ),
     });
 
@@ -221,11 +221,11 @@ export async function getResearchProjectionAction(
       return null;
     }
 
-    // Count research planets
-    const researchPlanets = await db.query.planets.findMany({
+    // Count research sectors
+    const researchPlanets = await db.query.sectors.findMany({
       where: and(
-        eq(planets.empireId, empireId),
-        eq(planets.type, "research")
+        eq(sectors.empireId, empireId),
+        eq(sectors.type, "research")
       ),
     });
 

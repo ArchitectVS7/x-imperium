@@ -18,19 +18,19 @@ import {
   calculateInventoryValue,
   createEmptyInventory,
 } from "../resource-tier-service";
-import type { Planet, ResourceInventory } from "@/lib/db/schema";
+import type { Sector, ResourceInventory } from "@/lib/db/schema";
 
 // =============================================================================
-// HELPER: Create mock planet
+// HELPER: Create mock sector
 // =============================================================================
 
-function createMockPlanet(type: string, id = "planet-1"): Planet {
+function createMockPlanet(type: string, id = "sector-1"): Sector {
   return {
     id,
     empireId: "empire-1",
     gameId: "game-1",
-    name: `Test ${type} Planet`,
-    type: type as Planet["type"],
+    name: `Test ${type} Sector`,
+    type: type as Sector["type"],
     productionRate: "100.00",
     purchasePrice: 1000,
     acquiredAtTurn: 1,
@@ -43,11 +43,11 @@ function createMockPlanet(type: string, id = "planet-1"): Planet {
 // =============================================================================
 
 describe("calculateTier1AutoProduction", () => {
-  it("should produce refined metals from ore planets (10%)", () => {
-    const planets = [createMockPlanet("ore")];
+  it("should produce refined metals from ore sectors (10%)", () => {
+    const sectors = [createMockPlanet("ore")];
     const baseProduction = { food: 0, ore: 1000, petroleum: 0 };
 
-    const result = calculateTier1AutoProduction(planets, baseProduction);
+    const result = calculateTier1AutoProduction(sectors, baseProduction);
 
     expect(result.totalByResource.refined_metals).toBe(100); // 10% of 1000
     expect(result.productions).toHaveLength(1);
@@ -59,57 +59,57 @@ describe("calculateTier1AutoProduction", () => {
     });
   });
 
-  it("should produce fuel cells from petroleum planets (10%)", () => {
-    const planets = [createMockPlanet("petroleum")];
+  it("should produce fuel cells from petroleum sectors (10%)", () => {
+    const sectors = [createMockPlanet("petroleum")];
     const baseProduction = { food: 0, ore: 0, petroleum: 500 };
 
-    const result = calculateTier1AutoProduction(planets, baseProduction);
+    const result = calculateTier1AutoProduction(sectors, baseProduction);
 
     expect(result.totalByResource.fuel_cells).toBe(50); // 10% of 500
   });
 
-  it("should produce processed food from food planets (5%)", () => {
-    const planets = [createMockPlanet("food")];
+  it("should produce processed food from food sectors (5%)", () => {
+    const sectors = [createMockPlanet("food")];
     const baseProduction = { food: 2000, ore: 0, petroleum: 0 };
 
-    const result = calculateTier1AutoProduction(planets, baseProduction);
+    const result = calculateTier1AutoProduction(sectors, baseProduction);
 
     expect(result.totalByResource.processed_food).toBe(100); // 5% of 2000
   });
 
-  it("should produce labor units from urban planets", () => {
-    const planets = [createMockPlanet("urban")];
+  it("should produce labor units from urban sectors", () => {
+    const sectors = [createMockPlanet("urban")];
     const baseProduction = { food: 0, ore: 0, petroleum: 0 };
 
-    const result = calculateTier1AutoProduction(planets, baseProduction);
+    const result = calculateTier1AutoProduction(sectors, baseProduction);
 
-    // 1 urban planet = 1000 credits * 5% / 50 = 1 labor unit
+    // 1 urban sector = 1000 credits * 5% / 50 = 1 labor unit
     expect(result.totalByResource.labor_units).toBe(1);
   });
 
-  it("should handle multiple planets of same type", () => {
-    const planets = [
+  it("should handle multiple sectors of same type", () => {
+    const sectors = [
       createMockPlanet("ore", "p1"),
       createMockPlanet("ore", "p2"),
       createMockPlanet("ore", "p3"),
     ];
     const baseProduction = { food: 0, ore: 3000, petroleum: 0 };
 
-    const result = calculateTier1AutoProduction(planets, baseProduction);
+    const result = calculateTier1AutoProduction(sectors, baseProduction);
 
     expect(result.totalByResource.refined_metals).toBe(300); // 10% of 3000
     expect(result.productions[0]?.sourcePlanets).toBe(3);
   });
 
-  it("should handle mixed planet types", () => {
-    const planets = [
+  it("should handle mixed sector types", () => {
+    const sectors = [
       createMockPlanet("ore", "p1"),
       createMockPlanet("petroleum", "p2"),
       createMockPlanet("food", "p3"),
     ];
     const baseProduction = { food: 1000, ore: 1000, petroleum: 1000 };
 
-    const result = calculateTier1AutoProduction(planets, baseProduction);
+    const result = calculateTier1AutoProduction(sectors, baseProduction);
 
     expect(result.productions).toHaveLength(3);
     expect(result.totalByResource.refined_metals).toBe(100);
@@ -118,29 +118,29 @@ describe("calculateTier1AutoProduction", () => {
   });
 
   it("should not produce if base production is zero", () => {
-    const planets = [createMockPlanet("ore")];
+    const sectors = [createMockPlanet("ore")];
     const baseProduction = { food: 0, ore: 0, petroleum: 0 };
 
-    const result = calculateTier1AutoProduction(planets, baseProduction);
+    const result = calculateTier1AutoProduction(sectors, baseProduction);
 
     expect(result.productions).toHaveLength(0);
     expect(result.totalByResource).toEqual({});
   });
 
-  it("should not produce if no matching planets", () => {
-    const planets = [createMockPlanet("tourism")];
+  it("should not produce if no matching sectors", () => {
+    const sectors = [createMockPlanet("tourism")];
     const baseProduction = { food: 1000, ore: 1000, petroleum: 1000 };
 
-    const result = calculateTier1AutoProduction(planets, baseProduction);
+    const result = calculateTier1AutoProduction(sectors, baseProduction);
 
     expect(result.productions).toHaveLength(0);
   });
 
   it("should floor fractional production", () => {
-    const planets = [createMockPlanet("ore")];
+    const sectors = [createMockPlanet("ore")];
     const baseProduction = { food: 0, ore: 55, petroleum: 0 }; // 10% = 5.5 → 5
 
-    const result = calculateTier1AutoProduction(planets, baseProduction);
+    const result = calculateTier1AutoProduction(sectors, baseProduction);
 
     expect(result.totalByResource.refined_metals).toBe(5);
   });
@@ -151,7 +151,7 @@ describe("calculateTier1AutoProduction", () => {
 // =============================================================================
 
 describe("calculateIndustrialProduction", () => {
-  it("should return empty if no industrial planets", () => {
+  it("should return empty if no industrial sectors", () => {
     const result = calculateIndustrialProduction(0, 1, { ore: 100, petroleum: 100, food: 100 });
 
     expect(result.produced).toEqual({});
@@ -161,7 +161,7 @@ describe("calculateIndustrialProduction", () => {
   it("should produce polymers with available resources", () => {
     const result = calculateIndustrialProduction(1, 0, { ore: 100, petroleum: 100, food: 0 });
 
-    // With base 10 production per planet and research level 0
+    // With base 10 production per sector and research level 0
     // Polymers: 30 petroleum + 20 ore → 1 polymer
     // Can make floor(100/30) = 3 from petroleum, floor(100/20) = 5 from ore
     // Limited by capacity: 10/2 = 5 polymers max
@@ -180,7 +180,7 @@ describe("calculateIndustrialProduction", () => {
     expect(highResearch.produced.polymers).toBeGreaterThanOrEqual(lowResearch.produced.polymers!);
   });
 
-  it("should scale with multiple industrial planets", () => {
+  it("should scale with multiple industrial sectors", () => {
     const single = calculateIndustrialProduction(1, 0, { ore: 500, petroleum: 500, food: 0 });
     const double = calculateIndustrialProduction(2, 0, { ore: 500, petroleum: 500, food: 0 });
 

@@ -27,7 +27,7 @@ const DEFEAT_DESCRIPTIONS: Record<string, string> = {
   bankruptcy:
     "Your empire could not pay its maintenance costs. Economic mismanagement led to your downfall.",
   elimination:
-    "All your planets have been conquered. Your empire has been wiped from the galaxy.",
+    "All your sectors have been conquered. Your empire has been wiped from the galaxy.",
   civil_collapse:
     "Three consecutive turns of revolting citizens led to civil war. Your government has collapsed.",
 };
@@ -77,13 +77,13 @@ export function DefeatScreen({
           {defeatType === "bankruptcy" && (
             <ul className="text-sm text-gray-400 space-y-1">
               <li>- Do not expand faster than your income can support</li>
-              <li>- Build tourism planets for steady credit income</li>
-              <li>- Release unprofitable planets before bankruptcy</li>
+              <li>- Build tourism sectors for steady credit income</li>
+              <li>- Release unprofitable sectors before bankruptcy</li>
             </ul>
           )}
           {defeatType === "elimination" && (
             <ul className="text-sm text-gray-400 space-y-1">
-              <li>- Build military units to defend your planets</li>
+              <li>- Build military units to defend your sectors</li>
               <li>- Do not provoke stronger empires early</li>
               <li>- Form alliances when you are weak (coming in M7)</li>
             </ul>
@@ -91,7 +91,7 @@ export function DefeatScreen({
           {defeatType === "civil_collapse" && (
             <ul className="text-sm text-gray-400 space-y-1">
               <li>- Keep your population fed to maintain civil status</li>
-              <li>- Build education planets for status bonus</li>
+              <li>- Build education sectors for status bonus</li>
               <li>- Do not let civil status reach revolting for 3 turns</li>
             </ul>
           )}

@@ -39,15 +39,15 @@ describe("M1.1: Starting Planets Reduced to 5", () => {
     expect(empire.planets.length).toBe(5);
 
     // Verify planet types are from the starting set
-    const planetTypes = empire.planets.map((p) => p.type);
-    expect(planetTypes).toContain("food");
-    expect(planetTypes).toContain("ore");
-    expect(planetTypes).toContain("petroleum");
-    expect(planetTypes).toContain("tourism");
-    expect(planetTypes).toContain("government");
+    const sectorTypes = empire.planets.map((p) => p.type);
+    expect(sectorTypes).toContain("food");
+    expect(sectorTypes).toContain("ore");
+    expect(sectorTypes).toContain("petroleum");
+    expect(sectorTypes).toContain("tourism");
+    expect(sectorTypes).toContain("government");
 
     // Research planet should NOT be included (player must buy it)
-    expect(planetTypes).not.toContain("research");
+    expect(sectorTypes).not.toContain("research");
   });
 
   it("should start all empires with 5 planets in simulation", () => {

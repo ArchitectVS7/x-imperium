@@ -19,14 +19,14 @@ import {
 
 describe("calculateInfluenceRadius", () => {
   it("should return base radius for starting empire", () => {
-    const result = calculateInfluenceRadius(6); // Starting planets
+    const result = calculateInfluenceRadius(6); // Starting sectors
     expect(result.base).toBe(3);
     expect(result.bonus).toBe(0);
     expect(result.total).toBe(3);
   });
 
-  it("should add bonus radius for more planets", () => {
-    // +1 per 5 planets beyond 6
+  it("should add bonus radius for more sectors", () => {
+    // +1 per 5 sectors beyond 6
     const result = calculateInfluenceRadius(16); // 6 + 10 = 16
     expect(result.bonus).toBe(2); // 10 / 5 = 2
     expect(result.total).toBe(5);
@@ -156,7 +156,7 @@ describe("calculateInfluenceSphere", () => {
   ];
 
   it("should categorize neighbors based on radius", () => {
-    const empire = { id: "empire-1", planetCount: 6 }; // radius = 3
+    const empire = { id: "empire-1", sectorCount: 6 }; // radius = 3
     const influence = {
       homeRegionId: "region-1",
       primaryRegionId: "region-1",
@@ -175,8 +175,8 @@ describe("calculateInfluenceSphere", () => {
     expect(result.totalRadius).toBe(3);
   });
 
-  it("should expand sphere with more planets", () => {
-    const empire = { id: "empire-1", planetCount: 16 }; // radius = 5 (3 + 2)
+  it("should expand sphere with more sectors", () => {
+    const empire = { id: "empire-1", sectorCount: 16 }; // radius = 5 (3 + 2)
     const influence = {
       homeRegionId: "region-1",
       primaryRegionId: "region-1",

@@ -40,7 +40,7 @@
  * 3. COALITION ATTACK: Multiple empires attack same target.
  *    Even at reduced power, combined forces overwhelm.
  *
- * 4. TERRITORY EXPANSION: Conquering their planets pulls them
+ * 4. TERRITORY EXPANSION: Conquering their sectors pulls them
  *    into your direct sphere for future attacks.
  *
  * 5. WORMHOLE DISCOVERY: Combat operations may discover
@@ -69,7 +69,7 @@ export interface AttackTargetInfo {
   empireId: string;
   empireName: string;
   networth: number;
-  planetCount: number;
+  sectorCount: number;
   regionId: string;
   regionName: string;
   forceMultiplier: number;
@@ -103,13 +103,13 @@ export interface AttackValidationWithInfluence {
  * Get all valid attack targets for an empire with full info
  */
 export function getAttackTargetsWithInfo(
-  attackerEmpire: Pick<Empire, "id" | "planetCount">,
+  attackerEmpire: Pick<Empire, "id" | "sectorCount">,
   attackerInfluence: EmpireInfluence,
   allEmpires: Array<{
     id: string;
     name: string;
     networth: number;
-    planetCount: number;
+    sectorCount: number;
     isEliminated: boolean;
   }>,
   empireRegions: Map<string, string>, // empireId -> regionId
@@ -193,7 +193,7 @@ export function getAttackTargetsWithInfo(
       empireId: empire.id,
       empireName: empire.name,
       networth: empire.networth,
-      planetCount: empire.planetCount,
+      sectorCount: empire.sectorCount,
       regionId,
       regionName: region?.name ?? "Unknown",
       forceMultiplier,

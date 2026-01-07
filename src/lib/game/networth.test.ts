@@ -7,9 +7,9 @@ import {
 } from "./networth";
 
 describe("calculateNetworth", () => {
-  it("calculates networth for starting empire (5 planets, 100 soldiers)", () => {
+  it("calculates networth for starting empire (5 sectors, 100 soldiers)", () => {
     const input: NetworthInput = {
-      planetCount: 5, // Reduced from 9 for faster eliminations
+      sectorCount: 5, // Reduced from 9 for faster eliminations
       soldiers: 100,
       fighters: 0,
       stations: 0,
@@ -27,7 +27,7 @@ describe("calculateNetworth", () => {
 
   it("calculates networth with all unit types", () => {
     const input: NetworthInput = {
-      planetCount: 15,
+      sectorCount: 15,
       soldiers: 1000,
       fighters: 50,
       stations: 10,
@@ -50,7 +50,7 @@ describe("calculateNetworth", () => {
     // 10 * 0.001 = 0.01
     // Total: 150.625, rounded to 151
     const rawExpected =
-      15 * NETWORTH_MULTIPLIERS.planets +
+      15 * NETWORTH_MULTIPLIERS.sectors +
       1000 * NETWORTH_MULTIPLIERS.soldiers +
       50 * NETWORTH_MULTIPLIERS.fighters +
       10 * NETWORTH_MULTIPLIERS.stations +
@@ -65,7 +65,7 @@ describe("calculateNetworth", () => {
 
   it("returns 0 for empty empire", () => {
     const input: NetworthInput = {
-      planetCount: 0,
+      sectorCount: 0,
       soldiers: 0,
       fighters: 0,
       stations: 0,
@@ -82,7 +82,7 @@ describe("calculateNetworth", () => {
 
   it("handles large military counts", () => {
     const input: NetworthInput = {
-      planetCount: 100,
+      sectorCount: 100,
       soldiers: 1_000_000,
       fighters: 100_000,
       stations: 50_000,
@@ -106,9 +106,9 @@ describe("calculateNetworth", () => {
     expect(result).toBeCloseTo(1880, 10);
   });
 
-  it("correctly weights planets as highest value", () => {
+  it("correctly weights sectors as highest value", () => {
     const planetsOnly: NetworthInput = {
-      planetCount: 10,
+      sectorCount: 10,
       soldiers: 0,
       fighters: 0,
       stations: 0,
@@ -119,7 +119,7 @@ describe("calculateNetworth", () => {
     };
 
     const soldiersOnly: NetworthInput = {
-      planetCount: 0,
+      sectorCount: 0,
       soldiers: 10000, // 10000 * 0.0005 = 5
       fighters: 0,
       stations: 0,
@@ -132,7 +132,7 @@ describe("calculateNetworth", () => {
     const planetNetworth = calculateNetworth(planetsOnly);
     const soldierNetworth = calculateNetworth(soldiersOnly);
 
-    // 10 planets = 100 networth
+    // 10 sectors = 100 networth
     // 10000 soldiers = 5 networth
     expect(planetNetworth).toBe(100);
     expect(soldierNetworth).toBe(5);
@@ -141,7 +141,7 @@ describe("calculateNetworth", () => {
 
   it("carriers have highest unit multiplier", () => {
     const baseInput: NetworthInput = {
-      planetCount: 0,
+      sectorCount: 0,
       soldiers: 0,
       fighters: 0,
       stations: 0,
@@ -175,13 +175,13 @@ describe("calculateStartingNetworth", () => {
   it("returns correct starting networth (50)", () => {
     const result = calculateStartingNetworth();
 
-    // 5 planets * 10 + 100 soldiers * 0.0005 = 50 + 0.05 = 50.05, rounded to 50
+    // 5 sectors * 10 + 100 soldiers * 0.0005 = 50 + 0.05 = 50.05, rounded to 50
     expect(result).toBe(50);
   });
 
   it("matches manual calculation with starting values", () => {
     const manualResult = calculateNetworth({
-      planetCount: 5, // Reduced from 9 for faster eliminations
+      sectorCount: 5, // Reduced from 9 for faster eliminations
       soldiers: 100,
       fighters: 0,
       stations: 0,
@@ -196,8 +196,8 @@ describe("calculateStartingNetworth", () => {
 });
 
 describe("NETWORTH_MULTIPLIERS", () => {
-  it("has correct planet multiplier (10)", () => {
-    expect(NETWORTH_MULTIPLIERS.planets).toBe(10);
+  it("has correct sector multiplier (10)", () => {
+    expect(NETWORTH_MULTIPLIERS.sectors).toBe(10);
   });
 
   it("has correct soldier multiplier (0.0005)", () => {

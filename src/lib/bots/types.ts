@@ -5,13 +5,13 @@
  * Defines decision types, weights, context, and processing results.
  */
 
-import type { Empire, Planet } from "@/lib/db/schema";
+import type { Empire, Sector } from "@/lib/db/schema";
 import type { CraftedResource } from "@/lib/game/constants/crafting";
 import type { ContractType } from "@/lib/game/constants/syndicate";
 import type { CombatStance } from "@/lib/combat/stances";
 
 // Re-export for convenience
-export type { Empire, Planet };
+export type { Empire, Sector };
 
 // =============================================================================
 // DIFFICULTY TYPES
@@ -115,7 +115,7 @@ export type ResearchBranch =
 
 export type BotDecision =
   | { type: "build_units"; unitType: UnitType; quantity: number }
-  | { type: "buy_planet"; planetType: PlanetType }
+  | { type: "buy_planet"; sectorType: PlanetType }
   | { type: "attack"; targetId: string; forces: Forces; stance?: CombatStance }
   | {
       type: "diplomacy";
@@ -185,11 +185,11 @@ export interface BotDecisionWeights {
  * Information about a potential target empire.
  *
  * TODO (Fog of War - Gate 2/3):
- * Currently bots have "god mode" knowledge - exact networth, planetCount,
+ * Currently bots have "god mode" knowledge - exact networth, sectorCount,
  * and militaryPower for all empires. This should be replaced with:
  * - estimatedNetworth: Based on leaderboard position (with uncertainty)
  * - estimatedPower: Based on covert ops intelligence (spy missions)
- * - visiblePlanets: Only planets revealed through espionage
+ * - visiblePlanets: Only sectors revealed through espionage
  * - publicInfo: Major battles, official rankings, treaty announcements
  *
  * Bots should only get accurate info through:
@@ -202,7 +202,7 @@ export interface EmpireTarget {
   id: string;
   name: string;
   networth: number;
-  planetCount: number;
+  sectorCount: number;
   isBot: boolean;
   isEliminated: boolean;
   /** Military strength estimate (soldiers + fighters + cruisers) */
@@ -217,7 +217,7 @@ export interface EmpireTarget {
 
 export interface BotDecisionContext {
   empire: Empire;
-  planets: Planet[];
+  sectors: Sector[];
   gameId: string;
   currentTurn: number;
   protectionTurns: number;

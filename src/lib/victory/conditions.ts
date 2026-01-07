@@ -22,7 +22,7 @@ export type DefeatReason = "bankruptcy" | "elimination" | "civil_collapse";
 export interface Empire {
   id: string;
   name: string;
-  planetCount: number;
+  sectorCount: number;
   networth: number;
   credits: number;
   civilStatus: string;
@@ -143,18 +143,18 @@ export function calculateMilitaryPower(empire: Empire): number {
 
 /**
  * Check if an empire has achieved Conquest Victory.
- * Requires controlling 60% of total planets.
+ * Requires controlling 60% of total sectors.
  *
  * @param empire - The empire to check
- * @param totalPlanets - Total number of planets in the game
+ * @param totalSectors - Total number of sectors in the game
  * @returns True if conquest victory achieved
  */
 export function checkConquestVictory(
   empire: Empire,
-  totalPlanets: number
+  totalSectors: number
 ): boolean {
-  if (totalPlanets <= 0) return false;
-  return empire.planetCount / totalPlanets >= CONQUEST_THRESHOLD;
+  if (totalSectors <= 0) return false;
+  return empire.sectorCount / totalSectors >= CONQUEST_THRESHOLD;
 }
 
 /**
@@ -175,27 +175,27 @@ export function checkEconomicVictory(
 
 /**
  * Check if a coalition has achieved Diplomatic Victory.
- * Requires coalition members to control 50% of total planets.
+ * Requires coalition members to control 50% of total sectors.
  *
  * @param coalition - The coalition to check
  * @param empires - All empires in the game
- * @param totalPlanets - Total number of planets in the game
+ * @param totalSectors - Total number of sectors in the game
  * @returns True if diplomatic victory achieved
  */
 export function checkDiplomaticVictory(
   coalition: Coalition,
   empires: Empire[],
-  totalPlanets: number
+  totalSectors: number
 ): boolean {
-  if (totalPlanets <= 0 || coalition.memberEmpireIds.length === 0) return false;
+  if (totalSectors <= 0 || coalition.memberEmpireIds.length === 0) return false;
 
   const memberEmpireIds = new Set(coalition.memberEmpireIds);
   // Only count active (non-eliminated) coalition members
   const coalitionPlanets = empires
     .filter((e) => memberEmpireIds.has(e.id) && !e.isEliminated)
-    .reduce((sum, e) => sum + e.planetCount, 0);
+    .reduce((sum, e) => sum + e.sectorCount, 0);
 
-  return coalitionPlanets / totalPlanets >= DIPLOMATIC_THRESHOLD;
+  return coalitionPlanets / totalSectors >= DIPLOMATIC_THRESHOLD;
 }
 
 /**
@@ -299,13 +299,13 @@ export function checkBankruptcy(
 
 /**
  * Check if an empire has been eliminated.
- * Elimination occurs when an empire controls 0 planets.
+ * Elimination occurs when an empire controls 0 sectors.
  *
  * @param empire - The empire to check
  * @returns True if empire is eliminated
  */
 export function checkElimination(empire: Empire): boolean {
-  return empire.planetCount === 0;
+  return empire.sectorCount === 0;
 }
 
 /**
@@ -334,7 +334,7 @@ export function checkDefeatConditions(
     return {
       defeated: true,
       reason: "elimination",
-      details: `${empire.name} has lost all planets and been eliminated from the galaxy.`,
+      details: `${empire.name} has lost all sectors and been eliminated from the galaxy.`,
     };
   }
 
@@ -367,7 +367,7 @@ export function checkDefeatConditions(
  *
  * @param empires - All empires in the game
  * @param coalitions - All coalitions in the game
- * @param totalPlanets - Total number of planets in the game
+ * @param totalSectors - Total number of sectors in the game
  * @param currentTurn - Current game turn
  * @param turnLimit - Maximum turns before survival victory
  * @returns VictoryResult if any empire has won
@@ -375,7 +375,7 @@ export function checkDefeatConditions(
 export function checkAllVictoryConditions(
   empires: Empire[],
   coalitions: Coalition[],
-  totalPlanets: number,
+  totalSectors: number,
   currentTurn: number,
   turnLimit: number = DEFAULT_TURN_LIMIT
 ): VictoryResult | null {
@@ -412,10 +412,10 @@ export function checkAllVictoryConditions(
 
       switch (victoryType) {
         case "conquest":
-          achieved = checkConquestVictory(empire, totalPlanets);
+          achieved = checkConquestVictory(empire, totalSectors);
           if (achieved) {
             const percentage = Math.round(
-              (empire.planetCount / totalPlanets) * 100
+              (empire.sectorCount / totalSectors) * 100
             );
             details = `${empire.name} controls ${percentage}% of the galaxy.`;
           }
@@ -433,7 +433,7 @@ export function checkAllVictoryConditions(
           for (const coalition of coalitions) {
             if (
               coalition.memberEmpireIds.includes(empire.id) &&
-              checkDiplomaticVictory(coalition, empires, totalPlanets)
+              checkDiplomaticVictory(coalition, empires, totalSectors)
             ) {
               achieved = true;
               details = `${empire.name}'s coalition controls the galaxy through diplomacy.`;
@@ -507,7 +507,7 @@ export interface VictoryProgress {
  * @param empire - The empire to analyze
  * @param allEmpires - All empires in the game
  * @param coalitions - All coalitions in the game
- * @param totalPlanets - Total number of planets in the game
+ * @param totalSectors - Total number of sectors in the game
  * @param currentTurn - Current game turn
  * @param turnLimit - Maximum turns before survival victory
  * @returns Array of VictoryProgress for each victory type
@@ -516,7 +516,7 @@ export function analyzeVictoryProgress(
   empire: Empire,
   allEmpires: Empire[],
   coalitions: Coalition[],
-  totalPlanets: number,
+  totalSectors: number,
   currentTurn: number,
   turnLimit: number = DEFAULT_TURN_LIMIT
 ): VictoryProgress[] {
@@ -539,20 +539,20 @@ export function analyzeVictoryProgress(
   const coalitionPlanets = empireCoalition
     ? activeEmpires
         .filter((e) => empireCoalition.memberEmpireIds.includes(e.id))
-        .reduce((sum, e) => sum + e.planetCount, 0)
-    : empire.planetCount;
+        .reduce((sum, e) => sum + e.sectorCount, 0)
+    : empire.sectorCount;
 
   return [
     // Conquest
     {
       type: "conquest",
-      currentValue: empire.planetCount,
-      targetValue: Math.ceil(totalPlanets * CONQUEST_THRESHOLD),
+      currentValue: empire.sectorCount,
+      targetValue: Math.ceil(totalSectors * CONQUEST_THRESHOLD),
       percentage:
-        totalPlanets > 0
-          ? Math.min(100, (empire.planetCount / (totalPlanets * CONQUEST_THRESHOLD)) * 100)
+        totalSectors > 0
+          ? Math.min(100, (empire.sectorCount / (totalSectors * CONQUEST_THRESHOLD)) * 100)
           : 0,
-      feasible: empire.planetCount > 0,
+      feasible: empire.sectorCount > 0,
     },
 
     // Economic
@@ -576,12 +576,12 @@ export function analyzeVictoryProgress(
     {
       type: "diplomatic",
       currentValue: coalitionPlanets,
-      targetValue: Math.ceil(totalPlanets * DIPLOMATIC_THRESHOLD),
+      targetValue: Math.ceil(totalSectors * DIPLOMATIC_THRESHOLD),
       percentage:
-        totalPlanets > 0
+        totalSectors > 0
           ? Math.min(
               100,
-              (coalitionPlanets / (totalPlanets * DIPLOMATIC_THRESHOLD)) * 100
+              (coalitionPlanets / (totalSectors * DIPLOMATIC_THRESHOLD)) * 100
             )
           : 0,
       feasible: coalitionPlanets > 0,
@@ -635,7 +635,7 @@ export function analyzeVictoryProgress(
  * @param empire - The empire to check
  * @param allEmpires - All empires in the game
  * @param coalitions - All coalitions in the game
- * @param totalPlanets - Total number of planets in the game
+ * @param totalSectors - Total number of sectors in the game
  * @param currentTurn - Current game turn
  * @param turnLimit - Maximum turns before survival victory
  * @returns True if at least one victory path is feasible
@@ -644,7 +644,7 @@ export function hasViableVictoryPath(
   empire: Empire,
   allEmpires: Empire[],
   coalitions: Coalition[],
-  totalPlanets: number,
+  totalSectors: number,
   currentTurn: number,
   turnLimit: number = DEFAULT_TURN_LIMIT
 ): boolean {
@@ -652,7 +652,7 @@ export function hasViableVictoryPath(
     empire,
     allEmpires,
     coalitions,
-    totalPlanets,
+    totalSectors,
     currentTurn,
     turnLimit
   );
@@ -666,7 +666,7 @@ export function hasViableVictoryPath(
  * @param empire - The empire to analyze
  * @param allEmpires - All empires in the game
  * @param coalitions - All coalitions in the game
- * @param totalPlanets - Total number of planets in the game
+ * @param totalSectors - Total number of sectors in the game
  * @param currentTurn - Current game turn
  * @param turnLimit - Maximum turns before survival victory
  * @returns The victory type with highest progress percentage
@@ -675,7 +675,7 @@ export function getMostViableVictoryPath(
   empire: Empire,
   allEmpires: Empire[],
   coalitions: Coalition[],
-  totalPlanets: number,
+  totalSectors: number,
   currentTurn: number,
   turnLimit: number = DEFAULT_TURN_LIMIT
 ): VictoryType {
@@ -683,7 +683,7 @@ export function getMostViableVictoryPath(
     empire,
     allEmpires,
     coalitions,
-    totalPlanets,
+    totalSectors,
     currentTurn,
     turnLimit
   );

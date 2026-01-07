@@ -43,7 +43,7 @@ function createTestEmpire(overrides: Partial<Empire> = {}): Empire {
   return {
     id: "empire-1",
     name: "Test Empire",
-    planetCount: 9,
+    sectorCount: 9,
     networth: 100,
     credits: 100000,
     civilStatus: "content",
@@ -102,28 +102,28 @@ describe("Victory Constants", () => {
 // =============================================================================
 
 describe("checkConquestVictory", () => {
-  it("should return true when empire controls 60% of planets", () => {
-    const empire = createTestEmpire({ planetCount: 60 });
+  it("should return true when empire controls 60% of sectors", () => {
+    const empire = createTestEmpire({ sectorCount: 60 });
     expect(checkConquestVictory(empire, 100)).toBe(true);
   });
 
   it("should return true when empire controls more than 60%", () => {
-    const empire = createTestEmpire({ planetCount: 75 });
+    const empire = createTestEmpire({ sectorCount: 75 });
     expect(checkConquestVictory(empire, 100)).toBe(true);
   });
 
   it("should return false when empire controls less than 60%", () => {
-    const empire = createTestEmpire({ planetCount: 59 });
+    const empire = createTestEmpire({ sectorCount: 59 });
     expect(checkConquestVictory(empire, 100)).toBe(false);
   });
 
-  it("should return false when totalPlanets is 0", () => {
-    const empire = createTestEmpire({ planetCount: 10 });
+  it("should return false when totalSectors is 0", () => {
+    const empire = createTestEmpire({ sectorCount: 10 });
     expect(checkConquestVictory(empire, 0)).toBe(false);
   });
 
   it("should handle edge case of exactly 60%", () => {
-    const empire = createTestEmpire({ planetCount: 6 });
+    const empire = createTestEmpire({ sectorCount: 6 });
     expect(checkConquestVictory(empire, 10)).toBe(true);
   });
 });
@@ -164,11 +164,11 @@ describe("checkEconomicVictory", () => {
 // =============================================================================
 
 describe("checkDiplomaticVictory", () => {
-  it("should return true when coalition controls 50% of planets", () => {
+  it("should return true when coalition controls 50% of sectors", () => {
     const empires = [
-      createTestEmpire({ id: "e1", planetCount: 30 }),
-      createTestEmpire({ id: "e2", planetCount: 20 }),
-      createTestEmpire({ id: "e3", planetCount: 50 }),
+      createTestEmpire({ id: "e1", sectorCount: 30 }),
+      createTestEmpire({ id: "e2", sectorCount: 20 }),
+      createTestEmpire({ id: "e3", sectorCount: 50 }),
     ];
     const coalition: Coalition = { id: "c1", memberEmpireIds: ["e1", "e2"] };
     expect(checkDiplomaticVictory(coalition, empires, 100)).toBe(true);
@@ -176,9 +176,9 @@ describe("checkDiplomaticVictory", () => {
 
   it("should return true when coalition controls more than 50%", () => {
     const empires = [
-      createTestEmpire({ id: "e1", planetCount: 40 }),
-      createTestEmpire({ id: "e2", planetCount: 20 }),
-      createTestEmpire({ id: "e3", planetCount: 40 }),
+      createTestEmpire({ id: "e1", sectorCount: 40 }),
+      createTestEmpire({ id: "e2", sectorCount: 20 }),
+      createTestEmpire({ id: "e3", sectorCount: 40 }),
     ];
     const coalition: Coalition = { id: "c1", memberEmpireIds: ["e1", "e2"] };
     expect(checkDiplomaticVictory(coalition, empires, 100)).toBe(true);
@@ -186,31 +186,31 @@ describe("checkDiplomaticVictory", () => {
 
   it("should return false when coalition controls less than 50%", () => {
     const empires = [
-      createTestEmpire({ id: "e1", planetCount: 30 }),
-      createTestEmpire({ id: "e2", planetCount: 10 }),
-      createTestEmpire({ id: "e3", planetCount: 60 }),
+      createTestEmpire({ id: "e1", sectorCount: 30 }),
+      createTestEmpire({ id: "e2", sectorCount: 10 }),
+      createTestEmpire({ id: "e3", sectorCount: 60 }),
     ];
     const coalition: Coalition = { id: "c1", memberEmpireIds: ["e1", "e2"] };
     expect(checkDiplomaticVictory(coalition, empires, 100)).toBe(false);
   });
 
   it("should return false when coalition has no members", () => {
-    const empires = [createTestEmpire({ id: "e1", planetCount: 100 })];
+    const empires = [createTestEmpire({ id: "e1", sectorCount: 100 })];
     const coalition: Coalition = { id: "c1", memberEmpireIds: [] };
     expect(checkDiplomaticVictory(coalition, empires, 100)).toBe(false);
   });
 
-  it("should return false when totalPlanets is 0", () => {
-    const empires = [createTestEmpire({ id: "e1", planetCount: 10 })];
+  it("should return false when totalSectors is 0", () => {
+    const empires = [createTestEmpire({ id: "e1", sectorCount: 10 })];
     const coalition: Coalition = { id: "c1", memberEmpireIds: ["e1"] };
     expect(checkDiplomaticVictory(coalition, empires, 0)).toBe(false);
   });
 
-  it("should exclude eliminated coalition members from planet count", () => {
+  it("should exclude eliminated coalition members from sector count", () => {
     const empires = [
-      createTestEmpire({ id: "e1", planetCount: 20 }),
-      createTestEmpire({ id: "e2", planetCount: 40, isEliminated: true }), // Eliminated!
-      createTestEmpire({ id: "e3", planetCount: 40 }),
+      createTestEmpire({ id: "e1", sectorCount: 20 }),
+      createTestEmpire({ id: "e2", sectorCount: 40, isEliminated: true }), // Eliminated!
+      createTestEmpire({ id: "e3", sectorCount: 40 }),
     ];
     const coalition: Coalition = { id: "c1", memberEmpireIds: ["e1", "e2"] };
     // e1 has 20, e2 is eliminated so doesn't count
@@ -220,12 +220,12 @@ describe("checkDiplomaticVictory", () => {
 
   it("should succeed when active coalition members control 50%", () => {
     const empires = [
-      createTestEmpire({ id: "e1", planetCount: 30 }),
-      createTestEmpire({ id: "e2", planetCount: 25 }),
-      createTestEmpire({ id: "e3", planetCount: 45, isEliminated: true }), // Eliminated!
+      createTestEmpire({ id: "e1", sectorCount: 30 }),
+      createTestEmpire({ id: "e2", sectorCount: 25 }),
+      createTestEmpire({ id: "e3", sectorCount: 45, isEliminated: true }), // Eliminated!
     ];
     const coalition: Coalition = { id: "c1", memberEmpireIds: ["e1", "e2"] };
-    // e1 has 30, e2 has 25 = 55 planets
+    // e1 has 30, e2 has 25 = 55 sectors
     // 55/100 = 55% >= 50% threshold
     expect(checkDiplomaticVictory(coalition, empires, 100)).toBe(true);
   });
@@ -439,13 +439,13 @@ describe("checkBankruptcy", () => {
 });
 
 describe("checkElimination", () => {
-  it("should return true when planet count is 0", () => {
-    const empire = createTestEmpire({ planetCount: 0 });
+  it("should return true when sector count is 0", () => {
+    const empire = createTestEmpire({ sectorCount: 0 });
     expect(checkElimination(empire)).toBe(true);
   });
 
-  it("should return false when planet count is positive", () => {
-    const empire = createTestEmpire({ planetCount: 1 });
+  it("should return false when sector count is positive", () => {
+    const empire = createTestEmpire({ sectorCount: 1 });
     expect(checkElimination(empire)).toBe(false);
   });
 });
@@ -476,7 +476,7 @@ describe("checkCivilCollapse", () => {
 describe("checkDefeatConditions", () => {
   it("should detect elimination first", () => {
     const empire = createTestEmpire({
-      planetCount: 0,
+      sectorCount: 0,
       credits: -1000,
       civilStatus: "revolting",
     });
@@ -487,7 +487,7 @@ describe("checkDefeatConditions", () => {
 
   it("should detect civil collapse second", () => {
     const empire = createTestEmpire({
-      planetCount: 5,
+      sectorCount: 5,
       credits: -1000,
       civilStatus: "revolting",
     });
@@ -498,7 +498,7 @@ describe("checkDefeatConditions", () => {
 
   it("should detect bankruptcy third", () => {
     const empire = createTestEmpire({
-      planetCount: 5,
+      sectorCount: 5,
       credits: -1000,
       civilStatus: "content",
     });
@@ -509,7 +509,7 @@ describe("checkDefeatConditions", () => {
 
   it("should return not defeated when all conditions pass", () => {
     const empire = createTestEmpire({
-      planetCount: 5,
+      sectorCount: 5,
       credits: 1000,
       civilStatus: "content",
     });
@@ -526,9 +526,9 @@ describe("checkDefeatConditions", () => {
 describe("checkAllVictoryConditions", () => {
   it("should return null when no victory achieved", () => {
     const empires = [
-      createTestEmpire({ id: "e1", planetCount: 30, networth: 100 }),
-      createTestEmpire({ id: "e2", planetCount: 30, networth: 100 }),
-      createTestEmpire({ id: "e3", planetCount: 40, networth: 100 }),
+      createTestEmpire({ id: "e1", sectorCount: 30, networth: 100 }),
+      createTestEmpire({ id: "e2", sectorCount: 30, networth: 100 }),
+      createTestEmpire({ id: "e3", sectorCount: 40, networth: 100 }),
     ];
     const result = checkAllVictoryConditions(empires, [], 100, 50);
     expect(result).toBeNull();
@@ -536,8 +536,8 @@ describe("checkAllVictoryConditions", () => {
 
   it("should detect conquest victory", () => {
     const empires = [
-      createTestEmpire({ id: "e1", planetCount: 65 }),
-      createTestEmpire({ id: "e2", planetCount: 35 }),
+      createTestEmpire({ id: "e1", sectorCount: 65 }),
+      createTestEmpire({ id: "e2", sectorCount: 35 }),
     ];
     const result = checkAllVictoryConditions(empires, [], 100, 50);
     expect(result?.achieved).toBe(true);
@@ -549,10 +549,10 @@ describe("checkAllVictoryConditions", () => {
     const empires = [
       createTestEmpire({
         id: "e1",
-        planetCount: 65,
+        sectorCount: 65,
         fundamentalResearchLevel: 7, // Also has research victory
       }),
-      createTestEmpire({ id: "e2", planetCount: 35 }),
+      createTestEmpire({ id: "e2", sectorCount: 35 }),
     ];
     const result = checkAllVictoryConditions(empires, [], 100, 50);
     expect(result?.type).toBe("conquest");
@@ -560,8 +560,8 @@ describe("checkAllVictoryConditions", () => {
 
   it("should detect last empire standing as conquest", () => {
     const empires = [
-      createTestEmpire({ id: "e1", planetCount: 30, isEliminated: false }),
-      createTestEmpire({ id: "e2", planetCount: 0, isEliminated: true }),
+      createTestEmpire({ id: "e1", sectorCount: 30, isEliminated: false }),
+      createTestEmpire({ id: "e2", sectorCount: 0, isEliminated: true }),
     ];
     const result = checkAllVictoryConditions(empires, [], 100, 50);
     expect(result?.achieved).toBe(true);
@@ -585,8 +585,8 @@ describe("checkAllVictoryConditions", () => {
 
 describe("analyzeVictoryProgress", () => {
   it("should return progress for all victory types", () => {
-    const empire = createTestEmpire({ id: "e1", planetCount: 30 });
-    const allEmpires = [empire, createTestEmpire({ id: "e2", planetCount: 70 })];
+    const empire = createTestEmpire({ id: "e1", sectorCount: 30 });
+    const allEmpires = [empire, createTestEmpire({ id: "e2", sectorCount: 70 })];
     const progress = analyzeVictoryProgress(empire, allEmpires, [], 100, 50);
 
     expect(progress.length).toBe(6);
@@ -601,7 +601,7 @@ describe("analyzeVictoryProgress", () => {
   });
 
   it("should calculate conquest progress correctly", () => {
-    const empire = createTestEmpire({ id: "e1", planetCount: 30 });
+    const empire = createTestEmpire({ id: "e1", sectorCount: 30 });
     const allEmpires = [empire];
     const progress = analyzeVictoryProgress(empire, allEmpires, [], 100, 50);
     const conquest = progress.find((p) => p.type === "conquest");
@@ -624,37 +624,37 @@ describe("analyzeVictoryProgress", () => {
 
 describe("hasViableVictoryPath", () => {
   it("should return true when empire has viable paths", () => {
-    const empire = createTestEmpire({ planetCount: 30 });
+    const empire = createTestEmpire({ sectorCount: 30 });
     expect(hasViableVictoryPath(empire, [empire], [], 100, 50)).toBe(true);
   });
 
   it("should consider survival always viable for active empires", () => {
-    const empire = createTestEmpire({ planetCount: 1 });
+    const empire = createTestEmpire({ sectorCount: 1 });
     expect(hasViableVictoryPath(empire, [empire], [], 100, 50)).toBe(true);
   });
 });
 
 describe("getMostViableVictoryPath", () => {
   it("should return highest progress victory path", () => {
-    // When empire has 50 planets out of 100:
+    // When empire has 50 sectors out of 100:
     // - Conquest: 50/60 = 83% progress
-    // - Diplomatic: 50/50 = 100% progress (empire's own planets count as coalition)
+    // - Diplomatic: 50/50 = 100% progress (empire's own sectors count as coalition)
     // So diplomatic should be returned as it has higher progress
-    const empire = createTestEmpire({ id: "e1", planetCount: 50 });
-    const other = createTestEmpire({ id: "e2", planetCount: 50 });
+    const empire = createTestEmpire({ id: "e1", sectorCount: 50 });
+    const other = createTestEmpire({ id: "e2", sectorCount: 50 });
     const result = getMostViableVictoryPath(empire, [empire, other], [], 100, 50);
     expect(result).toBe("diplomatic");
   });
 
   it("should return survival as fallback", () => {
     const empire = createTestEmpire({
-      planetCount: 1,
+      sectorCount: 1,
       networth: 1,
       soldiers: 0,
     });
     const other = createTestEmpire({
       id: "e2",
-      planetCount: 99,
+      sectorCount: 99,
       networth: 1000,
       soldiers: 10000,
     });

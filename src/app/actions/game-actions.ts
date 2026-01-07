@@ -288,7 +288,7 @@ export async function getResumableCampaignsAction(): Promise<ResumableCampaign[]
             credits: true,
           },
           with: {
-            planets: {
+            sectors: {
               columns: { id: true },
             },
           },
@@ -298,7 +298,7 @@ export async function getResumableCampaignsAction(): Promise<ResumableCampaign[]
 
     return campaigns.map((game) => {
       const playerEmpire = game.empires.find((e) => e.type === "player");
-      const activeEmpires = game.empires.filter((e) => e.planets.length > 0);
+      const activeEmpires = game.empires.filter((e) => e.sectors.length > 0);
 
       return {
         gameId: game.id,
@@ -473,7 +473,7 @@ export async function getGameResultAction(): Promise<{
       with: {
         empires: {
           with: {
-            planets: true,
+            sectors: true,
           },
         },
       },
@@ -495,13 +495,13 @@ export async function getGameResultAction(): Promise<{
     let victoryType: string | null = null;
 
     if (game.status === "completed") {
-      // Find empires with planets (still alive)
+      // Find empires with sectors (still alive)
       const activeEmpires = game.empires.filter(
-        (e) => e.planets.length > 0
+        (e) => e.sectors.length > 0
       );
 
       if (activeEmpires.length > 0) {
-        // Sort by networth (credits + planets as proxy)
+        // Sort by networth (credits + sectors as proxy)
         const sorted = activeEmpires.sort(
           (a, b) => b.credits - a.credits
         );
@@ -511,13 +511,13 @@ export async function getGameResultAction(): Promise<{
           winnerName = winner.name;
 
           // Determine victory type based on game state
-          const totalPlanets = game.empires.reduce(
-            (sum, e) => sum + e.planets.length,
+          const totalSectors = game.empires.reduce(
+            (sum, e) => sum + e.sectors.length,
             0
           );
-          const winnerPlanets = winner.planets.length;
+          const winnerPlanets = winner.sectors.length;
 
-          if (winnerPlanets / totalPlanets >= 0.6) {
+          if (winnerPlanets / totalSectors >= 0.6) {
             victoryType = "conquest";
           } else if (game.currentTurn >= 200) {
             victoryType = "survival";
@@ -529,13 +529,13 @@ export async function getGameResultAction(): Promise<{
     }
 
     // Determine if player was defeated based on game state
-    // Player is defeated if they have 0 planets or negative credits
+    // Player is defeated if they have 0 sectors or negative credits
     const playerDefeated =
-      playerEmpire.planets.length === 0 || playerEmpire.credits < 0;
+      playerEmpire.sectors.length === 0 || playerEmpire.credits < 0;
     let defeatType: string | null = null;
     if (playerDefeated) {
       // Check defeat reason based on empire state
-      if (playerEmpire.planets.length === 0) {
+      if (playerEmpire.sectors.length === 0) {
         defeatType = "elimination";
       } else if (playerEmpire.credits < 0) {
         defeatType = "bankruptcy";

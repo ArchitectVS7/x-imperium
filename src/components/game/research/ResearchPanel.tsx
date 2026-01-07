@@ -132,7 +132,7 @@ export function ResearchPanel({ refreshTrigger }: ResearchPanelProps) {
             <span className="text-gray-400 text-sm">Turns to Level {status.level + 1}:</span>
             <span className="font-mono text-white text-lg">
               {turnsToNextLevel === -1 ? (
-                <span className="text-red-400">No research planets</span>
+                <span className="text-red-400">No research sectors</span>
               ) : (
                 `${turnsToNextLevel} turns`
               )}

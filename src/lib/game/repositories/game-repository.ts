@@ -2,15 +2,15 @@ import { db } from "@/lib/db";
 import {
   games,
   empires,
-  planets,
+  sectors,
   galaxyRegions,
   regionConnections,
   empireInfluence,
   type NewEmpire,
-  type NewPlanet,
+  type NewSector,
   type Game,
   type Empire,
-  type Planet,
+  type Sector,
 } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 import {
@@ -58,7 +58,7 @@ export async function getGameById(gameId: string): Promise<Game | undefined> {
 }
 
 /**
- * Get a game with all empires and their planets.
+ * Get a game with all empires and their sectors.
  */
 export async function getGameWithEmpires(gameId: string) {
   return db.query.games.findFirst({
@@ -66,7 +66,7 @@ export async function getGameWithEmpires(gameId: string) {
     with: {
       empires: {
         with: {
-          planets: true,
+          sectors: true,
         },
       },
     },
@@ -78,7 +78,7 @@ export async function getGameWithEmpires(gameId: string) {
 // =============================================================================
 
 /**
- * Create a player empire with 9 starting planets.
+ * Create a player empire with 9 starting sectors.
  */
 export async function createPlayerEmpire(
   gameId: string,
@@ -87,7 +87,7 @@ export async function createPlayerEmpire(
 ): Promise<Empire> {
   // Calculate starting networth
   const networth = calculateNetworth({
-    planetCount: TOTAL_STARTING_PLANETS,
+    sectorCount: TOTAL_STARTING_PLANETS,
     ...STARTING_MILITARY,
   });
 
@@ -101,7 +101,7 @@ export async function createPlayerEmpire(
     ...STARTING_MILITARY,
     ...STARTING_POPULATION,
     networth,
-    planetCount: TOTAL_STARTING_PLANETS,
+    sectorCount: TOTAL_STARTING_PLANETS,
   };
 
   const [empire] = await db.insert(empires).values(empireData).returning();
@@ -109,7 +109,7 @@ export async function createPlayerEmpire(
     throw new Error("Failed to create empire");
   }
 
-  // Create starting planets
+  // Create starting sectors
   await createStartingPlanets(empire.id, gameId);
 
   // Initialize M3 systems (research & upgrades)
@@ -120,17 +120,17 @@ export async function createPlayerEmpire(
 }
 
 /**
- * Create the 9 starting planets for an empire.
+ * Create the 9 starting sectors for an empire.
  */
 async function createStartingPlanets(
   empireId: string,
   gameId: string
-): Promise<Planet[]> {
-  const planetValues: NewPlanet[] = [];
+): Promise<Sector[]> {
+  const sectorValues: NewSector[] = [];
 
   for (const { type, count } of STARTING_PLANETS) {
     for (let i = 0; i < count; i++) {
-      planetValues.push({
+      sectorValues.push({
         empireId,
         gameId,
         type,
@@ -140,7 +140,7 @@ async function createStartingPlanets(
     }
   }
 
-  const createdPlanets = await db.insert(planets).values(planetValues).returning();
+  const createdPlanets = await db.insert(sectors).values(sectorValues).returning();
   return createdPlanets;
 }
 
@@ -154,13 +154,13 @@ export async function getEmpireById(empireId: string): Promise<Empire | undefine
 }
 
 /**
- * Get an empire with all its planets.
+ * Get an empire with all its sectors.
  */
 export async function getEmpireWithPlanets(empireId: string) {
   return db.query.empires.findFirst({
     where: eq(empires.id, empireId),
     with: {
-      planets: true,
+      sectors: true,
     },
   });
 }
@@ -172,7 +172,7 @@ export async function getPlayerEmpire(gameId: string) {
   return db.query.empires.findFirst({
     where: eq(empires.gameId, gameId),
     with: {
-      planets: true,
+      sectors: true,
     },
   });
 }
@@ -182,16 +182,16 @@ export async function getPlayerEmpire(gameId: string) {
 // =============================================================================
 
 /**
- * Get all planets for an empire.
+ * Get all sectors for an empire.
  */
-export async function getPlanetsByEmpireId(empireId: string): Promise<Planet[]> {
-  return db.query.planets.findMany({
-    where: eq(planets.empireId, empireId),
+export async function getPlanetsByEmpireId(empireId: string): Promise<Sector[]> {
+  return db.query.sectors.findMany({
+    where: eq(sectors.empireId, empireId),
   });
 }
 
 /**
- * Get planet counts by type for an empire.
+ * Get sector counts by type for an empire.
  */
 export async function getPlanetCountsByType(
   empireId: string
@@ -199,8 +199,8 @@ export async function getPlanetCountsByType(
   const empirePlanets = await getPlanetsByEmpireId(empireId);
 
   return empirePlanets.reduce(
-    (acc, planet) => {
-      acc[planet.type] = (acc[planet.type] || 0) + 1;
+    (acc, sector) => {
+      acc[sector.type] = (acc[sector.type] || 0) + 1;
       return acc;
     },
     {} as Record<string, number>
@@ -288,7 +288,7 @@ async function initializeGalaxyGeography(
     id: e.id,
     type: e.type as "player" | "bot",
     botTier: e.botTier,
-    planetCount: e.planetCount,
+    sectorCount: e.sectorCount,
   }));
 
   const galaxy = generateGalaxy(gameId, empireData, { seed });
@@ -427,7 +427,7 @@ export async function regenerateGalaxyData(
     id: e.id,
     type: e.type as "player" | "bot",
     botTier: e.botTier,
-    planetCount: e.planetCount,
+    sectorCount: e.sectorCount,
   }));
 
   const seed = Date.now();
@@ -515,7 +515,7 @@ export async function regenerateGalaxyData(
  */
 export interface DashboardData {
   empire: Empire;
-  planets: Planet[];
+  sectors: Sector[];
   resources: {
     credits: number;
     food: number;
@@ -534,7 +534,7 @@ export interface DashboardData {
   };
   stats: {
     networth: number;
-    planetCount: number;
+    sectorCount: number;
     population: number;
     civilStatus: string;
   };
@@ -562,7 +562,7 @@ export async function getDashboardData(
 
   return {
     empire: empireWithPlanets,
-    planets: empireWithPlanets.planets,
+    sectors: empireWithPlanets.sectors,
     resources: {
       credits: empireWithPlanets.credits,
       food: empireWithPlanets.food,
@@ -581,7 +581,7 @@ export async function getDashboardData(
     },
     stats: {
       networth: empireWithPlanets.networth,
-      planetCount: empireWithPlanets.planetCount,
+      sectorCount: empireWithPlanets.sectorCount,
       population: empireWithPlanets.population,
       civilStatus: empireWithPlanets.civilStatus,
     },

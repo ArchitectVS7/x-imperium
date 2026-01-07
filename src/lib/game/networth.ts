@@ -13,7 +13,7 @@
  */
 
 export interface NetworthInput {
-  planetCount: number;
+  sectorCount: number;
   soldiers: number;
   fighters: number;
   stations: number;
@@ -24,7 +24,7 @@ export interface NetworthInput {
 }
 
 export const NETWORTH_MULTIPLIERS = {
-  planets: 10,
+  sectors: 10,
   soldiers: 0.0005,
   fighters: 0.001,
   stations: 0.002,
@@ -35,14 +35,14 @@ export const NETWORTH_MULTIPLIERS = {
 } as const;
 
 /**
- * Calculate the networth of an empire based on its planets and military units.
+ * Calculate the networth of an empire based on its sectors and military units.
  *
- * @param input - The empire's planet count and military unit counts
+ * @param input - The empire's sector count and military unit counts
  * @returns The calculated networth as a number
  */
 export function calculateNetworth(input: NetworthInput): number {
   const rawNetworth =
-    input.planetCount * NETWORTH_MULTIPLIERS.planets +
+    input.sectorCount * NETWORTH_MULTIPLIERS.sectors +
     input.soldiers * NETWORTH_MULTIPLIERS.soldiers +
     input.fighters * NETWORTH_MULTIPLIERS.fighters +
     input.stations * NETWORTH_MULTIPLIERS.stations +
@@ -57,14 +57,14 @@ export function calculateNetworth(input: NetworthInput): number {
 
 /**
  * Calculate the starting networth for a new empire.
- * Default: 5 planets, 100 soldiers, no other units.
- * (Reduced from 9 planets for faster eliminations)
+ * Default: 5 sectors, 100 soldiers, no other units.
+ * (Reduced from 9 sectors for faster eliminations)
  *
  * @returns Starting networth (50)
  */
 export function calculateStartingNetworth(): number {
   return calculateNetworth({
-    planetCount: 5, // Reduced from 9 for faster eliminations
+    sectorCount: 5, // Reduced from 9 for faster eliminations
     soldiers: 100,
     fighters: 0,
     stations: 0,

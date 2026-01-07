@@ -96,9 +96,9 @@ describe("Difficulty System", () => {
 
   describe("selectTarget", () => {
     const mockTargets: EmpireTarget[] = [
-      { id: "1", name: "Empire 1", networth: 100, planetCount: 5, isBot: true, isEliminated: false, militaryPower: 50 },
-      { id: "2", name: "Empire 2", networth: 50, planetCount: 3, isBot: true, isEliminated: false, militaryPower: 30 },
-      { id: "3", name: "Empire 3", networth: 200, planetCount: 10, isBot: true, isEliminated: false, militaryPower: 100 },
+      { id: "1", name: "Empire 1", networth: 100, sectorCount: 5, isBot: true, isEliminated: false, militaryPower: 50 },
+      { id: "2", name: "Empire 2", networth: 50, sectorCount: 3, isBot: true, isEliminated: false, militaryPower: 30 },
+      { id: "3", name: "Empire 3", networth: 200, sectorCount: 10, isBot: true, isEliminated: false, militaryPower: 100 },
     ];
 
     it("should return null for empty targets array", () => {

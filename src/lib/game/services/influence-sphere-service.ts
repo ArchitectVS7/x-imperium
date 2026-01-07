@@ -3,7 +3,7 @@
  *
  * Calculates and manages empire spheres of influence based on:
  * - Galaxy region structure
- * - Empire territory (planet count)
+ * - Empire territory (sector count)
  * - Region connections (including wormholes)
  * - Distance calculations
  *
@@ -28,7 +28,7 @@ export interface InfluenceSphereResult {
   extendedNeighbors: string[];
   /** Empire IDs that cannot be attacked (too far) */
   distantEmpires: string[];
-  /** Total influence radius (base + bonus from planets/tech) */
+  /** Total influence radius (base + bonus from sectors/tech) */
   totalRadius: number;
 }
 
@@ -60,7 +60,7 @@ export interface NeighborInfo {
 export const INFLUENCE_CONSTANTS = {
   /** Base number of direct neighbors */
   BASE_NEIGHBOR_COUNT: 3,
-  /** Additional neighbors per 5 planets owned */
+  /** Additional neighbors per 5 sectors owned */
   NEIGHBORS_PER_PLANETS: 5,
   /** Maximum number of direct neighbors */
   MAX_DIRECT_NEIGHBORS: 8,
@@ -91,14 +91,14 @@ export const INFLUENCE_CONSTANTS = {
  * Radius determines how many "hops" an empire can project power
  */
 export function calculateInfluenceRadius(
-  planetCount: number,
+  sectorCount: number,
   researchLevel: number = 0,
   techBonuses: number = 0
 ): { base: number; bonus: number; total: number } {
   const base = INFLUENCE_CONSTANTS.BASE_NEIGHBOR_COUNT;
 
-  // Bonus from planet count: +1 radius per 5 planets beyond starting 6
-  const planetBonus = Math.floor(Math.max(0, planetCount - 6) / 5);
+  // Bonus from sector count: +1 radius per 5 sectors beyond starting 6
+  const planetBonus = Math.floor(Math.max(0, sectorCount - 6) / 5);
 
   // Bonus from research (propulsion branch could add this)
   const researchBonus = Math.floor(researchLevel / 10);
@@ -262,7 +262,7 @@ function buildAdjacencyMap(
  * Calculate the full influence sphere for an empire
  */
 export function calculateInfluenceSphere(
-  empire: Pick<Empire, "id" | "planetCount">,
+  empire: Pick<Empire, "id" | "sectorCount">,
   empireInfluence: Pick<EmpireInfluence, "homeRegionId" | "primaryRegionId">,
   allEmpires: Array<{
     id: string;
@@ -274,7 +274,7 @@ export function calculateInfluenceSphere(
   connections: RegionConnection[]
 ): InfluenceSphereResult {
   // Calculate influence radius
-  const { total: radius } = calculateInfluenceRadius(empire.planetCount);
+  const { total: radius } = calculateInfluenceRadius(empire.sectorCount);
 
   // Get all empires sorted by distance
   const sortedNeighbors = getEmpiresbyDistance(
@@ -406,10 +406,10 @@ export function getValidAttackTargets(
 // =============================================================================
 
 /**
- * Recalculate influence when territory changes (planet captured, empire eliminated)
+ * Recalculate influence when territory changes (sector captured, empire eliminated)
  */
 export function recalculateInfluenceOnTerritoryChange(
-  empire: Pick<Empire, "id" | "planetCount">,
+  empire: Pick<Empire, "id" | "sectorCount">,
   currentInfluence: EmpireInfluence,
   allEmpires: Array<{
     id: string;
@@ -426,7 +426,7 @@ export function recalculateInfluenceOnTerritoryChange(
   baseInfluenceRadius: number;
   bonusInfluenceRadius: number;
 } {
-  const { base, bonus, total } = calculateInfluenceRadius(empire.planetCount);
+  const { base, bonus, total } = calculateInfluenceRadius(empire.sectorCount);
 
   const sphere = calculateInfluenceSphere(
     empire,

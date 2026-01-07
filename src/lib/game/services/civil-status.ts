@@ -201,7 +201,7 @@ export function shouldUpgradeStatus(
         break;
 
       case "education":
-        // Education planet bonus can trigger upgrade
+        // Education sector bonus can trigger upgrade
         return true;
 
       case "low_maintenance":

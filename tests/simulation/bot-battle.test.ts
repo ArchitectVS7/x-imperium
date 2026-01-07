@@ -142,7 +142,7 @@ describe("Bot Battle Simulator", () => {
       const result = runSimulation(config);
 
       expect(result.coverage.buyPlanet.count).toBeGreaterThan(0);
-      expect(result.coverage.buyPlanet.planetTypes.size).toBeGreaterThan(0);
+      expect(result.coverage.buyPlanet.sectorTypes.size).toBeGreaterThan(0);
     });
 
     it("should resolve combat after protection period", () => {

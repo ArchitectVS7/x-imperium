@@ -2,8 +2,8 @@
   "personaId": "architect_construct",
   "templates": {
     "greeting": [
-      "Ah, {empire_name}. I am Architect Construct. You build on planets? How... quaint. I build DYSON SPHERES.",
-      "Greetings from the megastructure. I am the Builder. Your empire has planets. I have cosmic engineering. Difference: noted.",
+      "Ah, {empire_name}. I am Architect Construct. You build on sectors? How... quaint. I build DYSON SPHERES.",
+      "Greetings from the megastructure. I am the Builder. Your empire has sectors. I have cosmic engineering. Difference: noted.",
       "Contact from planetary civilization. I am Construct. I think in stellar scales. Planets are... small. Let us talk bigger."
     ],
     "battleTaunt": [
@@ -12,7 +12,7 @@
       "Megastructure defense systems engaged! You attack a civilization that builds AROUND STARS! Impressive ignorance!"
     ],
     "victoryGloat": [
-      "Your empire falls, {empire_name}. Built on mere planets. How fragile. My megastructures endure eternally.",
+      "Your empire falls, {empire_name}. Built on mere sectors. How fragile. My megastructures endure eternally.",
       "Victory for cosmic engineering. Your planetary civilization was... inadequate. Think bigger next time.",
       "Planets are primitive. I build BETTER. Your defeat proves the superiority of megastructure-based warfare."
     ],
@@ -22,12 +22,12 @@
       "Your primitive forces penetrated stellar-scale structures. Remarkable. I shall engineer countermeasures."
     ],
     "tradeOffer": [
-      "Trade: megastructure surplus for credits. My production exceeds anything planets generate. Interested?",
+      "Trade: megastructure surplus for credits. My production exceeds anything sectors generate. Interested?",
       "I offer resources from stellar-scale operations. Your planetary economy benefits from cosmic engineering output.",
-      "Transaction: goods from megastructure production. Quantities your planets cannot match. Fair exchange."
+      "Transaction: goods from megastructure production. Quantities your sectors cannot match. Fair exchange."
     ],
     "allianceProposal": [
-      "Alliance: your planets provide raw materials. I construct megastructures. Together: cosmic engineering scale.",
+      "Alliance: your sectors provide raw materials. I construct megastructures. Together: cosmic engineering scale.",
       "Join the Architect. Your empire gains megastructure protection. My constructs gain resource supply. Symbiosis.",
       "Partnership of scale. You think planetary. I think stellar. Together: galactic engineering projects."
     ],
@@ -47,9 +47,9 @@
       "Submit to megastructure supremacy. Planets pay tribute to stellar constructs. This is how scale works."
     ],
     "threatWarning": [
-      "Warning: my megastructure weapons can sterilize planets from stellar distances. Cease hostilities.",
+      "Warning: my megastructure weapons can sterilize sectors from stellar distances. Cease hostilities.",
       "Your primitive empire threatens cosmic engineering? Consider the scale difference. Reconsider.",
-      "Final warning. Push further and face weapons that operate on scales your planets cannot comprehend."
+      "Final warning. Push further and face weapons that operate on scales your sectors cannot comprehend."
     ],
     "retreat": [
       "Retreating to megastructure core. My constructs are vast. Pursuing me takes years. I have time.",
@@ -67,14 +67,14 @@
       "Final phase. Stellar-scale construction complete. The Architect's vision realized. Planets are obsolete."
     ],
     "broadcastShout": [
-      "Empires: I build megastructures while you squabble over planets. Think bigger. Or become building materials.",
-      "Broadcast from cosmic engineering: planets are primitive. I build BETTER. Join the Architect or be outscaled.",
+      "Empires: I build megastructures while you squabble over sectors. Think bigger. Or become building materials.",
+      "Broadcast from cosmic engineering: sectors are primitive. I build BETTER. Join the Architect or be outscaled.",
       "To all planetary civilizations: my constructs dwarf your worlds. Scale matters. I am the biggest."
     ],
     "casualMessage": [
       "Expanding my ringworld today, {empire_name}. Added a continent. On a ring AROUND A STAR. Think bigger.",
       "Your planetary development is... cute. I'm working on my third Dyson sphere. Cosmic engineering never rests.",
-      "Calculating stellar engine trajectories. Moving a sun is complex. But planets? Planets are too small to move."
+      "Calculating stellar engine trajectories. Moving a sun is complex. But sectors? Planets are too small to move."
     ]
   }
 }

@@ -153,7 +153,7 @@ export function isFeatureEnabledForGame(
 export const FEATURE_FLAG_DESCRIPTIONS: Record<FeatureFlag, string> = {
   COALITION_RAIDS: 'When 3+ empires attack the same boss in one turn, each gets +5% attack bonus',
   UNDERDOG_BONUS: 'Weaker empires get +10-20% attack bonus when attacking stronger empires',
-  PUNCHUP_BONUS: 'Extra rewards (planets, credits, reputation) for defeating stronger empires',
+  PUNCHUP_BONUS: 'Extra rewards (sectors, credits, reputation) for defeating stronger empires',
   TRADE_ROUTES: 'Use trade partners as staging points for attacks into their sectors',
   HAZARD_ZONES: 'Some sector connections have hazards that cause unit attrition',
   CONTESTED_ZONES: 'Some sector connections are contested with random combat events',

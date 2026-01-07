@@ -3,7 +3,7 @@
  *
  * Builds rich, contextual prompts for LLM decision-making that include:
  * - Persona voice and archetype
- * - Current game state (resources, military, planets)
+ * - Current game state (resources, military, sectors)
  * - Emotional state and modifiers
  * - Available targets with analysis
  * - Memory context (grudges, alliances)
@@ -103,7 +103,7 @@ function getArchetypeDescription(archetype: string): string {
     diplomat:
       "You seek alliances and peaceful expansion. Propose treaties, trade actively, only attack as part of coalitions. Trade network (+10% income per alliance).",
     merchant:
-      "You focus on economic dominance. Buy planets, trade resources, invest in infrastructure. Market insight (see next turn's prices).",
+      "You focus on economic dominance. Buy sectors, trade resources, invest in infrastructure. Market insight (see next turn's prices).",
     schemer:
       "You use deception and espionage. Form false alliances, conduct covert ops, betray when beneficial. Shadow network (-50% agent costs, +20% covert success).",
     turtle:
@@ -158,11 +158,11 @@ Effects: ${effects.join(", ")}`;
  * Build the user prompt with current game state and available actions.
  */
 export function buildUserPrompt(context: BotDecisionContext): string {
-  const { empire, planets, currentTurn, availableTargets, permanentGrudges } = context;
+  const { empire, sectors, currentTurn, availableTargets, permanentGrudges } = context;
 
   const resourceSummary = buildResourceSummary(empire);
   const militarySummary = buildMilitarySummary(empire);
-  const planetSummary = buildPlanetSummary(planets);
+  const planetSummary = buildPlanetSummary(sectors);
   const targetsSummary = buildTargetsSummary(availableTargets, permanentGrudges);
   const actionsSummary = buildAvailableActions(context);
 
@@ -214,21 +214,21 @@ function buildMilitarySummary(empire: { soldiers: number | null; fighters: numbe
 - Army Effectiveness: ${empire.armyEffectiveness ?? 100}%`;
 }
 
-function buildPlanetSummary(planets: { type: string }[]): string {
+function buildPlanetSummary(sectors: { type: string }[]): string {
   const planetCounts: Record<string, number> = {};
-  for (const planet of planets) {
-    planetCounts[planet.type] = (planetCounts[planet.type] ?? 0) + 1;
+  for (const sector of sectors) {
+    planetCounts[sector.type] = (planetCounts[sector.type] ?? 0) + 1;
   }
 
   const breakdown = Object.entries(planetCounts)
     .map(([type, count]) => `${count} ${type}`)
     .join(", ");
 
-  return `PLANETS (${planets.length} total): ${breakdown}`;
+  return `PLANETS (${sectors.length} total): ${breakdown}`;
 }
 
 function buildTargetsSummary(
-  targets: { id: string; name: string; networth: number; planetCount: number; militaryPower?: number; hasTreaty?: boolean }[],
+  targets: { id: string; name: string; networth: number; sectorCount: number; militaryPower?: number; hasTreaty?: boolean }[],
   permanentGrudges?: string[]
 ): string {
   const sorted = [...targets].sort((a, b) => b.networth - a.networth);
@@ -241,7 +241,7 @@ function buildTargetsSummary(
       ? ` (${(target.militaryPower / 1000).toFixed(1)}K power)`
       : "";
 
-    return `  - ${target.name}: Networth ${target.networth.toLocaleString()}, ${target.planetCount} planets${powerRatio}${treatyMarker}${grudgeMarker}`;
+    return `  - ${target.name}: Networth ${target.networth.toLocaleString()}, ${target.sectorCount} sectors${powerRatio}${treatyMarker}${grudgeMarker}`;
   });
 
   const grudgeNote =
@@ -262,8 +262,8 @@ function buildAvailableActions(context: BotDecisionContext): string {
     .filter(([, cost]) => empire.credits >= cost)
     .map(([unit, cost]) => `${unit} (${cost} credits)`);
 
-  const planetCost = PLANET_COSTS.food * (1 + empire.planetCount * 0.05);
-  const canBuyPlanet = empire.credits >= planetCost;
+  const sectorCost = PLANET_COSTS.food * (1 + empire.sectorCount * 0.05);
+  const canBuyPlanet = empire.credits >= sectorCost;
 
   return `AVAILABLE ACTIONS:
 
@@ -271,7 +271,7 @@ function buildAvailableActions(context: BotDecisionContext): string {
    - Affordable: ${affordableUnits.length > 0 ? affordableUnits.join(", ") : "none (insufficient credits)"}
 
 2. buy_planet: Expand territory
-   - Cost: ~${Math.round(planetCost)} credits${canBuyPlanet ? "" : " (cannot afford)"}
+   - Cost: ~${Math.round(sectorCost)} credits${canBuyPlanet ? "" : " (cannot afford)"}
    - Types: food, ore, petroleum, tourism, urban, education, government, research
 
 3. attack: Launch invasion
@@ -342,7 +342,7 @@ export const EXPECTED_RESPONSE_SCHEMA = {
 /**
  * Example expected response:
  * {
- *   "thinking": "Empire Gamma is weak and has valuable ore planets. Attacking now while they're distracted by a war with Delta will expand my territory significantly.",
+ *   "thinking": "Empire Gamma is weak and has valuable ore sectors. Attacking now while they're distracted by a war with Delta will expand my territory significantly.",
  *   "decision": {
  *     "type": "attack",
  *     "targetId": "uuid-gamma",

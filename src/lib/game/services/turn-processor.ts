@@ -39,7 +39,7 @@ import {
   empireInfluence,
   galaxyRegions,
   type Empire,
-  type Planet,
+  type Sector,
   type CraftingQueue,
 } from "@/lib/db/schema";
 import { eq, and, inArray, sql } from "drizzle-orm";
@@ -126,13 +126,13 @@ export async function processTurn(gameId: string): Promise<TurnResult> {
   const globalEvents: TurnEvent[] = [];
 
   try {
-    // Load game with all empires and planets
+    // Load game with all empires and sectors
     const game = await db.query.games.findFirst({
       where: eq(games.id, gameId),
       with: {
         empires: {
           with: {
-            planets: true,
+            sectors: true,
           },
         },
       },
@@ -164,7 +164,7 @@ export async function processTurn(gameId: string): Promise<TurnResult> {
         try {
           return await processEmpireTurn(
             empire,
-            empire.planets,
+            empire.sectors,
             gameId,
             nextTurn,
             game.difficulty as Difficulty
@@ -495,7 +495,7 @@ export async function processTurn(gameId: string): Promise<TurnResult> {
  */
 async function processEmpireTurn(
   empire: Empire,
-  planets: Planet[],
+  sectors: Sector[],
   gameId: string,
   turn: number,
   difficulty: Difficulty = "normal"
@@ -510,8 +510,8 @@ async function processEmpireTurn(
   // Get current civil status multiplier
   const incomeMultiplier = getIncomeMultiplier(empire.civilStatus as CivilStatusLevel);
 
-  // Calculate resource production with planet maintenance already deducted
-  let resourceProduction = processTurnResources(planets, incomeMultiplier);
+  // Calculate resource production with sector maintenance already deducted
+  let resourceProduction = processTurnResources(sectors, incomeMultiplier);
 
   // Apply nightmare difficulty bonus for bot empires (+25% credits)
   if (empire.type === "bot" && difficulty === "nightmare") {
@@ -539,7 +539,7 @@ async function processEmpireTurn(
     covertAgents: empire.covertAgents,
   };
   const unitMaintenance = calculateUnitMaintenance(unitCounts);
-  const planetMaintenance = calculateMaintenanceCost(planets.length);
+  const planetMaintenance = calculateMaintenanceCost(sectors.length);
   const totalMaintenance = planetMaintenance.totalCost + unitMaintenance.totalCost;
 
   // Calculate new resource totals (deduct unit maintenance from credits)
@@ -558,10 +558,10 @@ async function processEmpireTurn(
     empireId: empire.id,
   });
 
-  // Add maintenance event (combined planet + unit)
+  // Add maintenance event (combined sector + unit)
   events.push({
     type: "maintenance",
-    message: `Paid ${totalMaintenance.toLocaleString()} credits in maintenance (${planetMaintenance.totalCost.toLocaleString()} planets, ${unitMaintenance.totalCost.toLocaleString()} units)`,
+    message: `Paid ${totalMaintenance.toLocaleString()} credits in maintenance (${planetMaintenance.totalCost.toLocaleString()} sectors, ${unitMaintenance.totalCost.toLocaleString()} units)`,
     severity: "info",
     empireId: empire.id,
   });
@@ -570,10 +570,10 @@ async function processEmpireTurn(
   // PHASE 1.5: TIER 1 AUTO-PRODUCTION (Crafting System)
   // ==========================================================================
 
-  // Calculate auto-production from specialized planets
+  // Calculate auto-production from specialized sectors
   // Ore → Refined Metals (10%), Petroleum → Fuel Cells (10%), Food → Processed Food (5%)
   const tier1Production = calculateTier1AutoProduction(
-    planets,
+    sectors,
     {
       food: resourceProduction.final.food,
       ore: resourceProduction.final.ore,
@@ -593,7 +593,7 @@ async function processEmpireTurn(
     for (const prod of tier1Production.productions) {
       events.push({
         type: "other",
-        message: `Auto-produced ${prod.quantity} ${prod.resourceType.replace(/_/g, " ")} from ${prod.sourcePlanets} ${prod.sourceType} planet(s)`,
+        message: `Auto-produced ${prod.quantity} ${prod.resourceType.replace(/_/g, " ")} from ${prod.sourcePlanets} ${prod.sourceType} sector(s)`,
         severity: "info",
         empireId: empire.id,
       });
@@ -656,8 +656,8 @@ async function processEmpireTurn(
     civilEvents.push({ type: "low_maintenance", severity: maintenanceRatio });
   }
 
-  // Check for education planets (provide bonus)
-  const hasEducation = planets.some(p => p.type === "education");
+  // Check for education sectors (provide bonus)
+  const hasEducation = sectors.some(p => p.type === "education");
   if (hasEducation) {
     civilEvents.push({ type: "education" });
   }
@@ -685,8 +685,8 @@ async function processEmpireTurn(
   // PHASE 3.5: RESEARCH PRODUCTION (M3)
   // ==========================================================================
 
-  // Generate research points from research planets (100 RP/planet/turn)
-  const researchPlanets = planets.filter(p => p.type === "research");
+  // Generate research points from research sectors (100 RP/sector/turn)
+  const researchPlanets = sectors.filter(p => p.type === "research");
   if (researchPlanets.length > 0) {
     const researchResult = await processResearchProduction(empire.id, researchPlanets.length);
     if (researchResult.leveledUp) {
@@ -789,7 +789,7 @@ async function processEmpireTurn(
     // Calculate ramping consequences
     const revoltConsequence = calculateRevoltConsequences(
       empire,
-      planets.length,
+      sectors.length,
       consecutiveRevoltingTurns
     );
 
@@ -814,8 +814,8 @@ async function processEmpireTurn(
     }
   }
 
-  // Empire is alive if not bankrupt, not collapsed, has population, and has planets
-  const isAlive = !isBankrupt && !isCivilCollapse && populationUpdate.newPopulation > 0 && planets.length > 0;
+  // Empire is alive if not bankrupt, not collapsed, has population, and has sectors
+  const isAlive = !isBankrupt && !isCivilCollapse && populationUpdate.newPopulation > 0 && sectors.length > 0;
 
   // ==========================================================================
   // UPDATE DATABASE
@@ -934,10 +934,10 @@ function createErrorEmpireResult(empire: Empire, error: unknown): EmpireResult {
  */
 export async function processPhase1_Income(
   empire: Empire,
-  planets: Planet[]
+  sectors: Sector[]
 ): Promise<{ resources: ResourceDelta; multiplier: number }> {
   const multiplier = getIncomeMultiplier(empire.civilStatus as CivilStatusLevel);
-  const production = processTurnResources(planets, multiplier);
+  const production = processTurnResources(sectors, multiplier);
   return {
     resources: production.final,
     multiplier,
@@ -1175,10 +1175,10 @@ async function processCraftingQueueForEmpire(
 export async function processPhase1_5_Tier1AutoProduction(
   empireId: string,
   gameId: string,
-  planets: Planet[],
+  sectors: Sector[],
   baseProduction: { food: number; ore: number; petroleum: number }
 ): Promise<{ productions: Array<{ resourceType: string; quantity: number }> }> {
-  const tier1Production = calculateTier1AutoProduction(planets, baseProduction);
+  const tier1Production = calculateTier1AutoProduction(sectors, baseProduction);
 
   if (tier1Production.productions.length > 0) {
     await updateResourceInventory(

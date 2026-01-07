@@ -4,11 +4,11 @@
  * Handles sector acquisition and release operations.
  * - Colonize sectors with cost scaling (PRD 5.3)
  * - Release sectors with 50% refund
- * - Atomic updates to empire.planetCount and networth
+ * - Atomic updates to empire.sectorCount and networth
  */
 
 import { db } from "@/lib/db";
-import { empires, planets, type Planet } from "@/lib/db/schema";
+import { empires, sectors, type Sector } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 import {
   calculateSectorCost,
@@ -25,7 +25,7 @@ import { calculateNetworth } from "../networth";
 export interface ColonizeSectorResult {
   success: boolean;
   error?: string;
-  sector?: Planet;
+  sector?: Sector;
   creditsDeducted?: number;
   newSectorCount?: number;
   newNetworth?: number;
@@ -58,7 +58,7 @@ export interface SectorPurchaseInfo {
  * - Validates sufficient credits
  * - Deducts credits using scaled cost
  * - Creates sector record
- * - Updates empire.planetCount and networth atomically
+ * - Updates empire.sectorCount and networth atomically
  *
  * @param empireId - The empire colonizing the sector
  * @param sectorType - Type of sector to colonize
@@ -75,7 +75,7 @@ export async function colonizeSector(
   const empire = await db.query.empires.findFirst({
     where: eq(empires.id, empireId),
     with: {
-      planets: true,
+      sectors: true,
     },
   });
 
@@ -90,7 +90,7 @@ export async function colonizeSector(
   }
 
   // Calculate scaled cost based on current ownership
-  const currentSectorCount = empire.planetCount;
+  const currentSectorCount = empire.sectorCount;
   const scaledCost = calculateSectorCost(baseCost, currentSectorCount);
 
   // Validate sufficient credits
@@ -105,7 +105,7 @@ export async function colonizeSector(
   const newCredits = empire.credits - scaledCost;
   const newSectorCount = currentSectorCount + 1;
   const newNetworth = calculateNetworth({
-    planetCount: newSectorCount,
+    sectorCount: newSectorCount,
     soldiers: empire.soldiers,
     fighters: empire.fighters,
     stations: empire.stations,
@@ -117,7 +117,7 @@ export async function colonizeSector(
 
   // Create sector and update empire atomically
   const [newSector] = await db
-    .insert(planets)
+    .insert(sectors)
     .values({
       empireId,
       gameId,
@@ -137,7 +137,7 @@ export async function colonizeSector(
     .update(empires)
     .set({
       credits: newCredits,
-      planetCount: newSectorCount,
+      sectorCount: newSectorCount,
       networth: newNetworth,
       updatedAt: new Date(),
     })
@@ -158,7 +158,7 @@ export async function colonizeSector(
  * - Validates sector ownership
  * - Calculates 50% refund of current price
  * - Deletes sector record
- * - Updates empire.planetCount and networth atomically
+ * - Updates empire.sectorCount and networth atomically
  *
  * @param empireId - The empire releasing the sector
  * @param sectorId - ID of the sector to release
@@ -168,8 +168,8 @@ export async function releaseSector(
   sectorId: string
 ): Promise<ReleaseSectorResult> {
   // Fetch the sector to release
-  const sector = await db.query.planets.findFirst({
-    where: eq(planets.id, sectorId),
+  const sector = await db.query.sectors.findFirst({
+    where: eq(sectors.id, sectorId),
   });
 
   if (!sector) {
@@ -190,7 +190,7 @@ export async function releaseSector(
   }
 
   // Cannot release if only 1 sector left
-  if (empire.planetCount <= 1) {
+  if (empire.sectorCount <= 1) {
     return { success: false, error: "Cannot release your last sector" };
   }
 
@@ -202,13 +202,13 @@ export async function releaseSector(
 
   // Calculate refund (50% of current price based on ownership count)
   // Note: We use current sector count (including this sector) for the refund calculation
-  const refund = calculateReleaseRefund(baseCost, empire.planetCount);
+  const refund = calculateReleaseRefund(baseCost, empire.sectorCount);
 
   // Calculate new values
   const newCredits = empire.credits + refund;
-  const newSectorCount = empire.planetCount - 1;
+  const newSectorCount = empire.sectorCount - 1;
   const newNetworth = calculateNetworth({
-    planetCount: newSectorCount,
+    sectorCount: newSectorCount,
     soldiers: empire.soldiers,
     fighters: empire.fighters,
     stations: empire.stations,
@@ -219,14 +219,14 @@ export async function releaseSector(
   });
 
   // Delete sector
-  await db.delete(planets).where(eq(planets.id, sectorId));
+  await db.delete(sectors).where(eq(sectors.id, sectorId));
 
   // Update empire with new credits, sector count, and networth
   await db
     .update(empires)
     .set({
       credits: newCredits,
-      planetCount: newSectorCount,
+      sectorCount: newSectorCount,
       networth: newNetworth,
       updatedAt: new Date(),
     })
@@ -256,7 +256,7 @@ export async function getSectorPurchaseInfo(
   const empire = await db.query.empires.findFirst({
     where: eq(empires.id, empireId),
     with: {
-      planets: true,
+      sectors: true,
     },
   });
 
@@ -271,18 +271,18 @@ export async function getSectorPurchaseInfo(
   }
 
   // Calculate current cost and multiplier
-  const currentCost = calculateSectorCost(baseCost, empire.planetCount);
-  const costMultiplier = 1 + empire.planetCount * 0.05;
+  const currentCost = calculateSectorCost(baseCost, empire.sectorCount);
+  const costMultiplier = 1 + empire.sectorCount * 0.05;
 
   // Calculate how many can be afforded
   const affordableCount = calculateAffordableSectors(
     baseCost,
-    empire.planetCount,
+    empire.sectorCount,
     empire.credits
   );
 
   // Count owned sectors of this type
-  const ownedCount = empire.planets.filter((p) => p.type === sectorType).length;
+  const ownedCount = empire.sectors.filter((p) => p.type === sectorType).length;
 
   return {
     sectorType,
@@ -319,7 +319,7 @@ export async function getAllSectorPurchaseInfo(
   const empire = await db.query.empires.findFirst({
     where: eq(empires.id, empireId),
     with: {
-      planets: true,
+      sectors: true,
     },
   });
 
@@ -329,14 +329,14 @@ export async function getAllSectorPurchaseInfo(
 
   return sectorTypes.map((sectorType) => {
     const baseCost = PLANET_COSTS[sectorType];
-    const currentCost = calculateSectorCost(baseCost, empire.planetCount);
-    const costMultiplier = 1 + empire.planetCount * 0.05;
+    const currentCost = calculateSectorCost(baseCost, empire.sectorCount);
+    const costMultiplier = 1 + empire.sectorCount * 0.05;
     const affordableCount = calculateAffordableSectors(
       baseCost,
-      empire.planetCount,
+      empire.sectorCount,
       empire.credits
     );
-    const ownedCount = empire.planets.filter((p) => p.type === sectorType).length;
+    const ownedCount = empire.sectors.filter((p) => p.type === sectorType).length;
 
     return {
       sectorType,

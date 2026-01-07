@@ -563,7 +563,7 @@ export function assignEmpiresToRegions(
 export function createEmpireInfluenceRecords(
   gameId: string,
   assignments: Map<string, string>,
-  empires: Array<{ id: string; planetCount: number }>
+  empires: Array<{ id: string; sectorCount: number }>
 ): NewEmpireInfluence[] {
   const records: NewEmpireInfluence[] = [];
 
@@ -598,7 +598,7 @@ export function createEmpireInfluenceRecords(
  */
 export function generateGalaxy(
   gameId: string,
-  empires: Array<{ id: string; type: "player" | "bot"; botTier?: string | null; planetCount: number }>,
+  empires: Array<{ id: string; type: "player" | "bot"; botTier?: string | null; sectorCount: number }>,
   config: Partial<GalaxyGenerationConfig> = {}
 ): {
   regions: NewGalaxyRegion[];

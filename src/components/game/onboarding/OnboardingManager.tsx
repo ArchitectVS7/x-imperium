@@ -85,10 +85,10 @@ const ONBOARDING_HINTS: OnboardingHintConfig[] = [
     turnToShow: 4,
     title: `Grow Your ${GAME_TERMS.empire}`,
     message:
-      `More ${UI_LABELS.planets.toLowerCase()} = more resources. Visit ${UI_LABELS.planets} to colonize new territories. Different types produce different resources. Balance is key!`,
+      `More ${UI_LABELS.sectors.toLowerCase()} = more resources. Visit ${UI_LABELS.sectors} to colonize new territories. Different types produce different resources. Balance is key!`,
     icon: Globe,
     position: "top",
-    action: { label: `Colonize ${UI_LABELS.planets}`, href: "/game/sectors" },
+    action: { label: `Colonize ${UI_LABELS.sectors}`, href: "/game/sectors" },
   },
 
   // Turn 5: Rivals and strategy

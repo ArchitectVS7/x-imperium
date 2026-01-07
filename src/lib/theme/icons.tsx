@@ -146,7 +146,7 @@ export const CivilStatusIcons = {
 
 export const ActionIcons = {
   military: Swords,
-  planets: MapPin,
+  sectors: MapPin,
   combat: Target,
   diplomacy: Handshake,
   market: BarChart3,

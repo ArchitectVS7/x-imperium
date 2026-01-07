@@ -68,7 +68,7 @@ export type ResourceDelta = {
 };
 
 export type ResourceProduction = {
-  /** Resources produced from planets (before multipliers) */
+  /** Resources produced from sectors (before multipliers) */
   production: ResourceDelta;
   /** Income multiplier from civil status */
   incomeMultiplier: number;
@@ -79,10 +79,10 @@ export type ResourceProduction = {
 export type MaintenanceCost = {
   /** Total maintenance cost */
   totalCost: number;
-  /** Cost per planet (168 credits) */
+  /** Cost per sector (168 credits) */
   costPerPlanet: number;
-  /** Number of planets */
-  planetCount: number;
+  /** Number of sectors */
+  sectorCount: number;
 };
 
 // =============================================================================

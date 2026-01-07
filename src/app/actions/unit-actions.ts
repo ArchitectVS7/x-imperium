@@ -157,10 +157,10 @@ export async function getUnitMaintenanceAction(): Promise<UnitMaintenanceBreakdo
 }
 
 /**
- * Get total maintenance (planets + units) for the current empire.
+ * Get total maintenance (sectors + units) for the current empire.
  */
 export async function getTotalMaintenanceAction(): Promise<{
-  planetCost: number;
+  sectorCost: number;
   unitCost: number;
   totalCost: number;
   unitBreakdown: UnitMaintenanceBreakdown;
@@ -190,7 +190,7 @@ export async function getTotalMaintenanceAction(): Promise<{
       covertAgents: empire.covertAgents,
     };
 
-    return calculateTotalMaintenance(empire.planetCount, units);
+    return calculateTotalMaintenance(empire.sectorCount, units);
   } catch (error) {
     console.error("Failed to get total maintenance:", error);
     return null;

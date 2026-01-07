@@ -2,14 +2,14 @@
  * Resource Tier Service
  *
  * Handles Tier 1-3 resource management:
- * - Auto-production of Tier 1 resources from specialized planets
- * - Tier 1 production from Industrial planets
+ * - Auto-production of Tier 1 resources from specialized sectors
+ * - Tier 1 production from Industrial sectors
  * - Resource inventory management
  *
  * Based on docs/crafting-system.md Part 1: Resource Tiers
  */
 
-import type { Planet, ResourceInventory } from "@/lib/db/schema";
+import type { Sector, ResourceInventory } from "@/lib/db/schema";
 import {
   TIER_1_RECIPES,
   RESOURCE_TIERS,
@@ -72,29 +72,29 @@ export interface ResourceCheckResult {
 // =============================================================================
 
 /**
- * Calculate Tier 1 auto-production from specialized planets
+ * Calculate Tier 1 auto-production from specialized sectors
  *
- * Ore planets produce Refined Metals (10% of ore output)
- * Petroleum planets produce Fuel Cells (10% of petroleum output)
- * Food planets produce Processed Food (5% of food output)
- * Urban planets produce Labor Units (5% of population-related output)
- * Industrial planets process Tier 0 → Tier 1 (configured separately)
+ * Ore sectors produce Refined Metals (10% of ore output)
+ * Petroleum sectors produce Fuel Cells (10% of petroleum output)
+ * Food sectors produce Processed Food (5% of food output)
+ * Urban sectors produce Labor Units (5% of population-related output)
+ * Industrial sectors process Tier 0 → Tier 1 (configured separately)
  *
- * @param planets - Planets owned by empire
+ * @param sectors - Planets owned by empire
  * @param baseProduction - Base Tier 0 resource production this turn
  * @returns Tier 1 production breakdown
  */
 export function calculateTier1AutoProduction(
-  planets: Planet[],
+  sectors: Sector[],
   baseProduction: { food: number; ore: number; petroleum: number }
 ): Tier1ProductionResult {
   const productions: Tier1AutoProduction[] = [];
   const totalByResource: Partial<Record<Tier1Resource, number>> = {};
 
-  // Count planets by type for Industrial planet processing
-  const planetCounts = planets.reduce(
-    (acc, planet) => {
-      acc[planet.type] = (acc[planet.type] || 0) + 1;
+  // Count sectors by type for Industrial sector processing
+  const planetCounts = sectors.reduce(
+    (acc, sector) => {
+      acc[sector.type] = (acc[sector.type] || 0) + 1;
       return acc;
     },
     {} as Record<string, number>
@@ -145,7 +145,7 @@ export function calculateTier1AutoProduction(
   // Urban Planets → Labor Units (5% based on urban credit production, converted to units)
   // Approximation: 1 labor unit per 1000 credits of urban production
   if (planetCounts.urban) {
-    const urbanProduction = planetCounts.urban * 1000; // 1000 credits per urban planet
+    const urbanProduction = planetCounts.urban * 1000; // 1000 credits per urban sector
     const laborUnits = Math.floor((urbanProduction * 0.05) / 50); // 50 credits per labor unit
     if (laborUnits > 0) {
       productions.push({
@@ -162,17 +162,17 @@ export function calculateTier1AutoProduction(
 }
 
 /**
- * Calculate Industrial planet Tier 1 production
+ * Calculate Industrial sector Tier 1 production
  *
- * Industrial planets can process any Tier 0 resource into Tier 1.
- * Each Industrial planet produces a fixed amount based on research level.
+ * Industrial sectors can process any Tier 0 resource into Tier 1.
+ * Each Industrial sector produces a fixed amount based on research level.
  *
  * NOTE: This is a simplified implementation for Phase 1. Currently only
  * produces polymers. Full implementation with player-configurable priorities
  * and support for all Tier 1 resources will be added in a future phase.
  * See docs/crafting-system.md for full specification.
  *
- * @param industrialPlanetCount - Number of industrial planets
+ * @param industrialPlanetCount - Number of industrial sectors
  * @param researchLevel - Empire's research level (affects efficiency)
  * @param tier0Resources - Available Tier 0 resources to process
  * @returns Tier 1 resources produced and Tier 0 resources consumed
@@ -192,7 +192,7 @@ export function calculateIndustrialProduction(
     };
   }
 
-  // Base production per industrial planet: 10 units
+  // Base production per industrial sector: 10 units
   // Research level adds 5% efficiency per level
   const baseProduction = 10;
   const efficiencyBonus = 1 + researchLevel * 0.05;

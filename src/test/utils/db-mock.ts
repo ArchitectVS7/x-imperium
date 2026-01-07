@@ -74,8 +74,8 @@ export function createMockEmpire(overrides?: Partial<MockEmpire>): MockEmpire {
     armyEffectiveness: "85.00",
     covertPoints: 0,
     fundamentalResearchLevel: 0,
-    networth: 50, // 5 planets × 10 + 100 soldiers × 0.0005 = 50.05 → 50
-    planetCount: 5, // Reduced from 9 for faster eliminations
+    networth: 50, // 5 sectors × 10 + 100 soldiers × 0.0005 = 50.05 → 50
+    sectorCount: 5, // Reduced from 9 for faster eliminations
     isEliminated: false,
     eliminatedAtTurn: null,
     createdAt: new Date(),
@@ -86,7 +86,7 @@ export function createMockEmpire(overrides?: Partial<MockEmpire>): MockEmpire {
 
 export function createMockPlanet(overrides?: Partial<MockPlanet>): MockPlanet {
   return {
-    id: "planet-123",
+    id: "sector-123",
     empireId: "empire-123",
     gameId: "game-123",
     type: "food",
@@ -100,13 +100,13 @@ export function createMockPlanet(overrides?: Partial<MockPlanet>): MockPlanet {
 }
 
 export function createStartingPlanets(empireId: string, gameId: string): MockPlanet[] {
-  const planets: MockPlanet[] = [];
+  const sectors: MockPlanet[] = [];
   let planetNum = 1;
 
-  // 2 Food planets
+  // 2 Food sectors
   for (let i = 0; i < 2; i++) {
-    planets.push(createMockPlanet({
-      id: `planet-${planetNum++}`,
+    sectors.push(createMockPlanet({
+      id: `sector-${planetNum++}`,
       empireId,
       gameId,
       type: "food",
@@ -115,10 +115,10 @@ export function createStartingPlanets(empireId: string, gameId: string): MockPla
     }));
   }
 
-  // 2 Ore planets
+  // 2 Ore sectors
   for (let i = 0; i < 2; i++) {
-    planets.push(createMockPlanet({
-      id: `planet-${planetNum++}`,
+    sectors.push(createMockPlanet({
+      id: `sector-${planetNum++}`,
       empireId,
       gameId,
       type: "ore",
@@ -127,9 +127,9 @@ export function createStartingPlanets(empireId: string, gameId: string): MockPla
     }));
   }
 
-  // 1 Petroleum planet
-  planets.push(createMockPlanet({
-    id: `planet-${planetNum++}`,
+  // 1 Petroleum sector
+  sectors.push(createMockPlanet({
+    id: `sector-${planetNum++}`,
     empireId,
     gameId,
     type: "petroleum",
@@ -137,9 +137,9 @@ export function createStartingPlanets(empireId: string, gameId: string): MockPla
     purchasePrice: 11500,
   }));
 
-  // 1 Tourism planet
-  planets.push(createMockPlanet({
-    id: `planet-${planetNum++}`,
+  // 1 Tourism sector
+  sectors.push(createMockPlanet({
+    id: `sector-${planetNum++}`,
     empireId,
     gameId,
     type: "tourism",
@@ -147,9 +147,9 @@ export function createStartingPlanets(empireId: string, gameId: string): MockPla
     purchasePrice: 8000,
   }));
 
-  // 1 Urban planet
-  planets.push(createMockPlanet({
-    id: `planet-${planetNum++}`,
+  // 1 Urban sector
+  sectors.push(createMockPlanet({
+    id: `sector-${planetNum++}`,
     empireId,
     gameId,
     type: "urban",
@@ -157,9 +157,9 @@ export function createStartingPlanets(empireId: string, gameId: string): MockPla
     purchasePrice: 8000,
   }));
 
-  // 1 Government planet
-  planets.push(createMockPlanet({
-    id: `planet-${planetNum++}`,
+  // 1 Government sector
+  sectors.push(createMockPlanet({
+    id: `sector-${planetNum++}`,
     empireId,
     gameId,
     type: "government",
@@ -167,9 +167,9 @@ export function createStartingPlanets(empireId: string, gameId: string): MockPla
     purchasePrice: 7500,
   }));
 
-  // 1 Research planet
-  planets.push(createMockPlanet({
-    id: `planet-${planetNum++}`,
+  // 1 Research sector
+  sectors.push(createMockPlanet({
+    id: `sector-${planetNum++}`,
     empireId,
     gameId,
     type: "research",
@@ -177,7 +177,7 @@ export function createStartingPlanets(empireId: string, gameId: string): MockPla
     purchasePrice: 23000,
   }));
 
-  return planets;
+  return sectors;
 }
 
 // Type definitions for mocks
@@ -224,7 +224,7 @@ interface MockEmpire {
   covertPoints: number;
   fundamentalResearchLevel: number;
   networth: number;
-  planetCount: number;
+  sectorCount: number;
   isEliminated: boolean;
   eliminatedAtTurn: number | null;
   createdAt: Date;

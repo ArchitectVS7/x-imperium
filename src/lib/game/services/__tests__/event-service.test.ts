@@ -72,7 +72,7 @@ const createMockEmpire = (overrides: Partial<Empire> = {}): Empire => ({
   covertPoints: 25,
   fundamentalResearchLevel: 0,
   networth: 100000,
-  planetCount: 9,
+  sectorCount: 9,
   reputation: 50,
   isEliminated: false,
   eliminatedAtTurn: null,

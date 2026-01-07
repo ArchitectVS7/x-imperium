@@ -254,7 +254,7 @@ describe("Bot Game System Coverage", () => {
    */
   const allDecisionTypes = [
     "build_units",      // Military system
-    "buy_planet",       // Planet/expansion system
+    "buy_planet",       // Sector/expansion system
     "attack",           // Combat system
     "diplomacy",        // Diplomacy system
     "trade",            // Market system
@@ -280,7 +280,7 @@ describe("Bot Game System Coverage", () => {
   describe("Game System Mapping", () => {
     const systemMapping = {
       military: ["build_units", "upgrade_units"],
-      planets: ["buy_planet"],
+      sectors: ["buy_planet"],
       combat: ["attack"],
       diplomacy: ["diplomacy"],
       market: ["trade"],

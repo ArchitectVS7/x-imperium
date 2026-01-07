@@ -5,7 +5,7 @@ import {
   hasActiveGameAction,
 } from "@/app/actions/game-actions";
 import { getSectorTypeLabel, UI_LABELS } from "@/lib/game/constants";
-import type { Planet } from "@/lib/db/schema";
+import type { Sector } from "@/lib/db/schema";
 import { ColonizeSectorPanel } from "@/components/game/sectors/ColonizeSectorPanel";
 import { SectorsList } from "@/components/game/sectors/SectorsList";
 import { SectorIcons } from "@/lib/theme/icons";
@@ -23,14 +23,14 @@ async function SectorsContent() {
     redirect("/game");
   }
 
-  // Group planets by type
-  const planetsByType = data.planets.reduce<Record<string, Planet[]>>(
-    (acc, planet) => {
-      const existing = acc[planet.type];
+  // Group sectors by type
+  const sectorsByType = data.sectors.reduce<Record<string, Sector[]>>(
+    (acc, sector) => {
+      const existing = acc[sector.type];
       if (existing) {
-        existing.push(planet);
+        existing.push(sector);
       } else {
-        acc[planet.type] = [planet];
+        acc[sector.type] = [sector];
       }
       return acc;
     },
@@ -38,7 +38,7 @@ async function SectorsContent() {
   );
 
   // Sort types by count (descending)
-  const sortedTypes = Object.entries(planetsByType).sort(
+  const sortedTypes = Object.entries(sectorsByType).sort(
     (a, b) => b[1].length - a[1].length
   );
 
@@ -78,7 +78,7 @@ async function SectorsContent() {
       </div>
 
       {/* Detailed Sector Cards with Release Option */}
-      <SectorsList planets={data.planets} planetCount={data.stats.planetCount} />
+      <SectorsList sectors={data.sectors} sectorCount={data.stats.sectorCount} />
     </div>
   );
 }

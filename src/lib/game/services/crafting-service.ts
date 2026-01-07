@@ -238,7 +238,7 @@ export function validateCraftingOrder(
  * @param baseCraftingTime - Base crafting time from recipe
  * @param researchLevel - Empire's research level
  * @param economyInvestment - RP invested in economy branch
- * @param industrialPlanets - Number of industrial planets
+ * @param industrialPlanets - Number of industrial sectors
  * @returns Adjusted crafting time in turns
  */
 export function calculateCraftingTime(
@@ -249,7 +249,7 @@ export function calculateCraftingTime(
 ): number {
   let time = baseCraftingTime;
 
-  // Research level bonus: 5% faster per level (from Industrial planet config)
+  // Research level bonus: 5% faster per level (from Industrial sector config)
   const researchBonus = researchLevel * INDUSTRIAL_PLANET.craftingTimeReductionPerResearchLevel;
   time *= 1 - researchBonus;
 
@@ -258,7 +258,7 @@ export function calculateCraftingTime(
   const economyBonus = Math.min(economyInvestment * 0.005, 0.1);
   time *= 1 - economyBonus;
 
-  // Industrial planets: 2% faster per planet, max 20%
+  // Industrial sectors: 2% faster per sector, max 20%
   const industrialBonus = Math.min(industrialPlanets * 0.02, 0.2);
   time *= 1 - industrialBonus;
 

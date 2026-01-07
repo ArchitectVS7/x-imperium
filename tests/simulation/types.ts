@@ -125,7 +125,7 @@ export interface CombatOutcomeRecord {
 export interface SystemCoverage {
   // Actions taken
   buildUnits: { count: number; unitTypes: Set<UnitType> };
-  buyPlanet: { count: number; planetTypes: Set<PlanetType> };
+  buyPlanet: { count: number; sectorTypes: Set<PlanetType> };
   attacks: { count: number; invasions: number; guerilla: number };
   diplomacy: { count: number; naps: number; alliances: number };
   trades: { count: number; buys: number; sells: number };

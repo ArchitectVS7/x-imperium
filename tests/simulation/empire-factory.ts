@@ -148,7 +148,7 @@ export function createSimulatedEmpire(
  */
 export function calculateSimulatedNetworth(empire: SimulatedEmpire): number {
   return calculateNetworth({
-    planetCount: empire.planets.length,
+    sectorCount: empire.planets.length,
     soldiers: empire.soldiers,
     fighters: empire.fighters,
     stations: empire.stations,

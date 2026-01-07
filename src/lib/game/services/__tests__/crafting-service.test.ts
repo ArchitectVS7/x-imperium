@@ -221,7 +221,7 @@ describe("calculateCraftingTime", () => {
     expect(withEconomy).toBeLessThan(baseTime);
   });
 
-  it("should reduce time with industrial planets", () => {
+  it("should reduce time with industrial sectors", () => {
     const baseTime = calculateCraftingTime(10, 0, 0, 0);
     const withIndustrial = calculateCraftingTime(10, 0, 0, 5); // 5 * 2% = 10% reduction
 

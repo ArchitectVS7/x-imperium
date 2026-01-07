@@ -78,8 +78,8 @@ describe("determineTellType", () => {
     expect(determineTellType(decision)).toBe("silence");
   });
 
-  it("should return economic_preparation for planet purchases", () => {
-    const decision: BotDecision = { type: "buy_planet", planetType: "food" };
+  it("should return economic_preparation for sector purchases", () => {
+    const decision: BotDecision = { type: "buy_planet", sectorType: "food" };
     expect(determineTellType(decision)).toBe("economic_preparation");
   });
 
@@ -379,7 +379,7 @@ describe("generateTellsForTurn", () => {
       .mockReturnValueOnce(0.50); // attack bluff check - fails (no bluff)
 
     const decisions: BotDecision[] = [
-      { type: "buy_planet", planetType: "food" }, // economic_preparation (priority 3)
+      { type: "buy_planet", sectorType: "food" }, // economic_preparation (priority 3)
       { type: "attack", targetId: "t1", forces: { soldiers: 100, fighters: 0, stations: 0, lightCruisers: 0, heavyCruisers: 0, carriers: 0 } }, // aggression_spike (priority 10)
     ];
 
@@ -400,7 +400,7 @@ describe("generateTellsForTurn", () => {
     vi.mocked(Math.random).mockReturnValue(0.9);
 
     const decisions: BotDecision[] = [
-      { type: "buy_planet", planetType: "food" },
+      { type: "buy_planet", sectorType: "food" },
     ];
 
     const results = generateTellsForTurn(decisions, "empire-1", "game-1", context);

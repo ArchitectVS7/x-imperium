@@ -2,9 +2,9 @@
   "personaId": "bulwark_titan",
   "templates": {
     "greeting": [
-      "Greetings from the MASSIVE, {empire_name}. I am Bulwark Titan. My stations dwarf your planets. Size matters.",
+      "Greetings from the MASSIVE, {empire_name}. I am Bulwark Titan. My stations dwarf your sectors. Size matters.",
       "You approach something ENORMOUS. I am Titan the Massive. I focus on stations. Big ones. VERY big ones.",
-      "Contact with planetary empire. I am Bulwark Titan. I don't build planets. I build STATIONS. Bigger than planets."
+      "Contact with planetary empire. I am Bulwark Titan. I don't build sectors. I build STATIONS. Bigger than sectors."
     ],
     "battleTaunt": [
       "Size matters. And I am LARGE, {empire_name}! My stations dwarf your fleet! Approach my MASSIVE defenses!",

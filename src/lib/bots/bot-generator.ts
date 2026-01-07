@@ -4,12 +4,12 @@
  * Creates bot empires for a game. Each bot gets:
  * - Unique persona from personas.json with name, archetype, and tier
  * - Tier-based selection (LLM Elite, Strategic, Simple, Random)
- * - Same starting resources/planets as player (9 planets)
+ * - Same starting resources/sectors as player (9 sectors)
  * - Initialized research & upgrades
  */
 
 import { db } from "@/lib/db";
-import { empires, planets, type NewEmpire, type NewPlanet, type Empire } from "@/lib/db/schema";
+import { empires, sectors, type NewEmpire, type NewSector, type Empire } from "@/lib/db/schema";
 import {
   STARTING_RESOURCES,
   STARTING_MILITARY,
@@ -216,7 +216,7 @@ export function getRandomArchetype(): BotArchetype {
 // =============================================================================
 
 /**
- * Create a single bot empire with starting planets.
+ * Create a single bot empire with starting sectors.
  * Follows the same pattern as createPlayerEmpire.
  *
  * @param gameId - Game to create bot for
@@ -236,7 +236,7 @@ export async function createBotEmpire(
 ): Promise<Empire> {
   // Calculate starting networth (same as player)
   const networth = calculateNetworth({
-    planetCount: TOTAL_STARTING_PLANETS,
+    sectorCount: TOTAL_STARTING_PLANETS,
     ...STARTING_MILITARY,
   });
 
@@ -253,7 +253,7 @@ export async function createBotEmpire(
     ...STARTING_MILITARY,
     ...STARTING_POPULATION,
     networth,
-    planetCount: TOTAL_STARTING_PLANETS,
+    sectorCount: TOTAL_STARTING_PLANETS,
   };
 
   const [empire] = await db.insert(empires).values(empireData).returning();
@@ -261,7 +261,7 @@ export async function createBotEmpire(
     throw new Error(`Failed to create bot empire: ${name}`);
   }
 
-  // Create starting planets (same as player)
+  // Create starting sectors (same as player)
   await createBotStartingPlanets(empire.id, gameId);
 
   // Initialize M3 systems (research & upgrades)
@@ -272,18 +272,18 @@ export async function createBotEmpire(
 }
 
 /**
- * Create the 9 starting planets for a bot empire.
+ * Create the 9 starting sectors for a bot empire.
  * Same distribution as player: 2 Food, 2 Ore, 1 Petroleum, 1 Tourism, 1 Urban, 1 Government, 1 Research
  */
 async function createBotStartingPlanets(
   empireId: string,
   gameId: string
 ): Promise<void> {
-  const planetValues: NewPlanet[] = [];
+  const sectorValues: NewSector[] = [];
 
   for (const { type, count } of STARTING_PLANETS) {
     for (let i = 0; i < count; i++) {
-      planetValues.push({
+      sectorValues.push({
         empireId,
         gameId,
         type,
@@ -293,7 +293,7 @@ async function createBotStartingPlanets(
     }
   }
 
-  await db.insert(planets).values(planetValues);
+  await db.insert(sectors).values(sectorValues);
 }
 
 // =============================================================================

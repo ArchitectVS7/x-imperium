@@ -24,7 +24,7 @@ async function main() {
     console.log(`  Active:          ${result.stats.activeGames}`);
     console.log(`  Completed:       ${result.stats.completedGames}`);
     console.log(`Empires:           ${result.stats.empireCount}`);
-    console.log(`Planets:           ${result.stats.planetCount}`);
+    console.log(`Sectors:           ${result.stats.sectorCount}`);
     console.log(`Bot Memories:      ${result.stats.memoryCount}`);
     console.log(`Messages:          ${result.stats.messageCount}`);
     console.log(`Attacks:           ${result.stats.attackCount}`);
@@ -35,7 +35,7 @@ async function main() {
     if (result.stats.gameCount > 0) {
       const recordsPerGame = Math.round(
         (result.stats.empireCount +
-          result.stats.planetCount +
+          result.stats.sectorCount +
           result.stats.memoryCount +
           result.stats.messageCount +
           result.stats.attackCount +

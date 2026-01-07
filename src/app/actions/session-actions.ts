@@ -19,7 +19,7 @@ export interface EmpireRanking {
   name: string;
   emperorName: string | null;
   networth: number;
-  planetCount: number;
+  sectorCount: number;
   isPlayer: boolean;
   isEliminated: boolean;
 }
@@ -91,7 +91,7 @@ export async function getSessionDataAction(): Promise<SessionData | null> {
       name: empire.name,
       emperorName: empire.emperorName,
       networth: Number(empire.networth),
-      planetCount: empire.planetCount,
+      sectorCount: empire.sectorCount,
       isPlayer: empire.type === "player",
       isEliminated: empire.isEliminated,
     }));

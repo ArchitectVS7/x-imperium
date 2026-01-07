@@ -5,7 +5,7 @@
     "player": {
       "startingCreditsBonus": 2000,
       "incomeMultiplier": 1.20,
-      "planetCostReduction": 0.85,
+      "sectorCostReduction": 0.85,
       "unitCostReduction": 0.90,
       "researchSpeedBonus": 1.15
     },
@@ -33,7 +33,7 @@
     "player": {
       "startingCreditsBonus": 0,
       "incomeMultiplier": 1.00,
-      "planetCostReduction": 1.00,
+      "sectorCostReduction": 1.00,
       "unitCostReduction": 1.00,
       "researchSpeedBonus": 1.00
     },
@@ -61,7 +61,7 @@
     "player": {
       "startingCreditsBonus": 0,
       "incomeMultiplier": 1.00,
-      "planetCostReduction": 1.00,
+      "sectorCostReduction": 1.00,
       "unitCostReduction": 1.00,
       "researchSpeedBonus": 1.00
     },
@@ -89,7 +89,7 @@
     "player": {
       "startingCreditsBonus": -1000,
       "incomeMultiplier": 1.00,
-      "planetCostReduction": 1.00,
+      "sectorCostReduction": 1.00,
       "unitCostReduction": 1.00,
       "researchSpeedBonus": 1.00
     },

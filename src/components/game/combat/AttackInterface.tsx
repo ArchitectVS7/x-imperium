@@ -98,7 +98,7 @@ export function AttackInterface({
         errors.push("Invasions require at least 1 carrier for troop transport");
       }
       if (selectedForces.soldiers === 0) {
-        errors.push("Invasions require soldiers to capture planets");
+        errors.push("Invasions require soldiers to capture sectors");
       }
       if (selectedForces.soldiers > carrierCapacity && selectedForces.carriers > 0) {
         errors.push(`Only ${formatNumber(carrierCapacity)} soldiers can be transported. Consider adding more carriers.`);
@@ -223,7 +223,7 @@ export function AttackInterface({
               Invasion
             </div>
             <div className="text-xs text-gray-500">
-              Full assault to capture planets
+              Full assault to capture sectors
             </div>
           </button>
 

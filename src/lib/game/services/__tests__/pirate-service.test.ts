@@ -39,7 +39,7 @@ function createMockTargetState(overrides: Partial<TargetEmpireState> = {}): Targ
     battlecruisers: 5,
     dreadnoughts: 2,
     stealthCruisers: 1,
-    planetCount: 15,
+    sectorCount: 15,
     foodPlanets: 4,
     orePlanets: 3,
     petroleumPlanets: 2,
@@ -143,8 +143,8 @@ describe("Pirate Mission Execution", () => {
   });
 
   describe("executeDisruptionMission", () => {
-    it("should destroy planets", () => {
-      const target = createMockTargetState({ planetCount: 10 });
+    it("should destroy sectors", () => {
+      const target = createMockTargetState({ sectorCount: 10 });
       const config = getMissionEffects("disruption")!;
 
       const result = executeDisruptionMission(target, config);
@@ -155,8 +155,8 @@ describe("Pirate Mission Execution", () => {
       expect(result.effects.planetsDestroyed).toBeLessThanOrEqual(3);
     });
 
-    it("should not destroy more planets than target has", () => {
-      const target = createMockTargetState({ planetCount: 1 });
+    it("should not destroy more sectors than target has", () => {
+      const target = createMockTargetState({ sectorCount: 1 });
       const config = getMissionEffects("disruption")!;
 
       const result = executeDisruptionMission(target, config);
@@ -165,14 +165,14 @@ describe("Pirate Mission Execution", () => {
       expect(result.effects.planetsDestroyed).toBe(1);
     });
 
-    it("should fail if target has no planets", () => {
-      const target = createMockTargetState({ planetCount: 0 });
+    it("should fail if target has no sectors", () => {
+      const target = createMockTargetState({ sectorCount: 0 });
       const config = getMissionEffects("disruption")!;
 
       const result = executeDisruptionMission(target, config);
 
       expect(result.success).toBe(false);
-      expect(result.error).toContain("no planets");
+      expect(result.error).toContain("no sectors");
     });
   });
 
@@ -248,14 +248,14 @@ describe("Pirate Mission Execution", () => {
 // PLANET DESTRUCTION TESTS
 // =============================================================================
 
-describe("Planet Destruction", () => {
+describe("Sector Destruction", () => {
   describe("selectPlanetsToDestroy", () => {
-    it("should select correct number of planets", () => {
+    it("should select correct number of sectors", () => {
       const target = createMockTargetState({
         foodPlanets: 5,
         orePlanets: 3,
         petroleumPlanets: 2,
-        planetCount: 10,
+        sectorCount: 10,
       });
 
       const selected = selectPlanetsToDestroy(target, 3);
@@ -272,7 +272,7 @@ describe("Planet Destruction", () => {
         urbanPlanets: 0,
         touristPlanets: 0,
         industrialPlanets: 0,
-        planetCount: 2,
+        sectorCount: 2,
       });
 
       const selected = selectPlanetsToDestroy(target, 10);
@@ -280,7 +280,7 @@ describe("Planet Destruction", () => {
       expect(selected).toHaveLength(2);
     });
 
-    it("should include valid planet types", () => {
+    it("should include valid sector types", () => {
       const target = createMockTargetState();
 
       const selected = selectPlanetsToDestroy(target, 5);
@@ -451,7 +451,7 @@ describe("Message Generation", () => {
       const message = generateMissionResultMessage(result);
 
       expect(message).toContain("destroyed");
-      expect(message).toContain("2 planet");
+      expect(message).toContain("2 sector");
     });
 
     it("should generate salvage_op message", () => {
@@ -475,13 +475,13 @@ describe("Message Generation", () => {
         missionType: "disruption" as const,
         targetEmpireId: "target-1",
         effects: {},
-        error: "No planets available",
+        error: "No sectors available",
       };
 
       const message = generateMissionResultMessage(result);
 
       expect(message).toContain("failed");
-      expect(message).toContain("No planets available");
+      expect(message).toContain("No sectors available");
     });
   });
 });

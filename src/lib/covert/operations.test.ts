@@ -37,7 +37,7 @@ function createDefender(overrides?: Partial<CovertTargetState>): CovertTargetSta
     ore: 3000,
     petroleum: 2000,
     carriers: 10,
-    planetCount: 15,
+    sectorCount: 15,
     armyEffectiveness: 85,
     civilStatusIndex: 3,
     ...overrides,
@@ -67,7 +67,7 @@ describe("calculateCovertSuccess", () => {
     expect(highAgents.successRate).toBeGreaterThan(lowAgents.successRate);
   });
 
-  it("should have lower success rate against more government planets", () => {
+  it("should have lower success rate against more government sectors", () => {
     const operation = COVERT_OPERATIONS.insurgent_aid;
     const lowGov = calculateCovertSuccess(50, 30, 1, operation);
     const highGov = calculateCovertSuccess(50, 30, 5, operation);
@@ -215,10 +215,10 @@ describe("executeCovertOp", () => {
       expect(result.effects[0]?.duration).toBe(10);
     });
 
-    it("should execute setup_coup with planet loss", () => {
+    it("should execute setup_coup with sector loss", () => {
       attacker.agents = 100;
       attacker.covertPoints = 200;
-      defender.planetCount = 20;
+      defender.sectorCount = 20;
       const operation = COVERT_OPERATIONS.setup_coup;
       const result = executeCovertOp(operation, attacker, defender, 0.01, 0.99);
 
@@ -230,7 +230,7 @@ describe("executeCovertOp", () => {
 
   describe("failed operations", () => {
     it("should fail operation when roll is high and conditions are unfavorable", () => {
-      // Use unfavorable conditions: defender has more agents and government planets
+      // Use unfavorable conditions: defender has more agents and government sectors
       const weakAttacker = createAttacker({ agents: 10 });
       const strongDefender = createDefender({ agents: 100, governmentPlanets: 5 });
       const operation = COVERT_OPERATIONS.send_spy;
@@ -473,9 +473,9 @@ describe("Edge Cases", () => {
     expect(result.effects[0]?.value).toBe(0);
   });
 
-  it("should handle low planet count for coup", () => {
+  it("should handle low sector count for coup", () => {
     const attacker = createAttacker({ agents: 100, covertPoints: 200 });
-    const defender = createDefender({ planetCount: 2 });
+    const defender = createDefender({ sectorCount: 2 });
     const operation = COVERT_OPERATIONS.setup_coup;
     const result = executeCovertOp(operation, attacker, defender, 0.01, 0.99);
 

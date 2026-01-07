@@ -239,7 +239,7 @@ describe("Full Invasion (3-Phase Combat)", () => {
     expect(result.phases.length).toBe(1);
   });
 
-  it("should capture planets on attacker victory (5-15%)", () => {
+  it("should capture sectors on attacker victory (5-15%)", () => {
     const strongAttacker: Forces = {
       soldiers: 5000,
       fighters: 200,
@@ -253,9 +253,9 @@ describe("Full Invasion (3-Phase Combat)", () => {
     const result = resolveInvasion(strongAttacker, weakDefender, 20, 0.5);
 
     if (result.outcome === "attacker_victory") {
-      // 5-15% of 20 planets = 1-3 planets
-      expect(result.planetsCaptured).toBeGreaterThanOrEqual(1);
-      expect(result.planetsCaptured).toBeLessThanOrEqual(3);
+      // 5-15% of 20 sectors = 1-3 sectors
+      expect(result.sectorsCaptured).toBeGreaterThanOrEqual(1);
+      expect(result.sectorsCaptured).toBeLessThanOrEqual(3);
     }
   });
 
@@ -331,10 +331,10 @@ describe("Guerilla Attack", () => {
     expect(result.attackerTotalCasualties.fighters).toBe(0);
   });
 
-  it("should not capture planets", () => {
+  it("should not capture sectors", () => {
     const result = resolveGuerillaAttack(1000, { ...emptyForces, soldiers: 100 }, 0.5);
 
-    expect(result.planetsCaptured).toBe(0);
+    expect(result.sectorsCaptured).toBe(0);
   });
 });
 

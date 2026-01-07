@@ -18,8 +18,8 @@ export const GAME_EVENT_TYPES = [
   // Combat events
   "battle_won",
   "battle_lost",
-  "planet_captured",
-  "planet_lost",
+  "sector_captured",
+  "sector_lost",
   "invasion_success",
   "invasion_failed",
   "under_attack",
@@ -125,8 +125,8 @@ export const EVENT_TRIGGERS: Record<GameEventType, EventTrigger> = {
     },
   },
 
-  planet_captured: {
-    event: "planet_captured",
+  sector_captured: {
+    event: "sector_captured",
     description: "Successful conquest fuels ambition",
     responses: {
       fromNegative: { newState: "confident", intensityChange: +0.20 },
@@ -134,8 +134,8 @@ export const EVENT_TRIGGERS: Record<GameEventType, EventTrigger> = {
     },
   },
 
-  planet_lost: {
-    event: "planet_lost",
+  sector_lost: {
+    event: "sector_lost",
     description: "Losing territory creates fear or anger",
     canScar: true,
     responses: {

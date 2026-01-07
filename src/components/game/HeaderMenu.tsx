@@ -27,7 +27,7 @@ const MENU_SECTIONS = {
   ] as MenuItem[],
   actions: [
     { href: "/game/military", label: UI_LABELS.military, icon: ActionIcons.military },
-    { href: "/game/sectors", label: UI_LABELS.planets, icon: ActionIcons.planets },
+    { href: "/game/sectors", label: UI_LABELS.sectors, icon: ActionIcons.sectors },
     { href: "/game/combat", label: UI_LABELS.combat, icon: ActionIcons.combat },
     { href: "/game/diplomacy", label: UI_LABELS.diplomacy, icon: ActionIcons.diplomacy },
     { href: "/game/market", label: UI_LABELS.market, icon: ActionIcons.market },

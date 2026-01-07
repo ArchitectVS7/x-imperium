@@ -14,7 +14,7 @@
 
 import { db } from "@/lib/db";
 import { eq, and } from "drizzle-orm";
-import { empires, type Empire, type Planet } from "@/lib/db/schema";
+import { empires, type Empire, type Sector } from "@/lib/db/schema";
 import type { BotDecisionContext } from "@/lib/bots/types";
 import { buildDecisionPrompt } from "./prompts/tier1-prompt";
 import { callLlmWithFailover } from "./client";
@@ -80,7 +80,7 @@ export async function preComputeNextTurnDecisions(
         eq(empires.isEliminated, false)
       ),
       with: {
-        planets: true,
+        sectors: true,
       },
     });
 
@@ -156,7 +156,7 @@ export async function preComputeNextTurnDecisions(
  * Process a single bot's LLM decision.
  */
 async function processOneBotLLMDecision(
-  bot: Empire & { planets?: Planet[] },
+  bot: Empire & { sectors?: Sector[] },
   allEmpires: Empire[],
   gameId: string,
   nextTurn: number
@@ -182,7 +182,7 @@ async function processOneBotLLMDecision(
   // Step 3: Build decision context
   const context: BotDecisionContext = {
     empire: bot,
-    planets: bot.planets ?? [],
+    sectors: bot.sectors ?? [],
     gameId,
     currentTurn: nextTurn,
     protectionTurns: 20, // TODO: Get from game settings
@@ -193,7 +193,7 @@ async function processOneBotLLMDecision(
         id: e.id,
         name: e.name,
         networth: e.networth ?? 0,
-        planetCount: e.planetCount ?? 0,
+        sectorCount: e.sectorCount ?? 0,
         isBot: e.type === "bot",
         isEliminated: e.isEliminated,
         militaryPower:

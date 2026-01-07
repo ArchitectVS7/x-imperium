@@ -39,7 +39,7 @@ export const RESOURCE_ICONS = {
 // SECTORS (formerly Planets)
 // =============================================================================
 
-export const SECTOR_TERM = "Sector"; // Generic term for "planet"
+export const SECTOR_TERM = "Sector"; // Generic term for "sector"
 export const SECTORS_TERM = "Sectors"; // Plural
 
 export const SECTOR_NAMES = {
@@ -213,7 +213,7 @@ export const UI_LABELS = {
   diplomacy: "Diplomacy",
   research: "Research",
   crafting: "Manufacturing",
-  planets: "Sectors", // Uses SECTORS_TERM
+  sectors: "Sectors", // Uses SECTORS_TERM
   combat: "Combat",
 } as const;
 
@@ -244,7 +244,7 @@ export function getResourceName(key: keyof typeof RESOURCE_NAMES): string {
 }
 
 /**
- * Get display name for a sector (planet) type
+ * Get display name for a sector (sector) type
  */
 export function getSectorName(key: keyof typeof SECTOR_NAMES): string {
   return SECTOR_NAMES[key] ?? key;

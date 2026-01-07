@@ -66,7 +66,7 @@ export interface CoalitionVictoryCheck {
   coalitionName: string;
   territoryPercent: number;
   memberCount: number;
-  members: Array<{ id: string; name: string; planetCount: number }>;
+  members: Array<{ id: string; name: string; sectorCount: number }>;
 }
 
 export interface CoordinatedAttack {
@@ -516,18 +516,18 @@ export async function checkDiplomaticVictory(
     return null;
   }
 
-  // Get total planets in the game
-  const totalPlanets = await getTotalPlanetCount(coalition.gameId);
-  if (totalPlanets === 0) {
+  // Get total sectors in the game
+  const totalSectors = await getTotalPlanetCount(coalition.gameId);
+  if (totalSectors === 0) {
     return null;
   }
 
   // Calculate coalition territory
   const coalitionPlanets = coalition.members.reduce(
-    (sum, m) => sum + m.empire.planetCount,
+    (sum, m) => sum + m.empire.sectorCount,
     0
   );
-  const territoryPercent = coalitionPlanets / totalPlanets;
+  const territoryPercent = coalitionPlanets / totalSectors;
 
   const achieved = territoryPercent >= COALITION_VICTORY_THRESHOLD;
 
@@ -540,7 +540,7 @@ export async function checkDiplomaticVictory(
     members: coalition.members.map((m) => ({
       id: m.empire.id,
       name: m.empire.name,
-      planetCount: m.empire.planetCount,
+      sectorCount: m.empire.sectorCount,
     })),
   };
 }

@@ -672,7 +672,7 @@
       "tone": "dystopian corporate speak, everything is business metrics",
       "quirks": [
         "uses buzzwords excessively (synergy, leverage, stakeholders)",
-        "refers to planets as 'assets' and people as 'human capital'",
+        "refers to sectors as 'assets' and people as 'human capital'",
         "ends messages with 'End transmission.'"
       ],
       "vocabulary": [
@@ -1550,7 +1550,7 @@
       "quirks": [
         "refers to crew/fleet constantly",
         "uses nautical/pirate terminology in space",
-        "counts treasure, not planets"
+        "counts treasure, not sectors"
       ],
       "vocabulary": [
         "plunder",
@@ -1718,7 +1718,7 @@
     "voice": {
       "tone": "destroys everything in path, leaves nothing",
       "quirks": [
-        "destroys planets after conquest",
+        "destroys sectors after conquest",
         "takes everything",
         "scorched earth policy"
       ],
@@ -2059,7 +2059,7 @@
       "tone": "megastructure builder, thinks in cosmic scale",
       "quirks": [
         "builds Dyson spheres and ringworlds",
-        "thinks planets are too small",
+        "thinks sectors are too small",
         "references engineering marvels"
       ],
       "vocabulary": [

@@ -22,25 +22,25 @@ import {
 
 describe("Victory Points Service", () => {
   describe("calculateTerritoryVP", () => {
-    it("should return 0 for less than 10 planets", () => {
+    it("should return 0 for less than 10 sectors", () => {
       expect(calculateTerritoryVP(0)).toBe(0);
       expect(calculateTerritoryVP(5)).toBe(0);
       expect(calculateTerritoryVP(9)).toBe(0);
     });
 
-    it("should return 1 for 10-19 planets", () => {
+    it("should return 1 for 10-19 sectors", () => {
       expect(calculateTerritoryVP(10)).toBe(1);
       expect(calculateTerritoryVP(15)).toBe(1);
       expect(calculateTerritoryVP(19)).toBe(1);
     });
 
-    it("should return 2 for 20-29 planets", () => {
+    it("should return 2 for 20-29 sectors", () => {
       expect(calculateTerritoryVP(20)).toBe(2);
       expect(calculateTerritoryVP(25)).toBe(2);
       expect(calculateTerritoryVP(29)).toBe(2);
     });
 
-    it("should return 3 for 30+ planets", () => {
+    it("should return 3 for 30+ sectors", () => {
       expect(calculateTerritoryVP(30)).toBe(3);
       expect(calculateTerritoryVP(50)).toBe(3);
       expect(calculateTerritoryVP(100)).toBe(3);
@@ -148,7 +148,7 @@ describe("Victory Points Service", () => {
   describe("calculateVictoryPoints", () => {
     it("should calculate full breakdown correctly", () => {
       const empire = {
-        planetCount: 25,
+        sectorCount: 25,
         networth: 2000,
         militaryPower: 1600,
         allianceCount: 3,
@@ -164,7 +164,7 @@ describe("Victory Points Service", () => {
 
       const result = calculateVictoryPoints(empire, gameStats);
 
-      expect(result.territory).toBe(2); // 25 planets
+      expect(result.territory).toBe(2); // 25 sectors
       expect(result.networth).toBe(3); // 2× average
       expect(result.military).toBe(1); // 1.6× average
       expect(result.diplomacy).toBe(1); // 3 alliances
@@ -175,7 +175,7 @@ describe("Victory Points Service", () => {
 
     it("should handle minimal empire", () => {
       const empire = {
-        planetCount: 5,
+        sectorCount: 5,
         networth: 500,
         militaryPower: 500,
         allianceCount: 0,
@@ -195,7 +195,7 @@ describe("Victory Points Service", () => {
 
     it("should handle maximum empire", () => {
       const empire = {
-        planetCount: 50,
+        sectorCount: 50,
         networth: 10000,
         militaryPower: 5000,
         allianceCount: 5,

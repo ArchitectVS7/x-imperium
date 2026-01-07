@@ -26,8 +26,8 @@ export interface PlayerModifiers {
   startingCreditsBonus: number;
   /** Income multiplier (1.20 = +20% income) */
   incomeMultiplier: number;
-  /** Planet purchase cost multiplier (0.85 = -15% cost) */
-  planetCostReduction: number;
+  /** Sector purchase cost multiplier (0.85 = -15% cost) */
+  sectorCostReduction: number;
   /** Unit build cost multiplier (0.90 = -10% cost) */
   unitCostReduction: number;
   /** Research speed multiplier (1.15 = +15% faster) */

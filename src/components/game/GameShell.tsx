@@ -388,7 +388,7 @@ export function GameShell({ children, initialLayoutData }: GameShellProps) {
       </SlideOutPanel>
 
       <SlideOutPanel
-        isOpen={activePanel === "planets"}
+        isOpen={activePanel === "sectors"}
         onClose={() => setActivePanel(null)}
         title="Sectors"
         width="lg"

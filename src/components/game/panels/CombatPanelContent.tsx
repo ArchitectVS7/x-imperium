@@ -21,7 +21,7 @@ interface Target {
   id: string;
   name: string;
   networth: number;
-  planetCount: number;
+  sectorCount: number;
 }
 
 interface CombatPanelContentProps {
@@ -190,7 +190,7 @@ export function CombatPanelContent({
               >
                 <div className="font-medium">{target.name}</div>
                 <div className="text-xs text-gray-400">
-                  NW: {target.networth.toLocaleString()} | Sectors: {target.planetCount}
+                  NW: {target.networth.toLocaleString()} | Sectors: {target.sectorCount}
                 </div>
               </button>
             ))}
@@ -276,7 +276,7 @@ export function CombatPanelContent({
             defenderForces={{
               soldiers: Math.floor(selectedTarget.networth * 0.001),
               fighters: Math.floor(selectedTarget.networth * 0.0002),
-              stations: selectedTarget.planetCount * 50,
+              stations: selectedTarget.sectorCount * 50,
               lightCruisers: Math.floor(selectedTarget.networth * 0.00001),
               heavyCruisers: Math.floor(selectedTarget.networth * 0.000002),
               carriers: Math.floor(selectedTarget.networth * 0.000005),

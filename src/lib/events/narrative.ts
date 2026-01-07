@@ -87,7 +87,7 @@ export const NARRATIVE_EVENTS: GalacticEvent[] = [
   },
   {
     id: "library_planet",
-    name: "Lost Library Planet Found",
+    name: "Lost Library Sector Found",
     category: "narrative",
     scope: "random_empire",
     description: "A world of forgotten knowledge emerges from myth",
@@ -239,7 +239,7 @@ export const NARRATIVE_EVENTS: GalacticEvent[] = [
       {
         type: "production_bonus",
         bonus: 0.1,
-        planetTypes: ["tourism", "education"],
+        sectorTypes: ["tourism", "education"],
       },
     ],
     duration: 15,

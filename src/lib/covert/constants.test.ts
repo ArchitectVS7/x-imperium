@@ -36,8 +36,8 @@ describe("Covert System Constants (PRD 6.8)", () => {
     expect(MAX_COVERT_POINTS).toBe(50);
   });
 
-  it("should have correct agent capacity per government planet", () => {
-    // PRD: Agent capacity = Government planets × 300
+  it("should have correct agent capacity per government sector", () => {
+    // PRD: Agent capacity = Government sectors × 300
     expect(AGENT_CAPACITY_PER_GOV_PLANET).toBe(300);
   });
 });

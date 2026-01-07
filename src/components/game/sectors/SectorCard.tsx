@@ -7,7 +7,7 @@
  */
 
 import { PLANET_TYPE_LABELS, PLANET_PRODUCTION } from "@/lib/game/constants";
-import type { Planet } from "@/lib/db/schema";
+import type { Sector } from "@/lib/db/schema";
 import { ReleaseSectorButton } from "./ReleaseSectorButton";
 import { SectorIcons } from "@/lib/theme/icons";
 import { Globe } from "lucide-react";
@@ -26,7 +26,7 @@ const SECTOR_TYPE_COLORS: Record<string, string> = {
 };
 
 interface SectorCardProps {
-  sector: Planet;  // Still uses Planet type from DB schema
+  sector: Sector;  // Still uses Sector type from DB schema
   sectorCount: number;
   onRelease?: () => void;
 }

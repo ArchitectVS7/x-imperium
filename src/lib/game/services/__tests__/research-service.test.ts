@@ -22,7 +22,7 @@ import {
 // =============================================================================
 
 describe("Research Constants", () => {
-  it("should have correct points per planet", () => {
+  it("should have correct points per sector", () => {
     expect(RESEARCH_POINTS_PER_PLANET).toBe(100);
   });
 
@@ -106,22 +106,22 @@ describe("Research Progress Calculations", () => {
 // =============================================================================
 
 describe("Research Production Calculations", () => {
-  it("should calculate correct production with 1 planet", () => {
+  it("should calculate correct production with 1 sector", () => {
     const production = 1 * RESEARCH_POINTS_PER_PLANET;
     expect(production).toBe(100);
   });
 
-  it("should calculate correct production with 5 planets", () => {
+  it("should calculate correct production with 5 sectors", () => {
     const production = 5 * RESEARCH_POINTS_PER_PLANET;
     expect(production).toBe(500);
   });
 
-  it("should calculate correct production with 10 planets", () => {
+  it("should calculate correct production with 10 sectors", () => {
     const production = 10 * RESEARCH_POINTS_PER_PLANET;
     expect(production).toBe(1_000);
   });
 
-  it("should generate 0 points with 0 planets", () => {
+  it("should generate 0 points with 0 sectors", () => {
     const production = 0 * RESEARCH_POINTS_PER_PLANET;
     expect(production).toBe(0);
   });
@@ -260,7 +260,7 @@ describe("Next Unlock", () => {
 
 describe("Turns to Level Calculations", () => {
   it("should calculate turns needed with current progress", () => {
-    // At level 0 with 500 points progress, 1 research planet
+    // At level 0 with 500 points progress, 1 research sector
     // Need 500 more points (1000 - 500)
     // Generating 100/turn = 5 turns
     const currentProgress = 500;
@@ -272,7 +272,7 @@ describe("Turns to Level Calculations", () => {
   });
 
   it("should calculate turns for multiple levels", () => {
-    // From level 0, 0 progress, to level 2 with 10 research planets
+    // From level 0, 0 progress, to level 2 with 10 research sectors
     // Need: 1000 (level 0→1) + 2000 (level 1→2) = 3000 points
     // Generating 1000/turn = 3 turns
     const pointsNeeded = calculateResearchCost(0) + calculateResearchCost(1);
@@ -332,7 +332,7 @@ describe("Research Edge Cases", () => {
     expect(remainingPoints).toBe(37_000);
   });
 
-  it("should handle zero research planets correctly", () => {
+  it("should handle zero research sectors correctly", () => {
     const production = 0 * RESEARCH_POINTS_PER_PLANET;
     expect(production).toBe(0);
   });
@@ -355,7 +355,7 @@ describe("PRD 9.1 Compliance", () => {
     }
   });
 
-  it("should generate 100 research points per research planet", () => {
+  it("should generate 100 research points per research sector", () => {
     expect(RESEARCH_POINTS_PER_PLANET).toBe(100);
   });
 

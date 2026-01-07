@@ -170,7 +170,7 @@ function RankingRow({
         <div className="text-sm font-mono text-lcars-amber">
           {empire.networth.toLocaleString()}
         </div>
-        <div className="text-xs text-gray-500">{empire.planetCount} planets</div>
+        <div className="text-xs text-gray-500">{empire.sectorCount} sectors</div>
       </div>
     </div>
   );
