@@ -14,6 +14,7 @@ import {
   breakTreatyAction,
   endTreatyAction,
 } from "@/app/actions/diplomacy-actions";
+import { ConfirmationModal } from "../ConfirmationModal";
 
 interface TreatyInfo {
   id: string;
@@ -54,6 +55,7 @@ export function DiplomacyPanel({ gameId, empireId, onTreatyChange }: DiplomacyPa
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
+  const [breakTreatyConfirm, setBreakTreatyConfirm] = useState<string | null>(null);
 
   const fetchStatus = useCallback(async () => {
     const result = await getDiplomacyStatusAction(gameId, empireId);
@@ -99,11 +101,15 @@ export function DiplomacyPanel({ gameId, empireId, onTreatyChange }: DiplomacyPa
     setActionLoading(null);
   };
 
-  const handleBreak = async (treatyId: string) => {
-    if (!confirm("Breaking a treaty will severely damage your reputation. Are you sure?")) {
-      return;
-    }
+  const handleBreakClick = (treatyId: string) => {
+    setBreakTreatyConfirm(treatyId);
+  };
 
+  const handleBreakConfirm = async () => {
+    if (!breakTreatyConfirm) return;
+
+    const treatyId = breakTreatyConfirm;
+    setBreakTreatyConfirm(null);
     setActionLoading(treatyId);
     setError(null);
 
@@ -288,7 +294,7 @@ export function DiplomacyPanel({ gameId, empireId, onTreatyChange }: DiplomacyPa
                     {actionLoading === treaty.id ? "..." : "End Peacefully"}
                   </button>
                   <button
-                    onClick={() => handleBreak(treaty.id)}
+                    onClick={() => handleBreakClick(treaty.id)}
                     disabled={actionLoading === treaty.id}
                     className="flex-1 py-1 bg-red-800 hover:bg-red-700 text-white text-sm rounded disabled:opacity-50"
                     data-testid={`break-${treaty.id}`}
@@ -308,6 +314,19 @@ export function DiplomacyPanel({ gameId, empireId, onTreatyChange }: DiplomacyPa
           {error}
         </p>
       )}
+
+      {/* Break Treaty Confirmation Modal */}
+      <ConfirmationModal
+        isOpen={breakTreatyConfirm !== null}
+        onClose={() => setBreakTreatyConfirm(null)}
+        onConfirm={handleBreakConfirm}
+        title="Break Treaty"
+        message="Breaking a treaty will severely damage your reputation."
+        details="Your empire's reputation score will drop significantly, making future diplomatic negotiations more difficult. Other empires may view you as untrustworthy."
+        variant="danger"
+        confirmText="Break Treaty"
+        cancelText="Cancel"
+      />
     </div>
   );
 }

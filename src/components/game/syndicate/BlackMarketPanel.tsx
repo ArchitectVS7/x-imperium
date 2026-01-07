@@ -11,6 +11,7 @@ import {
   type TrustStatusDisplay,
 } from "@/app/actions/syndicate-actions";
 import { Drama } from "lucide-react";
+import { ConfirmationModal } from "../ConfirmationModal";
 
 type TabType = "overview" | "contracts" | "catalog";
 
@@ -31,6 +32,7 @@ export function BlackMarketPanel({ refreshTrigger: externalTrigger }: BlackMarke
     text: string;
   } | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [showReportConfirm, setShowReportConfirm] = useState(false);
 
   const triggerRefresh = useCallback(() => {
     setRefreshTrigger((prev) => prev + 1);
@@ -80,11 +82,12 @@ export function BlackMarketPanel({ refreshTrigger: externalTrigger }: BlackMarke
     }
   };
 
-  const handleReportToCoordinator = async () => {
-    if (!confirm("WARNING: This will make the Syndicate hostile. Assassins will target your assets. Are you sure?")) {
-      return;
-    }
+  const handleReportClick = () => {
+    setShowReportConfirm(true);
+  };
 
+  const handleReportConfirm = async () => {
+    setShowReportConfirm(false);
     setIsLoading(true);
     setActionMessage(null);
 
@@ -242,7 +245,7 @@ export function BlackMarketPanel({ refreshTrigger: externalTrigger }: BlackMarke
                     Warning: The Syndicate will become hostile and send assassins.
                   </p>
                   <button
-                    onClick={handleReportToCoordinator}
+                    onClick={handleReportClick}
                     disabled={isLoading}
                     className="px-4 py-2 bg-red-800 text-white rounded hover:bg-red-700
                              disabled:opacity-50 transition-colors text-sm"
@@ -280,6 +283,19 @@ export function BlackMarketPanel({ refreshTrigger: externalTrigger }: BlackMarke
           </p>
         </div>
       )}
+
+      {/* Report to Coordinator Confirmation Modal */}
+      <ConfirmationModal
+        isOpen={showReportConfirm}
+        onClose={() => setShowReportConfirm(false)}
+        onConfirm={handleReportConfirm}
+        title="Betray the Syndicate"
+        message="This will make the Syndicate permanently hostile to your empire."
+        details="Assassins will be dispatched to target your generals and agents. This action cannot be undone - there is no path to redemption with the Syndicate."
+        variant="danger"
+        confirmText="Report to Coordinator"
+        cancelText="Cancel"
+      />
     </div>
   );
 }

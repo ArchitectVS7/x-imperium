@@ -440,6 +440,64 @@ export function Starmap({
     setTooltip(null);
   }, []);
 
+  // Handle keyboard interaction for accessibility
+  const handleKeyDown = useCallback(
+    (empire: EmpireMapData, event: React.KeyboardEvent) => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        // Show tooltip at node position when activated via keyboard
+        setTooltip({
+          empire,
+          x: empire.x ?? width / 2,
+          y: empire.y ?? height / 2,
+        });
+      } else if (event.key === "Escape") {
+        setTooltip(null);
+      }
+    },
+    [width, height]
+  );
+
+  const handleFocus = useCallback(
+    (empire: EmpireMapData) => {
+      // Show tooltip on focus for keyboard users
+      setTooltip({
+        empire,
+        x: empire.x ?? width / 2,
+        y: empire.y ?? height / 2,
+      });
+    },
+    [width, height]
+  );
+
+  const handleBlur = useCallback(() => {
+    setTooltip(null);
+  }, []);
+
+  // Generate accessible label for an empire
+  const getEmpireAriaLabel = useCallback(
+    (empire: EmpireMapData, isPlayer: boolean): string => {
+      if (isPlayer) {
+        return `Your empire: ${empire.name}, ${empire.sectorCount} sectors, networth ${empire.networth.toLocaleString()}`;
+      }
+
+      if (empire.isEliminated) {
+        return `${empire.name}, eliminated`;
+      }
+
+      if (empire.intelLevel === "unknown") {
+        return `Unknown empire`;
+      }
+
+      const threatLabel = empire.threatLevel ? `, ${empire.threatLevel.replace("_", " ")}` : "";
+      const treatyLabel = empire.hasTreaty ? ", treaty partner" : "";
+      const aggressorLabel = empire.recentAggressor ? ", recent aggressor" : "";
+
+      return `${empire.name}, ${empire.sectorCount} sectors${threatLabel}${treatyLabel}${aggressorLabel}`;
+    },
+    []
+  );
+
   // Handle drag
   const handleDragStart = useCallback(
     (empire: EmpireMapData) => {
@@ -645,12 +703,19 @@ export function Starmap({
             <g
               key={empire.id}
               transform={`translate(${empire.x ?? 0}, ${empire.y ?? 0})`}
-              className="cursor-pointer transition-transform hover:scale-105"
+              className="cursor-pointer transition-transform hover:scale-105 focus:outline-none focus-visible:outline-2 focus-visible:outline-lcars-amber focus-visible:outline-offset-4"
               onMouseEnter={(e) => handleMouseEnter(empire, e)}
               onMouseLeave={handleMouseLeave}
               onMouseDown={() => handleDragStart(empire)}
               onMouseMove={(e) => e.buttons === 1 && handleDrag(empire, e)}
               onMouseUp={() => handleDragEnd(empire)}
+              // Keyboard accessibility
+              tabIndex={0}
+              role="button"
+              aria-label={getEmpireAriaLabel(empire, isPlayer)}
+              onKeyDown={(e) => handleKeyDown(empire, e)}
+              onFocus={() => handleFocus(empire)}
+              onBlur={handleBlur}
             >
               <NebulaNode
                 empire={empire}
@@ -677,7 +742,7 @@ export function Starmap({
 
       {/* Help hint */}
       <div className="absolute bottom-2 left-2 text-xs text-gray-500">
-        Drag empires to reposition • Hover for details • Run Intel Ops for more info
+        Tab to navigate • Enter for details • Drag to reposition • Run Intel Ops for more info
       </div>
     </div>
   );

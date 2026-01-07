@@ -20,6 +20,7 @@ import {
   executeSellOrder,
   getOrderHistory,
 } from "@/lib/market";
+import { checkRateLimit } from "@/lib/security/rate-limiter";
 
 // =============================================================================
 // VALIDATION SCHEMAS
@@ -87,6 +88,13 @@ export async function buyResourceAction(
       return { success: false as const, error: parsed.error.issues[0]?.message || "Invalid input" };
     }
 
+    // SECURITY: Rate limiting to prevent market manipulation
+    const rateLimitResult = checkRateLimit(parsed.data.empireId, "MARKET_ACTION");
+    if (!rateLimitResult.allowed) {
+      const waitSeconds = Math.ceil((rateLimitResult.resetAt - Date.now()) / 1000);
+      return { success: false as const, error: `Rate limit exceeded. Please wait ${waitSeconds} seconds.` };
+    }
+
     // Get current turn
     const game = await db.query.games.findFirst({
       where: eq(games.id, parsed.data.gameId),
@@ -138,6 +146,13 @@ export async function sellResourceAction(
     const parsed = TradeOrderSchema.safeParse({ gameId, empireId, resourceType, quantity });
     if (!parsed.success) {
       return { success: false as const, error: parsed.error.issues[0]?.message || "Invalid input" };
+    }
+
+    // SECURITY: Rate limiting to prevent market manipulation
+    const rateLimitResult = checkRateLimit(parsed.data.empireId, "MARKET_ACTION");
+    if (!rateLimitResult.allowed) {
+      const waitSeconds = Math.ceil((rateLimitResult.resetAt - Date.now()) / 1000);
+      return { success: false as const, error: `Rate limit exceeded. Please wait ${waitSeconds} seconds.` };
     }
 
     // Get current turn
