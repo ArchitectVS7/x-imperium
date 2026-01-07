@@ -7,7 +7,7 @@
 ## The Basics
 
 **You are:** Ruler of a small space empire
-**Your goal:** Achieve victory before Turn 200
+**Your goal:** Achieve victory (50-500 turns based on game mode)
 **Protection:** You cannot be attacked for 20 turns
 
 ---
@@ -16,9 +16,9 @@
 
 ```
 [ ] Turn 1: Check resources, queue 50+ Marines
-[ ] Turn 2: Buy 1 Agricultural planet (food!)
+[ ] Turn 2: Acquire 1 Agricultural sector (food!)
 [ ] Turn 3: Queue more Marines, check neighbors
-[ ] Turn 4: Buy another planet (Mining or Industrial)
+[ ] Turn 4: Acquire another sector (Mining or Industrial)
 [ ] Turn 5: Review Star Map, consider diplomacy
 ```
 
@@ -42,7 +42,7 @@
 
 | Unit | Role | When to Build |
 |------|------|---------------|
-| **Marines** | Capture planets | Always |
+| **Marines** | Capture sectors | Always |
 | **Drones** | Cheap offense | Early game |
 | **Frigates** | Main battle line | Mid game |
 | **Cruisers** | Heavy firepower | When affordable |
@@ -57,7 +57,7 @@
 2. Choose forces to send
 3. Pick stance (Balanced is safe)
 4. Combat resolves in 3 phases: Space → Orbital → Ground
-5. **Must have Marines to capture planets!**
+5. **Must have Marines to capture sectors!**
 
 ---
 
@@ -65,9 +65,9 @@
 
 | Type | How to Win |
 |------|------------|
-| **Conquest** | Own 60% of planets |
+| **Conquest** | Own 60% of sectors |
 | **Economic** | 1.5× networth of #2 |
-| **Survival** | Highest score at Turn 200 |
+| **Survival** | Highest score at game end |
 | **Research** | Complete Research Level 8 |
 | **Coalition** | Team owns 50% territory |
 | **Military** | 2× power of everyone combined |
@@ -82,7 +82,7 @@
 | **20** | You can be attacked! |
 | **30** | Black Market unlocks |
 | **100** | Nuclear weapons available |
-| **200** | Game ends, Survival victory calculated |
+| **Game End** | Survival victory calculated (varies by mode) |
 
 ---
 
@@ -99,8 +99,8 @@
 ## Top 5 Beginner Mistakes
 
 1. **Ignoring food** → Starvation → Revolt → Game over
-2. **No Marines** → Can win battles but never capture planets
-3. **Over-expanding** → Too many planets, not enough resources
+2. **No Marines** → Can win battles but never capture sectors
+3. **Over-expanding** → Too many sectors, not enough resources
 4. **No diplomacy** → Getting attacked from all sides
 5. **Attacking on Turn 21** → You're not ready yet, wait until 30+
 

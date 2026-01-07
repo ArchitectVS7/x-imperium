@@ -6,6 +6,28 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Nexus Dominion is a modernization of Solar Imperium/Solar Realms Elite - a turn-based space empire strategy game with AI-controlled bot opponents. Built with Next.js 14 (App Router), TypeScript, Tailwind CSS, Drizzle ORM, and PostgreSQL (Neon). The game features tiered AI bots with archetypes, emotional states, and memory systems.
 
+## 🚨 CRITICAL TERMINOLOGY RULES 🚨
+
+**FORBIDDEN TERMS - NEVER USE:**
+- ❌ "planet" or "planets" → ALWAYS use "**sector**" or "**sectors**"
+- ❌ "25 AI opponents" → Use "**10-100 AI opponents (configurable)**"
+- ❌ "200 turns" or "up to 200 turns" → Use "**50-500 turns (based on game mode)**"
+- ❌ "Bot Phase" → Use "**simultaneous processing**" or "**action resolution**"
+
+**WHY THIS MATTERS:**
+Nexus Dominion has deliberately moved away from Solar Realms Elite's "planet" terminology as part of a **critical rebranding decision**. We use **SECTORS** to establish our own identity.
+
+**CORRECT GAME CONFIGURATION:**
+- **Game Modes**: Oneshot (10-25 bots, 50-100 turns) and Campaign (25-100 bots, 150-500 turns)
+- **Turn Processing**: All empires act simultaneously (single-player MMO feel), not turn-by-turn
+- **Default Campaign**: 50 bots, 200 turns (but configurable up to 500)
+
+**DATABASE NOTE:**
+The database table is currently (incorrectly) named `planets` but is being migrated to `sectors`. In code and documentation, ALWAYS refer to "sectors" even if the schema says "planets".
+
+**VIOLATIONS:**
+Any documentation or code that uses "planet" terminology represents a **critical branding failure** and must be fixed immediately. See `docs/CODE-REVIEW-TERMINOLOGY-CRISIS.md` for details.
+
 ## Commands
 
 ```bash

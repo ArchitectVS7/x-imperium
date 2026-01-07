@@ -11,7 +11,7 @@ Welcome to **Nexus Dominion**, a turn-based 4X space empire strategy game. This 
 1. [Overview](#overview)
 2. [Getting Started](#getting-started)
 3. [Resources & Economy](#resources--economy)
-4. [Planets & Expansion](#planets--expansion)
+4. [Sectors & Expansion](#sectors--expansion)
 5. [Military & Combat](#military--combat)
 6. [Diplomacy & Intelligence](#diplomacy--intelligence)
 7. [Research & Technology](#research--technology)
@@ -24,17 +24,14 @@ Welcome to **Nexus Dominion**, a turn-based 4X space empire strategy game. This 
 
 ## Overview
 
-Nexus Dominion is a **4X strategy game** (eXplore, eXpand, eXploit, eXterminate) where you command a fledgling space empire competing against 25 AI opponents. Each game lasts up to 200 turns, with victory going to the empire that achieves one of six victory conditions.
-
->**Dev note:** Neither "25 AI opponents" not "up to 200 turns" is correct. We are configured for different scales of games, from 25 up to 100 opponents. There should be no maximum number of turns.
->
+Nexus Dominion is a **4X strategy game** (eXplore, eXpand, eXploit, eXterminate) where you command a fledgling space empire competing against 10-100 AI opponents (configurable based on game mode). Games can last anywhere from 50 to 500 turns depending on the mode you choose, with victory going to the empire that achieves one of six victory conditions.
 
 ### The 4X Pillars
 
 | Pillar | Description |
 |--------|-------------|
 | **EXPLORE** | Survey the galaxy through your Star Chart. Gather intelligence on rival empires through covert operations. |
-| **EXPAND** | Acquire new sectors to grow your domain. Each planet type provides unique resources. |
+| **EXPAND** | Acquire new sectors to grow your domain. Each sector type provides unique resources. |
 | **EXPLOIT** | Harvest resources, grow your population, and research technologies to gain an edge. |
 | **EXTERMINATE** | Build fleets, train armies, and crush your rivals. Only the strongest will dominate. |
 
@@ -45,11 +42,9 @@ Nexus Dominion is a **4X strategy game** (eXplore, eXpand, eXploit, eXterminate)
 ### Your First Game
 
 When you start a new game, you receive:
-- A small empire with **5 starting planets**
+- A small empire with **5 starting sectors**
 - Basic resources to begin building
 - **20 turns of protection** (no one can attack you)
-
-> **Dev Note** We should not be using "Planets" for reference. We have twoce done a sweep for rebranding, and this is a critical failure of the redesign
 
 > **Use protection wisely!** Build your economy and military before turn 20.
 
@@ -63,16 +58,17 @@ Your **Command Center** (dashboard) is your empire's nerve center. Here you can:
 
 ### Turn Structure
 
-Each turn follows this order:
-1. **Income Phase** - Collect resources from planets
+All empires (human and AI) take their turns simultaneously - this creates a single-player MMO feel where everyone is acting at once. Each turn processes in this order:
+
+1. **Income Phase** - All empires collect resources from their sectors
 2. **Population Phase** - Population grows (or starves!)
 3. **Civil Status Phase** - Evaluate empire happiness
 4. **Market Phase** - Process buy/sell orders
-5. **Bot Phase** - AI empires take their actions
-6. **Action Phase** - Your queued actions resolve
+5. **Action Resolution** - All queued actions (yours and AI) resolve in deterministic order
+6. **Combat & Trade** - Conflicts between empires are resolved
 
-> **Dev Note** There is no "Bot Phase". All players are taking their turns simultaneously. This is a compromise between turn based and real time strategy games. When it comes to action phases that affect other players such as trading and combat, we will process them in some sort of order. I want this to feel like a single player playing an MMO, and calling out a "Bot phase" breaks this immersion
-> 
+> **Note:** You don't wait for AI empires - everyone acts simultaneously. Combat and trading are resolved in a fair, deterministic order after all decisions are made.
+
 Click **"End Turn"** when you're ready to advance.
 
 ---
@@ -83,16 +79,16 @@ Click **"End Turn"** when you're ready to advance.
 
 | Resource | Icon | Purpose | Source |
 |----------|------|---------|--------|
-| **Credits** | $ | Currency for everything | All planet types |
-| **Food** | 🌾 | Feeds population | Agricultural planets |
-| **Ore** | �ite | Construction & crafting | Mining planets |
-| **Petroleum** | ⛽ | Powers advanced units | Industrial planets |
-| **Research** | 🔬 | Unlocks technology | Research planets |
+| **Credits** | $ | Currency for everything | All sector types |
+| **Food** | 🌾 | Feeds population | Agricultural sectors |
+| **Ore** | ⛏️ | Construction & crafting | Mining sectors |
+| **Petroleum** | ⛽ | Powers advanced units | Industrial sectors |
+| **Research** | 🔬 | Unlocks technology | Research sectors |
 
 ### Resource Balance
 
 - **Food is critical** - If food < population, your people starve and rebel
-- **Credits fund everything** - Units, planets, operations all cost credits
+- **Credits fund everything** - Units, sectors, operations all cost credits
 - **Ore & Petroleum** - Needed for advanced ships and crafting
 - **Research accumulates** - Invest consistently to unlock tech levels
 
@@ -112,9 +108,9 @@ Your empire's happiness affects income:
 
 ---
 
-## Planets & Expansion
+## Sectors & Expansion
 
-### Planet Types
+### Sector Types
 
 | Type | Primary Output | Secondary |
 |------|----------------|-----------|
@@ -127,14 +123,14 @@ Your empire's happiness affects income:
 | **Ocean** | Food, Research | Credits |
 | **Arctic** | Ore, Research | Low everything |
 
-### Buying Planets
+### Acquiring Sectors
 
-1. Navigate to **Sectors** (planets menu)
-2. Click **"Buy Planet"**
-3. Select planet type based on your needs
+1. Navigate to **Sectors** menu
+2. Click **"Acquire Sector"**
+3. Select sector type based on your needs
 4. Pay the credit cost
 
-**Cost Formula:** Base cost × (current planet count)
+**Cost Formula:** Base cost × (current sector count)
 
 > **Tip:** Early game, balance food production with credits. Don't over-expand without food!
 
@@ -153,7 +149,7 @@ The galaxy contains **10 sectors** arranged in a network:
 
 | Unit | Type | Strength | Cost | Notes |
 |------|------|----------|------|-------|
-| **Marines** | Ground | Low | Cheap | Essential for conquering planets |
+| **Marines** | Ground | Low | Cheap | Essential for capturing sectors |
 | **Drones** | Space | Low | Cheap | Fast attack craft |
 | **Frigates** | Space | Medium | Medium | Main battle line |
 | **Cruisers** | Space | High | High | Heavy firepower |
@@ -172,10 +168,10 @@ Combat resolves in three phases:
 │  Drones, Frigates, Cruisers, Carriers engage    │
 ├─────────────────────────────────────────────────┤
 │  PHASE 2: ORBITAL BOMBARDMENT                   │
-│  Surviving ships bombard planetary defenses     │
+│  Surviving ships bombard sector defenses        │
 ├─────────────────────────────────────────────────┤
 │  PHASE 3: GROUND ASSAULT                        │
-│  Marines invade and capture the planet          │
+│  Marines invade and capture the sector          │
 └─────────────────────────────────────────────────┘
 ```
 
@@ -284,7 +280,7 @@ A black market for forbidden goods:
 ### Nuclear Warfare (Unlocks Turn 100)
 
 The ultimate weapon:
-- Devastating damage to planets
+- Devastating damage to sectors
 - Kills population and destroys infrastructure
 - **Warning:** Other empires will turn against you!
 
@@ -296,12 +292,12 @@ There are **six paths to victory**:
 
 | Victory Type | Condition | Difficulty |
 |--------------|-----------|------------|
-| **Conquest** | Control 60% of all planets | Hard |
+| **Conquest** | Control 60% of all sectors | Hard |
 | **Economic** | 1.5× networth of 2nd place empire | Medium |
 | **Diplomatic** | Your coalition controls 50% territory | Medium |
 | **Research** | Complete all 8 research levels | Hard |
 | **Military** | 2× military power of all others combined | Very Hard |
-| **Survival** | Highest networth at Turn 200 | Variable |
+| **Survival** | Highest networth at game end | Variable |
 
 > **Pro Tip:** Don't commit to one strategy too early. Adapt based on how the galaxy develops!
 
@@ -314,7 +310,7 @@ There are **six paths to victory**:
 | Turn | Goal | Why |
 |------|------|-----|
 | **1-5** | Build 200+ Marines | Basic defense |
-| **5-10** | Expand to 7+ planets | Economic base |
+| **5-10** | Expand to 7+ sectors | Economic base |
 | **10-15** | Start Research | Long-term investment |
 | **15-20** | Form a NAP | Diplomatic security |
 | **20** | Launch first attack | Protection ends! |
@@ -324,7 +320,7 @@ There are **six paths to victory**:
 
 - [ ] Check your starting resources
 - [ ] Queue Marine production
-- [ ] Buy 1-2 additional planets (prioritize Food)
+- [ ] Acquire 1-2 additional sectors (prioritize Food)
 - [ ] Review neighboring empires
 - [ ] End turn and watch your empire grow
 
@@ -342,10 +338,10 @@ During turns 1-20:
 ## Tips & Tricks
 
 ### Economy Tips
-- Balance planet types - don't neglect food
+- Balance sector types - don't neglect food
 - Watch civil status - unhappy empires produce less
 - Trade on the market - buy low, sell high
-- Don't over-expand - each planet costs upkeep
+- Don't over-expand - each sector costs upkeep
 
 ### Combat Tips
 - Always bring Marines - you can't capture without ground troops
