@@ -20,7 +20,7 @@ async function listTables() {
     ORDER BY tablename
   `);
 
-  const rows = extractRows(result as DbQueryResult<{ tablename: string }>);
+  const rows = extractRows(result as unknown as DbQueryResult<{ tablename: string }>);
   console.log("Tables in database:");
   rows.forEach((row) => console.log(`  - ${row.tablename}`));
 }

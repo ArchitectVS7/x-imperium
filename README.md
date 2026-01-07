@@ -63,7 +63,7 @@ npm run db:migrate       # Run migrations
 ### Core Gameplay
 - Turn-based empire management (200-turn games)
 - 5 resource types: Credits, Food, Ore, Petroleum, Research
-- 8 planet types with unique production profiles
+- 8 sector types with unique production profiles
 - Progressive unlock system (features unlock as you advance)
 
 ### Military & Combat
@@ -89,7 +89,7 @@ npm run db:migrate       # Run migrations
 - Emotional states and relationship memory
 
 ### Victory Conditions
-1. **Conquest:** Control 60% of all planets
+1. **Conquest:** Control 60% of all sectors
 2. **Economic:** 1.5x networth of 2nd place
 3. **Diplomatic:** Coalition controls 50% territory
 4. **Research:** Complete all 8 research levels
@@ -141,7 +141,6 @@ npm run db:migrate       # Run migrations
 | Theater Bonuses | DONE | `src/lib/combat/theater-control.ts` |
 | Combat Stances | DONE | `src/lib/combat/stances.ts` |
 | Combat Service Integration | DONE | `combat-service.ts:301` uses volley system |
-| Sector Terminology | DONE | 32 files rebranded from "planet" |
 
 ### Outstanding Items
 
@@ -312,6 +311,20 @@ The UI enhancement implementation has coding complete for Phases 1-7, but requir
 3. **Phase 4 (Ambient Music)** - Requires implementation work + assets
 
 ---
+
+## Acknowledgments
+
+Nexus Dominion is inspired by **Solar Realms Elite** (1990) by Amit Patel.
+
+While we acknowledge the heritage, Nexus Dominion has diverged significantly with:
+- **100 AI bot opponents** (SRE was multiplayer-only BBS game)
+- **Sector-based strategic geography** (10 sectors with borders and wormholes)
+- **Crafting & syndicate systems** (entirely new mechanics)
+- **Modern LCARS UI** (SRE was text-based BBS interface)
+- **D20 combat system** (SRE used deterministic Lanchester equations)
+- **4-tier bot AI** with archetypes, emotional states, and memory
+
+No code from Solar Realms Elite was used (clean TypeScript implementation from original design concepts).
 
 ## License
 

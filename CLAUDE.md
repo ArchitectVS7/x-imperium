@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Nexus Dominion is a modernization of Solar Imperium/Solar Realms Elite - a turn-based space empire strategy game with AI-controlled bot opponents. Built with Next.js 14 (App Router), TypeScript, Tailwind CSS, Drizzle ORM, and PostgreSQL (Neon). The game features tiered AI bots with archetypes, emotional states, and memory systems.
+Nexus Dominion is inspired by Solar Imperium/Solar Realms Elite - a turn-based space empire strategy game with AI-controlled bot opponents. Built with Next.js 14 (App Router), TypeScript, Tailwind CSS, Drizzle ORM, and PostgreSQL (Neon). The game features tiered AI bots with archetypes, emotional states, and memory systems.
 
 ## 🚨 CRITICAL TERMINOLOGY RULES 🚨
 
@@ -78,7 +78,7 @@ src/
 │   └── game/              # Game UI components
 │       ├── combat/        # AttackInterface, BattleReport, CombatPreview
 │       ├── military/      # BuildQueuePanel, UnitCard
-│       ├── planets/       # PlanetList, BuyPlanetPanel
+│       ├── sectors/       # SectorsList, BuySectorPanel
 │       ├── research/      # FundamentalResearchProgress
 │       ├── messages/      # MessageInbox, GalacticNewsFeed
 │       └── starmap/       # Force-directed empire visualization
@@ -93,7 +93,7 @@ src/
 │   │   │   ├── population.ts          # Growth/starvation
 │   │   │   ├── civil-status.ts        # Civil status evaluation
 │   │   │   ├── build-queue-service.ts # Unit construction
-│   │   │   ├── planet-service.ts      # Buy/release planets
+│   │   │   ├── sector-service.ts      # Acquire/release sectors
 │   │   │   ├── research-service.ts    # Research progression
 │   │   │   └── covert-service.ts      # Spy operations
 │   │   ├── repositories/  # Database access layer
@@ -103,7 +103,7 @@ src/
 │   │   ├── casualties.ts
 │   │   ├── army-effectiveness.ts
 │   │   ├── population.ts
-│   │   └── planet-costs.ts
+│   │   └── sector-costs.ts
 │   ├── combat/            # Combat system
 │   │   ├── phases.ts      # 3-phase combat (space/orbital/ground)
 │   │   └── effectiveness.ts # Unit effectiveness matrix
@@ -138,7 +138,7 @@ src/
 ### Database Schema
 
 The schema in `src/lib/db/schema.ts` defines:
-- Core tables: `games`, `empires`, `planets`
+- Core tables: `games`, `empires`, `sectors`
 - Combat: `attacks`, `combatLogs`
 - Economy: `marketPrices`, `marketOrders`, `buildQueue`
 - Diplomacy: `treaties`, `messages`, `reputationLog`
@@ -163,7 +163,7 @@ Bot decisions defined in `src/lib/bots/types.ts`:
 ```typescript
 type BotDecision =
   | { type: "build_units"; unitType: UnitType; quantity: number }
-  | { type: "buy_planet"; planetType: PlanetType }
+  | { type: "buy_planet"; sectorType: PlanetType }
   | { type: "attack"; targetId: string; forces: Forces }
   | { type: "diplomacy"; action: "propose_nap" | "propose_alliance"; targetId: string }
   | { type: "trade"; resource: ResourceType; quantity: number; action: "buy" | "sell" }

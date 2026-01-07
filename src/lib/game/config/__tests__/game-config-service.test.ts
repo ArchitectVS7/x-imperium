@@ -3,6 +3,10 @@
  */
 
 import { describe, it, expect, beforeEach, vi } from "vitest";
+
+// Mock server-only before importing the service
+vi.mock("server-only", () => ({}));
+
 import {
   loadGameConfig,
   setGameConfigOverride,
@@ -135,7 +139,6 @@ describe("Game Config Service", () => {
 
   describe("setGameConfigOverride", () => {
     it("should insert new override when none exists", async () => {
-      const mockInsert = vi.fn().mockReturnThis();
       const mockValues = vi.fn().mockResolvedValue(undefined);
 
       // Mock select returning empty (no existing override)
@@ -154,7 +157,7 @@ describe("Game Config Service", () => {
       const overrides = { unified: { defenderBonus: 1.25 } };
       await setGameConfigOverride(mockGameId, "combat", overrides);
 
-      expect(mockInsert).toHaveBeenCalled();
+      expect(db.insert).toHaveBeenCalled();
       expect(mockValues).toHaveBeenCalledWith({
         gameId: mockGameId,
         configType: "combat",
@@ -164,8 +167,7 @@ describe("Game Config Service", () => {
 
     it("should update existing override", async () => {
       const existingId = "existing-config-id";
-      const mockUpdate = vi.fn().mockReturnThis();
-      const mockSet = vi.fn().mockReturnThis();
+      const mockSet = vi.fn();
       const mockWhere = vi.fn().mockResolvedValue(undefined);
 
       // Mock select returning existing override
@@ -186,14 +188,13 @@ describe("Game Config Service", () => {
       const overrides = { unified: { defenderBonus: 1.30 } };
       await setGameConfigOverride(mockGameId, "combat", overrides);
 
-      expect(mockUpdate).toHaveBeenCalled();
+      expect(db.update).toHaveBeenCalled();
       expect(mockSet).toHaveBeenCalledWith({ overrides });
     });
   });
 
   describe("clearGameConfigOverride", () => {
     it("should delete game config override", async () => {
-      const mockDelete = vi.fn().mockReturnThis();
       const mockWhere = vi.fn().mockResolvedValue(undefined);
 
       (db.delete as ReturnType<typeof vi.fn>).mockReturnValue({
@@ -202,7 +203,7 @@ describe("Game Config Service", () => {
 
       await clearGameConfigOverride(mockGameId, "combat");
 
-      expect(mockDelete).toHaveBeenCalled();
+      expect(db.delete).toHaveBeenCalled();
       expect(mockWhere).toHaveBeenCalled();
     });
   });

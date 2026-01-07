@@ -19,7 +19,7 @@ async function applyMigrations() {
   const result = await db.execute(sql`
     SELECT id FROM drizzle.__drizzle_migrations ORDER BY id
   `);
-  const applied = extractRows(result as DbQueryResult<{ id: number }>).map(r => r.id);
+  const applied = extractRows(result as unknown as DbQueryResult<{ id: number }>).map(r => r.id);
   console.log(`Applied migrations: ${applied.join(', ')}`);
 
   // Migrations to apply

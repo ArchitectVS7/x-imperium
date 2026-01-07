@@ -269,6 +269,9 @@ function mergeConfig(
         // Override primitive or array values
         (merged as Record<string, unknown>)[key] = value;
       }
+    } else {
+      // Add new properties from overrides that don't exist in default config
+      (merged as Record<string, unknown>)[key] = value;
     }
   }
 

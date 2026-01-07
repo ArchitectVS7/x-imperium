@@ -9,7 +9,7 @@
 
 ## Executive Summary
 
-**Nexus Dominion** is a **1-2 hour single-player space empire strategy game** that modernizes the classic Solar Realms Elite (1990) BBS game. It features **100 AI bot opponents** with distinct personalities, **sector-based strategic geography**, and a **Star Trek LCARS-inspired interface** designed to be accessible to new players while offering depth for veterans.
+**Nexus Dominion** is a **1-2 hour single-player space empire strategy game** inspired by the classic Solar Realms Elite (1990) BBS game. It features **100 AI bot opponents** with distinct personalities, **sector-based strategic geography**, and a **Star Trek LCARS-inspired interface** designed to be accessible to new players while offering depth for veterans.
 
 ### Core Experience
 

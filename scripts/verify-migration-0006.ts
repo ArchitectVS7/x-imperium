@@ -41,7 +41,7 @@ async function verifyMigration() {
       WHERE schemaname = 'public'
       AND tablename = 'sectors'
     `);
-    const sectorsTableRows = extractRows(sectorsTableResult as DbQueryResult<{ tablename: string }>);
+    const sectorsTableRows = extractRows(sectorsTableResult as unknown as DbQueryResult<{ tablename: string }>);
 
     if (sectorsTableRows.length > 0) {
       console.log("   ✅ 'sectors' table exists");
@@ -58,7 +58,7 @@ async function verifyMigration() {
       WHERE schemaname = 'public'
       AND tablename = 'planets'
     `);
-    const planetsTableRows = extractRows(planetsTableResult as DbQueryResult<{ tablename: string }>);
+    const planetsTableRows = extractRows(planetsTableResult as unknown as DbQueryResult<{ tablename: string }>);
 
     if (planetsTableRows.length === 0) {
       console.log("   ✅ 'planets' table successfully removed");
@@ -76,7 +76,7 @@ async function verifyMigration() {
       AND tablename = 'sectors'
       ORDER BY indexname
     `);
-    const indexesRows = extractRows(indexesResult as DbQueryResult<{ indexname: string }>);
+    const indexesRows = extractRows(indexesResult as unknown as DbQueryResult<{ indexname: string }>);
 
     const expectedIndexes = [
       'sectors_pkey',
@@ -105,7 +105,7 @@ async function verifyMigration() {
     const countResult = await db.execute(sql`
       SELECT COUNT(*) as count FROM sectors
     `);
-    const countRows = extractRows(countResult as DbQueryResult<{ count: number }>);
+    const countRows = extractRows(countResult as unknown as DbQueryResult<{ count: number }>);
     const count = countRows[0]?.count || 0;
     console.log(`   ✅ Found ${count} sectors in database`);
 
