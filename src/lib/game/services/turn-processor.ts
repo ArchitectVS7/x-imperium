@@ -42,7 +42,7 @@ import {
   type Planet,
   type CraftingQueue,
 } from "@/lib/db/schema";
-import { eq, and, inArray } from "drizzle-orm";
+import { eq, and, inArray, sql } from "drizzle-orm";
 import type {
   TurnResult,
   EmpireResult,
@@ -1038,20 +1038,32 @@ async function updateResourceInventory(
   }
 
   // PERFORMANCE: Execute updates and inserts in parallel
-  await Promise.all([
-    // Batch insert new resources
-    toInsert.length > 0 ? db.insert(resourceInventory).values(toInsert) : Promise.resolve(),
-    // Batch update existing resources (parallel updates)
-    ...toUpdate.map((update) =>
+  const updates: Promise<unknown>[] = [];
+
+  // Batch insert new resources
+  if (toInsert.length > 0) {
+    updates.push(db.insert(resourceInventory).values(toInsert));
+  }
+
+  // Batch update existing resources with a single SQL query using CASE
+  if (toUpdate.length > 0) {
+    const ids = toUpdate.map((u) => u.id);
+    const quantityCases = toUpdate
+      .map((u) => sql`WHEN ${resourceInventory.id} = ${u.id} THEN ${u.newQuantity}`)
+      .reduce((acc, curr) => sql`${acc} ${curr}`, sql``);
+
+    updates.push(
       db
         .update(resourceInventory)
         .set({
-          quantity: update.newQuantity,
+          quantity: sql`CASE ${quantityCases} END`,
           updatedAt: new Date(),
         })
-        .where(eq(resourceInventory.id, update.id))
-    ),
-  ]);
+        .where(inArray(resourceInventory.id, ids))
+    );
+  }
+
+  await Promise.all(updates);
 }
 
 /**

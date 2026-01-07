@@ -129,7 +129,11 @@ export function MessageInbox({
         <h2 className="text-xl font-display text-lcars-amber">
           Inbox
           {summary && summary.unreadCount > 0 && (
-            <span className="ml-2 px-2 py-1 text-sm bg-lcars-blue rounded-full">
+            <span
+              className="ml-2 px-2 py-1 text-sm bg-lcars-blue rounded-full"
+              aria-live="polite"
+              aria-atomic="true"
+            >
               {summary.unreadCount} unread
             </span>
           )}
@@ -162,7 +166,12 @@ export function MessageInbox({
           {showUnreadOnly ? "No unread messages" : "No messages yet"}
         </div>
       ) : (
-        <div className="space-y-2 max-h-96 overflow-y-auto">
+        <div
+          className="space-y-2 max-h-96 overflow-y-auto"
+          role="region"
+          aria-live="polite"
+          aria-label="Message list"
+        >
           {messages.map((message) => (
             <MessageListItem
               key={message.id}

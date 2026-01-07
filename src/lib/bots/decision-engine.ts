@@ -812,8 +812,8 @@ function generateAttackDecision(
       // Prioritize grudge targets (70% chance to attack grudge target if available)
       const grudgeRoll = random ?? Math.random();
       if (grudgeRoll < 0.7) {
-        // Use a separate random value for target selection to avoid double random call
-        const targetRoll = random !== undefined ? (grudgeRoll + 0.3) % 1 : Math.random();
+        // Derive second random value deterministically from first to avoid double random call
+        const targetRoll = (grudgeRoll + 0.3) % 1;
         target = grudgeTargets[Math.floor(targetRoll * grudgeTargets.length)];
       }
     }

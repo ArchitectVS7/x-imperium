@@ -219,7 +219,13 @@ export function BattleReport({
   const OutcomeIcon = outcomeConfig.icon;
 
   return (
-    <div className="lcars-panel max-w-2xl mx-auto" data-testid="battle-report">
+    <div
+      className="lcars-panel max-w-2xl mx-auto"
+      data-testid="battle-report"
+      role="region"
+      aria-live="polite"
+      aria-label="Battle report"
+    >
       {/* Header */}
       <div className={`${outcomeConfig.bgColor} rounded-lg p-4 mb-4 text-center`}>
         <OutcomeIcon className={`w-12 h-12 mx-auto mb-2 ${outcomeConfig.color}`} />

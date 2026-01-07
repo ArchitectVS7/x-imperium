@@ -395,6 +395,8 @@ export const empires = pgTable(
     index("empires_game_idx").on(table.gameId),
     index("empires_type_idx").on(table.type),
     index("empires_networth_idx").on(table.networth),
+    // Composite index for filtering active empires in a game
+    index("empires_game_eliminated_idx").on(table.gameId, table.isEliminated),
   ]
 );
 
@@ -1500,6 +1502,8 @@ export const messages = pgTable(
     index("messages_channel_idx").on(table.channel),
     index("messages_turn_idx").on(table.turn),
     index("messages_is_read_idx").on(table.isRead),
+    // Composite index for filtering messages by game and channel
+    index("messages_game_channel_idx").on(table.gameId, table.channel),
   ]
 );
 
@@ -1900,6 +1904,8 @@ export const resourceInventory = pgTable(
     index("resource_inv_empire_idx").on(table.empireId),
     index("resource_inv_game_idx").on(table.gameId),
     index("resource_inv_type_idx").on(table.resourceType),
+    // Composite index for querying specific resources for an empire
+    index("resource_inv_empire_type_idx").on(table.empireId, table.resourceType),
   ]
 );
 

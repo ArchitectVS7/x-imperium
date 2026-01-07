@@ -41,7 +41,12 @@ export function CompactHeaderStatus({
   };
 
   return (
-    <div className="hidden md:flex items-center gap-4 text-sm">
+    <div
+      className="hidden md:flex items-center gap-4 text-sm"
+      role="status"
+      aria-live="polite"
+      aria-label="Game status"
+    >
       {/* Turn indicator */}
       <div className="flex items-center gap-1">
         <span className="text-gray-500">T:</span>

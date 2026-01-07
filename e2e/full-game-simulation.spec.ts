@@ -91,7 +91,7 @@ async function updateState(page: Page) {
   const turnText = await page.locator('[data-testid="turn-counter"]').textContent().catch(() => null);
   if (turnText) {
     const match = turnText.match(/(\d+)/);
-    if (match) state.turn = parseInt(match[1], 10);
+    if (match?.[1]) state.turn = parseInt(match[1], 10);
   }
 }
 
