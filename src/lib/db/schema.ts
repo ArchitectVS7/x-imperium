@@ -401,11 +401,11 @@ export const empires = pgTable(
 );
 
 // ============================================
-// PLANETS TABLE
+// SECTORS TABLE
 // ============================================
 
-export const planets = pgTable(
-  "planets",
+export const sectors = pgTable(
+  "sectors",
   {
     id: uuid("id").primaryKey().defaultRandom(),
     empireId: uuid("empire_id")
@@ -415,7 +415,7 @@ export const planets = pgTable(
       .notNull()
       .references(() => games.id, { onDelete: "cascade" }),
 
-    // Planet info
+    // Sector info
     type: planetTypeEnum("type").notNull(),
     name: varchar("name", { length: 255 }),
 
@@ -430,9 +430,9 @@ export const planets = pgTable(
     createdAt: timestamp("created_at").notNull().defaultNow(),
   },
   (table) => [
-    index("planets_empire_idx").on(table.empireId),
-    index("planets_game_idx").on(table.gameId),
-    index("planets_type_idx").on(table.type),
+    index("sectors_empire_idx").on(table.empireId),
+    index("sectors_game_idx").on(table.gameId),
+    index("sectors_type_idx").on(table.type),
   ]
 );
 
@@ -778,7 +778,8 @@ export const combatLogs = pgTable(
 
 export const gamesRelations = relations(games, ({ many }) => ({
   empires: many(empires),
-  planets: many(planets),
+  sectors: many(sectors),
+  planets: many(sectors), // Legacy alias
   saves: many(gameSaves),
   sessions: many(gameSessions),
   performanceLogs: many(performanceLogs),
@@ -803,7 +804,8 @@ export const empiresRelations = relations(empires, ({ one, many }) => ({
     fields: [empires.gameId],
     references: [games.id],
   }),
-  planets: many(planets),
+  sectors: many(sectors),
+  planets: many(sectors), // Legacy alias
   civilStatusHistory: many(civilStatusHistory),
   buildQueue: many(buildQueue),
   researchProgress: many(researchProgress),
@@ -826,16 +828,19 @@ export const empiresRelations = relations(empires, ({ one, many }) => ({
   targetedByTells: many(botTells, { relationName: "tellTarget" }),
 }));
 
-export const planetsRelations = relations(planets, ({ one }) => ({
+export const sectorsRelations = relations(sectors, ({ one }) => ({
   empire: one(empires, {
-    fields: [planets.empireId],
+    fields: [sectors.empireId],
     references: [empires.id],
   }),
   game: one(games, {
-    fields: [planets.gameId],
+    fields: [sectors.gameId],
     references: [games.id],
   }),
 }));
+
+// Legacy relation alias for backward compatibility
+export const planetsRelations = sectorsRelations;
 
 export const gameSavesRelations = relations(gameSaves, ({ one }) => ({
   game: one(games, {
@@ -2475,8 +2480,15 @@ export type NewGameSession = typeof gameSessions.$inferInsert;
 export type Empire = typeof empires.$inferSelect;
 export type NewEmpire = typeof empires.$inferInsert;
 
-export type Planet = typeof planets.$inferSelect;
-export type NewPlanet = typeof planets.$inferInsert;
+export type Sector = typeof sectors.$inferSelect;
+export type NewSector = typeof sectors.$inferInsert;
+// Legacy type aliases for backward compatibility during migration
+export type Planet = Sector;
+export type NewPlanet = NewSector;
+
+// Legacy table alias for backward compatibility during Phase 2-3 migration
+// TODO: Remove after Phase 3 codebase sweep is complete
+export const planets = sectors;
 
 export type GameSave = typeof gameSaves.$inferSelect;
 export type NewGameSave = typeof gameSaves.$inferInsert;

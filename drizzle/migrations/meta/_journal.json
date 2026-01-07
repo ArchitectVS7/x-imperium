@@ -43,6 +43,13 @@
       "when": 1736211600000,
       "tag": "0005_add_composite_indexes",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1736212800000,
+      "tag": "0006_rename_planets_to_sectors",
+      "breakpoints": true
     }
   ]
 }
