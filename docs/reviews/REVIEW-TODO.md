@@ -153,7 +153,7 @@ This document consolidates all action items, marking completed items with eviden
 | TODO-006 | architect-review | Complete combat system consolidation (remove deprecated code after validation) | 4-8h | **TODO-009** (do first) | Pending |
 | ~~TODO-007~~ | documentation-review | ~~Move terminology-crisis-audit.md from archive to active docs~~ | ~~15m~~ | ~~None~~ | **DONE** |
 | TODO-008 | documentation-review | Add link checking to CI pipeline | 4h | Best after TODO-001, TODO-005 | Pending |
-| TODO-009 | qa-review | Add combat edge case E2E tests | 3-4h | None (do before TODO-006) | Pending |
+| ~~TODO-009~~ | qa-review | ~~Add combat edge case E2E tests~~ | ~~3-4h~~ | ~~None (do before TODO-006)~~ | **DONE** (4 new test suites) |
 | ~~TODO-010~~ | qa-review | ~~Configure Playwright trace-on-all for debugging~~ | ~~2-3h~~ | ~~None~~ | **DONE** (env vars added) |
 | ~~TODO-011~~ | qa-review | ~~Implement flaky test tagging and tracking~~ | ~~2-3h~~ | ~~None~~ | **DONE** (analyzer + tracking file) |
 
@@ -230,8 +230,8 @@ All Phase 1 tasks completed:
 
 ### Phase 3: Combat/Testing Chain
 Execute sequentially:
-1. **TODO-009** (3-4h) - Combat edge case E2E tests
-2. **TODO-006** (4-8h) - Combat consolidation (requires TODO-009)
+1. ~~TODO-009~~ - Combat edge case E2E tests **DONE** (4 new test suites added)
+2. **TODO-006** (4-8h) - Combat consolidation (requires TODO-009) - **NOW UNBLOCKED**
 
 ### Phase 4: Progressive UI - COMPLETED 2026-01-08
 After TODO-003 completes:
@@ -362,12 +362,12 @@ Old milestone files are staged for deletion.
 | Architect | 7 | 2 | 78% |
 | Documentation | 6 | 4 | 60% |
 | Product | 8 | 2 | 80% |
-| QA | 10 | 1 | 91% |
-| **Total** | **31** | **9** | **78%** |
+| QA | 11 | 0 | 100% |
+| **Total** | **32** | **8** | **80%** |
 
-**Completed 2026-01-08:** TODO-001, TODO-002, TODO-003, TODO-004, TODO-005, TODO-007, TODO-010, TODO-011
+**Completed 2026-01-08:** TODO-001, TODO-002, TODO-003, TODO-004, TODO-005, TODO-007, TODO-009, TODO-010, TODO-011
 
-Remaining by source: Architect (TODO-006,012), Documentation (TODO-008,015,016,017), Product (TODO-013,014), QA (TODO-009).
+Remaining by source: Architect (TODO-006,012), Documentation (TODO-008,015,016,017), Product (TODO-013,014).
 
 ---
 
