@@ -7,36 +7,36 @@
  *
  * Domain Structure:
  * - combat/: Combat resolution, attack validation, boss detection
+ * - core/: Turn processing, victory, saves, sessions
  * - covert/: Covert operations and espionage
  * - crafting/: Crafting queue and resource crafting
- * - core/: Turn processing, victory, saves, sessions
+ * - diplomacy/: Coalitions and diplomatic mechanics
+ * - economy/: Resource production and economic management
+ * - events/: Game events, checkpoints, pirate encounters
+ * - geography/: Sectors, wormholes, expansion, territory
+ * - military/: Unit construction, upgrades, threat assessment
  * - population/: Population growth, civil status
  * - research/: Research progression, sector traits
- *
- * Remaining flat services will be organized into domains incrementally.
  */
 
 // Domain re-exports
 export * from "./combat";
+export * from "./core";
 export * from "./covert";
 export * from "./crafting";
-export * from "./core";
+export * from "./diplomacy";
+export * from "./economy";
+export * from "./events";
+export * from "./military";
 export * from "./population";
 export * from "./research";
 
-// Flat services (to be organized)
+// Geography domain - special handling for naming collisions
 // Note: Some exports have naming collisions and must be imported directly
 // from their source modules (e.g., influence-sphere-service.validateAttack)
-export * from "./resource-engine";
-export * from "./resource-tier-service";
-export * from "./sector-service";
-export * from "./sector-balancing-service";
-export * from "./unit-service";
-export * from "./build-queue-service";
-export * from "./upgrade-service";
-export * from "./coalition-service";
-export * from "./checkpoint-service";
-export * from "./wormhole-service";
+export * from "./geography/sector-service";
+export * from "./geography/sector-balancing-service";
+export * from "./geography/wormhole-service";
 // wormhole-construction-service has naming collision with influence-sphere
 export {
   processWormholeConstruction,
@@ -46,11 +46,10 @@ export {
   type WormholeConstructionProject,
   type WormholeConstructionCost,
   type WormholeConstructionInfo,
-} from "./wormhole-construction-service";
-export * from "./border-discovery-service";
-export * from "./expansion-service";
-export * from "./galaxy-generation-service";
-export * from "./event-service";
+} from "./geography/wormhole-construction-service";
+export * from "./geography/border-discovery-service";
+export * from "./geography/expansion-service";
+export * from "./geography/galaxy-generation-service";
 // influence-sphere-service.validateAttack and calculateRegionDistance conflict
 export {
   calculateInfluenceSphere,
@@ -60,19 +59,36 @@ export {
   inheritNeighborsFromEliminated,
   type InfluenceSphereResult,
   type AttackValidationResult as InfluenceAttackValidation,
-} from "./influence-sphere-service";
-// threat-service exports
+} from "./geography/influence-sphere-service";
+
+// Flat services (remaining)
+// victory-points-service has calculateMilitaryPower collision with threat-service
 export {
-  assessThreats,
-  calculateThreatLevel,
-  calculateMilitaryPower,
-  getDiplomaticStatus,
-  getRecentAction,
-  type ThreatAssessmentResult,
-  type ThreatLevel,
-  type ThreatInfo,
-} from "./threat-service";
-export * from "./victory-points-service";
+  type VictoryPointBreakdown,
+  type EmpireVPInput,
+  type GameVPStats,
+  type VPTier,
+  TERRITORY_THRESHOLDS,
+  NETWORTH_THRESHOLDS,
+  MILITARY_THRESHOLDS,
+  DIPLOMACY_THRESHOLDS,
+  ELIMINATION_THRESHOLDS,
+  RESEARCH_THRESHOLDS,
+  COALITION_TRIGGER_VP,
+  calculateTierVP,
+  calculateTerritoryVP,
+  calculateNetworthVP,
+  calculateMilitaryVP,
+  calculateDiplomacyVP,
+  calculateEliminationVP,
+  calculateResearchVP,
+  calculateVictoryPoints,
+  triggersCoalition,
+  getMaximumVP,
+  getVPDescriptions,
+  calculateMilitaryPower as calculateVPMilitaryPower,
+  compareVP,
+  getCoalitionProgress,
+} from "./victory-points-service";
 export * from "./syndicate-service";
-export * from "./pirate-service";
 export * from "./shared-victory-service";

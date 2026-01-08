@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { getTotalMaintenanceAction } from "@/app/actions/unit-actions";
 import { UNIT_LABELS, type UnitType } from "@/lib/game/unit-config";
-import type { UnitMaintenanceBreakdown } from "@/lib/game/services/unit-service";
+import type { UnitMaintenanceBreakdown } from "@/lib/game/services/military/unit-service";
 
 interface MaintenanceSummaryProps {
   refreshTrigger?: number;

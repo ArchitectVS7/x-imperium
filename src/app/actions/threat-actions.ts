@@ -7,7 +7,7 @@ import { eq } from "drizzle-orm";
 import {
   assessThreats,
   type ThreatAssessmentResult,
-} from "@/lib/game/services/threat-service";
+} from "@/lib/game/services/military/threat-service";
 
 // =============================================================================
 // COOKIE HELPERS

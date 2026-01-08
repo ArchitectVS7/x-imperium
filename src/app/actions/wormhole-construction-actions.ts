@@ -10,7 +10,7 @@ import {
   getConstructionProjects,
   getPotentialDestinations,
   startWormholeConstruction,
-} from "@/lib/game/services/wormhole-construction-service";
+} from "@/lib/game/services/geography/wormhole-construction-service";
 
 // =============================================================================
 // COOKIE HELPERS

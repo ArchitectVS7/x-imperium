@@ -8,7 +8,7 @@ import {
   type WormholeInProgress,
   type ThreatLevelSimple,
   EXPANSION_CONSTANTS,
-} from "@/lib/game/services/expansion-service";
+} from "@/lib/game/services/geography/expansion-service";
 import { getExpansionOptionsAction } from "@/app/actions/expansion-actions";
 
 // =============================================================================

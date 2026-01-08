@@ -16,7 +16,7 @@ import {
   generateGalaxy,
   createSeededRandom,
   GALAXY_CONSTANTS,
-} from "../galaxy-generation-service";
+} from "../geography/galaxy-generation-service";
 
 describe("createSeededRandom", () => {
   it("should produce deterministic results", () => {

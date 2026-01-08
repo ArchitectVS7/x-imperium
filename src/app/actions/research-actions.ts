@@ -15,7 +15,7 @@ import {
   type ResearchStatus,
   type ResearchResult,
 } from "@/lib/game/services/research";
-import { initializeUnitUpgrades } from "@/lib/game/services/upgrade-service";
+import { initializeUnitUpgrades } from "@/lib/game/services/military/upgrade-service";
 import {
   sanitizeQuantity,
   verifyEmpireOwnership,

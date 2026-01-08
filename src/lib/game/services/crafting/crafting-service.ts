@@ -23,7 +23,7 @@ import {
   type ResourceInventoryMap,
   deductResources,
   getResourceTier,
-} from "../resource-tier-service";
+} from "../economy/resource-tier-service";
 
 // =============================================================================
 // TYPES

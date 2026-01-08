@@ -32,7 +32,7 @@ import {
   canStabilizeWormhole,
   stabilizeWormhole,
   WORMHOLE_CONSTANTS,
-} from "@/lib/game/services/wormhole-service";
+} from "@/lib/game/services/geography/wormhole-service";
 
 // =============================================================================
 // COOKIE HELPERS

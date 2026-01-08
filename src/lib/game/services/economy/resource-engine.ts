@@ -15,7 +15,7 @@ import type {
   ResourceDelta,
   ResourceProduction,
   MaintenanceCost,
-} from "../types/turn-types";
+} from "../../types/turn-types";
 
 // =============================================================================
 // CONSTANTS

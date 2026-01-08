@@ -15,8 +15,8 @@ import {
   calculateReleaseRefund,
   calculateAffordableSectors,
 } from "@/lib/formulas/sector-costs";
-import { SECTOR_COSTS, SECTOR_PRODUCTION, type SectorType } from "../constants";
-import { calculateNetworth } from "../networth";
+import { SECTOR_COSTS, SECTOR_PRODUCTION, type SectorType } from "../../constants";
+import { calculateNetworth } from "../../networth";
 
 // =============================================================================
 // TYPES

@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { colonizeSectorAction, getAllSectorPurchaseInfoAction } from "@/app/actions/sector-actions";
-import type { SectorPurchaseInfo } from "@/lib/game/services/sector-service";
+import type { SectorPurchaseInfo } from "@/lib/game/services/geography/sector-service";
 import { UI_LABELS, getSectorTypeLabel } from "@/lib/game/constants";
 
 const SECTOR_TYPE_COLORS: Record<string, string> = {

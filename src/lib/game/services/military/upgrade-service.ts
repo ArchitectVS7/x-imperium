@@ -14,14 +14,14 @@
 import { db } from "@/lib/db";
 import { unitUpgrades, researchProgress, type UnitUpgrade } from "@/lib/db/schema";
 import { eq, and } from "drizzle-orm";
-import { UNIT_TYPES, type UnitType } from "../unit-config";
+import { UNIT_TYPES, type UnitType } from "../../unit-config";
 import {
   MAX_UPGRADE_LEVEL,
   getUpgradeCost,
   getUpgradeBonuses,
   getUpgradeDescription,
-} from "../upgrade-config";
-import { toDbUnitType, fromDbUnitType, type DbUnitType } from "../build-config";
+} from "../../upgrade-config";
+import { toDbUnitType, fromDbUnitType, type DbUnitType } from "../../build-config";
 
 // =============================================================================
 // TYPES

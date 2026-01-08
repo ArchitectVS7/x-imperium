@@ -32,7 +32,7 @@ import {
   calculateStarvationLoss,
 } from "@/lib/formulas";
 import { SECTOR_PRODUCTION } from "@/lib/game/constants";
-import { SECTOR_MAINTENANCE_COST } from "@/lib/game/services/resource-engine";
+import { SECTOR_MAINTENANCE_COST } from "@/lib/game/services/economy/resource-engine";
 import { UNIT_COSTS } from "@/lib/game/unit-config";
 import type { CivilStatusLevel } from "@/lib/game/constants";
 import { evaluateCivilStatus, type CivilStatusEvent } from "@/lib/game/services/population";

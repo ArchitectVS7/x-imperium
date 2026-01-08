@@ -16,7 +16,7 @@ import {
   generateMissionResultMessage,
   type TargetEmpireState,
   type PirateMission,
-} from "../pirate-service";
+} from "../events/pirate-service";
 
 // =============================================================================
 // TEST HELPERS

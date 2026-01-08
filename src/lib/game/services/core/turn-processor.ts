@@ -53,9 +53,9 @@ import type {
 import type { CivilStatusLevel } from "../../constants";
 import { getIncomeMultiplier, evaluateCivilStatus, logStatusChange, type CivilStatusEvent } from "../population";
 import { processPopulation } from "../population";
-import { processTurnResources, calculateMaintenanceCost } from "../resource-engine";
-import { processBuildQueue } from "../build-queue-service";
-import { calculateUnitMaintenance, type UnitCounts } from "../unit-service";
+import { processTurnResources, calculateMaintenanceCost } from "../economy/resource-engine";
+import { processBuildQueue } from "../military/build-queue-service";
+import { calculateUnitMaintenance, type UnitCounts } from "../military/unit-service";
 import { processResearchProduction } from "../research";
 import { perfLogger } from "@/lib/performance/logger";
 import { processBotTurn, applyBotNightmareBonus } from "@/lib/bots";
@@ -76,7 +76,7 @@ import { updateMarketPrices } from "@/lib/market";
 import {
   calculateTier1AutoProduction,
   TIER_TO_ENUM,
-} from "../resource-tier-service";
+} from "../economy/resource-tier-service";
 import {
   processCraftingQueue as processCraftingQueueItems,
   type CompletedCrafting,
@@ -88,18 +88,18 @@ import {
   triggerEndgame,
   type TriggerContext,
 } from "@/lib/messages";
-import { processGalacticEvents, applyGalacticEvent } from "../event-service";
+import { processGalacticEvents, applyGalacticEvent } from "../events/event-service";
 import {
   evaluateAllianceCheckpoint,
   generateCheckpointNotification,
   isCheckpointTurn,
-} from "../checkpoint-service";
+} from "../events/checkpoint-service";
 import {
   processWormholesTurn,
   attemptWormholeDiscovery,
-} from "../wormhole-service";
-import { processBorderDiscovery } from "../border-discovery-service";
-import { processWormholeConstruction } from "../wormhole-construction-service";
+} from "../geography/wormhole-service";
+import { processBorderDiscovery } from "../geography/border-discovery-service";
+import { processWormholeConstruction } from "../geography/wormhole-construction-service";
 import { detectBosses } from "../combat";
 
 // =============================================================================

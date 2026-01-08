@@ -26,12 +26,12 @@ import {
 } from "../constants";
 import { calculateNetworth } from "../networth";
 import { initializeResearch } from "../services/research";
-import { initializeUnitUpgrades } from "../services/upgrade-service";
+import { initializeUnitUpgrades } from "../services/military/upgrade-service";
 import { createBotEmpires } from "@/lib/bots/bot-generator";
 import type { Difficulty } from "@/lib/bots/types";
 import { initializeMarketPrices } from "@/lib/market";
-import { generateGalaxy } from "../services/galaxy-generation-service";
-import { initializeBorderDiscovery } from "../services/border-discovery-service";
+import { generateGalaxy } from "../services/geography/galaxy-generation-service";
+import { initializeBorderDiscovery } from "../services/geography/border-discovery-service";
 
 // =============================================================================
 // GAME OPERATIONS

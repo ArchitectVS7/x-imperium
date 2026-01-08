@@ -30,7 +30,7 @@ import {
   getTotalSectorCount,
   getCoalitionEmpires,
   type CoalitionWithMembers,
-} from "../repositories/coalition-repository";
+} from "../../repositories/coalition-repository";
 
 // =============================================================================
 // CONSTANTS
@@ -556,7 +556,7 @@ export async function checkAllCoalitionsForVictory(
   }
 
   // Get all active coalitions
-  const { getGameCoalitions } = await import("../repositories/coalition-repository");
+  const { getGameCoalitions } = await import("../../repositories/coalition-repository");
   const activeCoalitions = await getGameCoalitions(gameId);
 
   for (const coalition of activeCoalitions) {

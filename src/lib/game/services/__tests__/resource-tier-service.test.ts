@@ -17,7 +17,7 @@ import {
   getResourcesByTier,
   calculateInventoryValue,
   createEmptyInventory,
-} from "../resource-tier-service";
+} from "../economy/resource-tier-service";
 import type { Sector, ResourceInventory } from "@/lib/db/schema";
 
 // =============================================================================

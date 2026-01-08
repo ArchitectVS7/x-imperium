@@ -7,7 +7,7 @@ import {
 } from "@/app/actions/upgrade-actions";
 import { UNIT_LABELS, type UnitType } from "@/lib/game/unit-config";
 import { MAX_UPGRADE_LEVEL } from "@/lib/game/upgrade-config";
-import type { AllUpgradeStatuses, UpgradeStatus } from "@/lib/game/services/upgrade-service";
+import type { AllUpgradeStatuses, UpgradeStatus } from "@/lib/game/services/military/upgrade-service";
 
 const UNIT_TYPE_COLORS: Record<UnitType, string> = {
   soldiers: "border-green-500/50",

@@ -9,7 +9,7 @@ import {
   type UnitType,
 } from "@/lib/game/unit-config";
 import { UNIT_BUILD_TIMES } from "@/lib/game/build-config";
-import { getRequiredResearchLevel } from "@/lib/game/services/unit-service";
+import { getRequiredResearchLevel } from "@/lib/game/services/military/unit-service";
 
 const UNIT_TYPE_COLORS: Record<UnitType, string> = {
   soldiers: "border-green-500/50 bg-green-900/10",

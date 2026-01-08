@@ -21,7 +21,7 @@ import {
   RESOURCE_TIERS,
   type CraftedResource,
 } from "@/lib/game/constants/crafting";
-import { createEmptyInventory, type ResourceInventoryMap } from "@/lib/game/services/resource-tier-service";
+import { createEmptyInventory, type ResourceInventoryMap } from "@/lib/game/services/economy/resource-tier-service";
 
 // =============================================================================
 // COOKIE HELPERS

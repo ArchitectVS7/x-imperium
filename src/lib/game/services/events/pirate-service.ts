@@ -11,7 +11,7 @@ import {
   CONTRACT_CONFIGS,
   type ContractType,
   type PirateMissionConfig,
-} from "../constants/syndicate";
+} from "../../constants/syndicate";
 
 // =============================================================================
 // TYPES

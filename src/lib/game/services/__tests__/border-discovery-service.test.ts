@@ -7,7 +7,7 @@ import {
   calculateDiscoveryTurn,
   assignDiscoveryTurns,
   BORDER_CONSTANTS,
-} from "../border-discovery-service";
+} from "../geography/border-discovery-service";
 
 // =============================================================================
 // DISCOVERY TURN CALCULATION TESTS

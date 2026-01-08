@@ -17,7 +17,7 @@ import {
   calculateNetResourceDelta,
   processTurnResources,
   SECTOR_MAINTENANCE_COST,
-} from "../resource-engine";
+} from "../economy/resource-engine";
 import type { Sector } from "@/lib/db/schema";
 import type { ResourceDelta } from "../../types/turn-types";
 

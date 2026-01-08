@@ -18,7 +18,7 @@ import {
   getForceReductionWarning,
   getAttackTargetsWithInfo,
 } from "../combat/attack-validation-service";
-import type { InfluenceSphereResult } from "../influence-sphere-service";
+import type { InfluenceSphereResult } from "../geography/influence-sphere-service";
 import type { EmpireInfluence } from "@/lib/db/schema";
 
 // =============================================================================

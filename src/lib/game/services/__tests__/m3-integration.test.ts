@@ -20,7 +20,7 @@ import {
   calculateUnitMaintenance,
   calculateTotalMaintenance,
   type UnitCounts,
-} from "../unit-service";
+} from "../military/unit-service";
 
 // Config imports
 import { UNIT_BUILD_TIMES } from "../../build-config";

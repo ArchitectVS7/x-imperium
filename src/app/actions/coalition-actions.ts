@@ -28,7 +28,7 @@ import {
   isCoalitionWarfareUnlocked,
   COALITION_UNLOCK_TURN,
   COALITION_WARFARE_UNLOCK_TURN,
-} from "@/lib/game/services/coalition-service";
+} from "@/lib/game/services/diplomacy/coalition-service";
 import {
   getCoalitionById,
   getCoalitionWithMembers,

@@ -9,7 +9,7 @@ import {
   type ColonizeSectorResult,
   type ReleaseSectorResult,
   type SectorPurchaseInfo,
-} from "@/lib/game/services/sector-service";
+} from "@/lib/game/services/geography/sector-service";
 import { getGameById } from "@/lib/game/repositories/game-repository";
 import type { SectorType } from "@/lib/game/constants";
 import {

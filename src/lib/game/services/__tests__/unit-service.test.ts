@@ -13,7 +13,7 @@ import {
   getRequiredResearchLevel,
   getAvailableUnits,
   getLockedUnits,
-} from "../unit-service";
+} from "../military/unit-service";
 import {
   UNIT_COSTS,
   UNIT_POPULATION,

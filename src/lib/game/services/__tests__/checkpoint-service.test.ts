@@ -16,7 +16,7 @@ import {
   generateCheckpointNotification,
   type AllianceGroup,
   type CheckpointResult,
-} from "../checkpoint-service";
+} from "../events/checkpoint-service";
 
 // =============================================================================
 // MOCK SETUP
@@ -307,7 +307,7 @@ describe("Checkpoint Service", () => {
 
   describe("evaluateAllianceCheckpoint Integration", () => {
     it("should return not a checkpoint for non-checkpoint turns", async () => {
-      const { evaluateAllianceCheckpoint } = await import("../checkpoint-service");
+      const { evaluateAllianceCheckpoint } = await import("../events/checkpoint-service");
 
       const result = await evaluateAllianceCheckpoint("game-1", 25);
 
@@ -318,7 +318,7 @@ describe("Checkpoint Service", () => {
     });
 
     it("should handle games with no alliances", async () => {
-      const { evaluateAllianceCheckpoint } = await import("../checkpoint-service");
+      const { evaluateAllianceCheckpoint } = await import("../events/checkpoint-service");
 
       const result = await evaluateAllianceCheckpoint("game-1", 30);
 

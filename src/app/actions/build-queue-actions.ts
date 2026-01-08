@@ -8,7 +8,7 @@ import {
   type AddToQueueResult,
   type CancelBuildResult,
   type QueueStatus,
-} from "@/lib/game/services/build-queue-service";
+} from "@/lib/game/services/military/build-queue-service";
 import type { UnitType } from "@/lib/game/unit-config";
 import { isFeatureUnlocked } from "@/lib/constants/unlocks";
 import { db } from "@/lib/db";

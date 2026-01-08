@@ -14,7 +14,7 @@ import {
   UNIT_MAINTENANCE,
   UNIT_TYPES,
   type UnitType,
-} from "../unit-config";
+} from "../../unit-config";
 
 // =============================================================================
 // TYPES

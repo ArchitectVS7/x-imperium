@@ -12,7 +12,7 @@ import {
   BALANCE_CONSTANTS,
   type EmpireForBalancing,
   type RegionForBalancing,
-} from "../sector-balancing-service";
+} from "../geography/sector-balancing-service";
 
 // =============================================================================
 // TEST FIXTURES

@@ -58,7 +58,7 @@ import {
   validateAttack as validateInfluenceAttack,
   getValidAttackTargets,
   type InfluenceSphereResult,
-} from "../influence-sphere-service";
+} from "../geography/influence-sphere-service";
 import type { Empire, GalaxyRegion, RegionConnection, EmpireInfluence } from "@/lib/db/schema";
 
 // =============================================================================

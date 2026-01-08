@@ -6,7 +6,7 @@ import {
   type ThreatInfo,
   type ThreatLevel,
   formatRecentAction,
-} from "@/lib/game/services/threat-service";
+} from "@/lib/game/services/military/threat-service";
 import { getThreatAssessmentAction } from "@/app/actions/threat-actions";
 import { Circle, Crown, Handshake, ScrollText, Swords } from "lucide-react";
 

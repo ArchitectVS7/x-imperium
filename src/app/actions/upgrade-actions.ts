@@ -9,7 +9,7 @@ import {
   type UpgradeResult,
   type UpgradeStatus,
   type AllUpgradeStatuses,
-} from "@/lib/game/services/upgrade-service";
+} from "@/lib/game/services/military/upgrade-service";
 import type { UnitType } from "@/lib/game/unit-config";
 import { isValidUnitType } from "@/lib/security/validation";
 

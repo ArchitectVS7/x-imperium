@@ -15,7 +15,7 @@ import {
   RESOURCE_TIERS,
   type Tier1Resource,
   type CraftedResource,
-} from "../constants/crafting";
+} from "../../constants/crafting";
 
 // =============================================================================
 // TYPES

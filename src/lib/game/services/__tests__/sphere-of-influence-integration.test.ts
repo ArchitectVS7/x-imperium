@@ -9,13 +9,13 @@
  */
 
 import { describe, it, expect, beforeAll } from "vitest";
-import { generateGalaxy } from "../galaxy-generation-service";
+import { generateGalaxy } from "../geography/galaxy-generation-service";
 import {
   calculateInfluenceSphere,
   validateAttack,
   INFLUENCE_CONSTANTS,
-} from "../influence-sphere-service";
-import { attemptWormholeDiscovery } from "../wormhole-service";
+} from "../geography/influence-sphere-service";
+import { attemptWormholeDiscovery } from "../geography/wormhole-service";
 import {
   validateAttackWithInfluence,
   getAttackTargetsWithInfo,

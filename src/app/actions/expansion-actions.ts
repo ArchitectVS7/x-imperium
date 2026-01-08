@@ -7,7 +7,7 @@ import { eq } from "drizzle-orm";
 import {
   getExpansionOptions,
   type ExpansionOptionsResult,
-} from "@/lib/game/services/expansion-service";
+} from "@/lib/game/services/geography/expansion-service";
 
 // =============================================================================
 // COOKIE HELPERS

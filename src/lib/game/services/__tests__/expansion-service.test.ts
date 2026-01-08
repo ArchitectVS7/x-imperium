@@ -7,7 +7,7 @@ import {
   calculateRegionThreatLevel,
   calculateBorderStatus,
   EXPANSION_CONSTANTS,
-} from "../expansion-service";
+} from "../geography/expansion-service";
 
 // =============================================================================
 // THREAT LEVEL TESTS

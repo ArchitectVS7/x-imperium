@@ -14,7 +14,7 @@ import {
   type BuildValidation,
   type UnitMaintenanceBreakdown,
   type UnitCounts,
-} from "@/lib/game/services/unit-service";
+} from "@/lib/game/services/military/unit-service";
 import type { UnitType } from "@/lib/game/unit-config";
 import { isValidUnitType, sanitizeQuantity } from "@/lib/security/validation";
 

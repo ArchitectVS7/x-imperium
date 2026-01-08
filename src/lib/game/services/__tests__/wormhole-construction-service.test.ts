@@ -10,7 +10,7 @@ import {
   calculateMaxWormholeSlots,
   canConstructWormhole,
   WORMHOLE_CONSTRUCTION_CONSTANTS,
-} from "../wormhole-construction-service";
+} from "../geography/wormhole-construction-service";
 
 // =============================================================================
 // DISTANCE CALCULATION TESTS

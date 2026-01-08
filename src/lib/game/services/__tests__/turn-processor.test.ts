@@ -178,7 +178,7 @@ describe("Turn Processor - Civil Status Income Multipliers", () => {
 
 describe("Turn Processor - Maintenance Calculations", () => {
   it("should calculate correct maintenance costs", async () => {
-    const { calculateMaintenanceCost, SECTOR_MAINTENANCE_COST } = await import("../resource-engine");
+    const { calculateMaintenanceCost, SECTOR_MAINTENANCE_COST } = await import("../economy/resource-engine");
 
     // Single sector maintenance
     const single = calculateMaintenanceCost(1);
@@ -191,7 +191,7 @@ describe("Turn Processor - Maintenance Calculations", () => {
   });
 
   it("should have correct maintenance value per PRD", async () => {
-    const { SECTOR_MAINTENANCE_COST } = await import("../resource-engine");
+    const { SECTOR_MAINTENANCE_COST } = await import("../economy/resource-engine");
 
     // PRD 4.3: 168 credits/sector/turn
     expect(SECTOR_MAINTENANCE_COST).toBe(168);
@@ -200,7 +200,7 @@ describe("Turn Processor - Maintenance Calculations", () => {
 
 describe("Turn Processor - Resource Production", () => {
   it("should apply income multiplier to credits", async () => {
-    const { processTurnResources, SECTOR_MAINTENANCE_COST } = await import("../resource-engine");
+    const { processTurnResources, SECTOR_MAINTENANCE_COST } = await import("../economy/resource-engine");
     const { SECTOR_PRODUCTION } = await import("../../constants");
 
     // Create mock tourism sector
@@ -248,7 +248,7 @@ describe("Turn Processor - Resource Production", () => {
 
 describe("Turn Processor - Edge Cases", () => {
   it("should handle empty empire (no sectors)", async () => {
-    const { processTurnResources } = await import("../resource-engine");
+    const { processTurnResources } = await import("../economy/resource-engine");
 
     const result = processTurnResources([], 1.0);
 

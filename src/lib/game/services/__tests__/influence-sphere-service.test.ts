@@ -15,7 +15,7 @@ import {
   getValidAttackTargets,
   inheritNeighborsFromEliminated,
   INFLUENCE_CONSTANTS,
-} from "../influence-sphere-service";
+} from "../geography/influence-sphere-service";
 
 describe("calculateInfluenceRadius", () => {
   it("should return base radius for starting empire", () => {

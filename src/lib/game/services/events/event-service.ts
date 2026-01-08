@@ -37,8 +37,8 @@ import {
   getLastEventTurn,
   recordEvent,
   expireEvents,
-} from "../repositories/event-repository";
-import { CIVIL_STATUS_LEVELS, type CivilStatusLevel } from "../constants";
+} from "../../repositories/event-repository";
+import { CIVIL_STATUS_LEVELS, type CivilStatusLevel } from "../../constants";
 
 // =============================================================================
 // TYPES
@@ -529,7 +529,7 @@ export async function calculateActiveModifiers(
   gameId: string,
   currentTurn: number
 ): Promise<ActiveEventModifiers> {
-  const { getActiveEffects } = await import("../repositories/event-repository");
+  const { getActiveEffects } = await import("../../repositories/event-repository");
   const activeEffects = await getActiveEffects(gameId, currentTurn);
 
   const modifiers: ActiveEventModifiers = {

@@ -9,7 +9,7 @@ import {
   getThreatPriority,
   formatRecentAction,
   THREAT_CONSTANTS,
-} from "../threat-service";
+} from "../military/threat-service";
 
 // =============================================================================
 // MILITARY POWER TESTS

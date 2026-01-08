@@ -14,7 +14,7 @@ import {
   checkWormholeReopen,
   processWormholesTurn,
   WORMHOLE_CONSTANTS,
-} from "../wormhole-service";
+} from "../geography/wormhole-service";
 
 describe("calculateDiscoveryChance", () => {
   it("should return base chance with no bonuses", () => {

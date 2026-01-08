@@ -16,7 +16,7 @@ import {
   COALITION_UNLOCK_TURN,
   COALITION_WARFARE_UNLOCK_TURN,
   COORDINATED_ATTACK_BONUS,
-} from "../coalition-service";
+} from "../diplomacy/coalition-service";
 import {
   COALITION_MAX_MEMBERS,
   COALITION_MIN_MEMBERS,

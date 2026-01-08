@@ -5,7 +5,7 @@ import {
   getBuildQueueStatusAction,
   cancelBuildOrderAction,
 } from "@/app/actions/build-queue-actions";
-import type { QueueStatus } from "@/lib/game/services/build-queue-service";
+import type { QueueStatus } from "@/lib/game/services/military/build-queue-service";
 import { UNIT_LABELS, type UnitType } from "@/lib/game/unit-config";
 import { fromDbUnitType, type DbUnitType } from "@/lib/game/build-config";
 
