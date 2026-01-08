@@ -1,28 +1,12 @@
 /**
- * Combat Phase Resolution (PRD 6.7)
+ * Combat Utility Functions
  *
- * @deprecated This module is DEPRECATED in favor of volley-combat-v2.ts.
- * The 3-phase sequential system has been replaced by D20-based volley combat.
- * This file is kept for:
- * - Type exports (Forces, CombatResult, PhaseResult)
- * - Historical reference
+ * Contains guerilla attack and retreat resolution functions.
+ * Main invasion combat is handled by volley-combat-v2.ts.
  *
- * DO NOT use resolveCombat() from this module - use resolveBattle() from volley-combat-v2.ts instead.
- *
- * Original design (kept for reference):
- * Three-phase combat system:
- * 1. Space Combat: Cruisers vs Cruisers (determines space superiority)
- * 2. Orbital Combat: Fighters vs Stations (determines orbital control)
- * 3. Ground Combat: Soldiers capture sectors (requires carriers for transport)
- *
- * Each phase must be won to proceed to the next.
- * Attackers need to win all 3 phases for successful sector capture.
- *
- * Problem: ~1.2% attacker win rate due to 0.45³ cascade effect.
+ * For types, see ./types.ts
  */
 
-// Note: FleetComposition and calculateFleetPower are available from combat-power
-// but we use custom phase-specific power calculations here
 import {
   calculateLossRate,
   calculateVariance,
@@ -33,569 +17,29 @@ import {
   type CombatOutcome as EffectivenessOutcome,
   calculateCombatEffectivenessChange,
 } from "../formulas/army-effectiveness";
-import {
-  type CombatPhase,
-  type CombatUnitType,
-  getUnitEffectiveness,
-  EFFECTIVENESS_LEVELS,
-} from "./effectiveness";
+import { EFFECTIVENESS_LEVELS } from "./effectiveness";
 
 // =============================================================================
-// TYPES
+// TYPE RE-EXPORTS (for backward compatibility)
 // =============================================================================
 
-// Import Forces from canonical source
-import type { Forces as ForcesType } from "@/lib/game/types/forces";
+export type {
+  Forces,
+  PhaseResult,
+  CombatResult,
+  AttackType,
+  CombatPhase,
+  CombatUnitType,
+} from "./types";
 
-// Re-export Forces for backward compatibility
-export type Forces = ForcesType;
-
-export interface PhaseResult {
-  phase: CombatPhase;
-  phaseNumber: 1 | 2 | 3;
-  winner: "attacker" | "defender" | "draw";
-
-  // Power calculations
-  attackerPower: number;
-  defenderPower: number;
-
-  // Forces at start of phase
-  attackerForcesStart: Forces;
-  defenderForcesStart: Forces;
-
-  // Forces after phase
-  attackerForcesEnd: Forces;
-  defenderForcesEnd: Forces;
-
-  // Casualties this phase
-  attackerCasualties: Partial<Forces>;
-  defenderCasualties: Partial<Forces>;
-
-  // Narrative description
-  description: string;
-}
-
-export interface CombatResult {
-  outcome: "attacker_victory" | "defender_victory" | "retreat" | "stalemate";
-  phases: PhaseResult[];
-
-  // Final casualty totals
-  attackerTotalCasualties: Forces;
-  defenderTotalCasualties: Forces;
-
-  // Effectiveness changes
-  attackerEffectivenessChange: number;
-  defenderEffectivenessChange: number;
-
-  // Sector capture
-  sectorsCaptured: number;
-
-  // Summary
-  summary: string;
-}
-
-export type AttackType = "invasion" | "guerilla";
+import type { Forces, PhaseResult, CombatResult } from "./types";
 
 // =============================================================================
 // CONSTANTS
 // =============================================================================
 
-/** Percentage of defender sectors captured on successful invasion */
-export const SECTOR_CAPTURE_MIN_PERCENT = 0.05;
-export const SECTOR_CAPTURE_MAX_PERCENT = 0.15;
-
 /** Minimum carriers required per soldier for invasions */
 export const SOLDIERS_PER_CARRIER = 100;
-
-/**
- * D20-style combat variance.
- * Even underdogs have a chance (like a natural 20) and favorites can fail (natural 1).
- *
- * @param powerRatio - Ratio of attacker/defender power
- * @param randomValue - Optional fixed random value for testing (0-1)
- * @returns Winner: "attacker" | "defender" | "draw"
- */
-export function determinePhaseWinnerWithVariance(
-  powerRatio: number,
-  randomValue?: number
-): "attacker" | "defender" | "draw" {
-  const roll = randomValue ?? Math.random();
-
-  // Calculate attacker's base win probability
-  // powerRatio 1.0 = 50%, 2.0 = 75%, 0.5 = 25%
-  let attackerWinChance = powerRatio / (powerRatio + 1);
-
-  // Apply floors and ceilings (nat 1 and nat 20 effect)
-  // Minimum 5% chance for underdog, maximum 95% for favorite
-  const MIN_CHANCE = 0.05;
-  const MAX_CHANCE = 0.95;
-  attackerWinChance = Math.max(MIN_CHANCE, Math.min(MAX_CHANCE, attackerWinChance));
-
-  // Narrow band for draws (very evenly matched: 45-55% win chance)
-  const drawBand = 0.05;
-  if (attackerWinChance >= 0.5 - drawBand && attackerWinChance <= 0.5 + drawBand) {
-    // In draw band, small chance of actual draw
-    if (roll > 0.45 && roll < 0.55) {
-      return "draw";
-    }
-  }
-
-  // Roll for outcome
-  if (roll < attackerWinChance) {
-    return "attacker";
-  } else {
-    return "defender";
-  }
-}
-
-// =============================================================================
-// PHASE POWER CALCULATIONS
-// =============================================================================
-
-/**
- * Calculate combat power for space phase.
- * Only cruisers participate effectively.
- */
-export function calculateSpacePhasePower(forces: Forces, isDefender: boolean): number {
-  const phase: CombatPhase = "space";
-
-  // Light cruisers: High effectiveness in space
-  const lightCruiserPower = forces.lightCruisers * 5 * getUnitEffectiveness("lightCruisers", phase, isDefender);
-
-  // Heavy cruisers: High effectiveness in space
-  const heavyCruiserPower = forces.heavyCruisers * 8 * getUnitEffectiveness("heavyCruisers", phase, isDefender);
-
-  // Fighters have low effectiveness in space
-  const fighterPower = forces.fighters * 3 * getUnitEffectiveness("fighters", phase, isDefender);
-
-  let total = lightCruiserPower + heavyCruiserPower + fighterPower;
-
-  // Defender advantage (reduced from 1.2× to keep combat viable)
-  if (isDefender) {
-    total *= 1.1;
-  }
-
-  return total;
-}
-
-/**
- * Calculate combat power for orbital phase.
- * Fighters vs Stations, with cruiser support.
- */
-export function calculateOrbitalPhasePower(forces: Forces, isDefender: boolean): number {
-  const phase: CombatPhase = "orbital";
-
-  // Fighters: High effectiveness in orbital
-  const fighterPower = forces.fighters * 3 * getUnitEffectiveness("fighters", phase, isDefender);
-
-  // Stations: Medium effectiveness, but 2× on defense (reduced from 50 to 30 for balance)
-  const stationPower = forces.stations * 30 * getUnitEffectiveness("stations", phase, isDefender);
-
-  // Light cruisers provide high support
-  const lightCruiserPower = forces.lightCruisers * 5 * getUnitEffectiveness("lightCruisers", phase, isDefender);
-
-  // Heavy cruisers provide medium support
-  const heavyCruiserPower = forces.heavyCruisers * 8 * getUnitEffectiveness("heavyCruisers", phase, isDefender);
-
-  let total = fighterPower + stationPower + lightCruiserPower + heavyCruiserPower;
-
-  // Defender advantage (reduced from 1.2× to keep combat viable)
-  if (isDefender) {
-    total *= 1.1;
-  }
-
-  return total;
-}
-
-/**
- * Calculate combat power for ground phase.
- * Only soldiers participate.
- */
-export function calculateGroundPhasePower(forces: Forces, isDefender: boolean): number {
-  const phase: CombatPhase = "ground";
-
-  // Soldiers: High effectiveness in ground combat
-  const soldierPower = forces.soldiers * 1 * getUnitEffectiveness("soldiers", phase, isDefender);
-
-  // Fighters provide low support
-  const fighterPower = forces.fighters * 3 * getUnitEffectiveness("fighters", phase, isDefender);
-
-  // Stations provide medium defensive support (reduced from 50 to 30 for balance)
-  const stationPower = forces.stations * 30 * getUnitEffectiveness("stations", phase, isDefender);
-
-  let total = soldierPower + fighterPower + stationPower;
-
-  // Defender advantage (defending own territory, reduced from 1.2×)
-  if (isDefender) {
-    total *= 1.1;
-  }
-
-  return total;
-}
-
-// =============================================================================
-// CASUALTY CALCULATIONS
-// =============================================================================
-
-/**
- * Calculate casualties for a specific combat phase.
- * Only units that participate in the phase take casualties.
- */
-function calculatePhaseCasualties(
-  forces: Forces,
-  attackPower: number,
-  defensePower: number,
-  phase: CombatPhase,
-  isDefender: boolean,
-  randomValue?: number
-): Partial<Forces> {
-  const lossRate = calculateLossRate(attackPower, defensePower);
-  const variance = calculateVariance(randomValue);
-
-  const casualties: Partial<Forces> = {};
-
-  // Only calculate casualties for units that participate in this phase
-  const unitTypes: CombatUnitType[] = ["soldiers", "fighters", "stations", "lightCruisers", "heavyCruisers", "carriers"];
-
-  for (const unitType of unitTypes) {
-    const effectiveness = getUnitEffectiveness(unitType, phase, isDefender);
-    if (effectiveness > 0 && forces[unitType] > 0) {
-      // Units with higher effectiveness take proportionally more casualties
-      const adjustedLossRate = lossRate * effectiveness;
-      casualties[unitType] = calculateCasualties(forces[unitType], adjustedLossRate, variance);
-    }
-  }
-
-  return casualties;
-}
-
-/**
- * Apply casualties to forces, returning new force totals.
- */
-function applyPhaseCasualties(forces: Forces, casualties: Partial<Forces>): Forces {
-  return {
-    soldiers: Math.max(0, forces.soldiers - (casualties.soldiers ?? 0)),
-    fighters: Math.max(0, forces.fighters - (casualties.fighters ?? 0)),
-    stations: Math.max(0, forces.stations - (casualties.stations ?? 0)),
-    lightCruisers: Math.max(0, forces.lightCruisers - (casualties.lightCruisers ?? 0)),
-    heavyCruisers: Math.max(0, forces.heavyCruisers - (casualties.heavyCruisers ?? 0)),
-    carriers: Math.max(0, forces.carriers - (casualties.carriers ?? 0)),
-  };
-}
-
-// =============================================================================
-// PHASE RESOLUTION
-// =============================================================================
-
-/**
- * Resolve Phase 1: Space Combat
- * Cruisers vs Cruisers - determines space superiority
- */
-export function resolveSpaceCombat(
-  attackerForces: Forces,
-  defenderForces: Forces,
-  randomValue?: number
-): PhaseResult {
-  const attackerPower = calculateSpacePhasePower(attackerForces, false);
-  const defenderPower = calculateSpacePhasePower(defenderForces, true);
-
-  // Determine winner with d20-style variance
-  const powerRatio = defenderPower > 0 ? attackerPower / defenderPower : Infinity;
-  const winner = determinePhaseWinnerWithVariance(powerRatio, randomValue);
-
-  // Calculate casualties (loser takes more)
-  const attackerCasualties = calculatePhaseCasualties(
-    attackerForces,
-    defenderPower, // Attacker's casualties based on defender's attack
-    attackerPower,
-    "space",
-    false,
-    randomValue
-  );
-
-  const defenderCasualties = calculatePhaseCasualties(
-    defenderForces,
-    attackerPower, // Defender's casualties based on attacker's attack
-    defenderPower,
-    "space",
-    true,
-    randomValue
-  );
-
-  const attackerForcesEnd = applyPhaseCasualties(attackerForces, attackerCasualties);
-  const defenderForcesEnd = applyPhaseCasualties(defenderForces, defenderCasualties);
-
-  return {
-    phase: "space",
-    phaseNumber: 1,
-    winner,
-    attackerPower,
-    defenderPower,
-    attackerForcesStart: { ...attackerForces },
-    defenderForcesStart: { ...defenderForces },
-    attackerForcesEnd,
-    defenderForcesEnd,
-    attackerCasualties,
-    defenderCasualties,
-    description: generatePhaseDescription("space", winner, attackerPower, defenderPower),
-  };
-}
-
-/**
- * Resolve Phase 2: Orbital Combat
- * Fighters vs Stations - determines orbital control
- */
-export function resolveOrbitalCombat(
-  attackerForces: Forces,
-  defenderForces: Forces,
-  randomValue?: number
-): PhaseResult {
-  const attackerPower = calculateOrbitalPhasePower(attackerForces, false);
-  const defenderPower = calculateOrbitalPhasePower(defenderForces, true);
-
-  // Determine winner with d20-style variance
-  const powerRatio = defenderPower > 0 ? attackerPower / defenderPower : Infinity;
-  const winner = determinePhaseWinnerWithVariance(powerRatio, randomValue);
-
-  const attackerCasualties = calculatePhaseCasualties(
-    attackerForces,
-    defenderPower,
-    attackerPower,
-    "orbital",
-    false,
-    randomValue
-  );
-
-  const defenderCasualties = calculatePhaseCasualties(
-    defenderForces,
-    attackerPower,
-    defenderPower,
-    "orbital",
-    true,
-    randomValue
-  );
-
-  const attackerForcesEnd = applyPhaseCasualties(attackerForces, attackerCasualties);
-  const defenderForcesEnd = applyPhaseCasualties(defenderForces, defenderCasualties);
-
-  return {
-    phase: "orbital",
-    phaseNumber: 2,
-    winner,
-    attackerPower,
-    defenderPower,
-    attackerForcesStart: { ...attackerForces },
-    defenderForcesStart: { ...defenderForces },
-    attackerForcesEnd,
-    defenderForcesEnd,
-    attackerCasualties,
-    defenderCasualties,
-    description: generatePhaseDescription("orbital", winner, attackerPower, defenderPower),
-  };
-}
-
-/**
- * Resolve Phase 3: Ground Combat
- * Soldiers capture sectors (requires prior phase victories)
- */
-export function resolveGroundCombat(
-  attackerForces: Forces,
-  defenderForces: Forces,
-  randomValue?: number
-): PhaseResult {
-  const attackerPower = calculateGroundPhasePower(attackerForces, false);
-  const defenderPower = calculateGroundPhasePower(defenderForces, true);
-
-  // Determine winner with d20-style variance
-  const powerRatio = defenderPower > 0 ? attackerPower / defenderPower : Infinity;
-  const winner = determinePhaseWinnerWithVariance(powerRatio, randomValue);
-
-  const attackerCasualties = calculatePhaseCasualties(
-    attackerForces,
-    defenderPower,
-    attackerPower,
-    "ground",
-    false,
-    randomValue
-  );
-
-  const defenderCasualties = calculatePhaseCasualties(
-    defenderForces,
-    attackerPower,
-    defenderPower,
-    "ground",
-    true,
-    randomValue
-  );
-
-  const attackerForcesEnd = applyPhaseCasualties(attackerForces, attackerCasualties);
-  const defenderForcesEnd = applyPhaseCasualties(defenderForces, defenderCasualties);
-
-  return {
-    phase: "ground",
-    phaseNumber: 3,
-    winner,
-    attackerPower,
-    defenderPower,
-    attackerForcesStart: { ...attackerForces },
-    defenderForcesStart: { ...defenderForces },
-    attackerForcesEnd,
-    defenderForcesEnd,
-    attackerCasualties,
-    defenderCasualties,
-    description: generatePhaseDescription("ground", winner, attackerPower, defenderPower),
-  };
-}
-
-// =============================================================================
-// FULL COMBAT RESOLUTION
-// =============================================================================
-
-/**
- * Resolve a full invasion attack through all 3 phases.
- *
- * @param attackerForces - Attacking forces
- * @param defenderForces - Defending forces
- * @param defenderSectorCount - Number of sectors defender owns
- * @param randomValue - Optional random value for deterministic testing
- * @returns Complete combat result
- */
-export function resolveInvasion(
-  attackerForces: Forces,
-  defenderForces: Forces,
-  defenderSectorCount: number,
-  randomValue?: number
-): CombatResult {
-  const phases: PhaseResult[] = [];
-  let currentAttackerForces = { ...attackerForces };
-  let currentDefenderForces = { ...defenderForces };
-
-  // Check carrier requirement
-  const maxSoldiersTransportable = attackerForces.carriers * SOLDIERS_PER_CARRIER;
-  if (attackerForces.soldiers > maxSoldiersTransportable) {
-    // Can only send as many soldiers as carriers can transport
-    currentAttackerForces.soldiers = maxSoldiersTransportable;
-  }
-
-  // Phase 1: Space Combat
-  const spaceResult = resolveSpaceCombat(currentAttackerForces, currentDefenderForces, randomValue);
-  phases.push(spaceResult);
-  currentAttackerForces = spaceResult.attackerForcesEnd;
-  currentDefenderForces = spaceResult.defenderForcesEnd;
-
-  // If attacker lost space phase, defender wins
-  if (spaceResult.winner === "defender") {
-    return createCombatResult(phases, "defender_victory", 0);
-  }
-
-  // Phase 2: Orbital Combat (only if space won or draw)
-  const orbitalResult = resolveOrbitalCombat(currentAttackerForces, currentDefenderForces, randomValue);
-  phases.push(orbitalResult);
-  currentAttackerForces = orbitalResult.attackerForcesEnd;
-  currentDefenderForces = orbitalResult.defenderForcesEnd;
-
-  // If attacker lost orbital phase, defender wins
-  if (orbitalResult.winner === "defender") {
-    return createCombatResult(phases, "defender_victory", 0);
-  }
-
-  // Phase 3: Ground Combat (only if orbital won or draw)
-  const groundResult = resolveGroundCombat(currentAttackerForces, currentDefenderForces, randomValue);
-  phases.push(groundResult);
-
-  // Determine final outcome
-  let outcome: CombatResult["outcome"];
-  let sectorsCaptured = 0;
-
-  if (groundResult.winner === "attacker") {
-    outcome = "attacker_victory";
-    // Calculate sectors captured (5-15% of defender's sectors)
-    const capturePercent = SECTOR_CAPTURE_MIN_PERCENT +
-      (randomValue ?? Math.random()) * (SECTOR_CAPTURE_MAX_PERCENT - SECTOR_CAPTURE_MIN_PERCENT);
-    sectorsCaptured = Math.max(1, Math.floor(defenderSectorCount * capturePercent));
-  } else if (groundResult.winner === "defender") {
-    outcome = "defender_victory";
-  } else {
-    outcome = "stalemate";
-  }
-
-  return createCombatResult(phases, outcome, sectorsCaptured);
-}
-
-/**
- * Resolve a guerilla attack (soldiers only, no phases).
- */
-export function resolveGuerillaAttack(
-  attackerSoldiers: number,
-  defenderForces: Forces,
-  randomValue?: number
-): CombatResult {
-  const attackerForces: Forces = {
-    soldiers: attackerSoldiers,
-    fighters: 0,
-    stations: 0,
-    lightCruisers: 0,
-    heavyCruisers: 0,
-    carriers: 0,
-  };
-
-  const attackerPower = attackerSoldiers * 1 * EFFECTIVENESS_LEVELS.HIGH;
-  const defenderPower = defenderForces.soldiers * 1 * EFFECTIVENESS_LEVELS.HIGH * 1.2;
-
-  const lossRate = calculateLossRate(attackerPower, defenderPower);
-  const variance = calculateVariance(randomValue);
-
-  const attackerLosses = calculateCasualties(attackerSoldiers, lossRate, variance);
-  const defenderLosses = calculateCasualties(defenderForces.soldiers, lossRate, variance);
-
-  const winner = attackerPower > defenderPower ? "attacker" : "defender";
-
-  const phaseResult: PhaseResult = {
-    phase: "guerilla",
-    phaseNumber: 1,
-    winner,
-    attackerPower,
-    defenderPower,
-    attackerForcesStart: attackerForces,
-    defenderForcesStart: defenderForces,
-    attackerForcesEnd: { ...attackerForces, soldiers: attackerSoldiers - attackerLosses },
-    defenderForcesEnd: { ...defenderForces, soldiers: defenderForces.soldiers - defenderLosses },
-    attackerCasualties: { soldiers: attackerLosses },
-    defenderCasualties: { soldiers: defenderLosses },
-    description: `Guerilla raid: ${attackerSoldiers} soldiers attack. ${winner === "attacker" ? "Raid succeeds!" : "Raid repelled!"}`,
-  };
-
-  const outcome = winner === "attacker" ? "attacker_victory" : "defender_victory";
-
-  return createCombatResult([phaseResult], outcome, 0);
-}
-
-/**
- * Calculate retreat casualties and return result.
- */
-export function resolveRetreat(attackerForces: Forces): CombatResult {
-  const casualties: Forces = {
-    soldiers: Math.floor(attackerForces.soldiers * RETREAT_CASUALTY_RATE),
-    fighters: Math.floor(attackerForces.fighters * RETREAT_CASUALTY_RATE),
-    stations: 0, // Stations don't retreat
-    lightCruisers: Math.floor(attackerForces.lightCruisers * RETREAT_CASUALTY_RATE),
-    heavyCruisers: Math.floor(attackerForces.heavyCruisers * RETREAT_CASUALTY_RATE),
-    carriers: Math.floor(attackerForces.carriers * RETREAT_CASUALTY_RATE),
-  };
-
-  const retreatResult: CombatResult = {
-    outcome: "retreat",
-    phases: [],
-    attackerTotalCasualties: casualties,
-    defenderTotalCasualties: createEmptyForces(),
-    attackerEffectivenessChange: -5, // Retreat penalty
-    defenderEffectivenessChange: 0,
-    sectorsCaptured: 0,
-    summary: `Forces retreat, suffering ${RETREAT_CASUALTY_RATE * 100}% casualties during withdrawal.`,
-  };
-
-  return retreatResult;
-}
 
 // =============================================================================
 // HELPER FUNCTIONS
@@ -655,7 +99,14 @@ function createCombatResult(
   const defenderEffectivenessChange = calculateCombatEffectivenessChange(defenderOutcome);
 
   // Generate summary
-  const summary = generateCombatSummary(outcome, phases, sectorsCaptured);
+  const summary =
+    outcome === "attacker_victory"
+      ? `Attack successful! ${sectorsCaptured} sector${sectorsCaptured !== 1 ? "s" : ""} captured.`
+      : outcome === "defender_victory"
+        ? "Attack repelled. Defender holds their territory."
+        : outcome === "retreat"
+          ? "Forces withdrew from combat, suffering retreat casualties."
+          : "Combat ended in stalemate. No territory changed hands.";
 
   return {
     outcome,
@@ -669,57 +120,87 @@ function createCombatResult(
   };
 }
 
-function generatePhaseDescription(
-  phase: CombatPhase,
-  winner: "attacker" | "defender" | "draw",
-  attackerPower: number,
-  defenderPower: number
-): string {
-  const phaseNames: Record<CombatPhase, string> = {
-    space: "Space Combat",
-    orbital: "Orbital Combat",
-    ground: "Ground Combat",
-    guerilla: "Guerilla Raid",
-    pirate_defense: "Pirate Defense",
+// =============================================================================
+// GUERILLA ATTACK
+// =============================================================================
+
+/**
+ * Resolve a guerilla attack (soldiers only, single phase).
+ * Used for quick raids that don't involve full invasion mechanics.
+ */
+export function resolveGuerillaAttack(
+  attackerSoldiers: number,
+  defenderForces: Forces,
+  randomValue?: number
+): CombatResult {
+  const attackerForces: Forces = {
+    soldiers: attackerSoldiers,
+    fighters: 0,
+    stations: 0,
+    lightCruisers: 0,
+    heavyCruisers: 0,
+    carriers: 0,
   };
 
-  const ratio = defenderPower > 0 ? (attackerPower / defenderPower).toFixed(2) : "∞";
+  const attackerPower = attackerSoldiers * 1 * EFFECTIVENESS_LEVELS.HIGH;
+  const defenderPower = defenderForces.soldiers * 1 * EFFECTIVENESS_LEVELS.HIGH * 1.2;
 
-  if (winner === "attacker") {
-    return `${phaseNames[phase]}: Attacker victorious (power ratio: ${ratio}:1)`;
-  } else if (winner === "defender") {
-    return `${phaseNames[phase]}: Defender holds (power ratio: ${ratio}:1)`;
-  } else {
-    return `${phaseNames[phase]}: Stalemate (power ratio: ${ratio}:1)`;
-  }
-}
+  const lossRate = calculateLossRate(attackerPower, defenderPower);
+  const variance = calculateVariance(randomValue);
 
-function generateCombatSummary(
-  outcome: CombatResult["outcome"],
-  phases: PhaseResult[],
-  sectorsCaptured: number
-): string {
-  switch (outcome) {
-    case "attacker_victory":
-      return `Invasion successful! ${sectorsCaptured} sector${sectorsCaptured !== 1 ? "s" : ""} captured after ${phases.length} combat phases.`;
-    case "defender_victory":
-      const failedPhase = phases.find(p => p.winner === "defender");
-      return `Invasion repelled during ${failedPhase?.phase ?? "combat"}. Defender holds their territory.`;
-    case "retreat":
-      return "Forces withdrew from combat, suffering retreat casualties.";
-    case "stalemate":
-      return "Combat ended in stalemate. No territory changed hands.";
-    default:
-      return "Combat concluded.";
-  }
+  const attackerLosses = calculateCasualties(attackerSoldiers, lossRate, variance);
+  const defenderLosses = calculateCasualties(defenderForces.soldiers, lossRate, variance);
+
+  const winner = attackerPower > defenderPower ? "attacker" : "defender";
+
+  const phaseResult: PhaseResult = {
+    phase: "guerilla",
+    phaseNumber: 1,
+    winner,
+    attackerPower,
+    defenderPower,
+    attackerForcesStart: attackerForces,
+    defenderForcesStart: defenderForces,
+    attackerForcesEnd: { ...attackerForces, soldiers: attackerSoldiers - attackerLosses },
+    defenderForcesEnd: { ...defenderForces, soldiers: defenderForces.soldiers - defenderLosses },
+    attackerCasualties: { soldiers: attackerLosses },
+    defenderCasualties: { soldiers: defenderLosses },
+    description: `Guerilla raid: ${attackerSoldiers} soldiers attack. ${winner === "attacker" ? "Raid succeeds!" : "Raid repelled!"}`,
+  };
+
+  const outcome = winner === "attacker" ? "attacker_victory" : "defender_victory";
+
+  return createCombatResult([phaseResult], outcome, 0);
 }
 
 // =============================================================================
-// EXPORTS
+// RETREAT
 // =============================================================================
 
-export {
-  type CombatPhase,
-  type CombatUnitType,
-  getUnitEffectiveness,
-} from "./effectiveness";
+/**
+ * Calculate retreat casualties and return result.
+ * Used when a player chooses to retreat from combat.
+ */
+export function resolveRetreat(attackerForces: Forces): CombatResult {
+  const casualties: Forces = {
+    soldiers: Math.floor(attackerForces.soldiers * RETREAT_CASUALTY_RATE),
+    fighters: Math.floor(attackerForces.fighters * RETREAT_CASUALTY_RATE),
+    stations: 0, // Stations don't retreat
+    lightCruisers: Math.floor(attackerForces.lightCruisers * RETREAT_CASUALTY_RATE),
+    heavyCruisers: Math.floor(attackerForces.heavyCruisers * RETREAT_CASUALTY_RATE),
+    carriers: Math.floor(attackerForces.carriers * RETREAT_CASUALTY_RATE),
+  };
+
+  const retreatResult: CombatResult = {
+    outcome: "retreat",
+    phases: [],
+    attackerTotalCasualties: casualties,
+    defenderTotalCasualties: createEmptyForces(),
+    attackerEffectivenessChange: -5, // Retreat penalty
+    defenderEffectivenessChange: 0,
+    sectorsCaptured: 0,
+    summary: `Forces retreat, suffering ${RETREAT_CASUALTY_RATE * 100}% casualties during withdrawal.`,
+  };
+
+  return retreatResult;
+}

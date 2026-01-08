@@ -150,9 +150,9 @@ This document consolidates all action items, marking completed items with eviden
 | ID | Source | Task | Effort | Dependencies | Status |
 |----|--------|------|--------|--------------|--------|
 | ~~TODO-005~~ | architect-review | ~~Complete barrel exports (`index.ts`) for remaining service domains~~ | ~~2-4h~~ | ~~TODO-001~~ | **DONE** (commit 8cc2d7e) |
-| TODO-006 | architect-review | Complete combat system consolidation (remove deprecated code after validation) | 4-8h | **TODO-009** (do first) | Pending |
+| ~~TODO-006~~ | architect-review | ~~Complete combat system consolidation (remove deprecated code after validation)~~ | ~~4-8h~~ | ~~TODO-009~~ | **DONE** (unified-combat.ts deleted, types.ts created) |
 | ~~TODO-007~~ | documentation-review | ~~Move terminology-crisis-audit.md from archive to active docs~~ | ~~15m~~ | ~~None~~ | **DONE** |
-| TODO-008 | documentation-review | Add link checking to CI pipeline | 4h | Best after TODO-001, TODO-005 | Pending |
+| ~~TODO-008~~ | documentation-review | ~~Add link checking to CI pipeline~~ | ~~4h~~ | ~~None~~ | **DONE** (CI job + local script) |
 | ~~TODO-009~~ | qa-review | ~~Add combat edge case E2E tests~~ | ~~3-4h~~ | ~~None (do before TODO-006)~~ | **DONE** (4 new test suites) |
 | ~~TODO-010~~ | qa-review | ~~Configure Playwright trace-on-all for debugging~~ | ~~2-3h~~ | ~~None~~ | **DONE** (env vars added) |
 | ~~TODO-011~~ | qa-review | ~~Implement flaky test tagging and tracking~~ | ~~2-3h~~ | ~~None~~ | **DONE** (analyzer + tracking file) |
@@ -359,15 +359,15 @@ Old milestone files are staged for deletion.
 
 | Category | Completed | Remaining | Completion % |
 |----------|-----------|-----------|--------------|
-| Architect | 7 | 2 | 78% |
-| Documentation | 6 | 4 | 60% |
+| Architect | 8 | 1 | 89% |
+| Documentation | 7 | 3 | 70% |
 | Product | 8 | 2 | 80% |
 | QA | 11 | 0 | 100% |
-| **Total** | **32** | **8** | **80%** |
+| **Total** | **34** | **6** | **85%** |
 
-**Completed 2026-01-08:** TODO-001, TODO-002, TODO-003, TODO-004, TODO-005, TODO-007, TODO-009, TODO-010, TODO-011
+**Completed 2026-01-08:** TODO-001, TODO-002, TODO-003, TODO-004, TODO-005, TODO-006, TODO-007, TODO-008, TODO-009, TODO-010, TODO-011
 
-Remaining by source: Architect (TODO-006,012), Documentation (TODO-008,015,016,017), Product (TODO-013,014).
+Remaining by source: Architect (TODO-012), Documentation (TODO-015,016,017), Product (TODO-013,014).
 
 ---
 

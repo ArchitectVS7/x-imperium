@@ -4,7 +4,6 @@
 
 **File:** `volley-combat-v2.ts`
 **Status:** PRODUCTION
-**Feature Flag:** `USE_VOLLEY_COMBAT_V2 = true` (in `combat-service.ts`)
 
 ### Overview
 
@@ -60,28 +59,30 @@ Analyzed by `theater-control.ts`:
 
 ---
 
-## Legacy Systems
-
-### Unified Combat (Fallback)
-
-**File:** `unified-combat.ts`
-**Status:** DEPRECATED (feature-flagged OFF)
-
-Single-roll combat designed to fix the 1.2% attacker win rate problem from sequential phases. Uses combined power calculation with D20 variance. Kept as fallback only.
-
-Features:
-- Underdog bonus (networth-based, when enabled)
-- Punch-up bonus (extra sectors for weaker victors)
-- Config-driven via `data/combat-config.json`
-
-### Phase Combat v1
+## Utility Functions
 
 **File:** `phases.ts`
-**Status:** DEPRECATED (kept for type exports)
+**Status:** ACTIVE (contains guerilla/retreat)
 
-Original 3-phase sequential combat (Space → Orbital → Ground). Each phase had to be won to proceed. Problem: ~1.2% attacker win rate due to 0.45³ cascade effect.
+Provides combat utility functions not covered by the main volley system:
 
-**Note:** Still exports core types (`Forces`, `CombatResult`, `PhaseResult`) used by other systems.
+- `resolveGuerillaAttack()` - Soldier-only raids
+- `resolveRetreat()` - Retreat with 15% casualty penalty
+- `SOLDIERS_PER_CARRIER` - Carrier capacity constant (100)
+
+---
+
+## Type Definitions
+
+**File:** `types.ts`
+**Status:** CANONICAL
+
+All combat types are defined here:
+- `Forces` - Unit composition (re-exported from `@/lib/game/types/forces`)
+- `CombatResult` - Battle outcome and casualties
+- `PhaseResult` - Single phase/volley result
+- `AttackType` - "invasion" | "guerilla"
+- `CombatPhase` - Phase identifiers
 
 ---
 
@@ -98,9 +99,10 @@ Original 3-phase sequential combat (Space → Orbital → Ground). Each phase ha
 
 ---
 
-## Migration Plan
+## Migration History
 
-1. ~~Document authoritative system~~ (Done)
-2. Add `@deprecated` JSDoc to legacy files
-3. Monitor for any unified-combat usage in production
-4. Remove deprecated code after beta validation
+- **2026-01-08:** Consolidated combat system
+  - Created `types.ts` as canonical type source
+  - Removed deprecated `unified-combat.ts` (was feature-flagged OFF)
+  - Simplified `phases.ts` to utility functions only
+  - Updated all imports to use canonical type locations

@@ -22,7 +22,7 @@ import { createEmpires, calculateSimulatedNetworth } from "./empire-factory";
 import type { BotDecision, BotDecisionContext, EmpireTarget, Forces } from "@/lib/bots/types";
 import { generateBotDecision } from "@/lib/bots/decision-engine";
 import {
-  resolveInvasion,
+  resolveVolleyInvasion,
   resolveGuerillaAttack,
   type CombatResult,
 } from "@/lib/combat";
@@ -558,9 +558,8 @@ function executeAttack(
     carriers: defender.carriers,
   };
 
-  // Resolve combat using pure combat functions
-  // resolveInvasion(attackerForces, defenderForces, defenderPlanetCount)
-  const combatResult = resolveInvasion(forces, defenderForces, defender.planets.length);
+  // Resolve combat using D20 volley combat system
+  const combatResult = resolveVolleyInvasion(forces, defenderForces, defender.planets.length);
 
   // CombatResult has:
   // - outcome: "attacker_victory" | "defender_victory" | "retreat" | "stalemate"

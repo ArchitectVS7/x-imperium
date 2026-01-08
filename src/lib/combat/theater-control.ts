@@ -10,7 +10,7 @@
  * - Ground Superiority: 3x marines vs enemy → Capture even if lose 2 volleys
  */
 
-import type { Forces } from "./phases";
+import type { Forces } from "./types";
 
 // =============================================================================
 // TYPES

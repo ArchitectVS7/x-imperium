@@ -35,7 +35,8 @@
     "db:clean": "tsx scripts/clear-db.ts",
     "db:stats": "tsx scripts/db-stats.ts",
     "db:fix-galaxy": "tsx scripts/regenerate-galaxy.ts",
-    "compliance:check": "tsx scripts/compliance-check.ts"
+    "compliance:check": "tsx scripts/compliance-check.ts",
+    "docs:check-links": "tsx scripts/check-doc-links.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.71.2",

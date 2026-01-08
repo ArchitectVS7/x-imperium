@@ -14,7 +14,7 @@
  * 7. Post-combat: Capture sectors based on victory margin
  */
 
-import type { Forces } from "./phases";
+import type { Forces, CombatResult, PhaseResult, CombatPhase } from "./types";
 import {
   type CombatStance,
   getStanceModifiers,
@@ -22,7 +22,6 @@ import {
   getDefaultStance,
 } from "./stances";
 import { analyzeTheaterControl, type TheaterAnalysis } from "./theater-control";
-import type { CombatResult, PhaseResult, CombatPhase } from "./phases";
 import unitStatsData from "@/../data/unit-stats.json";
 
 // =============================================================================

@@ -1,20 +1,18 @@
 /**
  * CombatPreview Component
  *
- * Shows power comparison before launching an attack.
- * Helps players understand the odds of success.
+ * Shows win probability and force comparison before launching an attack.
+ * Uses the D20 volley combat system for probability estimation.
  */
 
+import { useMemo } from "react";
 import type { Forces } from "@/lib/combat";
 import {
-  calculateSpacePhasePower,
-  calculateOrbitalPhasePower,
-  calculateGroundPhasePower,
   SOLDIERS_PER_CARRIER,
+  estimateWinProbability,
 } from "@/lib/combat";
 import { UIIcons } from "@/lib/theme/icons";
-import { Rocket, CircleDot, Swords } from "lucide-react";
-import type { LucideIcon } from "lucide-react";
+import { Swords, Target, Shield, Percent } from "lucide-react";
 
 // =============================================================================
 // TYPES
@@ -49,30 +47,24 @@ function formatNumber(n: number): string {
   return n.toLocaleString();
 }
 
-function formatPower(power: number): string {
-  if (power >= 1000000) {
-    return `${(power / 1000000).toFixed(1)}M`;
-  }
-  if (power >= 1000) {
-    return `${(power / 1000).toFixed(1)}K`;
-  }
-  return formatNumber(Math.round(power));
+function formatPercent(p: number): string {
+  return `${Math.round(p * 100)}%`;
 }
 
-function getOddsColor(ratio: number): string {
-  if (ratio >= 2.0) return "text-green-400"; // Very favorable
-  if (ratio >= 1.2) return "text-lime-400"; // Favorable
-  if (ratio >= 0.8) return "text-yellow-400"; // Even
-  if (ratio >= 0.5) return "text-orange-400"; // Unfavorable
+function getOddsColor(winProb: number): string {
+  if (winProb >= 0.7) return "text-green-400"; // Very favorable
+  if (winProb >= 0.55) return "text-lime-400"; // Favorable
+  if (winProb >= 0.45) return "text-yellow-400"; // Even
+  if (winProb >= 0.3) return "text-orange-400"; // Unfavorable
   return "text-red-400"; // Very unfavorable
 }
 
-function getOddsLabel(ratio: number): string {
-  if (ratio >= 2.0) return "Overwhelming Advantage";
-  if (ratio >= 1.5) return "Strong Advantage";
-  if (ratio >= 1.2) return "Slight Advantage";
-  if (ratio >= 0.8) return "Even Odds";
-  if (ratio >= 0.5) return "Unfavorable Odds";
+function getOddsLabel(winProb: number): string {
+  if (winProb >= 0.7) return "Overwhelming Advantage";
+  if (winProb >= 0.6) return "Strong Advantage";
+  if (winProb >= 0.55) return "Slight Advantage";
+  if (winProb >= 0.45) return "Even Odds";
+  if (winProb >= 0.3) return "Unfavorable Odds";
   return "Suicide Mission";
 }
 
@@ -80,52 +72,14 @@ function calculateCarrierCapacity(carriers: number): number {
   return carriers * SOLDIERS_PER_CARRIER;
 }
 
-// =============================================================================
-// SUB-COMPONENTS
-// =============================================================================
-
-interface PhasePreviewProps {
-  phase: "space" | "orbital" | "ground";
-  attackerPower: number;
-  defenderPower: number;
-  icon: LucideIcon;
-  label: string;
-}
-
-function PhasePreview({ attackerPower, defenderPower, icon: IconComponent, label }: PhasePreviewProps) {
-  const ratio = defenderPower > 0 ? attackerPower / defenderPower : Infinity;
-  const percentage = Math.min(100, Math.round((ratio / (ratio + 1)) * 100));
-
+function getTotalForces(forces: Forces): number {
   return (
-    <div className="bg-gray-900/50 rounded-lg p-3">
-      <div className="flex items-center justify-between mb-2">
-        <span className="flex items-center gap-2">
-          <IconComponent className="w-5 h-5 text-gray-400" />
-          <span className="text-sm text-gray-300">{label}</span>
-        </span>
-        <span className={`text-sm font-semibold ${getOddsColor(ratio)}`}>
-          {isFinite(ratio) ? `${ratio.toFixed(1)}:1` : "∞:1"}
-        </span>
-      </div>
-
-      {/* Power Bar */}
-      <div className="h-4 bg-gray-800 rounded-full overflow-hidden flex">
-        <div
-          className="bg-lcars-amber h-full transition-all"
-          style={{ width: `${percentage}%` }}
-        />
-        <div
-          className="bg-lcars-lavender h-full transition-all"
-          style={{ width: `${100 - percentage}%` }}
-        />
-      </div>
-
-      {/* Power Numbers */}
-      <div className="flex justify-between text-xs mt-1">
-        <span className="text-lcars-amber">{formatPower(attackerPower)}</span>
-        <span className="text-lcars-lavender">{formatPower(defenderPower)}</span>
-      </div>
-    </div>
+    forces.soldiers +
+    forces.fighters +
+    forces.stations +
+    forces.lightCruisers +
+    forces.heavyCruisers +
+    forces.carriers
   );
 }
 
@@ -144,27 +98,25 @@ export function CombatPreview({
   onConfirmAttack,
   onCancel,
 }: CombatPreviewProps) {
-  // Calculate phase powers
-  const spacePowerAttacker = calculateSpacePhasePower(attackerForces, false);
-  const spacePowerDefender = calculateSpacePhasePower(defenderForces, true);
-
-  const orbitalPowerAttacker = calculateOrbitalPhasePower(attackerForces, false);
-  const orbitalPowerDefender = calculateOrbitalPhasePower(defenderForces, true);
-
-  const groundPowerAttacker = calculateGroundPhasePower(attackerForces, false);
-  const groundPowerDefender = calculateGroundPhasePower(defenderForces, true);
-
-  // Calculate overall odds (product of phase ratios)
-  const spaceRatio = spacePowerDefender > 0 ? spacePowerAttacker / spacePowerDefender : Infinity;
-  const orbitalRatio = orbitalPowerDefender > 0 ? orbitalPowerAttacker / orbitalPowerDefender : Infinity;
-  const groundRatio = groundPowerDefender > 0 ? groundPowerAttacker / groundPowerDefender : Infinity;
-
-  // Must win all phases
-  const worstRatio = Math.min(spaceRatio, orbitalRatio, groundRatio);
+  // Calculate win probability using Monte Carlo (50 iterations for preview)
+  const winProbability = useMemo(() => {
+    return estimateWinProbability(
+      attackerForces,
+      defenderForces,
+      "balanced",
+      "balanced",
+      50
+    );
+  }, [attackerForces, defenderForces]);
 
   // Calculate carrier capacity warning
   const carrierCapacity = calculateCarrierCapacity(attackerForces.carriers);
   const soldiersOverCapacity = attackerForces.soldiers > carrierCapacity;
+
+  // Calculate force totals
+  const attackerTotal = getTotalForces(attackerForces);
+  const defenderTotal = getTotalForces(defenderForces);
+  const forceRatio = defenderTotal > 0 ? attackerTotal / defenderTotal : Infinity;
 
   return (
     <div className="lcars-panel max-w-lg mx-auto" data-testid="combat-preview">
@@ -198,43 +150,80 @@ export function CombatPreview({
 
       {/* Overall Assessment */}
       <div className={`text-center p-4 rounded-lg mb-4 ${
-        worstRatio >= 1.0 ? "bg-green-900/30" : "bg-red-900/30"
+        winProbability >= 0.5 ? "bg-green-900/30" : "bg-red-900/30"
       }`}>
-        <p className={`text-lg font-semibold ${getOddsColor(worstRatio)}`}>
-          {getOddsLabel(worstRatio)}
+        <p className={`text-lg font-semibold ${getOddsColor(winProbability)}`}>
+          {getOddsLabel(winProbability)}
         </p>
-        <p className="text-gray-400 text-sm">
-          Weakest phase ratio: {isFinite(worstRatio) ? worstRatio.toFixed(2) : "∞"}:1
+        <p className="text-gray-400 text-sm mt-1">
+          Estimated win probability: <span className={getOddsColor(winProbability)}>{formatPercent(winProbability)}</span>
         </p>
       </div>
 
-      {/* Phase Breakdowns */}
+      {/* Combat Stats */}
       <div className="space-y-3 mb-4">
-        <h3 className="text-sm font-semibold text-gray-400">Combat Phases</h3>
+        <h3 className="text-sm font-semibold text-gray-400">Battle Analysis</h3>
 
-        <PhasePreview
-          phase="space"
-          attackerPower={spacePowerAttacker}
-          defenderPower={spacePowerDefender}
-          icon={Rocket}
-          label="Phase 1: Space Combat"
-        />
+        {/* Win Probability Bar */}
+        <div className="bg-gray-900/50 rounded-lg p-3">
+          <div className="flex items-center justify-between mb-2">
+            <span className="flex items-center gap-2">
+              <Percent className="w-5 h-5 text-gray-400" />
+              <span className="text-sm text-gray-300">Win Probability</span>
+            </span>
+            <span className={`text-sm font-semibold ${getOddsColor(winProbability)}`}>
+              {formatPercent(winProbability)}
+            </span>
+          </div>
+          <div className="h-4 bg-gray-800 rounded-full overflow-hidden flex">
+            <div
+              className="bg-lcars-amber h-full transition-all"
+              style={{ width: `${winProbability * 100}%` }}
+            />
+            <div
+              className="bg-lcars-lavender h-full transition-all"
+              style={{ width: `${(1 - winProbability) * 100}%` }}
+            />
+          </div>
+          <div className="flex justify-between text-xs mt-1">
+            <span className="text-lcars-amber">{attackerName}</span>
+            <span className="text-lcars-lavender">{defenderName}</span>
+          </div>
+        </div>
 
-        <PhasePreview
-          phase="orbital"
-          attackerPower={orbitalPowerAttacker}
-          defenderPower={orbitalPowerDefender}
-          icon={CircleDot}
-          label="Phase 2: Orbital Combat"
-        />
+        {/* Force Comparison */}
+        <div className="bg-gray-900/50 rounded-lg p-3">
+          <div className="flex items-center justify-between mb-2">
+            <span className="flex items-center gap-2">
+              <Swords className="w-5 h-5 text-gray-400" />
+              <span className="text-sm text-gray-300">Force Ratio</span>
+            </span>
+            <span className={`text-sm font-semibold ${forceRatio >= 1 ? "text-green-400" : "text-orange-400"}`}>
+              {isFinite(forceRatio) ? `${forceRatio.toFixed(1)}:1` : "∞:1"}
+            </span>
+          </div>
+          <div className="grid grid-cols-2 gap-4 text-xs">
+            <div>
+              <span className="text-gray-400">Your Forces: </span>
+              <span className="text-lcars-amber font-mono">{formatNumber(attackerTotal)}</span>
+            </div>
+            <div>
+              <span className="text-gray-400">Enemy Forces: </span>
+              <span className="text-lcars-lavender font-mono">{formatNumber(defenderTotal)}</span>
+            </div>
+          </div>
+        </div>
 
-        <PhasePreview
-          phase="ground"
-          attackerPower={groundPowerAttacker}
-          defenderPower={groundPowerDefender}
-          icon={Swords}
-          label="Phase 3: Ground Combat"
-        />
+        {/* Combat Info */}
+        <div className="bg-gray-900/50 rounded-lg p-3">
+          <div className="flex items-center gap-2 mb-2">
+            <Target className="w-5 h-5 text-gray-400" />
+            <span className="text-sm text-gray-300">D20 Volley Combat</span>
+          </div>
+          <p className="text-xs text-gray-500">
+            Best of 3 volleys. Each unit rolls D20 + TAR vs enemy DEF. Theater bonuses and stances affect rolls.
+          </p>
+        </div>
       </div>
 
       {/* Army Effectiveness */}
@@ -301,12 +290,12 @@ export function CombatPreview({
             <button
               onClick={onConfirmAttack}
               className={`px-6 py-2 font-semibold rounded transition-colors ${
-                worstRatio >= 0.5
+                winProbability >= 0.3
                   ? "bg-lcars-amber text-black hover:bg-lcars-amber/80"
                   : "bg-red-700 text-white hover:bg-red-600"
               }`}
             >
-              {worstRatio < 0.5 ? "Attack Anyway" : "Launch Attack"}
+              {winProbability < 0.3 ? "Attack Anyway" : "Launch Attack"}
             </button>
           )}
         </div>

@@ -176,3 +176,70 @@ jobs:
         env:
           DATABASE_URL: "postgresql://dummy:dummy@localhost:5432/dummy"
 
+  link-check:
+    name: Documentation Link Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+
+      - name: Install markdown-link-check
+        run: npm install -g markdown-link-check
+
+      - name: Check documentation links
+        run: |
+          # Create config file for link checker
+          cat > .mlc-config.json << 'EOF'
+          {
+            "ignorePatterns": [
+              {
+                "pattern": "^https://localhost"
+              },
+              {
+                "pattern": "^http://localhost"
+              },
+              {
+                "pattern": "^mailto:"
+              },
+              {
+                "pattern": "^#"
+              }
+            ],
+            "aliveStatusCodes": [200, 206, 302, 301],
+            "retryOn429": true,
+            "retryCount": 3,
+            "fallbackRetryDelay": "30s"
+          }
+          EOF
+
+          # Find all markdown files and check links
+          echo "Checking documentation links..."
+          EXIT_CODE=0
+
+          # Check core docs (non-archive)
+          for file in $(find docs -name "*.md" -not -path "*/archive/*" -not -path "*/reviews/*" 2>/dev/null); do
+            echo "Checking: $file"
+            markdown-link-check -c .mlc-config.json "$file" || EXIT_CODE=1
+          done
+
+          # Check root markdown files
+          for file in README.md CLAUDE.md CONTRIBUTING.md; do
+            if [ -f "$file" ]; then
+              echo "Checking: $file"
+              markdown-link-check -c .mlc-config.json "$file" || EXIT_CODE=1
+            fi
+          done
+
+          # Exit with error if any links were broken
+          exit $EXIT_CODE
+        continue-on-error: true  # Don't fail CI on broken external links initially
+
+      - name: Report link check results
+        if: failure()
+        run: echo "::warning::Some documentation links may be broken. Review the link check output above."
+

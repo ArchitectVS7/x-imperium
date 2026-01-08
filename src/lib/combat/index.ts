@@ -2,35 +2,40 @@
  * Combat System Module
  *
  * Exports all combat-related functionality including:
- * - Three-phase combat resolution (Space → Orbital → Ground)
+ * - D20 Volley Combat System v2 (production)
+ * - Combat types (Forces, CombatResult, PhaseResult)
  * - Unit effectiveness matrix
- * - Combat power calculations
+ * - Guerilla attacks and retreat mechanics
  */
 
-// Phase resolution
+// =============================================================================
+// TYPE EXPORTS
+// =============================================================================
+
+export type {
+  Forces,
+  PhaseResult,
+  CombatResult,
+  AttackType,
+  CombatPhase,
+  CombatUnitType,
+} from "./types";
+
+// =============================================================================
+// COMBAT UTILITIES (Guerilla, Retreat)
+// =============================================================================
+
 export {
-  type Forces,
-  type PhaseResult,
-  type CombatResult,
-  type AttackType,
-  resolveSpaceCombat,
-  resolveOrbitalCombat,
-  resolveGroundCombat,
-  resolveInvasion,
   resolveGuerillaAttack,
   resolveRetreat,
-  calculateSpacePhasePower,
-  calculateOrbitalPhasePower,
-  calculateGroundPhasePower,
-  SECTOR_CAPTURE_MIN_PERCENT,
-  SECTOR_CAPTURE_MAX_PERCENT,
   SOLDIERS_PER_CARRIER,
 } from "./phases";
 
-// Unit effectiveness
+// =============================================================================
+// UNIT EFFECTIVENESS
+// =============================================================================
+
 export {
-  type CombatPhase,
-  type CombatUnitType,
   UNIT_EFFECTIVENESS,
   EFFECTIVENESS_LEVELS,
   PHASE_PRIMARY_UNITS,
@@ -42,7 +47,10 @@ export {
   getPhaseRoleDescription,
 } from "./effectiveness";
 
-// D20 Volley Combat System v2
+// =============================================================================
+// D20 VOLLEY COMBAT SYSTEM v2 (PRODUCTION)
+// =============================================================================
+
 export {
   type D20Stats,
   type CombatUnitType as VolleyCombatUnitType,

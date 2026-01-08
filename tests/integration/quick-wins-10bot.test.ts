@@ -16,12 +16,6 @@ import { createSimulatedEmpire } from "../simulation/empire-factory";
 import type { SimulationConfig, SimulationResult, SimulatedEmpire } from "../simulation/types";
 import { STARTING_SECTORS } from "@/lib/game/constants";
 import { isFeatureEnabled, FEATURE_FLAGS } from "@/lib/config/feature-flags";
-import {
-  calculateNetworthUnderdogBonus,
-  calculatePunchupBonus,
-  NETWORTH_UNDERDOG_THRESHOLD,
-  PUNCHUP_NETWORTH_THRESHOLD,
-} from "@/lib/combat/unified-combat";
 
 // =============================================================================
 // M1.1: STARTING PLANETS
@@ -165,115 +159,11 @@ describe("M4.1: Weak-First Initiative", () => {
 });
 
 // =============================================================================
-// M4.2: UNDERDOG COMBAT BONUS
+// NOTE: M4.2 (Underdog Bonus) and M4.3 (Punching-up Bonus) tests removed.
+// These tested the deprecated unified-combat system which has been replaced
+// by volley-combat-v2. The feature flag functionality is now handled
+// within the volley combat system if re-implemented.
 // =============================================================================
-
-describe("M4.2: Underdog Combat Bonus", () => {
-  it("should return 1.0 when attacker is stronger", () => {
-    const bonus = calculateNetworthUnderdogBonus(100000, 50000);
-    expect(bonus).toBe(1.0);
-  });
-
-  it("should return 1.0 when ratio is above threshold", () => {
-    // At 0.6 ratio (above 0.5 threshold), no bonus
-    const bonus = calculateNetworthUnderdogBonus(60000, 100000);
-    expect(bonus).toBe(1.0);
-  });
-
-  it("should calculate bonus correctly when flag is enabled", () => {
-    const originalEnv = process.env.FEATURE_UNDERDOG_BONUS;
-    process.env.FEATURE_UNDERDOG_BONUS = "true";
-
-    try {
-      // At 0.25 ratio (well below 0.5 threshold), should get bonus
-      const bonus = calculateNetworthUnderdogBonus(25000, 100000);
-
-      // Should be between 1.10 and 1.20
-      expect(bonus).toBeGreaterThanOrEqual(1.10);
-      expect(bonus).toBeLessThanOrEqual(1.20);
-    } finally {
-      if (originalEnv !== undefined) {
-        process.env.FEATURE_UNDERDOG_BONUS = originalEnv;
-      } else {
-        delete process.env.FEATURE_UNDERDOG_BONUS;
-      }
-    }
-  });
-
-  it("should return 1.0 when flag is disabled", () => {
-    const originalEnv = process.env.FEATURE_UNDERDOG_BONUS;
-    process.env.FEATURE_UNDERDOG_BONUS = "false";
-
-    try {
-      const bonus = calculateNetworthUnderdogBonus(25000, 100000);
-      expect(bonus).toBe(1.0);
-    } finally {
-      if (originalEnv !== undefined) {
-        process.env.FEATURE_UNDERDOG_BONUS = originalEnv;
-      } else {
-        delete process.env.FEATURE_UNDERDOG_BONUS;
-      }
-    }
-  });
-});
-
-// =============================================================================
-// M4.3: PUNCHING-UP VICTORY BONUS
-// =============================================================================
-
-describe("M4.3: Punching-Up Victory Bonus", () => {
-  it("should return 0 when attacker lost", () => {
-    const bonus = calculatePunchupBonus(25000, 100000, false);
-    expect(bonus).toBe(0);
-  });
-
-  it("should return 0 when attacker was stronger", () => {
-    const bonus = calculatePunchupBonus(100000, 50000, true);
-    expect(bonus).toBe(0);
-  });
-
-  it("should return 0 when ratio is above threshold", () => {
-    // At 0.8 ratio (above 0.75 threshold), no bonus
-    const bonus = calculatePunchupBonus(80000, 100000, true);
-    expect(bonus).toBe(0);
-  });
-
-  it("should calculate bonus correctly when flag is enabled", () => {
-    const originalEnv = process.env.FEATURE_PUNCHUP_BONUS;
-    process.env.FEATURE_PUNCHUP_BONUS = "true";
-
-    try {
-      // At 0.25 ratio (well below 0.75 threshold), should get bonus planets
-      const bonus = calculatePunchupBonus(25000, 100000, true);
-
-      // Should be between 1 and 3 extra planets
-      expect(bonus).toBeGreaterThanOrEqual(1);
-      expect(bonus).toBeLessThanOrEqual(3);
-    } finally {
-      if (originalEnv !== undefined) {
-        process.env.FEATURE_PUNCHUP_BONUS = originalEnv;
-      } else {
-        delete process.env.FEATURE_PUNCHUP_BONUS;
-      }
-    }
-  });
-
-  it("should return 0 when flag is disabled", () => {
-    const originalEnv = process.env.FEATURE_PUNCHUP_BONUS;
-    process.env.FEATURE_PUNCHUP_BONUS = "false";
-
-    try {
-      const bonus = calculatePunchupBonus(25000, 100000, true);
-      expect(bonus).toBe(0);
-    } finally {
-      if (originalEnv !== undefined) {
-        process.env.FEATURE_PUNCHUP_BONUS = originalEnv;
-      } else {
-        delete process.env.FEATURE_PUNCHUP_BONUS;
-      }
-    }
-  });
-});
 
 // =============================================================================
 // INTEGRATION: ALL SYSTEMS TOGETHER

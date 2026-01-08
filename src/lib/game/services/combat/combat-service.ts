@@ -14,24 +14,15 @@
 import {
   resolveGuerillaAttack,
   resolveRetreat,
-  type Forces,
-  type CombatResult,
-  type AttackType,
   SOLDIERS_PER_CARRIER,
 } from "@/lib/combat/phases";
-import { resolveUnifiedInvasion } from "@/lib/combat/unified-combat";
+import type { Forces, CombatResult, AttackType } from "@/lib/combat/types";
 import {
   resolveBattle,
   convertToLegacyCombatResult,
   type BattleResult,
 } from "@/lib/combat/volley-combat-v2";
 import type { CombatStance } from "@/lib/combat/stances";
-
-/**
- * Feature flag for the new D20 volley combat system.
- * Set to true to enable 3-volley D20 combat, false for legacy unified combat.
- */
-const USE_VOLLEY_COMBAT_V2 = true;
 import {
   saveAttack,
   applyCombatResults,
@@ -303,8 +294,8 @@ export async function executeAttack(params: AttackParams): Promise<AttackResult>
       forces.soldiers,
       defenderForces
     );
-  } else if (USE_VOLLEY_COMBAT_V2) {
-    // New D20 3-volley combat system
+  } else {
+    // D20 3-volley combat system (production)
     // Resolve battle to get full D20 details
     battleResult = resolveBattle(
       { ...forces },
@@ -316,18 +307,6 @@ export async function executeAttack(params: AttackParams): Promise<AttackResult>
     );
     // Convert to legacy format for backward compatibility
     result = convertToLegacyCombatResult(battleResult, forces, defenderForces);
-  } else {
-    // Legacy unified combat resolution
-    // M4: Pass networth for feature-flagged underdog bonus
-    result = resolveUnifiedInvasion(
-      forces,
-      defenderForces,
-      defender.sectorCount,
-      {
-        attackerNetworth: attacker.networth,
-        defenderNetworth: defender.networth,
-      }
-    );
   }
 
   // Get current turn
