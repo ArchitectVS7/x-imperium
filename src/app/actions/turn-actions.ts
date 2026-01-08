@@ -508,6 +508,19 @@ export interface EnhancedTurnResult {
     type: string;
     message: string;
   };
+  defeatAnalysis?: {
+    cause: string;
+    finalTurn: number;
+    turnsPlayed: number;
+    finalCredits: number;
+    finalSectors: number;
+    finalPopulation: number;
+    factors: Array<{
+      type: string;
+      description: string;
+      severity: string;
+    }>;
+  };
 }
 
 export type EnhancedTurnActionResult =
@@ -594,6 +607,85 @@ export async function endTurnEnhancedAction(): Promise<EnhancedTurnActionResult>
     // Revalidate paths
     revalidatePath("/game");
 
+    // Build defeat analysis if player was defeated
+    let defeatAnalysis: EnhancedTurnResult["defeatAnalysis"];
+    if (playerResult && !playerResult.isAlive) {
+      // Determine cause of defeat from events
+      let cause = "unknown";
+      const factors: Array<{ type: string; description: string; severity: string }> = [];
+
+      // Check for bankruptcy
+      if (playerResult.events.some(e => e.type === "bankruptcy")) {
+        cause = "bankruptcy";
+        factors.push({
+          type: "economic",
+          description: "Credits dropped to zero or below",
+          severity: "high",
+        });
+      }
+
+      // Check for starvation
+      if (playerResult.events.some(e => e.type === "starvation")) {
+        if (cause === "unknown") cause = "starvation";
+        factors.push({
+          type: "population",
+          description: "Food shortage caused mass starvation",
+          severity: "high",
+        });
+      }
+
+      // Check for civil collapse
+      if (playerResult.events.some(e => e.type === "revolt_consequences")) {
+        if (cause === "unknown") cause = "revolt";
+        factors.push({
+          type: "population",
+          description: "Civil unrest led to empire collapse",
+          severity: "high",
+        });
+      }
+
+      // Check for conquest (lost all sectors)
+      const finalSectors = empireAfter?.sectorCount ?? 0;
+      if (finalSectors === 0) {
+        if (cause === "unknown") cause = "conquest";
+        factors.push({
+          type: "military",
+          description: "Lost all sectors to enemy forces",
+          severity: "high",
+        });
+      }
+
+      // Add contributing factors based on final state
+      const finalCredits = empireAfter?.credits ?? 0;
+      const finalPopulation = empireAfter?.population ?? 0;
+
+      if (finalCredits < 0) {
+        factors.push({
+          type: "economic",
+          description: "Negative credit balance indicates overspending",
+          severity: "medium",
+        });
+      }
+
+      if (finalPopulation < 1000 && cause !== "starvation") {
+        factors.push({
+          type: "population",
+          description: "Low population reduced production capacity",
+          severity: "medium",
+        });
+      }
+
+      defeatAnalysis = {
+        cause,
+        finalTurn: result.turn,
+        turnsPlayed: result.turn,
+        finalCredits,
+        finalSectors,
+        finalPopulation,
+        factors,
+      };
+    }
+
     return {
       success: true,
       turn: result.turn,
@@ -615,6 +707,7 @@ export async function endTurnEnhancedAction(): Promise<EnhancedTurnActionResult>
         type: result.victoryResult.type,
         message: result.victoryResult.message,
       } : undefined,
+      defeatAnalysis,
     };
   } catch (error) {
     console.error("Enhanced end turn failed:", error);

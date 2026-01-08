@@ -8,6 +8,13 @@
  */
 
 import { RESOURCE_ICONS } from "@/lib/theme/names";
+import {
+  Tooltip,
+  TurnTooltip,
+  CreditsTooltip,
+  FoodStatusTooltip,
+  PopulationTooltip,
+} from "./Tooltip";
 
 interface CompactHeaderStatusProps {
   credits: number;
@@ -48,31 +55,39 @@ export function CompactHeaderStatus({
       aria-label="Game status"
     >
       {/* Turn indicator */}
-      <div className="flex items-center gap-1">
-        <span className="text-gray-500">T:</span>
-        <span className="text-lcars-lavender font-mono">{currentTurn}</span>
-        <span className="text-gray-600">/{turnLimit}</span>
-      </div>
+      <Tooltip content={<TurnTooltip />} position="bottom">
+        <div className="flex items-center gap-1 cursor-help">
+          <span className="text-gray-500">T:</span>
+          <span className="text-lcars-lavender font-mono">{currentTurn}</span>
+          <span className="text-gray-600">/{turnLimit}</span>
+        </div>
+      </Tooltip>
 
       <div className="h-4 w-px bg-gray-700" />
 
       {/* Credits */}
-      <div className="flex items-center gap-1">
-        <span>{RESOURCE_ICONS.credits}</span>
-        <span className="text-lcars-amber font-mono">{formatCompact(credits)}</span>
-      </div>
+      <Tooltip content={<CreditsTooltip />} position="bottom">
+        <div className="flex items-center gap-1 cursor-help">
+          <span>{RESOURCE_ICONS.credits}</span>
+          <span className="text-lcars-amber font-mono">{formatCompact(credits)}</span>
+        </div>
+      </Tooltip>
 
       {/* Food status */}
-      <div className="flex items-center gap-1">
-        <span>{RESOURCE_ICONS.food}</span>
-        <span className={foodDisplay.color}>{foodDisplay.label}</span>
-      </div>
+      <Tooltip content={<FoodStatusTooltip />} position="bottom">
+        <div className="flex items-center gap-1 cursor-help">
+          <span>{RESOURCE_ICONS.food}</span>
+          <span className={foodDisplay.color}>{foodDisplay.label}</span>
+        </div>
+      </Tooltip>
 
       {/* Population */}
-      <div className="flex items-center gap-1">
-        <span>{RESOURCE_ICONS.population}</span>
-        <span className="text-gray-300 font-mono">{formatCompact(population)}</span>
-      </div>
+      <Tooltip content={<PopulationTooltip />} position="bottom">
+        <div className="flex items-center gap-1 cursor-help">
+          <span>{RESOURCE_ICONS.population}</span>
+          <span className="text-gray-300 font-mono">{formatCompact(population)}</span>
+        </div>
+      </Tooltip>
     </div>
   );
 }

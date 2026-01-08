@@ -241,6 +241,136 @@ export function SyndicateTooltip() {
   );
 }
 
+export function CreditsTooltip() {
+  return (
+    <div>
+      <strong className="text-lcars-amber">Credits</strong>
+      <p className="mt-1">
+        Your treasury. Credits fund military purchases, sector acquisitions,
+        and unit maintenance.
+      </p>
+      <p className="mt-1 text-gray-400 text-xs">
+        Earn credits from residential and commercial sectors.
+      </p>
+    </div>
+  );
+}
+
+export function OreTooltip() {
+  return (
+    <div>
+      <strong className="text-lcars-amber">Ore</strong>
+      <p className="mt-1">
+        Raw material used for building military units and structures.
+        Mined from industrial sectors.
+      </p>
+      <p className="mt-1 text-gray-400 text-xs">
+        Industrial sectors produce 100 ore/turn each.
+      </p>
+    </div>
+  );
+}
+
+export function PetroleumTooltip() {
+  return (
+    <div>
+      <strong className="text-lcars-amber">Petroleum</strong>
+      <p className="mt-1">
+        Fuel for advanced military units. Required for cruisers and carriers.
+      </p>
+      <p className="mt-1 text-gray-400 text-xs">
+        Petroleum sectors produce 80 petroleum/turn each.
+      </p>
+    </div>
+  );
+}
+
+export function PopulationTooltip() {
+  return (
+    <div>
+      <strong className="text-lcars-amber">Population</strong>
+      <p className="mt-1">
+        Your citizens. Population grows 2% per turn when fed, but starves
+        if food runs out. More population means more production!
+      </p>
+      <p className="mt-1 text-gray-400 text-xs">
+        Each citizen consumes 0.05 food per turn.
+      </p>
+    </div>
+  );
+}
+
+export function SectorsTooltip() {
+  return (
+    <div>
+      <strong className="text-lcars-amber">Sectors</strong>
+      <p className="mt-1">
+        Your territory. Different sector types produce different resources.
+        Capture enemy sectors through combat or buy unclaimed ones.
+      </p>
+      <p className="mt-1 text-gray-400 text-xs">
+        Control 60% of all sectors to win by Conquest!
+      </p>
+    </div>
+  );
+}
+
+export function MilitaryPowerTooltip() {
+  return (
+    <div>
+      <strong className="text-lcars-amber">Military Power</strong>
+      <p className="mt-1">
+        Combined strength of all your military units. Higher power means
+        better chances in combat.
+      </p>
+      <p className="mt-1 text-gray-400 text-xs">
+        Soldiers, fighters, cruisers, and carriers all contribute.
+      </p>
+    </div>
+  );
+}
+
+export function RankTooltip() {
+  return (
+    <div>
+      <strong className="text-lcars-amber">Rank</strong>
+      <p className="mt-1">
+        Your position among all empires, based on Renown (networth).
+        #1 is the most powerful empire in the galaxy.
+      </p>
+    </div>
+  );
+}
+
+export function TurnTooltip() {
+  return (
+    <div>
+      <strong className="text-lcars-amber">Turn Progress</strong>
+      <p className="mt-1">
+        Current turn / total turns in the game. When the turn limit is reached,
+        the empire with the highest score wins by Survival.
+      </p>
+      <p className="mt-1 text-gray-400 text-xs">
+        Press SPACE to end your turn.
+      </p>
+    </div>
+  );
+}
+
+export function FoodStatusTooltip() {
+  return (
+    <div>
+      <strong className="text-lcars-amber">Food Status</strong>
+      <ul className="mt-1 text-xs space-y-0.5">
+        <li><span className="text-green-400">Surplus</span>: Producing more than consuming</li>
+        <li><span className="text-blue-400">Stable</span>: Balanced food supply</li>
+        <li><span className="text-yellow-400">Deficit</span>: Running low on food</li>
+        <li><span className="text-red-400">Critical</span>: Starvation imminent!</li>
+      </ul>
+    </div>
+  );
+}
+
 // Note: Tooltip content functions are exported above for use in components.
 // Import them directly (e.g., CivilStatusTooltip) rather than using an object
 // to avoid Next.js Server Components bundler issues with JSX objects.

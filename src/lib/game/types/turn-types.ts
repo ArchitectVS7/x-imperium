@@ -164,6 +164,38 @@ export type TurnResult = {
     empireName: string;
     message: string;
   };
+  /** Enhanced defeat analysis for UI (P1 product review) */
+  defeatAnalysis?: DefeatAnalysis;
+};
+
+// =============================================================================
+// DEFEAT ANALYSIS (P1 - Product Review Enhancement)
+// =============================================================================
+
+export type DefeatCause =
+  | "bankruptcy"      // Ran out of credits
+  | "conquest"        // Lost all sectors
+  | "elimination"     // Destroyed by enemy
+  | "starvation"      // Population starved to death
+  | "revolt"          // Civil unrest destroyed empire
+  | "unknown";
+
+export type DefeatFactorType = "economic" | "military" | "population" | "diplomatic";
+
+export type DefeatFactor = {
+  type: DefeatFactorType;
+  description: string;
+  severity: "high" | "medium" | "low";
+};
+
+export type DefeatAnalysis = {
+  cause: DefeatCause;
+  finalTurn: number;
+  turnsPlayed: number;
+  finalCredits: number;
+  finalSectors: number;
+  finalPopulation: number;
+  factors: DefeatFactor[];
 };
 
 // =============================================================================

@@ -26,12 +26,14 @@ import { MobileActionSheet } from "./MobileActionSheet";
 import { OnboardingManager } from "./onboarding";
 import { TutorialOverlay } from "./tutorial";
 import { PhaseIndicator } from "./PhaseIndicator";
+import { QuickReferenceModal } from "./QuickReferenceModal";
+import { DefeatAnalysisModal } from "./DefeatAnalysisModal";
 import {
   getGameLayoutDataAction,
   endTurnEnhancedAction,
   type GameLayoutData,
 } from "@/app/actions/turn-actions";
-import type { TurnEvent, ResourceDelta } from "@/lib/game/types/turn-types";
+import type { TurnEvent, ResourceDelta, DefeatAnalysis } from "@/lib/game/types/turn-types";
 import type { CivilStatusKey } from "@/lib/theme/names";
 import { ResourcePanel } from "./ResourcePanel";
 import {
@@ -45,6 +47,7 @@ import {
   MessagesPanelContent,
 } from "./panels";
 import { useGameKeyboardShortcuts } from "@/hooks/useGameKeyboardShortcuts";
+import { useProgressiveDisclosure } from "@/hooks/useProgressiveDisclosure";
 import { PanelProvider, type PanelContextData } from "@/contexts/PanelContext";
 import { useGameStateStream, type GameStateUpdate } from "@/hooks/useGameStateStream";
 
@@ -85,6 +88,12 @@ export function GameShell({ children, initialLayoutData }: GameShellProps) {
 
   // Mobile action sheet state
   const [mobileSheetOpen, setMobileSheetOpen] = useState(false);
+
+  // Quick reference modal state
+  const [showQuickReference, setShowQuickReference] = useState(false);
+
+  // Defeat analysis modal state
+  const [defeatAnalysis, setDefeatAnalysis] = useState<DefeatAnalysis | null>(null);
 
   // Toast notification state for errors
   const [toast, setToast] = useState<{ message: string; type: "error" | "success" } | null>(null);
@@ -233,6 +242,23 @@ export function GameShell({ children, initialLayoutData }: GameShellProps) {
         });
         setShowModal(true);
 
+        // Show defeat analysis modal if player was defeated
+        if (result.defeatAnalysis) {
+          setDefeatAnalysis({
+            cause: result.defeatAnalysis.cause as DefeatAnalysis["cause"],
+            finalTurn: result.defeatAnalysis.finalTurn,
+            turnsPlayed: result.defeatAnalysis.turnsPlayed,
+            finalCredits: result.defeatAnalysis.finalCredits,
+            finalSectors: result.defeatAnalysis.finalSectors,
+            finalPopulation: result.defeatAnalysis.finalPopulation,
+            factors: result.defeatAnalysis.factors.map(f => ({
+              type: f.type as DefeatAnalysis["factors"][0]["type"],
+              description: f.description,
+              severity: f.severity as DefeatAnalysis["factors"][0]["severity"],
+            })),
+          });
+        }
+
         // Refresh layout data after turn
         await refreshLayoutData();
       } else {
@@ -273,9 +299,31 @@ export function GameShell({ children, initialLayoutData }: GameShellProps) {
     onClosePanel: handlePanelClose,
     activePanel,
     onEndTurn: handleEndTurn,
+    onQuickReference: useCallback(() => setShowQuickReference(true), []),
     isProcessing,
     enabled: true,
   });
+
+  // Progressive UI disclosure - unlock features gradually
+  const { isPanelLocked, getUnlockTurn } = useProgressiveDisclosure({
+    currentTurn: layoutData?.currentTurn ?? 1,
+    onUnlock: useCallback((features: string[]) => {
+      if (features.length > 0) {
+        showToast(`New features unlocked: ${features.join(", ")}`, "success");
+      }
+    }, [showToast]),
+    enabled: true,
+  });
+
+  // Wrap panel toggle to check if panel is locked
+  const handlePanelToggleWithLock = useCallback((panel: PanelType, context?: PanelContextData) => {
+    if (panel && isPanelLocked(panel)) {
+      const unlockTurn = getUnlockTurn(panel);
+      showToast(`This feature unlocks at turn ${unlockTurn}`, "error");
+      return;
+    }
+    handlePanelToggle(panel, context);
+  }, [handlePanelToggle, isPanelLocked, getUnlockTurn, showToast]);
 
   // Default layout data if not loaded
   const data = layoutData ?? {
@@ -305,7 +353,7 @@ export function GameShell({ children, initialLayoutData }: GameShellProps) {
     <PanelProvider
       activePanel={activePanel}
       panelContext={panelContext}
-      openPanel={handlePanelToggle}
+      openPanel={handlePanelToggleWithLock}
       closePanel={handlePanelClose}
     >
     <div className="flex flex-col h-[calc(100vh-56px)]">
@@ -354,7 +402,7 @@ export function GameShell({ children, initialLayoutData }: GameShellProps) {
         rank={data.rank}
         civilStatus={data.civilStatus as CivilStatusKey}
         activePanel={activePanel}
-        onPanelToggle={handlePanelToggle}
+        onPanelToggle={handlePanelToggleWithLock}
       />
 
       {/* Mobile Bottom Bar - Mobile only */}
@@ -519,6 +567,19 @@ export function GameShell({ children, initialLayoutData }: GameShellProps) {
             completed ? "Tutorial completed!" : "Tutorial skipped"
           );
         }}
+      />
+
+      {/* Quick Reference Modal (? key) */}
+      <QuickReferenceModal
+        isOpen={showQuickReference}
+        onClose={() => setShowQuickReference(false)}
+      />
+
+      {/* Defeat Analysis Modal */}
+      <DefeatAnalysisModal
+        isOpen={defeatAnalysis !== null}
+        onClose={() => setDefeatAnalysis(null)}
+        data={defeatAnalysis}
       />
 
       {/* Toast Notification */}

@@ -16,6 +16,20 @@ import {
 } from "@/lib/theme/names";
 import { ResourceIconWithValue, CivilStatusIcons, UnitIcons } from "@/lib/theme/icons";
 import { MapPin } from "lucide-react";
+import {
+  Tooltip,
+  CreditsTooltip,
+  FoodTooltip,
+  OreTooltip,
+  PetroleumTooltip,
+  ResearchTooltip,
+  PopulationTooltip,
+  SectorsTooltip,
+  MilitaryPowerTooltip,
+  CivilStatusTooltip,
+  NetworthTooltip,
+  RankTooltip,
+} from "./Tooltip";
 
 export type PanelType =
   | "resources"
@@ -89,81 +103,103 @@ export function EmpireStatusBar({
               : "hover:bg-gray-800"
           }`}
         >
-          <ResourceIconWithValue resource="credits" value={credits} compact />
-          <ResourceIconWithValue resource="food" value={food} compact />
-          <ResourceIconWithValue resource="ore" value={ore} compact />
-          <ResourceIconWithValue resource="petroleum" value={petroleum} compact />
-          <ResourceIconWithValue resource="researchPoints" value={researchPoints} compact />
+          <Tooltip content={<CreditsTooltip />} position="top">
+            <span><ResourceIconWithValue resource="credits" value={credits} compact /></span>
+          </Tooltip>
+          <Tooltip content={<FoodTooltip />} position="top">
+            <span><ResourceIconWithValue resource="food" value={food} compact /></span>
+          </Tooltip>
+          <Tooltip content={<OreTooltip />} position="top">
+            <span><ResourceIconWithValue resource="ore" value={ore} compact /></span>
+          </Tooltip>
+          <Tooltip content={<PetroleumTooltip />} position="top">
+            <span><ResourceIconWithValue resource="petroleum" value={petroleum} compact /></span>
+          </Tooltip>
+          <Tooltip content={<ResearchTooltip />} position="top">
+            <span><ResourceIconWithValue resource="researchPoints" value={researchPoints} compact /></span>
+          </Tooltip>
         </button>
 
         {/* Divider */}
         <div className="h-6 w-px bg-gray-700 hidden sm:block" />
 
         {/* Sectors - clickable */}
-        <button
-          onClick={() => onPanelToggle?.(activePanel === "sectors" ? null : "sectors")}
-          className={`flex items-center gap-2 px-3 py-1 rounded transition-colors ${
-            activePanel === "sectors"
-              ? "bg-lcars-amber/20 border border-lcars-amber/50"
-              : "hover:bg-gray-800"
-          }`}
-        >
-          <MapPin className="w-4 h-4 text-green-400" />
-          <span className="text-sm text-gray-300">
-            <span className="font-mono text-white">{sectorCount}</span>{" "}
-            <span className="hidden sm:inline">{sectorCount === 1 ? SECTOR_TERM : SECTORS_TERM}</span>
-          </span>
-        </button>
+        <Tooltip content={<SectorsTooltip />} position="top">
+          <button
+            onClick={() => onPanelToggle?.(activePanel === "sectors" ? null : "sectors")}
+            className={`flex items-center gap-2 px-3 py-1 rounded transition-colors ${
+              activePanel === "sectors"
+                ? "bg-lcars-amber/20 border border-lcars-amber/50"
+                : "hover:bg-gray-800"
+            }`}
+          >
+            <MapPin className="w-4 h-4 text-green-400" />
+            <span className="text-sm text-gray-300">
+              <span className="font-mono text-white">{sectorCount}</span>{" "}
+              <span className="hidden sm:inline">{sectorCount === 1 ? SECTOR_TERM : SECTORS_TERM}</span>
+            </span>
+          </button>
+        </Tooltip>
 
         {/* Military - clickable */}
-        <button
-          onClick={() => onPanelToggle?.(activePanel === "military" ? null : "military")}
-          className={`flex items-center gap-2 px-3 py-1 rounded transition-colors ${
-            activePanel === "military"
-              ? "bg-lcars-amber/20 border border-lcars-amber/50"
-              : "hover:bg-gray-800"
-          }`}
-        >
-          <UnitIcons.soldiers className="w-4 h-4 text-red-400" />
-          <span className="text-sm text-gray-300">
-            <span className="font-mono text-white">{formatCompact(militaryPower)}</span>{" "}
-            <span className="hidden sm:inline">Power</span>
-          </span>
-        </button>
+        <Tooltip content={<MilitaryPowerTooltip />} position="top">
+          <button
+            onClick={() => onPanelToggle?.(activePanel === "military" ? null : "military")}
+            className={`flex items-center gap-2 px-3 py-1 rounded transition-colors ${
+              activePanel === "military"
+                ? "bg-lcars-amber/20 border border-lcars-amber/50"
+                : "hover:bg-gray-800"
+            }`}
+          >
+            <UnitIcons.soldiers className="w-4 h-4 text-red-400" />
+            <span className="text-sm text-gray-300">
+              <span className="font-mono text-white">{formatCompact(militaryPower)}</span>{" "}
+              <span className="hidden sm:inline">Power</span>
+            </span>
+          </button>
+        </Tooltip>
 
         {/* Divider */}
         <div className="h-6 w-px bg-gray-700 hidden sm:block" />
 
         {/* Population - clickable */}
-        <button
-          onClick={() => onPanelToggle?.(activePanel === "population" ? null : "population")}
-          className={`flex items-center gap-2 px-3 py-1 rounded transition-colors ${
-            activePanel === "population"
-              ? "bg-lcars-amber/20 border border-lcars-amber/50"
-              : "hover:bg-gray-800"
-          }`}
-        >
-          <ResourceIconWithValue resource="population" value={population} compact />
-        </button>
+        <Tooltip content={<PopulationTooltip />} position="top">
+          <button
+            onClick={() => onPanelToggle?.(activePanel === "population" ? null : "population")}
+            className={`flex items-center gap-2 px-3 py-1 rounded transition-colors ${
+              activePanel === "population"
+                ? "bg-lcars-amber/20 border border-lcars-amber/50"
+                : "hover:bg-gray-800"
+            }`}
+          >
+            <ResourceIconWithValue resource="population" value={population} compact />
+          </button>
+        </Tooltip>
 
         {/* Civil Status */}
-        <div className="flex items-center gap-1 px-2 py-1">
-          <StatusIconComponent className="w-4 h-4 text-gray-400" />
-          <span className="text-sm text-gray-400 hidden sm:inline">{statusName}</span>
-        </div>
+        <Tooltip content={<CivilStatusTooltip />} position="top">
+          <div className="flex items-center gap-1 px-2 py-1 cursor-help">
+            <StatusIconComponent className="w-4 h-4 text-gray-400" />
+            <span className="text-sm text-gray-400 hidden sm:inline">{statusName}</span>
+          </div>
+        </Tooltip>
 
         {/* Rank & Networth */}
         <div className="flex items-center gap-3 px-2">
           {rank && (
-            <div className="text-sm">
-              <span className="text-gray-500">Rank </span>
-              <span className="font-mono text-lcars-lavender">#{rank}</span>
-            </div>
+            <Tooltip content={<RankTooltip />} position="top">
+              <div className="text-sm cursor-help">
+                <span className="text-gray-500">Rank </span>
+                <span className="font-mono text-lcars-lavender">#{rank}</span>
+              </div>
+            </Tooltip>
           )}
-          <div className="text-sm hidden lg:block">
-            <span className="text-gray-500">Renown </span>
-            <span className="font-mono text-lcars-blue">{formatCompact(networth)}</span>
-          </div>
+          <Tooltip content={<NetworthTooltip />} position="top">
+            <div className="text-sm hidden lg:block cursor-help">
+              <span className="text-gray-500">Renown </span>
+              <span className="font-mono text-lcars-blue">{formatCompact(networth)}</span>
+            </div>
+          </Tooltip>
         </div>
       </div>
     </div>

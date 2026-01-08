@@ -26,6 +26,8 @@ interface UseGameKeyboardShortcutsOptions {
   activePanel: PanelType;
   /** Callback for end turn action */
   onEndTurn?: () => void;
+  /** Callback for quick reference (?) key */
+  onQuickReference?: () => void;
   /** Whether turn is currently processing */
   isProcessing?: boolean;
   /** Whether shortcuts are enabled */
@@ -48,6 +50,7 @@ export function useGameKeyboardShortcuts({
   onClosePanel,
   activePanel,
   onEndTurn,
+  onQuickReference,
   isProcessing = false,
   enabled = true,
 }: UseGameKeyboardShortcutsOptions) {
@@ -60,6 +63,13 @@ export function useGameKeyboardShortcuts({
         target.tagName === "TEXTAREA" ||
         target.isContentEditable
       ) {
+        return;
+      }
+
+      // ? key: Open quick reference (works with or without Shift)
+      if (event.key === "?" && onQuickReference) {
+        event.preventDefault();
+        onQuickReference();
         return;
       }
 
@@ -93,7 +103,7 @@ export function useGameKeyboardShortcuts({
         }
       }
     },
-    [activePanel, onClosePanel, onEndTurn, onOpenPanel, isProcessing]
+    [activePanel, onClosePanel, onEndTurn, onOpenPanel, onQuickReference, isProcessing]
   );
 
   useEffect(() => {
