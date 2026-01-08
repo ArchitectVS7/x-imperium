@@ -18,6 +18,8 @@
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:smoke": "playwright test smoke-test.spec.ts",
+    "test:e2e:debug": "PLAYWRIGHT_TRACE_ALL=true PLAYWRIGHT_HEADED=true playwright test",
+    "test:e2e:analyze": "tsx scripts/analyze-flaky-tests.ts",
     "test:all": "npm run test:coverage && npm run test:e2e",
     "review:pr": "tsx scripts/review/run-review.ts",
     "milestone:status": "tsx scripts/orchestrator/parse-milestones.ts",

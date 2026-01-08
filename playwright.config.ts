@@ -10,7 +10,20 @@ import { defineConfig, devices } from "@playwright/test";
  * - screenshots on failure for quick visual debugging
  *
  * Run with --reporter=json to get machine-readable flaky test data
+ *
+ * Debugging Options (via environment variables):
+ * - PLAYWRIGHT_TRACE_ALL=true  - Capture traces for ALL tests (not just failures)
+ * - PLAYWRIGHT_VIDEO_ALL=true  - Capture video for ALL tests
+ * - PLAYWRIGHT_HEADED=true     - Run in headed mode (visible browser)
+ *
+ * Example: PLAYWRIGHT_TRACE_ALL=true npm run test:e2e
  */
+
+// Environment-based configuration
+const TRACE_ALL = process.env.PLAYWRIGHT_TRACE_ALL === "true";
+const VIDEO_ALL = process.env.PLAYWRIGHT_VIDEO_ALL === "true";
+const HEADED = process.env.PLAYWRIGHT_HEADED === "true";
+
 export default defineConfig({
   testDir: "./e2e",
   fullyParallel: true,
@@ -37,15 +50,19 @@ export default defineConfig({
   use: {
     baseURL: "http://localhost:3000",
 
-    // Flaky test debugging: capture traces on all failures (including retries)
-    // This creates .zip files in test-results/ with full execution timeline
-    trace: "retain-on-failure",
+    // Trace configuration: "on" for all tests, "retain-on-failure" for failures only
+    // Set PLAYWRIGHT_TRACE_ALL=true to capture traces for debugging
+    trace: TRACE_ALL ? "on" : "retain-on-failure",
 
-    // Capture screenshots on failure for visual debugging
-    screenshot: "only-on-failure",
+    // Screenshot configuration
+    screenshot: TRACE_ALL ? "on" : "only-on-failure",
 
-    // Capture video on failure to see what happened before the failure
-    video: "retain-on-failure",
+    // Video configuration: "on" for all tests, "retain-on-failure" for failures only
+    // Set PLAYWRIGHT_VIDEO_ALL=true to capture video for debugging
+    video: VIDEO_ALL ? "on" : "retain-on-failure",
+
+    // Headed mode for visual debugging
+    headless: !HEADED,
 
     actionTimeout: 15000, // 15 seconds for actions like click (increased)
     navigationTimeout: 20000, // 20 seconds for navigation (increased for game loading)

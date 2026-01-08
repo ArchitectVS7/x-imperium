@@ -139,3 +139,4 @@ grep -r "200 turns" docs/ | grep -v "default.*200"  # Should find 0
 ---
 
 *Moved from archive to active status: January 7, 2026*
+*Last verified: January 8, 2026*

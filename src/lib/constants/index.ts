@@ -1,11 +1,12 @@
 /**
- * Core Constants Module
+ * @deprecated This module is deprecated. Import from "@/lib/game/constants" instead.
  *
- * This module contains CORE GAME MECHANICS constants that apply globally.
+ * Core Constants Module (LEGACY LOCATION)
  *
- * Directory Structure:
- * - `@/lib/constants/` (this directory): Core mechanics (diplomacy, unlocks)
- * - `@/lib/game/constants/`: Feature-specific constants (crafting, syndicate, nuclear)
+ * This module re-exports from the canonical location at @/lib/game/constants.
+ * All new code should import from "@/lib/game/constants" directly.
+ *
+ * Migration: Update imports from "@/lib/constants" to "@/lib/game/constants"
  *
  * Exports:
  * - Diplomacy constants (PRD 8.x) - Treaties, reputation, coalitions

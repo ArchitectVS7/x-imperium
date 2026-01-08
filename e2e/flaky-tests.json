@@ -1,0 +1,8 @@
+{
+  "$schema": "./flaky-tests.schema.json",
+  "description": "Known flaky tests and their status. Updated automatically by CI or manually.",
+  "lastUpdated": "2026-01-08",
+  "knownFlaky": [],
+  "resolved": [],
+  "notes": "Tests are marked flaky when they fail then pass on retry. Use 'npm run test:e2e:analyze' to update this file from CI results."
+}

@@ -3,6 +3,7 @@
 **Created:** 2026-01-08
 **Status:** Active Operations Base
 **Last Verified:** Against commit bde277b
+**Dependency Analysis:** Added 2026-01-08
 
 ---
 
@@ -137,35 +138,109 @@ This document consolidates all action items, marking completed items with eviden
 
 ### P1: High Priority - Address This Sprint
 
-| ID | Source | Task | Effort |
-|----|--------|------|--------|
-| TODO-001 | architect-review | Complete service domain organization (add more subdirectories) | 8-16h |
-| TODO-002 | architect-review | Consolidate constants into single directory structure | 2-4h |
-| TODO-003 | product-review | Add "Tutorial Mode" toggle to game settings | 2-3h |
-| TODO-004 | product-review | Implement progressive UI disclosure system | 12-16h |
+| ID | Source | Task | Effort | Dependencies | Status |
+|----|--------|------|--------|--------------|--------|
+| TODO-001 | architect-review | Complete service domain organization (add more subdirectories) | 8-16h | None (start first) | Pending |
+| ~~TODO-002~~ | architect-review | ~~Consolidate constants into single directory structure~~ | ~~2-4h~~ | ~~None~~ | **DONE** (deprecation notice added) |
+| ~~TODO-003~~ | product-review | ~~Add "Tutorial Mode" toggle to game settings~~ | ~~2-3h~~ | ~~None~~ | **DONE** (via QuickReferenceModal) |
+| TODO-004 | product-review | Implement progressive UI disclosure system | 12-16h | TODO-003 (soft) | Pending |
 
 ### P2: Medium Priority - Address Before Beta
 
-| ID | Source | Task | Effort |
-|----|--------|------|--------|
-| TODO-005 | architect-review | Complete barrel exports (`index.ts`) for remaining service domains | 2-4h |
-| TODO-006 | architect-review | Complete combat system consolidation (remove deprecated code after validation) | 4-8h |
-| TODO-007 | documentation-review | Move terminology-crisis-audit.md from archive to active docs | 15m |
-| TODO-008 | documentation-review | Add link checking to CI pipeline | 4h |
-| TODO-009 | qa-review | Add combat edge case E2E tests | 3-4h |
-| TODO-010 | qa-review | Configure Playwright trace-on-all for debugging | 2-3h |
-| TODO-011 | qa-review | Implement flaky test tagging and tracking | 2-3h |
+| ID | Source | Task | Effort | Dependencies | Status |
+|----|--------|------|--------|--------------|--------|
+| TODO-005 | architect-review | Complete barrel exports (`index.ts`) for remaining service domains | 2-4h | **TODO-001** (hard) | Pending |
+| TODO-006 | architect-review | Complete combat system consolidation (remove deprecated code after validation) | 4-8h | **TODO-009** (do first) | Pending |
+| ~~TODO-007~~ | documentation-review | ~~Move terminology-crisis-audit.md from archive to active docs~~ | ~~15m~~ | ~~None~~ | **DONE** |
+| TODO-008 | documentation-review | Add link checking to CI pipeline | 4h | Best after TODO-001, TODO-002 | Pending |
+| TODO-009 | qa-review | Add combat edge case E2E tests | 3-4h | None (do before TODO-006) | Pending |
+| ~~TODO-010~~ | qa-review | ~~Configure Playwright trace-on-all for debugging~~ | ~~2-3h~~ | ~~None~~ | **DONE** (env vars added) |
+| ~~TODO-011~~ | qa-review | ~~Implement flaky test tagging and tracking~~ | ~~2-3h~~ | ~~None~~ | **DONE** (analyzer + tracking file) |
 
 ### P3: Low Priority - Post-Alpha Backlog
 
-| ID | Source | Task | Effort |
-|----|--------|------|--------|
-| TODO-012 | architect-review | Evaluate event sourcing prototype for turn history | 8-16h |
-| TODO-013 | product-review | Write 5 Steam-style screenshots with captions | 4h |
-| TODO-014 | product-review | Create marketing assets (logo, store description, feature bullets) | 8h |
-| TODO-015 | documentation-review | Evaluate Docusaurus/MkDocs for documentation site | 8-16h |
-| TODO-016 | documentation-review | Plan API documentation strategy | 16-24h |
-| TODO-017 | documentation-review | Add schema documentation (ERD diagrams) | 4-8h |
+| ID | Source | Task | Effort | Dependencies |
+|----|--------|------|--------|--------------|
+| TODO-012 | architect-review | Evaluate event sourcing prototype for turn history | 8-16h | None |
+| TODO-013 | product-review | Write 5 Steam-style screenshots with captions | 4h | None |
+| TODO-014 | product-review | Create marketing assets (logo, store description, feature bullets) | 8h | None |
+| TODO-015 | documentation-review | Evaluate Docusaurus/MkDocs for documentation site | 8-16h | None |
+| TODO-016 | documentation-review | Plan API documentation strategy | 16-24h | None |
+| TODO-017 | documentation-review | Add schema documentation (ERD diagrams) | 4-8h | None |
+
+---
+
+## Dependency Analysis
+
+### Dependency Chain 1: Service Reorganization → Barrel Exports → Link Checking
+
+```
+TODO-001 (Service domain organization)
+    └── TODO-005 (Barrel exports for service domains)
+           └── TODO-008 (Link checking CI) - may catch broken imports
+```
+
+**Explanation:** Subdirectories must be created (TODO-001) before barrel exports can be added (TODO-005). Link checking should run after reorganization completes or it will surface false positives during migration.
+
+### Dependency Chain 2: Combat E2E Tests ↔ Combat Consolidation
+
+```
+TODO-009 (Combat edge case E2E tests)
+    └── TODO-006 (Combat consolidation - remove deprecated code)
+```
+
+**Bi-directional Dependency:**
+- E2E tests (TODO-009) should be written/passing BEFORE removing deprecated code (TODO-006) to validate the volley combat system handles all edge cases
+- Combat consolidation could BREAK existing E2E tests if they reference deprecated code paths
+- **Recommendation:** Complete TODO-009 first, then TODO-006
+
+### Dependency Chain 3: Tutorial Toggle → Progressive UI
+
+```
+TODO-003 (Tutorial mode toggle)
+    └── TODO-004 (Progressive UI disclosure)
+```
+
+**Explanation:** Progressive UI (TODO-004) logically extends tutorial functionality. Adding the toggle first (TODO-003) establishes the settings infrastructure that progressive disclosure can use. This is a soft dependency - they could be done in parallel but sequencing is cleaner.
+
+### Independent Tasks (No Dependencies)
+
+The following tasks can be executed in any order or in parallel:
+- TODO-002 (Constants consolidation)
+- TODO-007 (Move terminology audit) - trivial 15m task
+- TODO-010 (Playwright trace-on-all)
+- TODO-011 (Flaky test tagging)
+- All P3 items (TODO-012 through TODO-017)
+
+---
+
+## Recommended Execution Order
+
+### Phase 1: Quick Wins (Parallelizable) - COMPLETED 2026-01-08
+All Phase 1 tasks completed:
+- ~~TODO-007~~ - Move terminology audit **DONE**
+- ~~TODO-002~~ - Constants consolidation (deprecation notice added) **DONE**
+- ~~TODO-003~~ - Tutorial toggle (via QuickReferenceModal) **DONE**
+- ~~TODO-010~~ + ~~TODO-011~~ - Testing infrastructure **DONE**
+
+### Phase 2: Architecture Chain
+Execute sequentially:
+1. **TODO-001** (8-16h) - Service domain organization
+2. **TODO-005** (2-4h) - Barrel exports (requires TODO-001)
+3. **TODO-008** (4h) - Link checking CI (best after reorganization)
+
+### Phase 3: Combat/Testing Chain
+Execute sequentially:
+1. **TODO-009** (3-4h) - Combat edge case E2E tests
+2. **TODO-006** (4-8h) - Combat consolidation (requires TODO-009)
+
+### Phase 4: Progressive UI
+After TODO-003 completes:
+- **TODO-004** (12-16h) - Progressive UI disclosure
+
+### Phase 5: Backlog (P3)
+No dependencies, prioritize as needed:
+- TODO-012 through TODO-017
 
 ---
 
@@ -285,13 +360,18 @@ Old milestone files are staged for deletion.
 
 | Category | Completed | Remaining | Completion % |
 |----------|-----------|-----------|--------------|
-| Architect | 4 | 5 | 44% |
-| Documentation | 5 | 2 | 71% |
-| Product | 6 | 3 | 67% |
-| QA | 8 | 3 | 73% |
-| **Total** | **23** | **13** | **64%** |
+| Architect | 5 | 4 | 56% |
+| Documentation | 6 | 4 | 60% |
+| Product | 7 | 3 | 70% |
+| QA | 10 | 1 | 91% |
+| **Total** | **28** | **12** | **70%** |
+
+**Completed 2026-01-08:** TODO-002, TODO-003, TODO-007, TODO-010, TODO-011
+
+Remaining by source: Architect (TODO-001,005,006,012), Documentation (TODO-008,015,016,017), Product (TODO-004,013,014), QA (TODO-009).
 
 ---
 
 *Generated by review consolidation process*
+*Dependency analysis added: 2026-01-08*
 *Next review: After P1 items complete*

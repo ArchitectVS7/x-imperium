@@ -7,7 +7,7 @@
  * Activated by pressing the ? key.
  */
 
-import { useEffect, useCallback, useRef } from "react";
+import { useEffect, useCallback, useRef, useState } from "react";
 import {
   Keyboard,
   Trophy,
@@ -21,7 +21,10 @@ import {
   TrendingUp,
   Users,
   Target,
+  GraduationCap,
+  RotateCcw,
 } from "lucide-react";
+import { clearTutorialState, hasSkippedTutorial } from "@/lib/tutorial/tutorial-service";
 
 export interface QuickReferenceModalProps {
   isOpen: boolean;
@@ -62,6 +65,23 @@ const QUICK_TIPS = [
 export function QuickReferenceModal({ isOpen, onClose }: QuickReferenceModalProps) {
   const modalRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const [tutorialWasSkipped, setTutorialWasSkipped] = useState(false);
+  const [tutorialReset, setTutorialReset] = useState(false);
+
+  // Check tutorial status when modal opens
+  useEffect(() => {
+    if (isOpen) {
+      setTutorialWasSkipped(hasSkippedTutorial());
+      setTutorialReset(false);
+    }
+  }, [isOpen]);
+
+  // Handle restart tutorial
+  const handleRestartTutorial = useCallback(() => {
+    clearTutorialState();
+    setTutorialReset(true);
+    setTutorialWasSkipped(false);
+  }, []);
 
   // Handle keyboard events
   const handleKeyDown = useCallback(
@@ -200,6 +220,38 @@ export function QuickReferenceModal({ isOpen, onClose }: QuickReferenceModalProp
                 </li>
               ))}
             </ul>
+          </section>
+
+          {/* Tutorial Settings */}
+          <section>
+            <h3 className="flex items-center gap-2 text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">
+              <GraduationCap className="w-4 h-4" />
+              Tutorial
+            </h3>
+            <div className="p-3 rounded bg-gray-800/50 border border-gray-700/50">
+              {tutorialReset ? (
+                <div className="flex items-center gap-2 text-sm text-lcars-green">
+                  <span>Tutorial will restart on next turn. Close this modal and continue playing.</span>
+                </div>
+              ) : tutorialWasSkipped ? (
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-gray-300">
+                    Tutorial was skipped. Want to see it again?
+                  </span>
+                  <button
+                    onClick={handleRestartTutorial}
+                    className="flex items-center gap-2 px-3 py-1.5 bg-lcars-amber/20 hover:bg-lcars-amber/30 text-lcars-amber rounded transition-colors text-sm"
+                  >
+                    <RotateCcw className="w-4 h-4" />
+                    Restart Tutorial
+                  </button>
+                </div>
+              ) : (
+                <div className="text-sm text-gray-400">
+                  Tutorial is active. Complete the steps or press Skip to hide it.
+                </div>
+              )}
+            </div>
           </section>
         </div>
 

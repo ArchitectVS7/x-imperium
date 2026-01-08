@@ -164,10 +164,11 @@ npm run db:clean    # Nuclear option: delete everything
 npm run db:stats    # Verify it worked
 ```
 
-### Tests failing randomly
+### Tests failing randomly (Flaky Tests)
 - Database may be full (check with `db:stats`)
 - Network issues with Neon
 - Try running tests sequentially: `npx playwright test --workers=1`
+- Use the flaky test tracker to identify patterns (see below)
 
 ### "Session lost" errors
 - Game data was deleted mid-test
@@ -197,3 +198,64 @@ npm run db:stats    # Verify it worked
 - Added automatic cleanup via `global-teardown.ts`
 - Added smoke test for CI
 - Database usage reduced by ~95%
+
+**2026-01-08: Flaky Test Tracking**
+- Added `flaky-tests.json` for tracking known flaky tests
+- Added `scripts/analyze-flaky-tests.ts` for automated detection
+- Added debug mode with full traces
+
+---
+
+## Flaky Test Tracking
+
+### What is a Flaky Test?
+A flaky test is one that sometimes passes and sometimes fails without code changes. These are identified when a test fails on the first attempt but passes on retry.
+
+### Automatic Detection
+Playwright is configured with retries (2 in CI). Tests that fail then pass are automatically flagged as flaky in the JSON report.
+
+### Analyze Flaky Tests
+After running tests in CI (with JSON reporter):
+```bash
+npm run test:e2e:analyze
+```
+
+This will:
+1. Parse `playwright-results.json`
+2. Identify tests that failed then passed
+3. Update `e2e/flaky-tests.json` with findings
+4. Show a summary report
+
+### Debug Flaky Tests
+Run with full tracing enabled:
+```bash
+npm run test:e2e:debug
+```
+
+Or with environment variables:
+```bash
+PLAYWRIGHT_TRACE_ALL=true npm run test:e2e
+PLAYWRIGHT_VIDEO_ALL=true npm run test:e2e
+PLAYWRIGHT_HEADED=true npm run test:e2e
+```
+
+### Tracking File
+`e2e/flaky-tests.json` tracks:
+- **knownFlaky** - Currently flaky tests with occurrence counts
+- **resolved** - Tests that were flaky but haven't failed in 7+ days
+- **lastUpdated** - When the file was last updated
+
+### Marking Tests as Flaky
+You can also manually tag tests in code:
+```typescript
+test('known flaky test', async ({ page }) => {
+  test.info().annotations.push({ type: 'flaky', description: 'Network timing issue' });
+  // test code...
+});
+```
+
+### CI Integration
+The CI pipeline automatically:
+1. Runs tests with 2 retries
+2. Outputs JSON results
+3. Can run `test:e2e:analyze` to update flaky tracking
