@@ -39,6 +39,8 @@ export interface TurnOrderPanelProps {
   isProcessing?: boolean;
   // Panel trigger callback (starmap-centric UI)
   onOpenPanel?: (panel: PanelType) => void;
+  // Progressive disclosure - hide locked panels
+  isPanelLocked?: (panel: PanelType) => boolean;
 }
 
 interface ActionItem {
@@ -82,6 +84,7 @@ export function TurnOrderPanel({
   onEndTurn,
   isProcessing = false,
   onOpenPanel,
+  isPanelLocked,
 }: TurnOrderPanelProps) {
   const pathname = usePathname();
   const [visitedActions, setVisitedActions] = useState<Set<string>>(new Set());
@@ -104,6 +107,15 @@ export function TurnOrderPanel({
 
   const foodStyle = STATUS_STYLES[foodStatus];
   const armyStyle = STATUS_STYLES[armyStrength];
+
+  // Filter actions based on progressive disclosure
+  const visibleActions = ACTIONS.filter((action) => {
+    if (!isPanelLocked || !action.panelType) return true;
+    return !isPanelLocked(action.panelType);
+  });
+
+  // Check if messages panel is locked
+  const messagesLocked = isPanelLocked?.("messages") ?? false;
 
   // Calculate turn progress for visual indicator
   const turnProgress = Math.min(100, (currentTurn / turnLimit) * 100);
@@ -157,7 +169,7 @@ export function TurnOrderPanel({
       <div className="flex-1 overflow-y-auto p-4">
         <div className="text-xs text-gray-500 uppercase tracking-wider mb-3">Your Actions</div>
         <div className="space-y-1">
-          {ACTIONS.map((action) => {
+          {visibleActions.map((action) => {
             const isVisited = visitedActions.has(action.id);
             const isCurrent = pathname.startsWith(action.href);
 
@@ -219,45 +231,47 @@ export function TurnOrderPanel({
           })}
         </div>
 
-        {/* Messages link/button with badge */}
-        {usePanelMode ? (
-          <button
-            onClick={() => onOpenPanel("messages")}
-            className="w-full flex items-center gap-3 p-2 rounded mt-2 transition-colors hover:bg-gray-800/50"
-          >
-            <Mail className="w-4 h-4 text-gray-400" />
-            <div className="flex-1 text-left">
-              <span className="text-sm text-gray-300">
-                {UI_LABELS.messages}
-              </span>
-            </div>
-            {unreadMessages > 0 && (
-              <span className="px-2 py-0.5 text-xs bg-red-500 text-white rounded-full">
-                {unreadMessages}
-              </span>
-            )}
-          </button>
-        ) : (
-          <Link
-            href="/game/messages"
-            className={`flex items-center gap-3 p-2 rounded mt-2 transition-colors ${
-              pathname === "/game/messages"
-                ? "bg-lcars-amber/20 border border-lcars-amber/50"
-                : "hover:bg-gray-800/50"
-            }`}
-          >
-            <Mail className={`w-4 h-4 ${pathname === "/game/messages" ? "text-lcars-amber" : "text-gray-400"}`} />
-            <div className="flex-1">
-              <span className={`text-sm ${pathname === "/game/messages" ? "text-lcars-amber" : "text-gray-300"}`}>
-                {UI_LABELS.messages}
-              </span>
-            </div>
-            {unreadMessages > 0 && (
-              <span className="px-2 py-0.5 text-xs bg-red-500 text-white rounded-full">
-                {unreadMessages}
-              </span>
-            )}
-          </Link>
+        {/* Messages link/button with badge - hidden when locked */}
+        {!messagesLocked && (
+          usePanelMode ? (
+            <button
+              onClick={() => onOpenPanel("messages")}
+              className="w-full flex items-center gap-3 p-2 rounded mt-2 transition-colors hover:bg-gray-800/50"
+            >
+              <Mail className="w-4 h-4 text-gray-400" />
+              <div className="flex-1 text-left">
+                <span className="text-sm text-gray-300">
+                  {UI_LABELS.messages}
+                </span>
+              </div>
+              {unreadMessages > 0 && (
+                <span className="px-2 py-0.5 text-xs bg-red-500 text-white rounded-full">
+                  {unreadMessages}
+                </span>
+              )}
+            </button>
+          ) : (
+            <Link
+              href="/game/messages"
+              className={`flex items-center gap-3 p-2 rounded mt-2 transition-colors ${
+                pathname === "/game/messages"
+                  ? "bg-lcars-amber/20 border border-lcars-amber/50"
+                  : "hover:bg-gray-800/50"
+              }`}
+            >
+              <Mail className={`w-4 h-4 ${pathname === "/game/messages" ? "text-lcars-amber" : "text-gray-400"}`} />
+              <div className="flex-1">
+                <span className={`text-sm ${pathname === "/game/messages" ? "text-lcars-amber" : "text-gray-300"}`}>
+                  {UI_LABELS.messages}
+                </span>
+              </div>
+              {unreadMessages > 0 && (
+                <span className="px-2 py-0.5 text-xs bg-red-500 text-white rounded-full">
+                  {unreadMessages}
+                </span>
+              )}
+            </Link>
+          )
         )}
       </div>
 

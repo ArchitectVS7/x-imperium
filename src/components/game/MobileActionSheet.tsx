@@ -7,7 +7,7 @@
  * Contains all the TurnOrderPanel content in a mobile-friendly format.
  */
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useMemo } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import gsap from "gsap";
@@ -15,6 +15,7 @@ import { UI_LABELS, GAME_TERMS, RESOURCE_NAMES } from "@/lib/theme/names";
 import { ActionIcons } from "@/lib/theme/icons";
 import { Shield, Home, Map, X } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
+import type { PanelType } from "./EmpireStatusBar";
 
 interface MobileActionSheetProps {
   isOpen: boolean;
@@ -26,6 +27,8 @@ interface MobileActionSheetProps {
   threatCount: number;
   unreadMessages?: number;
   protectionTurnsLeft?: number;
+  // Progressive disclosure - hide locked panels
+  isPanelLocked?: (panel: PanelType) => boolean;
 }
 
 interface ActionItem {
@@ -33,17 +36,18 @@ interface ActionItem {
   label: string;
   href: string;
   icon: LucideIcon;
+  panelType?: PanelType;
 }
 
 const ACTIONS: ActionItem[] = [
-  { id: "military", label: UI_LABELS.military, href: "/game/military", icon: ActionIcons.military },
-  { id: "sectors", label: UI_LABELS.sectors, href: "/game/sectors", icon: ActionIcons.sectors },
-  { id: "combat", label: UI_LABELS.combat, href: "/game/combat", icon: ActionIcons.combat },
-  { id: "diplomacy", label: UI_LABELS.diplomacy, href: "/game/diplomacy", icon: ActionIcons.diplomacy },
-  { id: "market", label: UI_LABELS.market, href: "/game/market", icon: ActionIcons.market },
-  { id: "covert", label: UI_LABELS.covert, href: "/game/covert", icon: ActionIcons.covert },
+  { id: "military", label: UI_LABELS.military, href: "/game/military", icon: ActionIcons.military, panelType: "military" },
+  { id: "sectors", label: UI_LABELS.sectors, href: "/game/sectors", icon: ActionIcons.sectors, panelType: "sectors" },
+  { id: "combat", label: UI_LABELS.combat, href: "/game/combat", icon: ActionIcons.combat, panelType: "combat" },
+  { id: "diplomacy", label: UI_LABELS.diplomacy, href: "/game/diplomacy", icon: ActionIcons.diplomacy, panelType: "diplomacy" },
+  { id: "market", label: UI_LABELS.market, href: "/game/market", icon: ActionIcons.market, panelType: "market" },
+  { id: "covert", label: UI_LABELS.covert, href: "/game/covert", icon: ActionIcons.covert, panelType: "covert" },
   { id: "crafting", label: UI_LABELS.crafting, href: "/game/crafting", icon: ActionIcons.crafting },
-  { id: "research", label: UI_LABELS.research, href: "/game/research", icon: ActionIcons.research },
+  { id: "research", label: UI_LABELS.research, href: "/game/research", icon: ActionIcons.research, panelType: "research" },
   { id: "starmap", label: "Starmap", href: "/game/starmap", icon: ActionIcons.starmap },
 ];
 
@@ -67,6 +71,7 @@ export function MobileActionSheet({
   threatCount,
   unreadMessages = 0,
   protectionTurnsLeft,
+  isPanelLocked,
 }: MobileActionSheetProps) {
   const pathname = usePathname();
   const sheetRef = useRef<HTMLDivElement>(null);
@@ -140,6 +145,17 @@ export function MobileActionSheet({
   const foodStyle = STATUS_STYLES[foodStatus];
   const armyStyle = STATUS_STYLES[armyStrength];
 
+  // Filter actions based on progressive disclosure
+  const visibleActions = useMemo(() => {
+    return ACTIONS.filter((action) => {
+      if (!isPanelLocked || !action.panelType) return true;
+      return !isPanelLocked(action.panelType);
+    });
+  }, [isPanelLocked]);
+
+  // Check if messages panel is locked
+  const messagesLocked = isPanelLocked?.("messages") ?? false;
+
   return (
     <>
       {/* Backdrop */}
@@ -194,7 +210,7 @@ export function MobileActionSheet({
           <div className="p-4">
             <div className="text-xs text-gray-500 uppercase mb-3">Actions</div>
             <div className="grid grid-cols-4 gap-3">
-              {ACTIONS.map((action) => {
+              {visibleActions.map((action) => {
                 const isCurrent = pathname.startsWith(action.href);
                 const IconComponent = action.icon;
                 return (
@@ -217,28 +233,30 @@ export function MobileActionSheet({
               })}
             </div>
 
-            {/* Messages link */}
-            <Link
-              href="/game/messages"
-              onClick={onClose}
-              className={`flex items-center justify-between p-3 mt-3 rounded-lg ${
-                pathname === "/game/messages"
-                  ? "bg-lcars-amber/20 border border-lcars-amber/50"
-                  : "bg-gray-800 hover:bg-gray-700"
-              }`}
-            >
-              <div className="flex items-center gap-3">
-                <ActionIcons.messages className={`w-5 h-5 ${pathname === "/game/messages" ? "text-lcars-amber" : "text-gray-400"}`} />
-                <span className={pathname === "/game/messages" ? "text-lcars-amber" : "text-gray-300"}>
-                  {UI_LABELS.messages}
-                </span>
-              </div>
-              {unreadMessages > 0 && (
-                <span className="px-2 py-0.5 text-xs bg-red-500 text-white rounded-full">
-                  {unreadMessages}
-                </span>
-              )}
-            </Link>
+            {/* Messages link - hidden when locked */}
+            {!messagesLocked && (
+              <Link
+                href="/game/messages"
+                onClick={onClose}
+                className={`flex items-center justify-between p-3 mt-3 rounded-lg ${
+                  pathname === "/game/messages"
+                    ? "bg-lcars-amber/20 border border-lcars-amber/50"
+                    : "bg-gray-800 hover:bg-gray-700"
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  <ActionIcons.messages className={`w-5 h-5 ${pathname === "/game/messages" ? "text-lcars-amber" : "text-gray-400"}`} />
+                  <span className={pathname === "/game/messages" ? "text-lcars-amber" : "text-gray-300"}>
+                    {UI_LABELS.messages}
+                  </span>
+                </div>
+                {unreadMessages > 0 && (
+                  <span className="px-2 py-0.5 text-xs bg-red-500 text-white rounded-full">
+                    {unreadMessages}
+                  </span>
+                )}
+              </Link>
+            )}
           </div>
 
           {/* Quick Status */}

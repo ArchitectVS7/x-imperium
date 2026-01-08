@@ -143,7 +143,7 @@ This document consolidates all action items, marking completed items with eviden
 | ~~TODO-001~~ | architect-review | ~~Complete service domain organization (add more subdirectories)~~ | ~~8-16h~~ | ~~None~~ | **DONE** (commit 8cc2d7e) |
 | ~~TODO-002~~ | architect-review | ~~Consolidate constants into single directory structure~~ | ~~2-4h~~ | ~~None~~ | **DONE** (deprecation notice added) |
 | ~~TODO-003~~ | product-review | ~~Add "Tutorial Mode" toggle to game settings~~ | ~~2-3h~~ | ~~None~~ | **DONE** (via QuickReferenceModal) |
-| TODO-004 | product-review | Implement progressive UI disclosure system | 12-16h | TODO-003 (soft) | Pending |
+| ~~TODO-004~~ | product-review | ~~Implement progressive UI disclosure system~~ | ~~12-16h~~ | ~~TODO-003 (soft)~~ | **DONE** (wired to TurnOrderPanel/MobileActionSheet) |
 
 ### P2: Medium Priority - Address Before Beta
 
@@ -233,9 +233,9 @@ Execute sequentially:
 1. **TODO-009** (3-4h) - Combat edge case E2E tests
 2. **TODO-006** (4-8h) - Combat consolidation (requires TODO-009)
 
-### Phase 4: Progressive UI
+### Phase 4: Progressive UI - COMPLETED 2026-01-08
 After TODO-003 completes:
-- **TODO-004** (12-16h) - Progressive UI disclosure
+- ~~TODO-004~~ - Progressive UI disclosure **DONE** (wired to TurnOrderPanel/MobileActionSheet)
 
 ### Phase 5: Backlog (P3)
 No dependencies, prioritize as needed:
@@ -361,13 +361,13 @@ Old milestone files are staged for deletion.
 |----------|-----------|-----------|--------------|
 | Architect | 7 | 2 | 78% |
 | Documentation | 6 | 4 | 60% |
-| Product | 7 | 3 | 70% |
+| Product | 8 | 2 | 80% |
 | QA | 10 | 1 | 91% |
-| **Total** | **30** | **10** | **75%** |
+| **Total** | **31** | **9** | **78%** |
 
-**Completed 2026-01-08:** TODO-001, TODO-002, TODO-003, TODO-005, TODO-007, TODO-010, TODO-011
+**Completed 2026-01-08:** TODO-001, TODO-002, TODO-003, TODO-004, TODO-005, TODO-007, TODO-010, TODO-011
 
-Remaining by source: Architect (TODO-006,012), Documentation (TODO-008,015,016,017), Product (TODO-004,013,014), QA (TODO-009).
+Remaining by source: Architect (TODO-006,012), Documentation (TODO-008,015,016,017), Product (TODO-013,014), QA (TODO-009).
 
 ---
 

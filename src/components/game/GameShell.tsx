@@ -385,6 +385,7 @@ export function GameShell({ children, initialLayoutData }: GameShellProps) {
           onEndTurn={handleEndTurn}
           isProcessing={isProcessing}
           onOpenPanel={handlePanelToggle}
+          isPanelLocked={isPanelLocked}
         />
       </div>
 
@@ -429,6 +430,7 @@ export function GameShell({ children, initialLayoutData }: GameShellProps) {
         threatCount={data.threatCount}
         unreadMessages={data.unreadMessages}
         protectionTurnsLeft={data.protectionTurnsLeft}
+        isPanelLocked={isPanelLocked}
       />
 
       {/* Slide-out Panels */}
