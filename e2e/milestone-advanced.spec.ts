@@ -113,8 +113,7 @@ test.describe("M5: Random Bots", () => {
       await gamePage.click('a[href="/game/starmap"]');
       await gamePage.waitForLoadState("networkidle");
 
-      await gamePage.waitForTimeout(2000);
-
+      // Wait for starmap SVG to render
       const starmap = gamePage.locator('[data-testid="starmap-svg"]');
       await expect(starmap).toBeVisible({ timeout: 10000 });
     });
@@ -125,9 +124,9 @@ test.describe("M5: Random Bots", () => {
       await gamePage.click('a[href="/game/starmap"]');
       await gamePage.waitForLoadState("networkidle");
 
-      await gamePage.waitForTimeout(2000);
-
+      // Wait for starmap SVG to render with circles
       const circles = gamePage.locator('[data-testid="starmap-svg"] circle');
+      await expect(circles.first()).toBeVisible({ timeout: 10000 });
       const circleCount = await circles.count();
 
       expect(circleCount).toBeGreaterThanOrEqual(1);
@@ -140,10 +139,16 @@ test.describe("M5: Random Bots", () => {
 
       const turnCounter = gamePage.locator('[data-testid="turn-counter"]');
       const initialTurnText = await turnCounter.textContent();
+      const initialTurn = parseInt(initialTurnText?.match(/\d+/)?.[0] ?? "1");
 
       await gamePage.click('[data-testid="end-turn-button"]');
       await gamePage.waitForLoadState("networkidle");
-      await gamePage.waitForTimeout(3000);
+      // Wait for turn to actually change
+      await expect(async () => {
+        const newTurnText = await turnCounter.textContent();
+        const newTurn = parseInt(newTurnText?.match(/\d+/)?.[0] ?? "1");
+        expect(newTurn).toBeGreaterThan(initialTurn);
+      }).toPass({ timeout: 15000 });
 
       const newTurnText = await turnCounter.textContent();
       expect(newTurnText).not.toBe(initialTurnText);
@@ -152,10 +157,17 @@ test.describe("M5: Random Bots", () => {
     test("multiple turns can be processed", async ({ gamePage }) => {
       await ensureGameExists(gamePage, "M5 Multi-turn Test Empire");
 
+      const turnCounter = gamePage.locator('[data-testid="turn-counter"]');
       for (let i = 0; i < 3; i++) {
+        const beforeText = await turnCounter.textContent();
+        const beforeTurn = parseInt(beforeText?.match(/\d+/)?.[0] ?? "1");
         await gamePage.click('[data-testid="end-turn-button"]');
         await gamePage.waitForLoadState("networkidle");
-        await gamePage.waitForTimeout(2000);
+        await expect(async () => {
+          const afterText = await turnCounter.textContent();
+          const afterTurn = parseInt(afterText?.match(/\d+/)?.[0] ?? "1");
+          expect(afterTurn).toBeGreaterThan(beforeTurn);
+        }).toPass({ timeout: 15000 });
       }
 
       await expect(gamePage.locator('[data-testid="starmap-page"], [data-testid="game-header"]')).toBeVisible();
@@ -197,9 +209,15 @@ test.describe("M6: Victory & Persistence", () => {
       const turnCounter = gamePage.locator('[data-testid="turn-counter"]');
       const initialTurn = await turnCounter.textContent();
 
+      const initialTurnNum = parseInt(initialTurn?.match(/\d+/)?.[0] ?? "1");
       await gamePage.click('[data-testid="end-turn-button"]');
       await gamePage.waitForLoadState("networkidle");
-      await gamePage.waitForTimeout(2000);
+      // Wait for turn to change
+      await expect(async () => {
+        const newTurnText = await turnCounter.textContent();
+        const newTurnNum = parseInt(newTurnText?.match(/\d+/)?.[0] ?? "1");
+        expect(newTurnNum).toBeGreaterThan(initialTurnNum);
+      }).toPass({ timeout: 15000 });
 
       const newTurn = await turnCounter.textContent();
       expect(newTurn).not.toBe(initialTurn);

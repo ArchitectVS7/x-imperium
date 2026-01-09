@@ -34,6 +34,10 @@ export interface TutorialStepInfo {
   targetElement?: string; // CSS selector for highlighting
   action?: string; // Action required to complete step
   nextStep: TutorialStep | "victory" | null;
+  /** Specific CSS selector for element to highlight during this step */
+  highlightSelector?: string;
+  /** Action guidance text - tells player what to do */
+  actionGuide?: string;
 }
 
 /**
@@ -47,14 +51,17 @@ export const TUTORIAL_STEPS: TutorialStepInfo[] = [
       "You are the ruler of a fledgling space empire. Your goal is to expand, " +
       "build your military, and achieve one of six victory conditions.",
     nextStep: "neighbors",
+    // No action guide for welcome - just read and continue
   },
   {
     id: "neighbors",
     title: "Your Neighbors",
     description:
       "Your empire starts in a sector with 7-9 other empires. These are your " +
-      "immediate neighbors. You can attack them directly at 1.0× force cost.",
+      "immediate neighbors. You can attack them directly at 1.0x force cost.",
     targetElement: "[data-testid='sector-box-current']",
+    highlightSelector: "[data-testid='nav-sectors'], [data-testid='sectors-nav-button']",
+    actionGuide: "Click 'Sectors' in the menu to see your territory",
     nextStep: "galaxy",
   },
   {
@@ -62,9 +69,11 @@ export const TUTORIAL_STEPS: TutorialStepInfo[] = [
     title: "The Galaxy Map",
     description:
       "The galaxy has 10 sectors connected by borders and wormholes. " +
-      "Adjacent sectors cost 1.2× forces to attack. Wormholes cost 1.5× but " +
+      "Adjacent sectors cost 1.2x forces to attack. Wormholes cost 1.5x but " +
       "let you reach distant sectors.",
     targetElement: "[data-testid='galaxy-view']",
+    highlightSelector: "[data-testid='nav-starmap'], [data-testid='starmap-nav-button']",
+    actionGuide: "Click 'Starmap' to view the galaxy",
     nextStep: "interface",
   },
   {
@@ -74,6 +83,8 @@ export const TUTORIAL_STEPS: TutorialStepInfo[] = [
       "This is your command center. Monitor resources, build units, " +
       "research technology, and manage diplomacy from here.",
     targetElement: "[data-testid='empire-status-bar']",
+    highlightSelector: "[data-testid='turn-order-panel']",
+    actionGuide: "The Turn Order Panel on the right shows your status",
     nextStep: "first_turn",
   },
   {
@@ -84,6 +95,8 @@ export const TUTORIAL_STEPS: TutorialStepInfo[] = [
       "resources, your population grows, and the galaxy evolves. You have " +
       "20 turns of protection before others can attack you.",
     targetElement: "[data-testid='end-turn-button']",
+    highlightSelector: "[data-testid='end-turn-button']",
+    actionGuide: "Click the 'End Turn' button to complete your first turn",
     action: "end_turn",
     nextStep: "victory",
   },
@@ -97,13 +110,14 @@ export const VICTORY_STEP: TutorialStepInfo = {
   title: "Paths to Victory",
   description:
     "There are six ways to win:\n" +
-    "• Conquest: Control 60% of all sectors\n" +
-    "• Economic: Have 1.5× the networth of 2nd place\n" +
-    "• Survival: Highest score at turn 200\n" +
-    "• Coalition: Lead a victorious alliance\n" +
-    "• Technological: Reach Research Level 10\n" +
-    "• Domination: Eliminate all opponents",
+    "- Conquest: Control 60% of all sectors\n" +
+    "- Economic: Have 1.5x the networth of 2nd place\n" +
+    "- Survival: Highest score at turn 200\n" +
+    "- Coalition: Lead a victorious alliance\n" +
+    "- Technological: Reach Research Level 10\n" +
+    "- Domination: Eliminate all opponents",
   nextStep: null,
+  // No action guide for victory - tutorial complete after this
 };
 
 // =============================================================================

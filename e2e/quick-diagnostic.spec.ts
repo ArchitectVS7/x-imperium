@@ -47,7 +47,8 @@ test.describe("Quick 5-Turn Diagnostic", () => {
 
     await createButton.click();
     await page.waitForLoadState('networkidle');
-    await page.waitForTimeout(3000); // Wait for game initialization
+    // Wait for game to initialize - look for turn counter or game header
+    await expect(page.locator('[data-testid="turn-counter"], [data-testid="game-header"]').first()).toBeVisible({ timeout: 30000 }).catch(() => {});
 
     await page.screenshot({ path: "e2e/screenshots/03-game-dashboard.png", fullPage: true });
 
@@ -67,8 +68,8 @@ test.describe("Quick 5-Turn Diagnostic", () => {
     // Step 5: Check for turn summary/income modal
     console.log("Step 5: Checking for turn summary modal");
 
-    // Wait a bit longer for React to render the modal on initial load
-    await page.waitForTimeout(2000);
+    // Wait for React to render the modal on initial load
+    await page.waitForLoadState('networkidle');
 
     // Check for turn summary modal (data-testid="turn-summary-modal")
     const modal = page.locator('[data-testid="turn-summary-modal"], [role="dialog"], .modal').first();
@@ -97,13 +98,13 @@ test.describe("Quick 5-Turn Diagnostic", () => {
       console.error("   Note: Modal should have data-testid='turn-summary-modal'");
     }
 
-    await page.waitForTimeout(1000);
+    await page.waitForLoadState('networkidle');
 
     // Step 6: Test navigation to each major page
     console.log("Step 6: Testing navigation");
 
     const pagesToTest = [
-      { name: "Planets", url: "/game/sectors", selector: 'a[href="/game/sectors"]' },
+      { name: "Sectors", url: "/game/sectors", selector: 'a[href="/game/sectors"]' },
       { name: "Military", url: "/game/military", selector: 'a[href="/game/military"]' },
       { name: "Research", url: "/game/research", selector: 'a[href="/game/research"]' },
       { name: "Market", url: "/game/market", selector: 'a[href="/game/market"]' },
@@ -194,7 +195,7 @@ test.describe("Quick 5-Turn Diagnostic", () => {
         console.log(`✅ Turn ${turn}: End Turn clicked`);
 
         // Wait for processing
-        await page.waitForTimeout(2000);
+        await page.waitForLoadState('networkidle');
 
         // Check for new turn summary
         const newModal = page.locator('[role="dialog"], .modal').first();

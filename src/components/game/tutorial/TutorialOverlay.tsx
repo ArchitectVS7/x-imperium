@@ -3,11 +3,12 @@
 /**
  * Tutorial Overlay Component (M9.2)
  *
- * Displays the 5-step tutorial with modal overlays and step indicators.
+ * Displays the 5-step tutorial with modal overlays, step indicators,
+ * and interactive element highlighting.
  */
 
 import { useState, useCallback, useEffect } from "react";
-import { Circle } from "lucide-react";
+import { Circle, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   type TutorialState,
@@ -92,37 +93,37 @@ function StepContent({ step }: { step: TutorialStepInfo }) {
           <p className="mb-3">There are six ways to win:</p>
           <ul className="space-y-1.5">
             <li className="flex items-start gap-2">
-              <span className="text-lcars-amber">•</span>
+              <span className="text-lcars-amber">*</span>
               <span>
                 <strong className="text-white">Conquest:</strong> Control 60% of all sectors
               </span>
             </li>
             <li className="flex items-start gap-2">
-              <span className="text-lcars-amber">•</span>
+              <span className="text-lcars-amber">*</span>
               <span>
-                <strong className="text-white">Economic:</strong> Have 1.5× the networth of 2nd place
+                <strong className="text-white">Economic:</strong> Have 1.5x the networth of 2nd place
               </span>
             </li>
             <li className="flex items-start gap-2">
-              <span className="text-lcars-amber">•</span>
+              <span className="text-lcars-amber">*</span>
               <span>
                 <strong className="text-white">Survival:</strong> Highest score at turn 200
               </span>
             </li>
             <li className="flex items-start gap-2">
-              <span className="text-lcars-amber">•</span>
+              <span className="text-lcars-amber">*</span>
               <span>
                 <strong className="text-white">Coalition:</strong> Lead a victorious alliance
               </span>
             </li>
             <li className="flex items-start gap-2">
-              <span className="text-lcars-amber">•</span>
+              <span className="text-lcars-amber">*</span>
               <span>
                 <strong className="text-white">Technological:</strong> Reach Research Level 10
               </span>
             </li>
             <li className="flex items-start gap-2">
-              <span className="text-lcars-amber">•</span>
+              <span className="text-lcars-amber">*</span>
               <span>
                 <strong className="text-white">Domination:</strong> Eliminate all opponents
               </span>
@@ -134,6 +135,18 @@ function StepContent({ step }: { step: TutorialStepInfo }) {
           {step.description}
         </p>
       )}
+    </div>
+  );
+}
+
+function ActionGuide({ guide }: { guide: string }) {
+  return (
+    <div className="mt-4 p-3 bg-lcars-amber/10 border border-lcars-amber/30 rounded-lg">
+      <div className="flex items-center gap-2 text-lcars-amber">
+        <ArrowRight className="w-4 h-4 flex-shrink-0" />
+        <span className="text-sm font-medium">Do This:</span>
+      </div>
+      <p className="text-sm text-gray-200 mt-1 ml-6">{guide}</p>
     </div>
   );
 }
@@ -170,6 +183,33 @@ export function TutorialOverlay({
       setIsVisible(forceShow);
     }
   }, [forceShow]);
+
+  // Highlight elements when step changes
+  useEffect(() => {
+    if (!state?.currentStep || !isVisible) return;
+
+    const currentStep = getStepInfo(state.currentStep);
+    if (!currentStep?.highlightSelector) return;
+
+    // Find and highlight elements matching the selector
+    const selectors = currentStep.highlightSelector.split(",").map(s => s.trim());
+    const highlightedElements: Element[] = [];
+
+    selectors.forEach(selector => {
+      const elements = document.querySelectorAll(selector);
+      elements.forEach(el => {
+        el.classList.add("tutorial-highlight");
+        highlightedElements.push(el);
+      });
+    });
+
+    // Cleanup: remove highlight when step changes
+    return () => {
+      highlightedElements.forEach(el => {
+        el.classList.remove("tutorial-highlight");
+      });
+    };
+  }, [state?.currentStep, isVisible]);
 
   // Handle next step
   const handleNext = useCallback(() => {
@@ -223,8 +263,8 @@ export function TutorialOverlay({
       className="fixed inset-0 z-50 flex items-center justify-center"
       data-testid="tutorial-overlay"
     >
-      {/* Backdrop */}
-      <div className="absolute inset-0 bg-black/80" />
+      {/* Backdrop - slightly transparent to show highlighted elements */}
+      <div className="absolute inset-0 bg-black/70" />
 
       {/* Modal */}
       <div
@@ -245,8 +285,13 @@ export function TutorialOverlay({
         {/* Content */}
         <StepContent step={currentStep} />
 
-        {/* Highlight hint */}
-        {currentStep.targetElement && (
+        {/* Action Guide - shows "Do This:" guidance for interactive steps */}
+        {currentStep.actionGuide && (
+          <ActionGuide guide={currentStep.actionGuide} />
+        )}
+
+        {/* Highlight hint (fallback if no action guide) */}
+        {currentStep.targetElement && !currentStep.actionGuide && (
           <div className="mt-4 text-xs text-lcars-amber/70 flex items-center gap-2">
             <Circle className="w-3 h-3 fill-current animate-pulse" />
             <span>Look for the highlighted element on screen</span>

@@ -10,7 +10,6 @@
  * - Proper error handling and logging
  */
 
-import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 import {
   executeAttack,
@@ -31,32 +30,10 @@ import type { Forces, AttackType } from "@/lib/combat/phases";
 import type { CombatStance } from "@/lib/combat/stances";
 import type { Attack } from "@/lib/db/schema";
 import { checkRateLimit } from "@/lib/security/rate-limiter";
+import { getGameSession } from "@/lib/session";
 
 // Valid combat stances for validation
 const VALID_STANCES: CombatStance[] = ["aggressive", "balanced", "defensive", "evasive"];
-
-// =============================================================================
-// COOKIE HELPERS
-// =============================================================================
-
-const GAME_ID_COOKIE = "gameId";
-const EMPIRE_ID_COOKIE = "empireId";
-
-async function getGameCookies(): Promise<{
-  gameId: string | undefined;
-  empireId: string | undefined;
-}> {
-  try {
-    const cookieStore = await cookies();
-    return {
-      gameId: cookieStore.get(GAME_ID_COOKIE)?.value,
-      empireId: cookieStore.get(EMPIRE_ID_COOKIE)?.value,
-    };
-  } catch (error) {
-    console.error("Failed to read cookies:", error);
-    return { gameId: undefined, empireId: undefined };
-  }
-}
 
 // =============================================================================
 // INPUT VALIDATION
@@ -124,7 +101,7 @@ export async function launchAttackAction(
 ): Promise<AttackResult> {
   try {
     // Get session cookies
-    const { gameId, empireId } = await getGameCookies();
+    const { gameId, empireId } = await getGameSession();
 
     if (!gameId || !empireId) {
       return { success: false, error: "No active game session" };
@@ -196,7 +173,7 @@ export async function validateAttackAction(
   forces: Forces
 ): Promise<AttackValidation> {
   try {
-    const { gameId, empireId } = await getGameCookies();
+    const { gameId, empireId } = await getGameSession();
 
     if (!gameId || !empireId) {
       return { valid: false, errors: ["No active game session"] };
@@ -241,7 +218,7 @@ export async function retreatAction(
   forces: Forces
 ): Promise<{ success: boolean; error?: string; casualties?: Forces }> {
   try {
-    const { empireId } = await getGameCookies();
+    const { empireId } = await getGameSession();
 
     if (!empireId) {
       return { success: false, error: "No active game session" };
@@ -286,7 +263,7 @@ export async function getAvailableTargetsAction(): Promise<{
   error?: string;
 }> {
   try {
-    const { gameId, empireId } = await getGameCookies();
+    const { gameId, empireId } = await getGameSession();
 
     if (!gameId || !empireId) {
       return { success: false, error: "No active game session" };
@@ -313,7 +290,7 @@ export async function getMyForcesAction(): Promise<{
   error?: string;
 }> {
   try {
-    const { empireId } = await getGameCookies();
+    const { empireId } = await getGameSession();
 
     if (!empireId) {
       return { success: false, error: "No active game session" };
@@ -346,7 +323,7 @@ export async function getAttackHistoryAction(
   error?: string;
 }> {
   try {
-    const { empireId } = await getGameCookies();
+    const { empireId } = await getGameSession();
 
     if (!empireId) {
       return { success: false, error: "No active game session" };
@@ -381,7 +358,7 @@ export async function getAttackDetailsAction(
 }> {
   try {
     // Get session cookies
-    const { empireId } = await getGameCookies();
+    const { empireId } = await getGameSession();
 
     if (!empireId) {
       return { success: false, error: "No active game session" };

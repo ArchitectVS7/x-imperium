@@ -111,6 +111,28 @@ body {
   box-shadow: 0 0 8px rgba(255, 153, 0, 0.5);
 }
 
+/* =============================================================================
+ * TUTORIAL HIGHLIGHT ANIMATION
+ * Used by TutorialOverlay to highlight UI elements during onboarding
+ * ============================================================================= */
+
+@keyframes pulse-highlight {
+  0%, 100% {
+    box-shadow: 0 0 0 4px rgba(217, 152, 86, 0.6), 0 0 20px rgba(217, 152, 86, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba(217, 152, 86, 0.8), 0 0 30px rgba(217, 152, 86, 0.5);
+  }
+}
+
+.tutorial-highlight {
+  position: relative;
+  z-index: 45;
+  box-shadow: 0 0 0 4px rgba(217, 152, 86, 0.6), 0 0 20px rgba(217, 152, 86, 0.3);
+  animation: pulse-highlight 2s infinite;
+  border-radius: 4px;
+}
+
 /* Starmap star twinkling animation */
 @keyframes twinkle {
   0%,
@@ -411,6 +433,7 @@ body {
   .alliance-line,
   .nebula-particle,
   .animate-pulse-slow,
+  .tutorial-highlight,
   .critical-hit,
   .fumble-hit,
   .volley-winner,

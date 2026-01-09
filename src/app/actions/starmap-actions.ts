@@ -1,6 +1,5 @@
 "use server";
 
-import { cookies } from "next/headers";
 import { db } from "@/lib/db";
 import {
   games,
@@ -33,21 +32,6 @@ import {
   stabilizeWormhole,
   WORMHOLE_CONSTANTS,
 } from "@/lib/game/services/geography/wormhole-service";
-
-// =============================================================================
-// COOKIE HELPERS
-// =============================================================================
-
-async function getGameCookies(): Promise<{
-  gameId: string | undefined;
-  empireId: string | undefined;
-}> {
-  const cookieStore = await cookies();
-  return {
-    gameId: cookieStore.get("gameId")?.value,
-    empireId: cookieStore.get("empireId")?.value,
-  };
-}
 
 // =============================================================================
 // INTEL LEVEL CALCULATION
@@ -160,7 +144,7 @@ export interface StarmapData {
  * Returns all empires with fog of war intel levels.
  */
 export async function getStarmapDataAction(): Promise<StarmapData | null> {
-  const { gameId, empireId } = await getGameCookies();
+  const { gameId, empireId } = await getGameSession();
 
   if (!gameId || !empireId) {
     return null;
@@ -335,7 +319,7 @@ export interface WormholeData {
  * Get all known wormholes for the current player.
  */
 export async function getWormholesAction(): Promise<WormholeData | null> {
-  const { gameId, empireId } = await getGameCookies();
+  const { gameId, empireId } = await getGameSession();
 
   if (!gameId || !empireId) {
     return null;
@@ -470,7 +454,7 @@ export interface StabilizeWormholeResult {
 export async function stabilizeWormholeAction(
   connectionId: string
 ): Promise<StabilizeWormholeResult> {
-  const { gameId, empireId } = await getGameCookies();
+  const { gameId, empireId } = await getGameSession();
 
   if (!gameId || !empireId) {
     return {
@@ -594,6 +578,7 @@ export async function stabilizeWormholeAction(
 // =============================================================================
 
 import type { GalaxyRegion, WormholeData as GalaxyWormholeData } from "@/components/game/starmap/GalaxyView";
+import { getGameSession } from "@/lib/session";
 
 export interface GalaxyViewData {
   regions: GalaxyRegion[];
@@ -614,7 +599,7 @@ export interface GalaxyViewData {
  * Returns regions with empires positioned within them, plus wormhole connections.
  */
 export async function getGalaxyViewDataAction(): Promise<GalaxyViewData | null> {
-  const { gameId, empireId } = await getGameCookies();
+  const { gameId, empireId } = await getGameSession();
 
   if (!gameId || !empireId) {
     return null;
@@ -822,7 +807,7 @@ export interface PlayerTellData {
  * PRD 7.10: Player Readability / Tell System
  */
 export async function getTellsForPlayerAction(): Promise<PlayerTellData | null> {
-  const { gameId, empireId } = await getGameCookies();
+  const { gameId, empireId } = await getGameSession();
 
   if (!gameId || !empireId) {
     return null;

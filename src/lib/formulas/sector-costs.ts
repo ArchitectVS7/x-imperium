@@ -32,7 +32,7 @@ export const SECTOR_RELEASE_REFUND = 0.5;
  * - 20 sectors: 8,000 × 2.00 = 16,000
  * - 50 sectors: 8,000 × 3.50 = 28,000
  *
- * @param baseCost - The base cost of the sector type (from PLANET_COSTS)
+ * @param baseCost - The base cost of the sector type (from SECTOR_COSTS)
  * @param ownedSectors - Number of sectors currently owned
  * @returns The colonization cost (integer, rounded down)
  */

@@ -47,11 +47,11 @@ async function dismissTurnSummaryModal(page: Page): Promise<boolean> {
     const continueBtn = page.locator('[data-testid="turn-summary-continue"]');
     if (await continueBtn.isVisible({ timeout: 1000 }).catch(() => false)) {
       await continueBtn.click();
-      await page.waitForTimeout(300);
+      await expect(modal).not.toBeVisible({ timeout: 2000 }).catch(() => {});
       return true;
     }
     await page.keyboard.press("Escape");
-    await page.waitForTimeout(300);
+    await expect(modal).not.toBeVisible({ timeout: 2000 }).catch(() => {});
     if (!await modal.isVisible({ timeout: 200 }).catch(() => false)) {
       return true;
     }
@@ -120,13 +120,20 @@ async function endTurnReliably(page: Page): Promise<number> {
     }
   }
 
-  await page.waitForTimeout(2000);
+  // Wait for turn to change instead of arbitrary timeout
+  await expect(async () => {
+    const newTurn = await getCurrentTurn(page);
+    expect(newTurn).toBeGreaterThan(turnBefore);
+  }).toPass({ timeout: 15000 });
 
-  for (let attempt = 0; attempt < 10; attempt++) {
-    const dismissed = await dismissTurnSummaryModal(page);
-    if (!dismissed) break;
-    await page.waitForTimeout(500);
-  }
+  // Dismiss any turn summary modals that appear
+  await expect(async () => {
+    const modal = page.locator('[data-testid="turn-summary-modal"]');
+    if (await modal.isVisible({ timeout: 300 }).catch(() => false)) {
+      await dismissTurnSummaryModal(page);
+    }
+    await expect(modal).not.toBeVisible({ timeout: 1000 });
+  }).toPass({ timeout: 10000 }).catch(() => {});
 
   return await getCurrentTurn(page);
 }
@@ -140,7 +147,7 @@ async function navigateTo(page: Page, path: string, pageName: string): Promise<b
     await dismissTutorialOverlays(page);
 
     await page.goto(`/game/${path}`, { waitUntil: "domcontentloaded" });
-    await page.waitForTimeout(500);
+    await page.waitForLoadState("networkidle", { timeout: 5000 }).catch(() => {});
 
     await dismissTurnSummaryModal(page);
     await dismissTutorialOverlays(page);
@@ -179,14 +186,18 @@ async function ensureGameReady(page: Page, empireName: string): Promise<void> {
     await page.waitForLoadState("domcontentloaded");
   }
 
-  await page.waitForTimeout(1000);
+  // Wait for game header to be visible instead of arbitrary timeout
+  await expect(page.locator('[data-testid="game-header"]')).toBeVisible({ timeout: 10000 });
   await dismissTutorialOverlays(page);
 
-  for (let attempt = 0; attempt < 5; attempt++) {
-    const dismissed = await dismissTurnSummaryModal(page);
-    if (!dismissed) break;
-    await page.waitForTimeout(300);
-  }
+  // Dismiss any turn summary modals
+  await expect(async () => {
+    const modal = page.locator('[data-testid="turn-summary-modal"]');
+    if (await modal.isVisible({ timeout: 300 }).catch(() => false)) {
+      await dismissTurnSummaryModal(page);
+    }
+    await expect(modal).not.toBeVisible({ timeout: 1000 });
+  }).toPass({ timeout: 10000 }).catch(() => {});
 }
 
 // =============================================================================
@@ -228,10 +239,10 @@ test.describe("10-Turn Core Gameplay Test", () => {
         }
 
         await page.goto("/game/starmap", { waitUntil: "domcontentloaded" });
-        await page.waitForTimeout(500);
+        await page.waitForLoadState("networkidle", { timeout: 5000 }).catch(() => {});
         await dismissTurnSummaryModal(page);
         await endTurnReliably(page);
-        await page.waitForTimeout(1000);
+        // endTurnReliably already waits for turn change
 
       } catch (error) {
         logDebug(`Turn ${turn} failed: ${String(error)}`);
@@ -294,7 +305,9 @@ test.describe("Full 20-Turn Gameplay Test", () => {
               const colonizeTab = page.locator('button:has-text("Colonize"), [data-testid="colonize-tab"]').first();
               if (await colonizeTab.isVisible({ timeout: 1500 }).catch(() => false)) {
                 await colonizeTab.click().catch(() => {});
-                await page.waitForTimeout(500);
+                // Wait for tab content to load
+                const buyButtons = page.locator('button:has-text("Colonize"), button:has-text("Buy")');
+                await expect(buyButtons.first()).toBeVisible({ timeout: 5000 }).catch(() => {});
               }
               const buyButtons = page.locator('button:has-text("Colonize"), button:has-text("Buy")');
               if (await buyButtons.first().isEnabled({ timeout: 1000 }).catch(() => false)) {
@@ -311,7 +324,9 @@ test.describe("Full 20-Turn Gameplay Test", () => {
               const buildTab = page.locator('button:has-text("Build"), [data-testid="build-tab"]').first();
               if (await buildTab.isVisible({ timeout: 1500 }).catch(() => false)) {
                 await buildTab.click().catch(() => {});
-                await page.waitForTimeout(500);
+                // Wait for tab content to load
+                const unitCards = page.locator('[data-testid*="unit-select"], button:has-text("Soldier")');
+                await expect(unitCards.first()).toBeVisible({ timeout: 5000 }).catch(() => {});
               }
               const unitCards = page.locator('[data-testid*="unit-select"], button:has-text("Soldier")');
               if (await unitCards.first().isVisible({ timeout: 1500 }).catch(() => false)) {
@@ -385,7 +400,7 @@ test.describe("Full 20-Turn Gameplay Test", () => {
         }
 
         await page.goto("/game/starmap", { waitUntil: "domcontentloaded" });
-        await page.waitForTimeout(500);
+        await page.waitForLoadState("networkidle", { timeout: 5000 }).catch(() => {});
         await dismissTurnSummaryModal(page);
         await dismissTutorialOverlays(page);
 

@@ -86,6 +86,38 @@ export type MaintenanceCost = {
 };
 
 // =============================================================================
+// STORAGE COSTS AND RESOURCE CAPS (P2-18)
+// =============================================================================
+
+/**
+ * Storage costs for resources that are expensive to store.
+ * Applies to ore and petroleum when stockpiles exceed 50% of cap.
+ */
+export type StorageCosts = {
+  /** Ore storage cost (0.5% of excess above threshold) */
+  ore: number;
+  /** Petroleum storage cost (0.5% of excess above threshold) */
+  petroleum: number;
+  /** Total storage cost across all resources */
+  total: number;
+};
+
+/**
+ * Resources lost due to exceeding storage capacity.
+ * Tracked for turn summary and player feedback.
+ */
+export type ResourceOverflow = {
+  /** Credits lost due to cap */
+  credits: number;
+  /** Food lost due to cap */
+  food: number;
+  /** Ore lost due to cap */
+  ore: number;
+  /** Petroleum lost due to cap */
+  petroleum: number;
+};
+
+// =============================================================================
 // TURN EVENTS
 // =============================================================================
 
@@ -101,6 +133,8 @@ export type TurnEvent = {
     | "victory"
     | "defeat"
     | "revolt_consequences"
+    | "storage_cost"
+    | "resource_overflow"
     | "other";
   /** Human-readable message */
   message: string;
@@ -129,6 +163,10 @@ export type EmpireResult = {
   events: TurnEvent[];
   /** Whether empire is still alive */
   isAlive: boolean;
+  /** Storage costs incurred this turn (P2-18) */
+  storageCosts?: StorageCosts;
+  /** Resources lost to overflow this turn (P2-18) */
+  resourceOverflow?: ResourceOverflow;
 };
 
 // =============================================================================

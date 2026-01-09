@@ -1,6 +1,5 @@
 "use server";
 
-import { cookies } from "next/headers";
 import {
   upgradeUnit,
   getUnitUpgradeStatus,
@@ -12,17 +11,7 @@ import {
 } from "@/lib/game/services/military/upgrade-service";
 import type { UnitType } from "@/lib/game/unit-config";
 import { isValidUnitType } from "@/lib/security/validation";
-
-// =============================================================================
-// COOKIE HELPERS
-// =============================================================================
-
-const EMPIRE_ID_COOKIE = "empireId";
-
-async function getEmpireId(): Promise<string | undefined> {
-  const cookieStore = await cookies();
-  return cookieStore.get(EMPIRE_ID_COOKIE)?.value;
-}
+import { getGameSession } from "@/lib/session";
 
 // =============================================================================
 // UPGRADE ACTIONS
@@ -41,7 +30,7 @@ export async function upgradeUnitAction(
     return { success: false, error: "Invalid unit type" };
   }
 
-  const empireId = await getEmpireId();
+  const { empireId } = await getGameSession();
 
   if (!empireId) {
     return { success: false, error: "No active game session" };
@@ -71,7 +60,7 @@ export async function getUnitUpgradeStatusAction(
     return null;
   }
 
-  const empireId = await getEmpireId();
+  const { empireId } = await getGameSession();
 
   if (!empireId) {
     return null;
@@ -89,7 +78,7 @@ export async function getUnitUpgradeStatusAction(
  * Get upgrade statuses for all unit types.
  */
 export async function getAllUpgradeStatusesAction(): Promise<AllUpgradeStatuses | null> {
-  const empireId = await getEmpireId();
+  const { empireId } = await getGameSession();
 
   if (!empireId) {
     return null;
@@ -116,7 +105,7 @@ export async function canUpgradeUnitAction(
     return { canUpgrade: false, reason: "Invalid unit type" };
   }
 
-  const empireId = await getEmpireId();
+  const { empireId } = await getGameSession();
 
   if (!empireId) {
     return { canUpgrade: false, reason: "No active game session" };

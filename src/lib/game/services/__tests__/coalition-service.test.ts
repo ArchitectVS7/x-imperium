@@ -102,27 +102,27 @@ describe("Coalition Service", () => {
       expect(COALITION_VICTORY_THRESHOLD).toBe(0.5);
 
       // Example: coalition with 50 sectors out of 100 total
-      const coalitionPlanets = 50;
+      const coalitionSectors = 50;
       const totalSectors = 100;
-      const territoryPercent = coalitionPlanets / totalSectors;
+      const territoryPercent = coalitionSectors / totalSectors;
 
       expect(territoryPercent >= COALITION_VICTORY_THRESHOLD).toBe(true);
     });
 
     it("should not trigger victory under 50% territory", () => {
       // Example: coalition with 49 sectors out of 100 total
-      const coalitionPlanets = 49;
+      const coalitionSectors = 49;
       const totalSectors = 100;
-      const territoryPercent = coalitionPlanets / totalSectors;
+      const territoryPercent = coalitionSectors / totalSectors;
 
       expect(territoryPercent >= COALITION_VICTORY_THRESHOLD).toBe(false);
     });
 
     it("should handle edge case of exactly 50%", () => {
       // Exactly 50 out of 100
-      const coalitionPlanets = 500;
+      const coalitionSectors = 500;
       const totalSectors = 1000;
-      const territoryPercent = coalitionPlanets / totalSectors;
+      const territoryPercent = coalitionSectors / totalSectors;
 
       expect(territoryPercent).toBe(0.5);
       expect(territoryPercent >= COALITION_VICTORY_THRESHOLD).toBe(true);
@@ -164,19 +164,19 @@ describe("Coalition Service", () => {
     });
 
     it("should handle fractional percentages", () => {
-      const coalitionPlanets = 33;
+      const coalitionSectors = 33;
       const totalSectors = 100;
-      const percent = (coalitionPlanets / totalSectors) * 100;
+      const percent = (coalitionSectors / totalSectors) * 100;
 
       expect(percent).toBe(33);
     });
 
     it("should handle zero total sectors safely", () => {
-      const coalitionPlanets = 0;
+      const coalitionSectors = 0;
       const totalSectors = 0;
 
       // Avoid division by zero
-      const percent = totalSectors > 0 ? (coalitionPlanets / totalSectors) * 100 : 0;
+      const percent = totalSectors > 0 ? (coalitionSectors / totalSectors) * 100 : 0;
       expect(percent).toBe(0);
     });
   });

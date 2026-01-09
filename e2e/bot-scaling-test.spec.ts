@@ -27,7 +27,7 @@ async function createGameWithBots(page: any, botCount: number, testName: string)
 
   // Navigate to game page
   await page.goto("/game?newGame=true");
-  await page.waitForLoadState("networkidle");
+  await page.waitForLoadState("domcontentloaded");
 
   // Check if we need to create a new game
   const turnCounter = page.locator('[data-testid="turn-counter"]');
@@ -41,7 +41,7 @@ async function createGameWithBots(page: any, botCount: number, testName: string)
     if (await tutorialSkipButton.isVisible({ timeout: 2000 }).catch(() => false)) {
       console.log("  Skipping tutorial...");
       await tutorialSkipButton.click();
-      await page.waitForTimeout(1000);
+      await expect(tutorialSkipButton).not.toBeVisible({ timeout: 5000 }).catch(() => {});
     }
 
     // Wait for and fill setup form
@@ -70,7 +70,7 @@ async function createGameWithBots(page: any, botCount: number, testName: string)
         await gotItButton.click();
         modalsDismissed++;
         console.log(`  Dismissed modal ${modalsDismissed} via "Got it" button`);
-        await page.waitForTimeout(500);
+        await expect(gotItButton).not.toBeVisible({ timeout: 2000 }).catch(() => {});
         continue;
       }
 
@@ -80,7 +80,7 @@ async function createGameWithBots(page: any, botCount: number, testName: string)
         await closeButton.click();
         modalsDismissed++;
         console.log(`  Dismissed modal ${modalsDismissed} via X button`);
-        await page.waitForTimeout(500);
+        await expect(closeButton).not.toBeVisible({ timeout: 2000 }).catch(() => {});
         continue;
       }
 
@@ -113,7 +113,7 @@ async function processTurns(page: any, turns: number, botCount: number) {
     await endTurnButton.click();
 
     // Wait for turn processing
-    await page.waitForLoadState("networkidle", { timeout: 60000 });
+    await page.waitForLoadState("domcontentloaded", { timeout: 60000 });
 
     // Wait for modal and close it
     const modal = page.locator('[data-testid="turn-summary-modal"]');
@@ -125,8 +125,8 @@ async function processTurns(page: any, turns: number, botCount: number) {
     const turnTime = Date.now() - turnStart;
     console.log(`  Turn ${i + 1}/${turns}: ${turnTime}ms`);
 
-    // Small delay between turns
-    await page.waitForTimeout(500);
+    // Small delay between turns - wait for UI to stabilize
+    await page.waitForLoadState("networkidle", { timeout: 5000 }).catch(() => {});
   }
 
   const totalTime = Date.now() - startTime;

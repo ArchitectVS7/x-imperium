@@ -15,11 +15,11 @@
  */
 
 import { NextRequest } from "next/server";
-import { cookies } from "next/headers";
 import { db } from "@/lib/db";
 import { games, empires } from "@/lib/db/schema";
 import { eq, and } from "drizzle-orm";
 import { verifyEmpireOwnership } from "@/lib/security/validation";
+import { getGameSession } from "@/lib/session";
 
 // Heartbeat interval (15 seconds)
 const HEARTBEAT_INTERVAL_MS = 15000;
@@ -41,11 +41,11 @@ export async function GET(request: NextRequest) {
   }
 
   // SECURITY: Verify request matches authenticated session
-  const cookieStore = await cookies();
-  const cookieGameId = cookieStore.get("gameId")?.value;
-  const cookieEmpireId = cookieStore.get("empireId")?.value;
+  const session = await getGameSession();
+  const sessionGameId = session.gameId;
+  const sessionEmpireId = session.empireId;
 
-  if (gameId !== cookieGameId || empireId !== cookieEmpireId) {
+  if (gameId !== sessionGameId || empireId !== sessionEmpireId) {
     return new Response("Unauthorized - session mismatch", { status: 401 });
   }
 

@@ -32,7 +32,9 @@ export default defineConfig({
   // Flaky test detection: retry tests to identify inconsistent behavior
   // A test that fails then passes on retry is flagged as "flaky"
   retries: process.env.CI ? 2 : 1,
-  workers: process.env.CI ? 1 : undefined,
+  // Limit workers to prevent OOM - each test creates a game with bots
+  // CI: 1 worker (sequential), Local: 2 workers max to balance speed vs memory
+  workers: process.env.CI ? 1 : 2,
 
   // Timeouts
   globalTimeout: 15 * 60 * 1000, // 15 minutes max for ALL tests (increased for retries)
@@ -78,9 +80,13 @@ export default defineConfig({
     url: "http://localhost:3000",
     reuseExistingServer: !process.env.CI,
     timeout: 60 * 1000, // 1 minute to start dev server
-    // Disable LLM bot calls to avoid rate limits during testing
     env: {
+      // Disable LLM bot calls to avoid rate limits during testing
       DISABLE_LLM_BOTS: "true",
+      // Enable admin functions for test cleanup (teardown)
+      ADMIN_SECRET: "e2e-test-secret",
+      // Increase Node.js memory limit for game creation
+      NODE_OPTIONS: "--max-old-space-size=4096",
     },
   },
   // Cleanup test data after all tests complete

@@ -65,7 +65,7 @@ Example output:
 📊 Database Statistics
 Games:       12
 Empires:     120
-Planets:     450
+Sectors:     450
 Bot Memories: 3,200
 Messages:    890
 Attacks:     156

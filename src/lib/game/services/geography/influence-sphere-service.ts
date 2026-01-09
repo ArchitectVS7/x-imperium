@@ -61,7 +61,7 @@ export const INFLUENCE_CONSTANTS = {
   /** Base number of direct neighbors */
   BASE_NEIGHBOR_COUNT: 3,
   /** Additional neighbors per 5 sectors owned */
-  NEIGHBORS_PER_PLANETS: 5,
+  NEIGHBORS_PER_SECTOR: 5,
   /** Maximum number of direct neighbors */
   MAX_DIRECT_NEIGHBORS: 8,
   /** Maximum number of extended neighbors */

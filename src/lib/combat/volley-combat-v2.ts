@@ -1,7 +1,7 @@
 /**
  * Volley Combat System v2 - D20 Based
  *
- * 3-Volley combat using true D20 mechanics (d20 + TAR ≥ DEF).
+ * 3-Volley combat using true D20 mechanics (d20 + TAR >= DEF).
  * Empire vs Empire combat - winner captures percentage of defender's sectors.
  *
  * Combat Flow:
@@ -22,6 +22,7 @@ import {
   getDefaultStance,
 } from "./stances";
 import { analyzeTheaterControl, type TheaterAnalysis } from "./theater-control";
+import { rollD20 as rollD20Seeded } from "@/lib/utils/seeded-rng";
 import unitStatsData from "@/../data/unit-stats.json";
 
 // =============================================================================
@@ -174,13 +175,23 @@ function getD20Stats(unitType: CombatUnitType): D20Stats {
 
 /**
  * Roll a d20 (1-20).
- * Uses provided roll if available (for testing).
+ * Uses provided roll override if available (for testing), otherwise uses
+ * the centralized rollD20 from seeded-rng utility with optional RNG function.
+ *
+ * @param rollOverrides - Optional array of predetermined roll values for testing
+ * @param rollIndex - Index into rollOverrides array
+ * @param rng - Optional RNG function for seeded randomness
+ * @returns Integer from 1 to 20
  */
-function rollD20(rollOverrides?: number[], rollIndex?: number): number {
+function rollD20(
+  rollOverrides?: number[],
+  rollIndex?: number,
+  rng?: () => number
+): number {
   if (rollOverrides && rollIndex !== undefined && rollOverrides[rollIndex] !== undefined) {
     return rollOverrides[rollIndex];
   }
-  return Math.floor(Math.random() * 20) + 1;
+  return rollD20Seeded(rng);
 }
 
 /**
@@ -294,7 +305,7 @@ function mergeCasualties(
 /**
  * Resolve a single volley of combat.
  *
- * Each unit type makes one attack roll: d20 + TAR + mods ≥ target DEF
+ * Each unit type makes one attack roll: d20 + TAR + mods >= target DEF
  * Damage dealt based on HUL stat.
  */
 function resolveVolley(

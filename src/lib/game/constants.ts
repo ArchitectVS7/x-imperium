@@ -135,18 +135,44 @@ export const CIVIL_STATUS_LEVELS = [
 
 export type CivilStatusLevel = (typeof CIVIL_STATUS_LEVELS)[number];
 
-// PRD 4.4: Civil Status Income Multipliers
-// "0× (no bonus)" means baseline income (1×) with no bonus
+// PRD 4.4: Civil Status Income Multipliers (Rebalanced)
+// Original range was 4.0x to 0.25x (16x differential) - too extreme, causing runaway feedback loops.
+// New range is 2.5x to 0.5x (5x differential) - still rewards success but allows recovery from setbacks.
 export const CIVIL_STATUS_INCOME_MULTIPLIERS: Record<CivilStatusLevel, number> = {
-  ecstatic: 4.0,   // PRD: "4× multiplier" - Many victories, high education
-  happy: 3.0,      // PRD: "3× multiplier" - Stable empire, winning wars
-  content: 2.0,    // PRD: "2× multiplier" - Normal state
-  neutral: 1.0,    // PRD: "1× multiplier" - Minor problems
-  unhappy: 1.0,    // PRD: "0× (no bonus)" = baseline (1×) - Starvation, battle losses
-  angry: 0.75,     // Extrapolated: 25% penalty
-  rioting: 0.5,    // Extrapolated: 50% penalty
-  revolting: 0.25, // Extrapolated: 75% penalty (near collapse)
+  ecstatic: 2.5,   // Rebalanced: 2.5× - Many victories, high education
+  happy: 2.0,      // Rebalanced: 2× - Stable empire, winning wars
+  content: 1.5,    // Rebalanced: 1.5× - Normal state
+  neutral: 1.0,    // Baseline: 1× - Minor problems
+  unhappy: 0.85,   // Rebalanced: 15% penalty - Starvation, battle losses
+  angry: 0.7,      // Rebalanced: 30% penalty
+  rioting: 0.6,    // Rebalanced: 40% penalty
+  revolting: 0.5,  // Rebalanced: 50% penalty (near collapse, but recoverable)
 };
+
+// =============================================================================
+// RESOURCE CAPS AND STORAGE (P2-18)
+// =============================================================================
+
+/** Maximum storage capacity per resource type */
+export const RESOURCE_CAPS = {
+  credits: 10_000_000,   // 10M credits
+  food: 100_000,         // 100K food units
+  ore: 50_000,           // 50K ore units
+  petroleum: 25_000,     // 25K petroleum units
+  researchPoints: Infinity, // No cap (always spent)
+} as const;
+
+/** Storage cost threshold - costs apply above this % of cap */
+export const STORAGE_COST_THRESHOLD = 0.5; // 50% of cap
+
+/** Storage cost rate per turn for resources above threshold */
+export const STORAGE_COST_RATE = 0.005; // 0.5% per turn
+
+/** Resources that incur storage costs (expensive to store) */
+export const RESOURCES_WITH_STORAGE_COSTS: readonly (keyof Omit<typeof RESOURCE_CAPS, 'researchPoints'>)[] = [
+  'ore',
+  'petroleum',
+] as const;
 
 // =============================================================================
 // GAME SETTINGS

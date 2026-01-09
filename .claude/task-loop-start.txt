@@ -1,0 +1,43 @@
+ D docs/reviews/architect-review.md
+ D docs/reviews/documentation-review.md
+ D docs/reviews/product-review.md
+ D docs/reviews/qa-review.md
+ M e2e/bot-scaling-test.spec.ts
+ M e2e/combat-edge-cases.spec.ts
+ M e2e/fixtures/game.fixture.ts
+ M e2e/global-teardown.ts
+ M e2e/milestone-core.spec.ts
+ M e2e/smoke-test.spec.ts
+ M package.json
+ M playwright.config.ts
+ M src/app/actions/admin-actions.ts
+ M src/app/game/crafting/page.tsx
+ M src/app/game/diplomacy/page.tsx
+ M src/app/game/market/page.tsx
+ M src/app/game/messages/page.tsx
+ M src/app/game/military/page.tsx
+ M src/app/game/research/page.tsx
+ M src/app/game/syndicate/page.tsx
+ M src/components/game/CompactHeaderStatus.tsx
+ M src/components/game/combat/CombatPreview.tsx
+ M src/components/game/starmap/Starmap.tsx
+ M src/lib/game/repositories/combat-repository.ts
+?? .claude/task-loop-start.txt
+?? docs/plans/
+?? docs/reviews/REMEDIATION-PLAN.md
+?? docs/reviews/architecture.md
+?? docs/reviews/archive/
+?? docs/reviews/code-quality.md
+?? docs/reviews/dependencies.md
+?? docs/reviews/documentation.md
+?? docs/reviews/game-balance.md
+?? docs/reviews/game-economy.md
+?? docs/reviews/narrative.md
+?? docs/reviews/performance.md
+?? docs/reviews/player-journey.md
+?? docs/reviews/product.md
+?? docs/reviews/qa.md
+?? docs/reviews/security.md
+?? docs/reviews/ux.md
+?? nul
+main

@@ -143,7 +143,8 @@ test.describe("Crafting System", () => {
 
       if (await tier1Filter.isVisible()) {
         await tier1Filter.click();
-        await gamePage.waitForTimeout(500);
+        // Wait for filter to be applied
+        await expect(tier1Filter).toHaveClass(/active|selected/, { timeout: 2000 }).catch(() => {});
 
         // Should filter to Tier 1 only
         const visibleRecipes = gamePage.locator('[data-testid^="recipe-tier1"]');
@@ -172,7 +173,8 @@ test.describe("Crafting System", () => {
 
       if (await craftButton.isVisible()) {
         await craftButton.click();
-        await gamePage.waitForTimeout(1000);
+        // Wait for crafting action to complete (queue update)
+        await gamePage.waitForLoadState("networkidle");
 
         // Check queue was created in database
         const empire = await db.query.empires.findFirst({
@@ -206,10 +208,17 @@ test.describe("Crafting System", () => {
       await startNewGame(gamePage);
 
       // Fast-forward to turn 3 to accumulate some resources
+      const turnCounter = gamePage.locator('[data-testid="turn-counter"]');
       for (let i = 0; i < 2; i++) {
+        const beforeText = await turnCounter.textContent();
+        const beforeTurn = parseInt(beforeText?.match(/\d+/)?.[0] ?? "1");
         await gamePage.click('[data-testid="end-turn-button"]');
         await gamePage.waitForLoadState("networkidle");
-        await gamePage.waitForTimeout(3000);
+        await expect(async () => {
+          const afterText = await turnCounter.textContent();
+          const afterTurn = parseInt(afterText?.match(/\d+/)?.[0] ?? "1");
+          expect(afterTurn).toBeGreaterThan(beforeTurn);
+        }).toPass({ timeout: 15000 });
       }
 
       // Navigate to crafting
@@ -221,14 +230,20 @@ test.describe("Crafting System", () => {
 
       if (await craftButton.isVisible()) {
         await craftButton.click();
-        await gamePage.waitForTimeout(1000);
+        await gamePage.waitForLoadState("networkidle");
 
         // Process one more turn
         await gamePage.click('a[href="/game"]');
         await gamePage.waitForLoadState("networkidle");
+        const turnBeforeText = await turnCounter.textContent();
+        const turnBefore = parseInt(turnBeforeText?.match(/\d+/)?.[0] ?? "1");
         await gamePage.click('[data-testid="end-turn-button"]');
         await gamePage.waitForLoadState("networkidle");
-        await gamePage.waitForTimeout(3000);
+        await expect(async () => {
+          const turnAfterText = await turnCounter.textContent();
+          const turnAfter = parseInt(turnAfterText?.match(/\d+/)?.[0] ?? "1");
+          expect(turnAfter).toBeGreaterThan(turnBefore);
+        }).toPass({ timeout: 15000 });
 
         // Queue should have progressed
         console.log("Turn processed with crafting queue active");
@@ -364,10 +379,17 @@ test.describe("Syndicate System", () => {
       await startNewGame(gamePage);
 
       // Fast-forward several turns
+      const turnCounter = gamePage.locator('[data-testid="turn-counter"]');
       for (let i = 0; i < 5; i++) {
+        const beforeText = await turnCounter.textContent();
+        const beforeTurn = parseInt(beforeText?.match(/\d+/)?.[0] ?? "1");
         await gamePage.click('[data-testid="end-turn-button"]');
         await gamePage.waitForLoadState("networkidle");
-        await gamePage.waitForTimeout(2000);
+        await expect(async () => {
+          const afterText = await turnCounter.textContent();
+          const afterTurn = parseInt(afterText?.match(/\d+/)?.[0] ?? "1");
+          expect(afterTurn).toBeGreaterThan(beforeTurn);
+        }).toPass({ timeout: 15000 });
       }
 
       // Check both systems are functional

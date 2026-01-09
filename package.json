@@ -50,15 +50,16 @@
     "drizzle-orm": "^0.45.1",
     "gsap": "^3.14.2",
     "howler": "^2.2.4",
+    "iron-session": "^8.0.4",
     "lucide-react": "^0.562.0",
     "next": "14.2.35",
-    "postgres": "^3.4.7",
+    "postgres": "^3.4.8",
     "react": "^18",
     "react-dom": "^18",
-    "react-window": "^2.2.3",
+    "react-window": "^2.2.4",
     "server-only": "^0.0.1",
     "tailwind-merge": "^3.4.0",
-    "zod": "^4.2.1"
+    "zod": "^4.3.5"
   },
   "devDependencies": {
     "@playwright/test": "^1.57.0",

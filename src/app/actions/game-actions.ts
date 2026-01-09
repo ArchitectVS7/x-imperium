@@ -1,6 +1,5 @@
 "use server";
 
-import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import {
   startNewGame,
@@ -13,49 +12,12 @@ import type { Difficulty } from "@/lib/bots/types";
 import { triggerGreetings, type TriggerContext } from "@/lib/messages";
 import { GAME_MODE_PRESETS, type GameMode } from "@/lib/game/constants";
 import { checkRateLimit } from "@/lib/security/rate-limiter";
-
-// =============================================================================
-// COOKIE HELPERS
-// =============================================================================
-
-const GAME_ID_COOKIE = "gameId";
-const EMPIRE_ID_COOKIE = "empireId";
-const COOKIE_MAX_AGE = 60 * 60 * 24 * 30; // 30 days
-
-async function setGameCookies(gameId: string, empireId: string) {
-  const cookieStore = await cookies();
-  cookieStore.set(GAME_ID_COOKIE, gameId, {
-    maxAge: COOKIE_MAX_AGE,
-    path: "/",
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
-  });
-  cookieStore.set(EMPIRE_ID_COOKIE, empireId, {
-    maxAge: COOKIE_MAX_AGE,
-    path: "/",
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
-  });
-}
-
-async function getGameCookies(): Promise<{
-  gameId: string | undefined;
-  empireId: string | undefined;
-}> {
-  const cookieStore = await cookies();
-  return {
-    gameId: cookieStore.get(GAME_ID_COOKIE)?.value,
-    empireId: cookieStore.get(EMPIRE_ID_COOKIE)?.value,
-  };
-}
-
-async function clearGameCookies() {
-  const cookieStore = await cookies();
-  cookieStore.delete(GAME_ID_COOKIE);
-  cookieStore.delete(EMPIRE_ID_COOKIE);
-}
+import {
+  setGameSession,
+  getGameSession,
+  clearGameSession,
+  getRateLimitIdentifier,
+} from "@/lib/session";
 
 // =============================================================================
 // GAME ACTIONS
@@ -72,32 +34,8 @@ export interface StartGameResult {
 }
 
 /**
- * Get a unique identifier for rate limiting.
- * Uses empireId from cookies if available, otherwise uses a session-based identifier.
- */
-async function getRateLimitIdentifier(): Promise<string> {
-  const { empireId } = await getGameCookies();
-  if (empireId) return empireId;
-
-  // Fallback: use a cookie-based session ID or generate one
-  const cookieStore = await cookies();
-  let sessionId = cookieStore.get("rate_limit_id")?.value;
-  if (!sessionId) {
-    sessionId = crypto.randomUUID();
-    cookieStore.set("rate_limit_id", sessionId, {
-      maxAge: 60 * 60, // 1 hour
-      path: "/",
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
-    });
-  }
-  return sessionId;
-}
-
-/**
  * Start a new game with the given empire name and difficulty.
- * Sets cookies for game and empire IDs, then redirects to the game dashboard.
+ * Sets session for game and empire IDs, then redirects to the game dashboard.
  * Creates 25 bot empires with random decision-making (M5).
  */
 export async function startGameAction(formData: FormData): Promise<StartGameResult> {
@@ -157,7 +95,7 @@ export async function startGameAction(formData: FormData): Promise<StartGameResu
       gameMode
     );
 
-    await setGameCookies(game.id, empire.id);
+    await setGameSession(game.id, empire.id);
 
     // Start session tracking for campaign games
     if (gameMode === "campaign") {
@@ -201,7 +139,7 @@ export async function startGameAction(formData: FormData): Promise<StartGameResu
  * Fetch dashboard data for the current player's empire.
  */
 export async function fetchDashboardDataAction(): Promise<DashboardData | null> {
-  const { empireId } = await getGameCookies();
+  const { empireId } = await getGameSession();
 
   if (!empireId) {
     return null;
@@ -219,7 +157,7 @@ export async function fetchDashboardDataAction(): Promise<DashboardData | null> 
  * Check if there's an active game.
  */
 export async function hasActiveGameAction(): Promise<boolean> {
-  const { gameId, empireId } = await getGameCookies();
+  const { gameId, empireId } = await getGameSession();
   return !!(gameId && empireId);
 }
 
@@ -230,22 +168,26 @@ export async function getCurrentGameAction(): Promise<{
   gameId: string | undefined;
   empireId: string | undefined;
 }> {
-  return getGameCookies();
+  const session = await getGameSession();
+  return {
+    gameId: session.gameId,
+    empireId: session.empireId,
+  };
 }
 
 /**
- * End the current game and clear cookies.
- * Ends any active session before clearing cookies.
+ * End the current game and clear session.
+ * Ends any active session before clearing.
  */
 export async function endGameAction(): Promise<void> {
-  const { gameId } = await getGameCookies();
+  const { gameId } = await getGameSession();
 
   // End active session if exists
   if (gameId) {
     await endSession(gameId);
   }
 
-  await clearGameCookies();
+  await clearGameSession();
   redirect("/");
 }
 
@@ -319,7 +261,7 @@ export async function getResumableCampaignsAction(): Promise<ResumableCampaign[]
 }
 
 /**
- * Resume a campaign game by setting cookies.
+ * Resume a campaign game by setting session.
  */
 export async function resumeCampaignAction(gameId: string): Promise<ResumeGameResult> {
   // Rate limit check for auth-like actions
@@ -346,8 +288,8 @@ export async function resumeCampaignAction(gameId: string): Promise<ResumeGameRe
       return { success: false, error: "No player empire found for this game" };
     }
 
-    // Set cookies for the resumed game
-    await setGameCookies(gameId, playerEmpire.id);
+    // Set session for the resumed game
+    await setGameSession(gameId, playerEmpire.id);
 
     // Start/resume session tracking for campaign
     await startSession(gameId);
@@ -403,7 +345,7 @@ export interface ResumeGameResult {
 }
 
 /**
- * Resume a saved game by setting cookies and returning game info.
+ * Resume a saved game by setting session and returning game info.
  * @deprecated Multi-galaxy feature removed. Single active game per session.
  */
 export async function resumeGameAction(gameId: string): Promise<ResumeGameResult> {
@@ -426,8 +368,8 @@ export async function resumeGameAction(gameId: string): Promise<ResumeGameResult
       return { success: false, error: "No player empire found for this game" };
     }
 
-    // Set cookies for the resumed game
-    await setGameCookies(gameId, playerEmpire.id);
+    // Set session for the resumed game
+    await setGameSession(gameId, playerEmpire.id);
 
     return {
       success: true,
@@ -460,7 +402,7 @@ export async function getGameResultAction(): Promise<{
   };
   error?: string;
 }> {
-  const { gameId, empireId } = await getGameCookies();
+  const { gameId, empireId } = await getGameSession();
 
   if (!gameId || !empireId) {
     return { success: false, error: "No active game" };

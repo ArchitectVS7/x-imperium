@@ -38,10 +38,10 @@ describe("Bot Generator", () => {
     it("should define starting resources matching player", () => {
       // This is a documentation test for the bot creation spec
       // Reduced to 5 sectors for faster eliminations (see IMPLEMENTATION-PLAN.md M1.1)
-      const EXPECTED_STARTING_PLANETS = 5;
+      const EXPECTED_STARTING_SECTORS = 5;
       const EXPECTED_BOT_TIER = "tier4_random";
 
-      expect(EXPECTED_STARTING_PLANETS).toBe(5);
+      expect(EXPECTED_STARTING_SECTORS).toBe(5);
       expect(EXPECTED_BOT_TIER).toBe("tier4_random");
     });
 

@@ -221,3 +221,30 @@ export function clearTutorialState(): void {
   localStorage.removeItem(TUTORIAL_STORAGE_KEY);
   localStorage.removeItem(TUTORIAL_SKIP_KEY);
 }
+
+/**
+ * Check if tutorial is currently active (not completed or skipped).
+ * This function checks localStorage to determine if the tutorial overlay
+ * should be blocking other UI elements.
+ *
+ * @returns true if tutorial is still in progress, false if completed/skipped
+ */
+export function isTutorialActive(): boolean {
+  if (typeof window === "undefined") return false;
+
+  // Check if user has skipped
+  if (hasSkippedTutorial()) {
+    return false;
+  }
+
+  // Load saved state
+  const state = loadTutorialState();
+
+  // If no state exists, tutorial hasn't started yet - it will be active
+  if (!state) {
+    return true;
+  }
+
+  // Tutorial is active if isActive is true
+  return state.isActive;
+}

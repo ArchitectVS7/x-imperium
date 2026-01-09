@@ -103,6 +103,38 @@ export async function getActiveTreaties(empireId: string): Promise<TreatyInfo[]>
 }
 
 /**
+ * Get all active treaty partner IDs for an empire in a single query.
+ * Returns a Map of partnerId -> TreatyType for quick lookup.
+ *
+ * This is an optimized batch function to avoid N+1 queries when
+ * checking treaty status for multiple empires.
+ *
+ * @param empireId - Empire UUID
+ * @returns Map of partnerId to TreatyType
+ */
+export async function getActiveTreatyPartners(
+  empireId: string
+): Promise<Map<string, TreatyType>> {
+  const allTreaties = await db.query.treaties.findMany({
+    where: and(
+      eq(treaties.status, "active"),
+      or(
+        eq(treaties.proposerId, empireId),
+        eq(treaties.recipientId, empireId)
+      )
+    ),
+  });
+
+  const partnerMap = new Map<string, TreatyType>();
+  for (const t of allTreaties) {
+    const partnerId = t.proposerId === empireId ? t.recipientId : t.proposerId;
+    partnerMap.set(partnerId, t.treatyType as TreatyType);
+  }
+
+  return partnerMap;
+}
+
+/**
  * Get pending treaty proposals for an empire.
  *
  * @param empireId - Empire UUID (recipient)

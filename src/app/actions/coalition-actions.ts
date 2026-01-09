@@ -9,7 +9,6 @@
  * @see docs/PRD.md Section 8.2 (Coalitions)
  */
 
-import { cookies } from "next/headers";
 import { z } from "zod";
 import { db } from "@/lib/db";
 import { games, empires } from "@/lib/db/schema";
@@ -40,29 +39,7 @@ import {
   COALITION_MIN_MEMBERS,
   COALITION_VICTORY_THRESHOLD,
 } from "@/lib/constants/diplomacy";
-
-// =============================================================================
-// SESSION MANAGEMENT
-// =============================================================================
-
-const GAME_ID_COOKIE = "gameId";
-const EMPIRE_ID_COOKIE = "empireId";
-
-async function getGameCookies(): Promise<{
-  gameId: string | undefined;
-  empireId: string | undefined;
-}> {
-  try {
-    const cookieStore = await cookies();
-    return {
-      gameId: cookieStore.get(GAME_ID_COOKIE)?.value,
-      empireId: cookieStore.get(EMPIRE_ID_COOKIE)?.value,
-    };
-  } catch (error) {
-    console.error("Failed to read cookies:", error);
-    return { gameId: undefined, empireId: undefined };
-  }
-}
+import { getGameSession } from "@/lib/session";
 
 // =============================================================================
 // VALIDATION SCHEMAS
@@ -81,7 +58,7 @@ const UUIDSchema = z.string().uuid("Invalid UUID format");
 export async function getMyCoalitionAction() {
   try {
     // Get session from cookies
-    const { empireId } = await getGameCookies();
+    const { empireId } = await getGameSession();
 
     if (!empireId) {
       return { success: false as const, error: "No active game session" };
@@ -143,7 +120,7 @@ export async function getMyCoalitionAction() {
 export async function getGameCoalitionsAction() {
   try {
     // Get session from cookies
-    const { gameId } = await getGameCookies();
+    const { gameId } = await getGameSession();
 
     if (!gameId) {
       return { success: false as const, error: "No active game session" };
@@ -182,7 +159,7 @@ export async function getGameCoalitionsAction() {
 export async function getAvailableCoalitionMembersAction() {
   try {
     // Get session from cookies
-    const { gameId, empireId } = await getGameCookies();
+    const { gameId, empireId } = await getGameSession();
 
     if (!gameId || !empireId) {
       return { success: false as const, error: "No active game session" };
@@ -234,7 +211,7 @@ export async function getAvailableCoalitionMembersAction() {
 export async function createCoalitionAction(name: string) {
   try {
     // Get session from cookies
-    const { gameId, empireId } = await getGameCookies();
+    const { gameId, empireId } = await getGameSession();
 
     if (!gameId || !empireId) {
       return { success: false as const, error: "No active game session" };
@@ -310,7 +287,7 @@ export async function inviteToCoalitionAction(
     }
 
     // Get session from cookies (inviter is authenticated user)
-    const { empireId } = await getGameCookies();
+    const { empireId } = await getGameSession();
 
     if (!empireId) {
       return { success: false as const, error: "No active game session" };
@@ -369,7 +346,7 @@ export async function joinCoalitionAction(coalitionId: string) {
     }
 
     // Get session from cookies
-    const { empireId } = await getGameCookies();
+    const { empireId } = await getGameSession();
 
     if (!empireId) {
       return { success: false as const, error: "No active game session" };
@@ -427,7 +404,7 @@ export async function leaveCoalitionAction(coalitionId: string) {
     }
 
     // Get session from cookies
-    const { empireId } = await getGameCookies();
+    const { empireId } = await getGameSession();
 
     if (!empireId) {
       return { success: false as const, error: "No active game session" };
@@ -493,7 +470,7 @@ export async function proposeCoordinatedAttackAction(
     }
 
     // Get session from cookies (proposer is authenticated user)
-    const { empireId } = await getGameCookies();
+    const { empireId } = await getGameSession();
 
     if (!empireId) {
       return { success: false as const, error: "No active game session" };
@@ -589,7 +566,7 @@ export async function checkDiplomaticVictoryAction(coalitionId: string) {
 export async function getCoalitionSystemInfoAction() {
   try {
     // Get session from cookies
-    const { gameId } = await getGameCookies();
+    const { gameId } = await getGameSession();
 
     if (!gameId) {
       return { success: false as const, error: "No active game session" };

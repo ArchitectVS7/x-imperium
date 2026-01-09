@@ -631,6 +631,7 @@ export function Starmap({
         width={width}
         height={height}
         className="bg-gray-950/80 rounded-lg border border-gray-800"
+        data-testid="starmap-svg"
       >
         {/* Background gradient */}
         <defs>

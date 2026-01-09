@@ -4,19 +4,23 @@
  * Onboarding Manager
  *
  * Orchestrates the onboarding experience for new players.
- * Shows contextual hints during the first 5 turns.
+ * Shows contextual hints during the first 20 turns (starting from turn 2).
  *
  * Philosophy: Non-intrusive, helpful, skippable.
  * - Hints appear once per trigger (turn or action)
  * - Players can dismiss individually or disable all
  * - Hints are saved in localStorage so they don't repeat
+ *
+ * NOTE: Turn 1 hints are SKIPPED because the TutorialOverlay handles
+ * the initial onboarding. OnboardingManager takes over from turn 2.
  */
 
 import { useState, useEffect } from "react";
 import { OnboardingHint } from "./OnboardingHint";
-import { UI_LABELS, RESOURCE_NAMES, GAME_TERMS, THEME_INFO } from "@/lib/theme/names";
-import { Rocket, ClipboardList, Coins, Swords, Globe, Eye, FlaskConical, Settings, Drama } from "lucide-react";
+import { UI_LABELS, RESOURCE_NAMES, GAME_TERMS } from "@/lib/theme/names";
+import { Coins, Swords, Globe, Eye, FlaskConical, Settings, Drama } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
+import { isTutorialActive } from "@/lib/tutorial/tutorial-service";
 
 interface OnboardingManagerProps {
   currentTurn: number;
@@ -34,28 +38,10 @@ interface OnboardingHintConfig {
 }
 
 const ONBOARDING_HINTS: OnboardingHintConfig[] = [
-  // Turn 1: Welcome and orientation
-  {
-    id: "welcome",
-    turnToShow: 1,
-    title: `Welcome to ${THEME_INFO.name}!`,
-    message:
-      `You command a fledgling ${GAME_TERMS.empire.toLowerCase()}. Your goal: survive, expand, and dominate. Start by exploring the menu to see your resources and ${UI_LABELS.military.toLowerCase()}.`,
-    icon: Rocket,
-    position: "top",
-    action: { label: "Show me around", href: "/game" },
-  },
-  {
-    id: "turn-panel",
-    turnToShow: 1,
-    title: `Your ${GAME_TERMS.turn} Order`,
-    message:
-      `The panel on the right tracks your ${GAME_TERMS.turn.toLowerCase()}. Visit different sections to take actions, then click ${UI_LABELS.endTurn.toUpperCase()} when ready. You're protected from attacks for the first 20 ${GAME_TERMS.turn.toLowerCase()}s.`,
-    icon: ClipboardList,
-    position: "bottom",
-  },
+  // NOTE: Turn 1 hints removed - TutorialOverlay handles turn 1 onboarding
+  // The welcome and turn-panel hints were redundant with the tutorial steps
 
-  // Turn 2: Resources and growth
+  // Turn 2: Resources and growth (first hint after tutorial completes)
   {
     id: "resources",
     turnToShow: 2,
@@ -144,22 +130,30 @@ const STORAGE_KEY_DISABLED = "x-imperium-onboarding-disabled";
 
 export function OnboardingManager({ currentTurn }: OnboardingManagerProps) {
   const [isOnboardingDisabled, setIsOnboardingDisabled] = useState(false);
+  const [tutorialActive, setTutorialActive] = useState(true);
 
   useEffect(() => {
     // Check if onboarding is disabled
     const disabled = localStorage.getItem(STORAGE_KEY_DISABLED) === "true";
     setIsOnboardingDisabled(disabled);
-  }, []);
+
+    // Check if tutorial is still active
+    setTutorialActive(isTutorialActive());
+  }, [currentTurn]); // Re-check when turn changes (tutorial may have completed)
 
   const handleDisableAll = () => {
     localStorage.setItem(STORAGE_KEY_DISABLED, "true");
     setIsOnboardingDisabled(true);
   };
 
+  // Don't show if onboarding is disabled
   if (isOnboardingDisabled) return null;
 
-  // Only show hints for turns 1-20 (extended onboarding)
-  if (currentTurn > 20) return null;
+  // Don't show hints while tutorial is active (avoid UI overlap)
+  if (tutorialActive) return null;
+
+  // Only show hints for turns 2-20 (turn 1 is handled by TutorialOverlay)
+  if (currentTurn < 2 || currentTurn > 20) return null;
 
   // Get hints for current turn
   const currentHints = ONBOARDING_HINTS.filter((h) => h.turnToShow === currentTurn);
@@ -183,8 +177,8 @@ export function OnboardingManager({ currentTurn }: OnboardingManagerProps) {
         />
       ))}
 
-      {/* Disable all option (shown on turn 1 only) */}
-      {currentTurn === 1 && (
+      {/* Disable all option (shown on turn 2 - first hint after tutorial) */}
+      {currentTurn === 2 && (
         <div className="fixed bottom-4 right-80 z-40">
           <button
             onClick={handleDisableAll}

@@ -47,7 +47,7 @@ async function createGameWithBots(page: Page, botCount: number) {
     if (await tutorialSkipButton.isVisible({ timeout: 2000 }).catch(() => false)) {
       console.log("  Skipping tutorial...");
       await tutorialSkipButton.click();
-      await page.waitForTimeout(1000);
+      await expect(tutorialSkipButton).not.toBeVisible({ timeout: 5000 }).catch(() => {});
     }
 
     // Wait for and fill setup form
@@ -72,14 +72,14 @@ async function createGameWithBots(page: Page, botCount: number) {
       const gotItButton = page.locator('button:has-text("Got it")');
       if (await gotItButton.isVisible({ timeout: 1000 }).catch(() => false)) {
         await gotItButton.click();
-        await page.waitForTimeout(500);
+        await expect(gotItButton).not.toBeVisible({ timeout: 2000 }).catch(() => {});
         continue;
       }
 
       const closeButton = page.locator('button[aria-label="Dismiss hint"]').first();
       if (await closeButton.isVisible({ timeout: 1000 }).catch(() => false)) {
         await closeButton.click();
-        await page.waitForTimeout(500);
+        await expect(closeButton).not.toBeVisible({ timeout: 2000 }).catch(() => {});
         continue;
       }
       break;
@@ -114,7 +114,8 @@ async function processTurns(page: Page, turns: number) {
     }
 
     console.log(`  Turn ${i + 1}/${turns} completed`);
-    await page.waitForTimeout(300);
+    // Brief pause to allow UI to stabilize
+    await page.waitForLoadState("networkidle", { timeout: 3000 }).catch(() => {});
   }
 
   console.log(`${turns} turns completed`);

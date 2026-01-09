@@ -8,6 +8,7 @@
  * - PRD 5.2: Sector production rates
  * - PRD 4.4: Civil status income multipliers
  * - Sector maintenance: 168 credits per sector per turn
+ * - P2-18: Resource caps and storage costs
  */
 
 import type { Sector } from "@/lib/db/schema";
@@ -15,7 +16,15 @@ import type {
   ResourceDelta,
   ResourceProduction,
   MaintenanceCost,
+  StorageCosts,
+  ResourceOverflow,
 } from "../../types/turn-types";
+import {
+  RESOURCE_CAPS,
+  STORAGE_COST_THRESHOLD,
+  STORAGE_COST_RATE,
+  RESOURCES_WITH_STORAGE_COSTS,
+} from "../../constants";
 
 // =============================================================================
 // CONSTANTS
@@ -223,4 +232,172 @@ export function processTurnResources(
     incomeMultiplier,
     final: finalResources,
   };
+}
+
+// =============================================================================
+// RESOURCE CAPS AND STORAGE COSTS (P2-18)
+// =============================================================================
+
+/** Type for resources that have storage costs */
+type StorageCostResource = 'ore' | 'petroleum';
+
+/**
+ * Calculate storage costs for resources above threshold
+ *
+ * Storage costs apply to ore and petroleum when stockpiles exceed 50% of cap.
+ * Cost is 0.5% of the excess amount per turn.
+ *
+ * @param currentResources - Current resource stockpiles
+ * @returns StorageCosts breakdown with per-resource and total costs
+ *
+ * @example
+ * calculateStorageCosts({ credits: 100000, food: 5000, ore: 30000, petroleum: 15000 })
+ * // Ore threshold: 25000 (50% of 50000), excess: 5000, cost: 25 (0.5% of 5000)
+ * // Petroleum threshold: 12500 (50% of 25000), excess: 2500, cost: 12 (0.5% of 2500)
+ * // => { ore: 25, petroleum: 12, total: 37 }
+ */
+export function calculateStorageCosts(currentResources: {
+  credits: number;
+  food: number;
+  ore: number;
+  petroleum: number;
+}): StorageCosts {
+  const costs: StorageCosts = { ore: 0, petroleum: 0, total: 0 };
+
+  for (const resource of RESOURCES_WITH_STORAGE_COSTS) {
+    const typedResource = resource as StorageCostResource;
+    const cap = RESOURCE_CAPS[typedResource];
+    const threshold = cap * STORAGE_COST_THRESHOLD;
+    const current = currentResources[typedResource];
+
+    if (current > threshold) {
+      const excess = current - threshold;
+      costs[typedResource] = Math.floor(excess * STORAGE_COST_RATE);
+      costs.total += costs[typedResource];
+    }
+  }
+
+  return costs;
+}
+
+/**
+ * Apply resource caps and return overflow amounts
+ *
+ * Resources that exceed their maximum storage capacity are lost.
+ * This simulates spoilage, theft, and storage limitations.
+ *
+ * @param resources - Current resource totals (after production)
+ * @returns Object with capped resources and overflow amounts
+ *
+ * @example
+ * applyResourceCaps({
+ *   credits: 12000000,  // Over 10M cap
+ *   food: 150000,       // Over 100K cap
+ *   ore: 40000,         // Under 50K cap
+ *   petroleum: 20000,   // Under 25K cap
+ *   researchPoints: 500 // No cap
+ * })
+ * // => {
+ * //   capped: { credits: 10000000, food: 100000, ore: 40000, petroleum: 20000, researchPoints: 500 },
+ * //   overflow: { credits: 2000000, food: 50000, ore: 0, petroleum: 0 }
+ * // }
+ */
+export function applyResourceCaps(resources: {
+  credits: number;
+  food: number;
+  ore: number;
+  petroleum: number;
+  researchPoints: number;
+}): {
+  capped: typeof resources;
+  overflow: ResourceOverflow;
+} {
+  const capped = { ...resources };
+  const overflow: ResourceOverflow = { credits: 0, food: 0, ore: 0, petroleum: 0 };
+
+  // Apply caps to each resource (except researchPoints which has no cap)
+  const cappedResources: (keyof ResourceOverflow)[] = ['credits', 'food', 'ore', 'petroleum'];
+
+  for (const resource of cappedResources) {
+    const cap = RESOURCE_CAPS[resource];
+    if (capped[resource] > cap) {
+      overflow[resource] = capped[resource] - cap;
+      capped[resource] = cap;
+    }
+  }
+
+  return { capped, overflow };
+}
+
+/**
+ * Check if any resources would overflow
+ *
+ * Utility function to determine if caps would be exceeded.
+ *
+ * @param resources - Resources to check
+ * @returns true if any resource exceeds its cap
+ */
+export function wouldOverflow(resources: {
+  credits: number;
+  food: number;
+  ore: number;
+  petroleum: number;
+}): boolean {
+  return (
+    resources.credits > RESOURCE_CAPS.credits ||
+    resources.food > RESOURCE_CAPS.food ||
+    resources.ore > RESOURCE_CAPS.ore ||
+    resources.petroleum > RESOURCE_CAPS.petroleum
+  );
+}
+
+/**
+ * Check if storage costs would apply
+ *
+ * Utility function to determine if resources are above storage threshold.
+ *
+ * @param currentResources - Current resource stockpiles
+ * @returns true if any resource with storage costs exceeds threshold
+ */
+export function hasStorageCosts(currentResources: {
+  ore: number;
+  petroleum: number;
+}): boolean {
+  for (const resource of RESOURCES_WITH_STORAGE_COSTS) {
+    const typedResource = resource as StorageCostResource;
+    const cap = RESOURCE_CAPS[typedResource];
+    const threshold = cap * STORAGE_COST_THRESHOLD;
+    if (currentResources[typedResource] > threshold) {
+      return true;
+    }
+  }
+  return false;
+}
+
+/**
+ * Get the storage threshold for a resource
+ *
+ * @param resource - Resource type
+ * @returns Threshold value (50% of cap) or Infinity for uncapped resources
+ */
+export function getStorageThreshold(resource: keyof typeof RESOURCE_CAPS): number {
+  const cap = RESOURCE_CAPS[resource];
+  if (cap === Infinity) return Infinity;
+  return cap * STORAGE_COST_THRESHOLD;
+}
+
+/**
+ * Get the remaining capacity for a resource before hitting cap
+ *
+ * @param resource - Resource type
+ * @param currentAmount - Current stockpile
+ * @returns Remaining capacity (0 if at or over cap)
+ */
+export function getRemainingCapacity(
+  resource: keyof typeof RESOURCE_CAPS,
+  currentAmount: number
+): number {
+  const cap = RESOURCE_CAPS[resource];
+  if (cap === Infinity) return Infinity;
+  return Math.max(0, cap - currentAmount);
 }

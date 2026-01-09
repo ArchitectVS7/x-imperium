@@ -12,9 +12,17 @@ import { getDatabaseStatsAction } from "../src/app/actions/admin-actions";
 config({ path: ".env.local" });
 
 async function main() {
-  console.log("📊 Fetching database statistics...\n");
+  const adminSecret = process.env.ADMIN_SECRET;
 
-  const result = await getDatabaseStatsAction();
+  if (!adminSecret) {
+    console.error("Error: ADMIN_SECRET environment variable is not set.");
+    console.error("Please set ADMIN_SECRET in your .env.local file.");
+    process.exit(1);
+  }
+
+  console.log("Fetching database statistics...\n");
+
+  const result = await getDatabaseStatsAction(adminSecret);
 
   if (result.success && result.stats) {
     console.log("=".repeat(50));
@@ -47,18 +55,18 @@ async function main() {
 
     // Warnings
     if (result.stats.memoryCount > 10000) {
-      console.log("\n⚠️  WARNING: Bot memories are high. Consider pruning old games.");
+      console.log("\nWARNING: Bot memories are high. Consider pruning old games.");
     }
     if (result.stats.combatLogCount > 5000) {
-      console.log("\n⚠️  WARNING: Combat logs are high. Consider cleaning test data.");
+      console.log("\nWARNING: Combat logs are high. Consider cleaning test data.");
     }
     if (result.stats.gameCount > 50) {
-      console.log("\n⚠️  WARNING: Many games in database. Run 'npm run db:clean' to free space.");
+      console.log("\nWARNING: Many games in database. Run 'npm run db:clean' to free space.");
     }
 
-    console.log("\n💡 TIP: Run 'npm run db:clean' to remove all test data\n");
+    console.log("\nTIP: Run 'npm run db:clean' to remove all test data\n");
   } else {
-    console.error(`❌ Failed to get database stats: ${result.error}`);
+    console.error(`Failed to get database stats: ${result.error}`);
     process.exit(1);
   }
 }

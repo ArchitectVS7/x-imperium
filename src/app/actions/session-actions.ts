@@ -1,6 +1,5 @@
 "use server";
 
-import { cookies } from "next/headers";
 import { db } from "@/lib/db";
 import { games, empires } from "@/lib/db/schema";
 import { eq, desc } from "drizzle-orm";
@@ -9,6 +8,7 @@ import {
   getSessionSummary,
   type SessionSummary,
 } from "@/lib/game/services/core";
+import { getGameSession } from "@/lib/session";
 
 // =============================================================================
 // TYPES
@@ -32,21 +32,6 @@ export interface SessionData {
 }
 
 // =============================================================================
-// COOKIE HELPERS
-// =============================================================================
-
-async function getGameCookies(): Promise<{
-  gameId: string | undefined;
-  empireId: string | undefined;
-}> {
-  const cookieStore = await cookies();
-  return {
-    gameId: cookieStore.get("gameId")?.value,
-    empireId: cookieStore.get("empireId")?.value,
-  };
-}
-
-// =============================================================================
 // SESSION DATA ACTION
 // =============================================================================
 
@@ -54,7 +39,7 @@ async function getGameCookies(): Promise<{
  * Get session summary data including statistics and empire rankings.
  */
 export async function getSessionDataAction(): Promise<SessionData | null> {
-  const { gameId, empireId } = await getGameCookies();
+  const { gameId, empireId } = await getGameSession();
 
   if (!gameId || !empireId) {
     return null;

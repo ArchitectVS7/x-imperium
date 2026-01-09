@@ -56,9 +56,9 @@ export function CompactHeaderStatus({
     >
       {/* Turn indicator */}
       <Tooltip content={<TurnTooltip />} position="bottom">
-        <div className="flex items-center gap-1 cursor-help">
+        <div className="flex items-center gap-1 cursor-help" data-testid="turn-counter">
           <span className="text-gray-500">T:</span>
-          <span className="text-lcars-lavender font-mono">{currentTurn}</span>
+          <span className="text-lcars-lavender font-mono" data-testid="turn-value">{currentTurn}</span>
           <span className="text-gray-600">/{turnLimit}</span>
         </div>
       </Tooltip>
@@ -67,25 +67,25 @@ export function CompactHeaderStatus({
 
       {/* Credits */}
       <Tooltip content={<CreditsTooltip />} position="bottom">
-        <div className="flex items-center gap-1 cursor-help">
+        <div className="flex items-center gap-1 cursor-help" data-testid="header-credits">
           <span>{RESOURCE_ICONS.credits}</span>
-          <span className="text-lcars-amber font-mono">{formatCompact(credits)}</span>
+          <span className="text-lcars-amber font-mono" data-testid="credits-value">{formatCompact(credits)}</span>
         </div>
       </Tooltip>
 
       {/* Food status */}
       <Tooltip content={<FoodStatusTooltip />} position="bottom">
-        <div className="flex items-center gap-1 cursor-help">
+        <div className="flex items-center gap-1 cursor-help" data-testid="header-food">
           <span>{RESOURCE_ICONS.food}</span>
-          <span className={foodDisplay.color}>{foodDisplay.label}</span>
+          <span className={foodDisplay.color} data-testid="food-status">{foodDisplay.label}</span>
         </div>
       </Tooltip>
 
       {/* Population */}
       <Tooltip content={<PopulationTooltip />} position="bottom">
-        <div className="flex items-center gap-1 cursor-help">
+        <div className="flex items-center gap-1 cursor-help" data-testid="header-population">
           <span>{RESOURCE_ICONS.population}</span>
-          <span className="text-gray-300 font-mono">{formatCompact(population)}</span>
+          <span className="text-gray-300 font-mono" data-testid="population-value">{formatCompact(population)}</span>
         </div>
       </Tooltip>
     </div>

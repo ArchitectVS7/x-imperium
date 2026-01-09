@@ -13,6 +13,11 @@
  *
  * This component handles the turn processing flow and provides
  * context to child components.
+ *
+ * MODAL SEQUENCING (P2-16 fix):
+ * - Tutorial overlay shows FIRST on turn 1
+ * - Welcome modal shows AFTER tutorial is completed/skipped
+ * - OnboardingManager only shows hints AFTER tutorial is done
  */
 
 import { useState, useCallback, useEffect, useRef } from "react";
@@ -50,6 +55,7 @@ import { useGameKeyboardShortcuts } from "@/hooks/useGameKeyboardShortcuts";
 import { useProgressiveDisclosure } from "@/hooks/useProgressiveDisclosure";
 import { PanelProvider, type PanelContextData } from "@/contexts/PanelContext";
 import { useGameStateStream, type GameStateUpdate } from "@/hooks/useGameStateStream";
+import { isTutorialActive } from "@/lib/tutorial/tutorial-service";
 
 interface GameShellProps {
   children: React.ReactNode;
@@ -81,6 +87,10 @@ export function GameShell({ children, initialLayoutData }: GameShellProps) {
     empiresEliminated: string[];
     victoryResult?: { type: string; message: string };
   } | null>(null);
+
+  // Tutorial completion tracking (P2-16 fix)
+  // This tracks whether the tutorial has been completed/skipped so we can sequence modals properly
+  const [tutorialCompleted, setTutorialCompleted] = useState(false);
 
   // Slide-out panel state (desktop)
   const [activePanel, setActivePanel] = useState<PanelType>(null);
@@ -174,13 +184,25 @@ export function GameShell({ children, initialLayoutData }: GameShellProps) {
     }
   }, [sseConnected, sseError]);
 
+  // Check if tutorial is active on mount (P2-16 fix)
+  useEffect(() => {
+    // Check initial tutorial state
+    const tutorialIsActive = isTutorialActive();
+    setTutorialCompleted(!tutorialIsActive);
+  }, []);
+
   // Track if we've shown the initial welcome modal (using ref to persist across re-renders)
   const hasShownWelcomeModal = useRef(false);
 
-  // Show initial turn summary on turn 1 (game start)
+  // Show initial turn summary on turn 1 (game start) - ONLY AFTER tutorial is done (P2-16 fix)
   useEffect(() => {
-    // Only show welcome modal once per component mount, for turn 1
-    if (layoutData && layoutData.currentTurn === 1 && !hasShownWelcomeModal.current) {
+    // Only show welcome modal once per component mount, for turn 1, AND after tutorial is completed
+    if (
+      layoutData &&
+      layoutData.currentTurn === 1 &&
+      !hasShownWelcomeModal.current &&
+      tutorialCompleted // P2-16: Wait for tutorial to complete
+    ) {
       hasShownWelcomeModal.current = true;
 
       // Show immediately - no delay needed
@@ -214,7 +236,13 @@ export function GameShell({ children, initialLayoutData }: GameShellProps) {
       });
       setShowModal(true);
     }
-  }, [layoutData]);
+  }, [layoutData, tutorialCompleted]); // P2-16: Added tutorialCompleted dependency
+
+  // Handle tutorial completion callback (P2-16 fix)
+  const handleTutorialComplete = useCallback((completed: boolean) => {
+    console.log(completed ? "Tutorial completed!" : "Tutorial skipped");
+    setTutorialCompleted(true);
+  }, []);
 
   // Handle end turn
   const handleEndTurn = useCallback(async () => {
@@ -357,8 +385,10 @@ export function GameShell({ children, initialLayoutData }: GameShellProps) {
       closePanel={handlePanelClose}
     >
     <div className="flex flex-col h-[calc(100vh-56px)]">
-      {/* Onboarding Hints (first 5 turns) */}
-      <OnboardingManager currentTurn={data.currentTurn} />
+      {/* Onboarding Hints (turns 2-20, AFTER tutorial is done) - P2-16 fix */}
+      {tutorialCompleted && (
+        <OnboardingManager currentTurn={data.currentTurn} />
+      )}
 
       {/* Phase Indicator - shows current turn phase */}
       <PhaseIndicator
@@ -557,6 +587,7 @@ export function GameShell({ children, initialLayoutData }: GameShellProps) {
       />
 
       {/* Tutorial Overlay (5-step guided tutorial for new players) */}
+      {/* P2-16: Shows FIRST on turn 1, before welcome modal */}
       <TutorialOverlay
         onActionRequired={(action) => {
           if (action === "end_turn") {
@@ -564,11 +595,7 @@ export function GameShell({ children, initialLayoutData }: GameShellProps) {
             handleEndTurn();
           }
         }}
-        onComplete={(completed) => {
-          console.log(
-            completed ? "Tutorial completed!" : "Tutorial skipped"
-          );
-        }}
+        onComplete={handleTutorialComplete}
       />
 
       {/* Quick Reference Modal (? key) */}
@@ -597,7 +624,7 @@ export function GameShell({ children, initialLayoutData }: GameShellProps) {
         >
           <div className="flex items-center gap-3">
             <span className="text-lg">
-              {toast.type === "error" ? "⚠" : "✓"}
+              {toast.type === "error" ? "!" : "OK"}
             </span>
             <span className="text-sm font-medium">{toast.message}</span>
             <button
@@ -605,7 +632,7 @@ export function GameShell({ children, initialLayoutData }: GameShellProps) {
               className="ml-auto text-white/80 hover:text-white"
               aria-label="Dismiss notification"
             >
-              ✕
+              X
             </button>
           </div>
         </div>

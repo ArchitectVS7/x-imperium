@@ -439,8 +439,8 @@ describe("Raid Territory Distribution (M9.3)", () => {
 
       expect(totalDistributed).toBe(3);
       // Top 3 by damage should get sectors
-      const withPlanets = distribution.filter((d) => d.sectorsAwarded > 0);
-      expect(withPlanets.length).toBe(3);
+      const withSectors = distribution.filter((d) => d.sectorsAwarded > 0);
+      expect(withSectors.length).toBe(3);
     });
   });
 

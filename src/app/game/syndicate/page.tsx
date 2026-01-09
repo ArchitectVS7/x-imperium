@@ -84,7 +84,7 @@ function SyndicateSkeleton() {
 
 export default function SyndicatePage() {
   return (
-    <div className="max-w-6xl mx-auto px-4 md:px-0">
+    <div className="max-w-6xl mx-auto px-4 md:px-0" data-testid="syndicate-page">
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-6 md:mb-8 gap-2">
         <h1 className="text-2xl md:text-3xl font-display text-lcars-purple">
           The Galactic Syndicate

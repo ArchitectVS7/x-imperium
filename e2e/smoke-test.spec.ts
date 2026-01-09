@@ -70,7 +70,7 @@ test.describe("Smoke Test", () => {
 
     // Navigate to game
     await startButton.click();
-    await page.waitForLoadState("networkidle");
+    await page.waitForLoadState("domcontentloaded");
     await dismissTutorialOverlays(page);
 
     // Game setup should have either:

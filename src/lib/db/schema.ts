@@ -722,6 +722,7 @@ export const attacks = pgTable(
   },
   (table) => [
     index("attacks_game_idx").on(table.gameId),
+    index("attacks_game_turn_idx").on(table.gameId, table.turn),
     index("attacks_attacker_idx").on(table.attackerId),
     index("attacks_defender_idx").on(table.defenderId),
     index("attacks_turn_idx").on(table.turn),
@@ -1499,6 +1500,8 @@ export const messages = pgTable(
     index("messages_game_idx").on(table.gameId),
     index("messages_sender_idx").on(table.senderId),
     index("messages_recipient_idx").on(table.recipientId),
+    index("messages_game_recipient_idx").on(table.gameId, table.recipientId),
+    index("messages_game_turn_idx").on(table.gameId, table.turn),
     index("messages_channel_idx").on(table.channel),
     index("messages_turn_idx").on(table.turn),
     index("messages_is_read_idx").on(table.isRead),
@@ -1544,7 +1547,7 @@ export const botMemories = pgTable(
     isPermanentScar: boolean("is_permanent_scar").notNull().default(false), // 20% of negative events
 
     // Context data (JSON for flexibility)
-    context: json("context"), // { planetName, creditsAmount, unitType, etc. }
+    context: json("context"), // { sectorName, creditsAmount, unitType, etc. }
 
     // Timestamps
     createdAt: timestamp("created_at").notNull().defaultNow(),
@@ -1648,6 +1651,7 @@ export const botTells = pgTable(
     index("bot_tells_type_idx").on(table.tellType),
     index("bot_tells_turn_idx").on(table.createdAtTurn),
     index("bot_tells_expires_idx").on(table.expiresAtTurn),
+    index("bot_tells_game_expires_idx").on(table.gameId, table.expiresAtTurn),
   ]
 );
 
@@ -2106,7 +2110,7 @@ export const pirateMissions = pgTable(
     executionTurn: integer("execution_turn").notNull(),
     completedAtTurn: integer("completed_at_turn"),
 
-    // Results (JSON: { incomeDebuff, planetsDestroyed, militaryDestroyed, salvageValue })
+    // Results (JSON: { incomeDebuff, sectorsDestroyed, militaryDestroyed, salvageValue })
     results: json("results"),
 
     // Timestamps

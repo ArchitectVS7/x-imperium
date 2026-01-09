@@ -1,6 +1,5 @@
 "use server";
 
-import { cookies } from "next/headers";
 import { db } from "@/lib/db";
 import { games, empires } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
@@ -11,21 +10,7 @@ import {
   getPotentialDestinations,
   startWormholeConstruction,
 } from "@/lib/game/services/geography/wormhole-construction-service";
-
-// =============================================================================
-// COOKIE HELPERS
-// =============================================================================
-
-async function getGameCookies(): Promise<{
-  gameId: string | undefined;
-  empireId: string | undefined;
-}> {
-  const cookieStore = await cookies();
-  return {
-    gameId: cookieStore.get("gameId")?.value,
-    empireId: cookieStore.get("empireId")?.value,
-  };
-}
+import { getGameSession } from "@/lib/session";
 
 // =============================================================================
 // TYPES
@@ -70,7 +55,7 @@ export interface WormholeConstructionData {
  * Get all wormhole construction data for the current player.
  */
 export async function getWormholeConstructionDataAction(): Promise<WormholeConstructionData | null> {
-  const { gameId, empireId } = await getGameCookies();
+  const { gameId, empireId } = await getGameSession();
 
   if (!gameId || !empireId) {
     return null;
@@ -145,7 +130,7 @@ export interface StartConstructionResult {
 export async function startWormholeConstructionAction(
   destinationRegionId: string
 ): Promise<StartConstructionResult> {
-  const { gameId, empireId } = await getGameCookies();
+  const { gameId, empireId } = await getGameSession();
 
   if (!gameId || !empireId) {
     return { success: false, message: "Not logged in" };

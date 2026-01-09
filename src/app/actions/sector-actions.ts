@@ -1,6 +1,5 @@
 "use server";
 
-import { cookies } from "next/headers";
 import {
   colonizeSector,
   releaseSector,
@@ -17,24 +16,7 @@ import {
   isValidUUID,
   verifyEmpireOwnership,
 } from "@/lib/security/validation";
-
-// =============================================================================
-// COOKIE HELPERS
-// =============================================================================
-
-const GAME_ID_COOKIE = "gameId";
-const EMPIRE_ID_COOKIE = "empireId";
-
-async function getGameCookies(): Promise<{
-  gameId: string | undefined;
-  empireId: string | undefined;
-}> {
-  const cookieStore = await cookies();
-  return {
-    gameId: cookieStore.get(GAME_ID_COOKIE)?.value,
-    empireId: cookieStore.get(EMPIRE_ID_COOKIE)?.value,
-  };
-}
+import { getGameSession } from "@/lib/session";
 
 // =============================================================================
 // SECTOR ACTIONS
@@ -53,7 +35,7 @@ export async function colonizeSectorAction(
     return { success: false, error: "Invalid sector type" };
   }
 
-  const { gameId, empireId } = await getGameCookies();
+  const { gameId, empireId } = await getGameSession();
 
   if (!gameId || !empireId) {
     return { success: false, error: "No active game session" };
@@ -95,7 +77,7 @@ export async function releaseSectorAction(
     return { success: false, error: "Invalid sector ID format" };
   }
 
-  const { gameId, empireId } = await getGameCookies();
+  const { gameId, empireId } = await getGameSession();
 
   if (!gameId || !empireId) {
     return { success: false, error: "No active game session" };
@@ -131,7 +113,7 @@ export async function getSectorPurchaseInfoAction(
     return null;
   }
 
-  const { empireId } = await getGameCookies();
+  const { empireId } = await getGameSession();
 
   if (!empireId) {
     return null;
@@ -149,7 +131,7 @@ export async function getSectorPurchaseInfoAction(
  * Get purchase info for all sector types.
  */
 export async function getAllSectorPurchaseInfoAction(): Promise<SectorPurchaseInfo[] | null> {
-  const { empireId } = await getGameCookies();
+  const { empireId } = await getGameSession();
 
   if (!empireId) {
     return null;

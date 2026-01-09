@@ -52,7 +52,7 @@ export default function MilitaryPage() {
   const { empire, military, turn } = data;
 
   return (
-    <div className="max-w-6xl mx-auto">
+    <div className="max-w-6xl mx-auto" data-testid="military-page">
       <h1 className="text-3xl font-display text-lcars-amber mb-8">Military</h1>
 
       {/* Current Forces Summary */}

@@ -1,6 +1,5 @@
 "use server";
 
-import { cookies } from "next/headers";
 import { db } from "@/lib/db";
 import { empires } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
@@ -17,17 +16,7 @@ import {
 } from "@/lib/game/services/military/unit-service";
 import type { UnitType } from "@/lib/game/unit-config";
 import { isValidUnitType, sanitizeQuantity } from "@/lib/security/validation";
-
-// =============================================================================
-// COOKIE HELPERS
-// =============================================================================
-
-const EMPIRE_ID_COOKIE = "empireId";
-
-async function getEmpireId(): Promise<string | undefined> {
-  const cookieStore = await cookies();
-  return cookieStore.get(EMPIRE_ID_COOKIE)?.value;
-}
+import { getGameSession } from "@/lib/session";
 
 // =============================================================================
 // VALIDATION ACTIONS
@@ -53,7 +42,7 @@ export async function validateBuildAction(
     return { error: "Invalid quantity (must be between 1 and 100,000)" };
   }
 
-  const empireId = await getEmpireId();
+  const { empireId } = await getGameSession();
 
   if (!empireId) {
     return { error: "No active game session" };
@@ -94,7 +83,7 @@ export async function checkUnitLockAction(
     return { error: "Invalid unit type" };
   }
 
-  const empireId = await getEmpireId();
+  const { empireId } = await getGameSession();
 
   if (!empireId) {
     return { error: "No active game session" };
@@ -124,7 +113,7 @@ export async function checkUnitLockAction(
  * Get unit maintenance breakdown for the current empire.
  */
 export async function getUnitMaintenanceAction(): Promise<UnitMaintenanceBreakdown | null> {
-  const empireId = await getEmpireId();
+  const { empireId } = await getGameSession();
 
   if (!empireId) {
     return null;
@@ -165,7 +154,7 @@ export async function getTotalMaintenanceAction(): Promise<{
   totalCost: number;
   unitBreakdown: UnitMaintenanceBreakdown;
 } | null> {
-  const empireId = await getEmpireId();
+  const { empireId } = await getGameSession();
 
   if (!empireId) {
     return null;
@@ -209,7 +198,7 @@ export async function getUnitAvailabilityAction(): Promise<{
   locked: UnitType[];
   researchLevel: number;
 } | null> {
-  const empireId = await getEmpireId();
+  const { empireId } = await getGameSession();
 
   if (!empireId) {
     return null;

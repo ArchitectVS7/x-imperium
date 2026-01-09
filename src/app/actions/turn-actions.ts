@@ -7,7 +7,6 @@
  * Handles end turn requests and turn status queries.
  */
 
-import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { processTurn } from "@/lib/game/services/core";
 import { db } from "@/lib/db";
@@ -17,10 +16,9 @@ import type { TurnActionResult, TurnStatus, TurnEvent, ResourceDelta } from "@/l
 import { GAME_SETTINGS } from "@/lib/game/constants";
 import { verifyEmpireOwnership } from "@/lib/security/validation";
 import { checkRateLimit } from "@/lib/security/rate-limiter";
+import { getGameSession } from "@/lib/session";
 
 // Cookie names (must match game-actions.ts)
-const GAME_ID_COOKIE = "gameId";
-const EMPIRE_ID_COOKIE = "empireId";
 
 // =============================================================================
 // END TURN ACTION
@@ -37,9 +35,7 @@ const EMPIRE_ID_COOKIE = "empireId";
 export async function endTurnAction(): Promise<TurnActionResult> {
   try {
     // Get current game ID and empire ID from cookies
-    const cookieStore = await cookies();
-    const gameId = cookieStore.get(GAME_ID_COOKIE)?.value;
-    const empireId = cookieStore.get(EMPIRE_ID_COOKIE)?.value;
+    const { gameId, empireId } = await getGameSession();
 
     if (!gameId || !empireId) {
       return {
@@ -160,8 +156,7 @@ export async function endTurnAction(): Promise<TurnActionResult> {
  */
 export async function getTurnStatusAction(): Promise<TurnStatus | null> {
   try {
-    const cookieStore = await cookies();
-    const gameId = cookieStore.get(GAME_ID_COOKIE)?.value;
+    const { gameId } = await getGameSession();
 
     if (!gameId) {
       return null;
@@ -209,9 +204,7 @@ export interface TurnOrderPanelData {
  */
 export async function getTurnOrderPanelDataAction(): Promise<TurnOrderPanelData | null> {
   try {
-    const cookieStore = await cookies();
-    const gameId = cookieStore.get(GAME_ID_COOKIE)?.value;
-    const empireId = cookieStore.get("empireId")?.value;
+    const { gameId, empireId } = await getGameSession();
 
     if (!gameId || !empireId) {
       return null;
@@ -347,9 +340,7 @@ export interface GameLayoutData extends TurnOrderPanelData {
  */
 export async function getGameLayoutDataAction(): Promise<GameLayoutData | null> {
   try {
-    const cookieStore = await cookies();
-    const gameId = cookieStore.get(GAME_ID_COOKIE)?.value;
-    const empireId = cookieStore.get("empireId")?.value;
+    const { gameId, empireId } = await getGameSession();
 
     if (!gameId || !empireId) {
       return null;
@@ -532,9 +523,7 @@ export type EnhancedTurnActionResult =
  */
 export async function endTurnEnhancedAction(): Promise<EnhancedTurnActionResult> {
   try {
-    const cookieStore = await cookies();
-    const gameId = cookieStore.get(GAME_ID_COOKIE)?.value;
-    const empireId = cookieStore.get("empireId")?.value;
+    const { gameId, empireId } = await getGameSession();
 
     if (!gameId || !empireId) {
       return { success: false, error: "No active game found" };

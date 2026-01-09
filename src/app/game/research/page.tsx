@@ -3,7 +3,7 @@ import { FundamentalResearchProgress } from "@/components/game/research/Fundamen
 
 export default function ResearchPage() {
   return (
-    <div className="max-w-6xl mx-auto">
+    <div className="max-w-6xl mx-auto" data-testid="research-page">
       <h1 className="text-3xl font-display text-lcars-amber mb-8">Research</h1>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

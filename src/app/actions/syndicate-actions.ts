@@ -1,6 +1,5 @@
 "use server";
 
-import { cookies } from "next/headers";
 import { db } from "@/lib/db";
 import {
   syndicateTrust,
@@ -30,24 +29,13 @@ import {
   type ContractType,
 } from "@/lib/game/constants/syndicate";
 import { RESOURCE_TIERS, type CraftedResource } from "@/lib/game/constants/crafting";
+import { getGameSession } from "@/lib/session";
 
 // =============================================================================
 // COOKIE HELPERS
 // =============================================================================
 
-const GAME_ID_COOKIE = "gameId";
-const EMPIRE_ID_COOKIE = "empireId";
 
-async function getGameCookies(): Promise<{
-  gameId: string | undefined;
-  empireId: string | undefined;
-}> {
-  const cookieStore = await cookies();
-  return {
-    gameId: cookieStore.get(GAME_ID_COOKIE)?.value,
-    empireId: cookieStore.get(EMPIRE_ID_COOKIE)?.value,
-  };
-}
 
 // =============================================================================
 // TRUST STATUS ACTIONS
@@ -63,7 +51,7 @@ export interface TrustStatusDisplay extends SyndicateTrustStatus {
  */
 export async function getSyndicateTrustAction(): Promise<TrustStatusDisplay | null> {
   try {
-    const { gameId, empireId } = await getGameCookies();
+    const { gameId, empireId } = await getGameSession();
 
     if (!gameId || !empireId) {
       return null;
@@ -146,7 +134,7 @@ export interface ContractDisplay extends ContractOffer {
  */
 export async function getAvailableContractsAction(): Promise<ContractDisplay[] | null> {
   try {
-    const { gameId, empireId } = await getGameCookies();
+    const { gameId, empireId } = await getGameSession();
 
     if (!gameId || !empireId) {
       return null;
@@ -224,7 +212,7 @@ export async function getAvailableContractsAction(): Promise<ContractDisplay[] |
  */
 export async function getActiveContractsAction(): Promise<ContractDisplay[] | null> {
   try {
-    const { gameId, empireId } = await getGameCookies();
+    const { gameId, empireId } = await getGameSession();
 
     if (!gameId || !empireId) {
       return null;
@@ -289,7 +277,7 @@ export async function acceptContractAction(
   targetEmpireId?: string
 ): Promise<{ success: boolean; error?: string; contractId?: string }> {
   try {
-    const { gameId, empireId } = await getGameCookies();
+    const { gameId, empireId } = await getGameSession();
 
     if (!gameId || !empireId) {
       return { success: false, error: "No active game session" };
@@ -423,7 +411,7 @@ export interface BlackMarketItemDisplay {
  */
 export async function getBlackMarketCatalogAction(): Promise<BlackMarketItemDisplay[] | null> {
   try {
-    const { gameId, empireId } = await getGameCookies();
+    const { gameId, empireId } = await getGameSession();
 
     if (!gameId || !empireId) {
       return null;
@@ -481,7 +469,7 @@ export async function purchaseBlackMarketItemAction(
   resourceGained?: { type: string; quantity: number };
 }> {
   try {
-    const { gameId, empireId } = await getGameCookies();
+    const { gameId, empireId } = await getGameSession();
 
     if (!gameId || !empireId) {
       return { success: false, error: "No active game session" };
@@ -624,7 +612,7 @@ export async function checkRecruitmentAction(): Promise<{
   bonuses?: { startupFunds: number; trustBonusPercent: number };
 } | null> {
   try {
-    const { gameId, empireId } = await getGameCookies();
+    const { gameId, empireId } = await getGameSession();
 
     if (!gameId || !empireId) {
       return null;
@@ -686,7 +674,7 @@ export async function acceptSyndicateInvitationAction(): Promise<{
   startupFunds?: number;
 }> {
   try {
-    const { gameId, empireId } = await getGameCookies();
+    const { gameId, empireId } = await getGameSession();
 
     if (!gameId || !empireId) {
       return { success: false, error: "No active game session" };
@@ -774,7 +762,7 @@ export async function reportToCoordinatorAction(): Promise<{
   warning?: string;
 }> {
   try {
-    const { gameId, empireId } = await getGameCookies();
+    const { gameId, empireId } = await getGameSession();
 
     if (!gameId || !empireId) {
       return { success: false, error: "No active game session" };

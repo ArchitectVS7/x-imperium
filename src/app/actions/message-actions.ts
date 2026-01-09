@@ -10,7 +10,6 @@
  */
 
 import { z } from "zod";
-import { cookies } from "next/headers";
 import {
   getPlayerInbox,
   getInboxSummary,
@@ -30,29 +29,7 @@ import { db } from "@/lib/db";
 import { empires, games, messages } from "@/lib/db/schema";
 import { eq, and } from "drizzle-orm";
 import { verifyEmpireOwnership } from "@/lib/security/validation";
-
-// =============================================================================
-// COOKIE HELPERS
-// =============================================================================
-
-const GAME_ID_COOKIE = "gameId";
-const EMPIRE_ID_COOKIE = "empireId";
-
-async function getGameCookies(): Promise<{
-  gameId: string | undefined;
-  empireId: string | undefined;
-}> {
-  try {
-    const cookieStore = await cookies();
-    return {
-      gameId: cookieStore.get(GAME_ID_COOKIE)?.value,
-      empireId: cookieStore.get(EMPIRE_ID_COOKIE)?.value,
-    };
-  } catch (error) {
-    console.error("Failed to read cookies:", error);
-    return { gameId: undefined, empireId: undefined };
-  }
-}
+import { getGameSession } from "@/lib/session";
 
 // =============================================================================
 // VALIDATION SCHEMAS
@@ -254,7 +231,7 @@ export async function markMessageReadAction(
     }
 
     // SECURITY: Get current session and verify message ownership
-    const { gameId, empireId } = await getGameCookies();
+    const { gameId, empireId } = await getGameSession();
     if (!gameId || !empireId) {
       return { success: false, error: "No active game session" };
     }
@@ -541,7 +518,7 @@ export async function getInboxFromCookiesAction(
     unreadOnly?: boolean;
   }
 ): Promise<ActionResult<StoredMessage[]>> {
-  const { gameId, empireId } = await getGameCookies();
+  const { gameId, empireId } = await getGameSession();
   if (!gameId || !empireId) {
     return { success: false, error: "No active game session" };
   }
@@ -552,7 +529,7 @@ export async function getInboxFromCookiesAction(
  * Get inbox summary using cookies
  */
 export async function getInboxSummaryFromCookiesAction(): Promise<ActionResult<InboxSummary>> {
-  const { gameId, empireId } = await getGameCookies();
+  const { gameId, empireId } = await getGameSession();
   if (!gameId || !empireId) {
     return { success: false, error: "No active game session" };
   }
@@ -568,7 +545,7 @@ export async function getGalacticNewsFromCookiesAction(
     offset?: number;
   }
 ): Promise<ActionResult<GalacticNewsItem[]>> {
-  const { gameId } = await getGameCookies();
+  const { gameId } = await getGameSession();
   if (!gameId) {
     return { success: false, error: "No active game session" };
   }
@@ -579,7 +556,7 @@ export async function getGalacticNewsFromCookiesAction(
  * Mark all messages read using cookies
  */
 export async function markAllMessagesReadFromCookiesAction(): Promise<ActionResult<number>> {
-  const { gameId, empireId } = await getGameCookies();
+  const { gameId, empireId } = await getGameSession();
   if (!gameId || !empireId) {
     return { success: false, error: "No active game session" };
   }
@@ -590,7 +567,7 @@ export async function markAllMessagesReadFromCookiesAction(): Promise<ActionResu
  * Get current game session info
  */
 export async function getGameSessionAction(): Promise<ActionResult<{ gameId: string; empireId: string }>> {
-  const { gameId, empireId } = await getGameCookies();
+  const { gameId, empireId } = await getGameSession();
   if (!gameId || !empireId) {
     return { success: false, error: "No active game session" };
   }

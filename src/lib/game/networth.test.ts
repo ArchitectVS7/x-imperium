@@ -107,7 +107,7 @@ describe("calculateNetworth", () => {
   });
 
   it("correctly weights sectors as highest value", () => {
-    const planetsOnly: NetworthInput = {
+    const sectorsOnly: NetworthInput = {
       sectorCount: 10,
       soldiers: 0,
       fighters: 0,
@@ -129,14 +129,14 @@ describe("calculateNetworth", () => {
       covertAgents: 0,
     };
 
-    const planetNetworth = calculateNetworth(planetsOnly);
+    const sectorNetworth = calculateNetworth(sectorsOnly);
     const soldierNetworth = calculateNetworth(soldiersOnly);
 
     // 10 sectors = 100 networth
     // 10000 soldiers = 5 networth
-    expect(planetNetworth).toBe(100);
+    expect(sectorNetworth).toBe(100);
     expect(soldierNetworth).toBe(5);
-    expect(planetNetworth).toBeGreaterThan(soldierNetworth);
+    expect(sectorNetworth).toBeGreaterThan(soldierNetworth);
   });
 
   it("carriers have highest unit multiplier", () => {

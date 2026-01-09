@@ -1,6 +1,5 @@
 "use server";
 
-import { cookies } from "next/headers";
 import { db } from "@/lib/db";
 import { sectors, empires } from "@/lib/db/schema";
 import { eq, and } from "drizzle-orm";
@@ -20,24 +19,13 @@ import {
   sanitizeQuantity,
   verifyEmpireOwnership,
 } from "@/lib/security/validation";
+import { getGameSession } from "@/lib/session";
 
 // =============================================================================
 // COOKIE HELPERS
 // =============================================================================
 
-const GAME_ID_COOKIE = "gameId";
-const EMPIRE_ID_COOKIE = "empireId";
 
-async function getGameCookies(): Promise<{
-  gameId: string | undefined;
-  empireId: string | undefined;
-}> {
-  const cookieStore = await cookies();
-  return {
-    gameId: cookieStore.get(GAME_ID_COOKIE)?.value,
-    empireId: cookieStore.get(EMPIRE_ID_COOKIE)?.value,
-  };
-}
 
 // =============================================================================
 // RESEARCH STATUS ACTIONS
@@ -48,7 +36,7 @@ async function getGameCookies(): Promise<{
  */
 export async function getResearchStatusAction(): Promise<ResearchStatus | null> {
   try {
-    const { gameId, empireId } = await getGameCookies();
+    const { gameId, empireId } = await getGameSession();
 
     if (!gameId || !empireId) {
       return null;
@@ -81,7 +69,7 @@ export async function getResearchInfoAction(): Promise<{
   nextUnlock: { unlock: string; level: number } | null;
 } | null> {
   try {
-    const { gameId, empireId } = await getGameCookies();
+    const { gameId, empireId } = await getGameSession();
 
     if (!gameId || !empireId) {
       return null;
@@ -151,7 +139,7 @@ export async function investResearchPointsAction(
     return { success: false, error: "Invalid points amount (must be between 1 and 1,000,000)" };
   }
 
-  const { gameId, empireId } = await getGameCookies();
+  const { gameId, empireId } = await getGameSession();
 
   if (!gameId || !empireId) {
     return { success: false, error: "No active game session" };
@@ -209,7 +197,7 @@ export async function getResearchProjectionAction(
     return null;
   }
 
-  const { empireId } = await getGameCookies();
+  const { empireId } = await getGameSession();
 
   if (!empireId) {
     return null;

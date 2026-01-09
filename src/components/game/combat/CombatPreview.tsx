@@ -289,6 +289,7 @@ export function CombatPreview({
           {onConfirmAttack && (
             <button
               onClick={onConfirmAttack}
+              data-testid="launch-attack-button"
               className={`px-6 py-2 font-semibold rounded transition-colors ${
                 winProbability >= 0.3
                   ? "bg-lcars-amber text-black hover:bg-lcars-amber/80"

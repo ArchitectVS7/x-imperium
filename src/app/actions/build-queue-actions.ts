@@ -1,6 +1,5 @@
 "use server";
 
-import { cookies } from "next/headers";
 import {
   addToBuildQueue,
   cancelBuildOrder,
@@ -20,24 +19,7 @@ import {
   sanitizeQuantity,
   verifyEmpireOwnership,
 } from "@/lib/security/validation";
-
-// =============================================================================
-// COOKIE HELPERS
-// =============================================================================
-
-const GAME_ID_COOKIE = "gameId";
-const EMPIRE_ID_COOKIE = "empireId";
-
-async function getGameCookies(): Promise<{
-  gameId: string | undefined;
-  empireId: string | undefined;
-}> {
-  const cookieStore = await cookies();
-  return {
-    gameId: cookieStore.get(GAME_ID_COOKIE)?.value,
-    empireId: cookieStore.get(EMPIRE_ID_COOKIE)?.value,
-  };
-}
+import { getGameSession } from "@/lib/session";
 
 // =============================================================================
 // BUILD QUEUE ACTIONS
@@ -63,7 +45,7 @@ export async function addToBuildQueueAction(
     return { success: false, error: "Invalid quantity (must be between 1 and 100,000)" };
   }
 
-  const { gameId, empireId } = await getGameCookies();
+  const { gameId, empireId } = await getGameSession();
 
   if (!gameId || !empireId) {
     return { success: false, error: "No active game session" };
@@ -109,7 +91,7 @@ export async function cancelBuildOrderAction(
     return { success: false, error: "Invalid queue ID format" };
   }
 
-  const { gameId, empireId } = await getGameCookies();
+  const { gameId, empireId } = await getGameSession();
 
   if (!gameId || !empireId) {
     return { success: false, error: "No active game session" };
@@ -136,7 +118,7 @@ export async function cancelBuildOrderAction(
  * Get the current build queue status.
  */
 export async function getBuildQueueStatusAction(): Promise<QueueStatus | null> {
-  const { empireId } = await getGameCookies();
+  const { empireId } = await getGameSession();
 
   if (!empireId) {
     return null;

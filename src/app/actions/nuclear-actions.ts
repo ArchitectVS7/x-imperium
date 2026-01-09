@@ -9,7 +9,6 @@
  * @see docs/PRD.md Section on Turn 100+ unlocks
  */
 
-import { cookies } from "next/headers";
 import { z } from "zod";
 import { db } from "@/lib/db";
 import { games, empires, resourceInventory, messages } from "@/lib/db/schema";
@@ -26,29 +25,7 @@ import {
 } from "@/lib/combat/nuclear";
 import { getEmpireCoalition } from "@/lib/game/repositories/coalition-repository";
 import { verifyEmpireOwnership } from "@/lib/security/validation";
-
-// =============================================================================
-// SESSION MANAGEMENT
-// =============================================================================
-
-const GAME_ID_COOKIE = "gameId";
-const EMPIRE_ID_COOKIE = "empireId";
-
-async function getGameCookies(): Promise<{
-  gameId: string | undefined;
-  empireId: string | undefined;
-}> {
-  try {
-    const cookieStore = await cookies();
-    return {
-      gameId: cookieStore.get(GAME_ID_COOKIE)?.value,
-      empireId: cookieStore.get(EMPIRE_ID_COOKIE)?.value,
-    };
-  } catch (error) {
-    console.error("Failed to read cookies:", error);
-    return { gameId: undefined, empireId: undefined };
-  }
-}
+import { getGameSession } from "@/lib/session";
 
 // =============================================================================
 // VALIDATION SCHEMAS
@@ -180,7 +157,7 @@ async function createGlobalBroadcast(
 export async function purchaseNuclearWeaponAction() {
   try {
     // Get session from cookies
-    const { gameId, empireId } = await getGameCookies();
+    const { gameId, empireId } = await getGameSession();
 
     if (!gameId || !empireId) {
       return { success: false as const, error: "No active game session" };
@@ -270,7 +247,7 @@ export async function launchNuclearStrikeAction(targetEmpireId: string) {
     }
 
     // Get session from cookies
-    const { gameId, empireId } = await getGameCookies();
+    const { gameId, empireId } = await getGameSession();
 
     if (!gameId || !empireId) {
       return { success: false as const, error: "No active game session" };
@@ -437,7 +414,7 @@ export async function launchNuclearStrikeAction(targetEmpireId: string) {
 export async function getNuclearStatusAction() {
   try {
     // Get session from cookies
-    const { gameId, empireId } = await getGameCookies();
+    const { gameId, empireId } = await getGameSession();
 
     if (!gameId || !empireId) {
       return { success: false as const, error: "No active game session" };
@@ -528,7 +505,7 @@ export async function getNuclearStatusAction() {
 export async function getNuclearTargetsAction() {
   try {
     // Get session from cookies
-    const { gameId, empireId } = await getGameCookies();
+    const { gameId, empireId } = await getGameSession();
 
     if (!gameId || !empireId) {
       return { success: false as const, error: "No active game session" };

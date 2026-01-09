@@ -2,11 +2,11 @@
  * Civil Status Service
  *
  * Handles civil status evaluation, transitions, and income multiplier calculations.
- * Civil status affects income through 8 levels from Ecstatic (4×) to Revolting (-0.5×).
+ * Civil status affects income through 8 levels from Ecstatic (2.5×) to Revolting (0.5×).
  *
  * PRD References:
  * - PRD 4.4: Civil Status System (8 levels)
- * - Income multipliers: Ecstatic (4×) down to Revolting (-0.5×)
+ * - Income multipliers: Ecstatic (2.5×) down to Revolting (0.5×) - 5x differential
  * - Status changes based on food supply, victories, defeats
  */
 
@@ -64,13 +64,13 @@ const VICTORY_COUNT_THRESHOLD = 3;
  * Get income multiplier for a civil status level
  *
  * @param status - Civil status level
- * @returns Income multiplier (0× to 4×)
+ * @returns Income multiplier (0.5× to 2.5×)
  *
  * @example
- * getIncomeMultiplier('ecstatic') // => 4.0
- * getIncomeMultiplier('content')  // => 2.0
- * getIncomeMultiplier('unhappy')  // => 0.0
- * getIncomeMultiplier('revolting') // => -0.5
+ * getIncomeMultiplier('ecstatic') // => 2.5
+ * getIncomeMultiplier('content')  // => 1.5
+ * getIncomeMultiplier('unhappy')  // => 0.85
+ * getIncomeMultiplier('revolting') // => 0.5
  */
 export function getIncomeMultiplier(status: CivilStatusLevel): number {
   return CIVIL_STATUS_INCOME_MULTIPLIERS[status];

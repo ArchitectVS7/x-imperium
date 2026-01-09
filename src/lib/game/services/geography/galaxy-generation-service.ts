@@ -17,6 +17,12 @@ import type {
 } from "@/lib/db/schema";
 import { assignEmpiresWithBalancing } from "./sector-balancing-service";
 
+// Re-export createSeededRandom from the centralized utility for backwards compatibility
+export { createSeededRandom } from "@/lib/utils/seeded-rng";
+
+// Import for internal use
+import { createSeededRandom } from "@/lib/utils/seeded-rng";
+
 // =============================================================================
 // TYPES
 // =============================================================================
@@ -108,21 +114,6 @@ const REGION_SUFFIXES = [
   "Sector", "Quadrant", "Expanse", "Territories", "Reaches",
   "Domain", "Cluster", "Nebula", "Zone", "Systems",
 ];
-
-// =============================================================================
-// RANDOM NUMBER GENERATION
-// =============================================================================
-
-/**
- * Seeded random number generator for reproducible galaxy generation
- */
-export function createSeededRandom(seed: number): () => number {
-  let state = seed;
-  return () => {
-    state = (state * 1103515245 + 12345) & 0x7fffffff;
-    return state / 0x7fffffff;
-  };
-}
 
 // =============================================================================
 // REGION GENERATION

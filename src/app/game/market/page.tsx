@@ -32,7 +32,7 @@ function MarketSkeleton() {
 
 export default function MarketPage() {
   return (
-    <div className="max-w-6xl mx-auto">
+    <div className="max-w-6xl mx-auto" data-testid="market-page">
       <h1 className="text-3xl font-display text-lcars-amber mb-8">Market</h1>
       <Suspense fallback={<MarketSkeleton />}>
         <MarketContent />

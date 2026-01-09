@@ -27,9 +27,15 @@
  * 7.6. Alliance checkpoints (M11) - at turns 30, 60, 90, 120, 150, 180
  * 8. Victory/Defeat check
  * 9. Auto-save
+ *
+ * TRANSACTION BOUNDARIES (P1-11):
+ * Critical empire state updates are wrapped in a database transaction to ensure
+ * atomicity. If any empire update fails, the entire turn is rolled back.
+ * Non-critical operations (bot decisions, events, messages) run outside the
+ * transaction and can fail gracefully without corrupting game state.
  */
 
-import { db } from "@/lib/db";
+import { db, type Database } from "@/lib/db";
 import {
   games,
   empires,
@@ -54,9 +60,7 @@ import type { CivilStatusLevel } from "../../constants";
 import { getIncomeMultiplier, evaluateCivilStatus, logStatusChange, type CivilStatusEvent } from "../population";
 import { processPopulation } from "../population";
 import { processTurnResources, calculateMaintenanceCost } from "../economy/resource-engine";
-import { processBuildQueue } from "../military/build-queue-service";
 import { calculateUnitMaintenance, type UnitCounts } from "../military/unit-service";
-import { processResearchProduction } from "../research";
 import { perfLogger } from "@/lib/performance/logger";
 import { processBotTurn, applyBotNightmareBonus } from "@/lib/bots";
 import { applyEmotionalDecay } from "@/lib/game/repositories/bot-emotional-state-repository";
@@ -71,7 +75,6 @@ import {
   checkStalemateWarning,
 } from "./victory-service";
 import { createAutoSave } from "./save-service";
-import { processCovertPointGeneration } from "../covert";
 import { updateMarketPrices } from "@/lib/market";
 import {
   calculateTier1AutoProduction,
@@ -103,6 +106,16 @@ import { processWormholeConstruction } from "../geography/wormhole-construction-
 import { detectBosses } from "../combat";
 
 // =============================================================================
+// TYPES
+// =============================================================================
+
+/**
+ * Transaction context type for passing database connection to sub-functions.
+ * Can be either the main db instance or a transaction context.
+ */
+type TransactionContext = Database;
+
+// =============================================================================
 // TURN PROCESSOR
 // =============================================================================
 
@@ -111,6 +124,11 @@ import { detectBosses } from "../combat";
  *
  * Orchestrates all 8 phases of turn processing for each empire.
  * Returns comprehensive results including performance metrics.
+ *
+ * TRANSACTION SAFETY (P1-11):
+ * Empire state updates (phases 1-4.6) are wrapped in a single transaction.
+ * If any empire fails to update, the entire transaction rolls back,
+ * preventing partial turn updates that could corrupt game state.
  *
  * @param gameId - Game UUID to process
  * @returns TurnResult with all empire results and global events
@@ -157,25 +175,60 @@ export async function processTurn(gameId: string): Promise<TurnResult> {
 
     const currentTurn = game.currentTurn;
     const nextTurn = currentTurn + 1;
+    const difficulty = game.difficulty as Difficulty;
 
-    // PERFORMANCE: Process all empires in parallel (they don't have dependencies on each other)
-    const empireResults = await Promise.all(
-      game.empires.map(async (empire) => {
-        try {
-          return await processEmpireTurn(
-            empire,
-            empire.sectors,
-            gameId,
-            nextTurn,
-            game.difficulty as Difficulty
-          );
-        } catch (error) {
-          // Log error but continue processing other empires
-          console.error(`Error processing empire ${empire.id}:`, error);
-          return createErrorEmpireResult(empire, error);
-        }
-      })
-    );
+    // ==========================================================================
+    // TRANSACTIONAL PHASE: Empire State Updates (Phases 1-4.6)
+    // ==========================================================================
+    // All critical empire state updates are wrapped in a transaction.
+    // If any empire fails, the entire transaction rolls back.
+
+    let empireResults: EmpireResult[];
+
+    try {
+      empireResults = await db.transaction(async (tx) => {
+        // Process all empires in parallel within the transaction
+        const results = await Promise.all(
+          game.empires.map(async (empire) => {
+            // Process empire turn within transaction context
+            return await processEmpireTurn(
+              empire,
+              empire.sectors,
+              gameId,
+              nextTurn,
+              difficulty,
+              tx
+            );
+          })
+        );
+
+        // Update game turn counter within the same transaction
+        await tx
+          .update(games)
+          .set({
+            currentTurn: nextTurn,
+            lastTurnProcessingMs: Math.round(performance.now() - startTime),
+          })
+          .where(eq(games.id, gameId));
+
+        return results;
+      });
+    } catch (transactionError) {
+      // Transaction failed - entire turn is rolled back
+      console.error("Turn transaction failed, rolling back:", transactionError);
+      return createErrorResult(
+        gameId,
+        currentTurn,
+        startTime,
+        `Transaction failed: ${transactionError instanceof Error ? transactionError.message : "Unknown error"}`
+      );
+    }
+
+    // ==========================================================================
+    // NON-TRANSACTIONAL PHASES: External/Non-Critical Operations
+    // ==========================================================================
+    // These operations run outside the transaction. They can fail gracefully
+    // without corrupting the game state.
 
     // ==========================================================================
     // PHASE 5: BOT DECISIONS (M5)
@@ -427,15 +480,8 @@ export async function processTurn(gameId: string): Promise<TurnResult> {
       };
     }
 
-    // Update game turn counter and processing time
+    // Calculate final processing time
     const processingMs = Math.round(performance.now() - startTime);
-    await db
-      .update(games)
-      .set({
-        currentTurn: nextTurn,
-        lastTurnProcessingMs: processingMs,
-      })
-      .where(eq(games.id, gameId));
 
     // Log performance
     await perfLogger.log({
@@ -492,14 +538,28 @@ export async function processTurn(gameId: string): Promise<TurnResult> {
  * 4-6. Stubs for future phases
  * 7. Apply maintenance (already in resource calculation)
  * 8. Check for defeat conditions
+ *
+ * TRANSACTION SUPPORT (P1-11):
+ * Accepts an optional transaction context. When provided, all database
+ * operations use the transaction, ensuring atomicity across all empires.
+ *
+ * @param empire - Empire to process
+ * @param sectors - Empire's sectors
+ * @param gameId - Game UUID
+ * @param turn - Turn number being processed
+ * @param difficulty - Game difficulty level
+ * @param tx - Optional transaction context for atomic updates
  */
 async function processEmpireTurn(
   empire: Empire,
   sectors: Sector[],
   gameId: string,
   turn: number,
-  difficulty: Difficulty = "normal"
+  difficulty: Difficulty = "normal",
+  tx?: TransactionContext
 ): Promise<EmpireResult> {
+  // Use transaction context if provided, otherwise use default db
+  const database = tx ?? db;
   const events: TurnEvent[] = [];
   let civilStatusChange: CivilStatusUpdate | undefined;
 
@@ -586,7 +646,8 @@ async function processEmpireTurn(
     await updateResourceInventory(
       empire.id,
       gameId,
-      tier1Production.totalByResource as Partial<Record<CraftedResource, number>>
+      tier1Production.totalByResource as Partial<Record<CraftedResource, number>>,
+      database
     );
 
     // Log production events
@@ -677,7 +738,7 @@ async function processEmpireTurn(
       empireId: empire.id,
     });
 
-    // Log to database
+    // Log to database (uses its own connection - status logging is informational)
     await logStatusChange(empire.id, gameId, turn, statusUpdate);
   }
 
@@ -688,7 +749,7 @@ async function processEmpireTurn(
   // Generate research points from research sectors (100 RP/sector/turn)
   const researchSectors = sectors.filter(p => p.type === "research");
   if (researchSectors.length > 0) {
-    const researchResult = await processResearchProduction(empire.id, researchSectors.length);
+    const researchResult = await processResearchProductionWithTx(empire.id, researchSectors.length, database);
     if (researchResult.leveledUp) {
       events.push({
         type: "other",
@@ -704,7 +765,7 @@ async function processEmpireTurn(
   // ==========================================================================
 
   // Process build queue - decrement turns, add completed units
-  const buildQueueResult = await processBuildQueue(empire.id);
+  const buildQueueResult = await processBuildQueueWithTx(empire.id, database);
   if (buildQueueResult.success && buildQueueResult.completedBuilds.length > 0) {
     for (const build of buildQueueResult.completedBuilds) {
       events.push({
@@ -721,14 +782,14 @@ async function processEmpireTurn(
   // ==========================================================================
 
   // Generate covert points (5/turn, max 50)
-  await processCovertPointGeneration(empire.id);
+  await processCovertPointGenerationWithTx(empire.id, database);
 
   // ==========================================================================
   // PHASE 4.6: CRAFTING QUEUE PROCESSING (Crafting System)
   // ==========================================================================
 
   // Process crafting queue - complete items that are ready
-  const craftingResult = await processCraftingQueueForEmpire(empire.id, gameId, turn);
+  const craftingResult = await processCraftingQueueForEmpire(empire.id, gameId, turn, database);
   if (craftingResult.completed.length > 0) {
     for (const item of craftingResult.completed) {
       events.push({
@@ -830,7 +891,7 @@ async function processEmpireTurn(
   const finalCarriers = Math.max(0, empire.carriers - revoltUnitLosses.carrierLoss);
   const finalCovertAgents = Math.max(0, empire.covertAgents - revoltUnitLosses.covertAgentLoss);
 
-  await db
+  await database
     .update(empires)
     .set({
       credits: newCredits,
@@ -896,33 +957,6 @@ function createErrorResult(
   };
 }
 
-/**
- * Create an error result for a single empire
- */
-function createErrorEmpireResult(empire: Empire, error: unknown): EmpireResult {
-  return {
-    empireId: empire.id,
-    empireName: empire.name,
-    resourceChanges: {
-      credits: 0,
-      food: 0,
-      ore: 0,
-      petroleum: 0,
-      researchPoints: 0,
-    },
-    populationChange: 0,
-    events: [
-      {
-        type: "other",
-        message: `Error processing empire: ${error instanceof Error ? error.message : "Unknown error"}`,
-        severity: "error",
-        empireId: empire.id,
-      },
-    ],
-    isAlive: true, // Assume alive on error to prevent false eliminations
-  };
-}
-
 // =============================================================================
 // INDIVIDUAL PHASE PROCESSORS (for testing/extensibility)
 // =============================================================================
@@ -970,6 +1004,242 @@ export function processPhase3_CivilStatus(
 }
 
 // =============================================================================
+// TRANSACTION-AWARE SERVICE WRAPPERS
+// =============================================================================
+
+/**
+ * Process research production with transaction support.
+ * Mirrors processResearchProduction but uses the provided database context.
+ */
+async function processResearchProductionWithTx(
+  empireId: string,
+  researchSectorCount: number,
+  database: TransactionContext
+): Promise<{ leveledUp: boolean; newLevel: number }> {
+  // Import dynamically to avoid circular dependencies
+  const { researchProgress, empires: empiresTable } = await import("@/lib/db/schema");
+  const { calculateResearchCost } = await import("@/lib/formulas/research-costs");
+
+  const RESEARCH_POINTS_PER_SECTOR = 100;
+  const MAX_RESEARCH_LEVEL = 7;
+
+  const pointsGenerated = researchSectorCount * RESEARCH_POINTS_PER_SECTOR;
+
+  if (pointsGenerated === 0) {
+    const empire = await database.query.empires.findFirst({
+      where: eq(empiresTable.id, empireId),
+    });
+    return {
+      leveledUp: false,
+      newLevel: empire?.fundamentalResearchLevel ?? 0,
+    };
+  }
+
+  // Get current state
+  const empire = await database.query.empires.findFirst({
+    where: eq(empiresTable.id, empireId),
+  });
+
+  if (!empire) {
+    return { leveledUp: false, newLevel: 0 };
+  }
+
+  const progress = await database.query.researchProgress.findFirst({
+    where: eq(researchProgress.empireId, empireId),
+  });
+
+  if (!progress) {
+    return { leveledUp: false, newLevel: empire.fundamentalResearchLevel };
+  }
+
+  // Check if at max level
+  if (empire.fundamentalResearchLevel >= MAX_RESEARCH_LEVEL) {
+    return { leveledUp: false, newLevel: MAX_RESEARCH_LEVEL };
+  }
+
+  // Calculate new investment
+  let currentLevel = empire.fundamentalResearchLevel;
+  let currentPoints = progress.currentInvestment + pointsGenerated;
+  let leveledUp = false;
+
+  // Handle level-ups (including overflow)
+  while (currentLevel < MAX_RESEARCH_LEVEL) {
+    const costForLevel = calculateResearchCost(currentLevel);
+
+    if (currentPoints >= costForLevel) {
+      currentPoints -= costForLevel;
+      currentLevel++;
+      leveledUp = true;
+    } else {
+      break;
+    }
+  }
+
+  // Cap at max level
+  if (currentLevel >= MAX_RESEARCH_LEVEL) {
+    currentLevel = MAX_RESEARCH_LEVEL;
+    currentPoints = 0;
+  }
+
+  // Update database
+  const requiredForNext = calculateResearchCost(currentLevel);
+
+  await database
+    .update(researchProgress)
+    .set({
+      researchLevel: currentLevel,
+      currentInvestment: currentPoints,
+      requiredInvestment: requiredForNext,
+      updatedAt: new Date(),
+    })
+    .where(eq(researchProgress.id, progress.id));
+
+  // Also update empire's research level
+  if (leveledUp) {
+    await database
+      .update(empiresTable)
+      .set({
+        fundamentalResearchLevel: currentLevel,
+        updatedAt: new Date(),
+      })
+      .where(eq(empiresTable.id, empireId));
+  }
+
+  return { leveledUp, newLevel: currentLevel };
+}
+
+/**
+ * Process build queue with transaction support.
+ * Mirrors processBuildQueue but uses the provided database context.
+ */
+async function processBuildQueueWithTx(
+  empireId: string,
+  database: TransactionContext
+): Promise<{ success: boolean; completedBuilds: Array<{ unitType: string; quantity: number }> }> {
+  const { buildQueue, empires: empiresTable } = await import("@/lib/db/schema");
+  const { asc } = await import("drizzle-orm");
+  const { fromDbUnitType } = await import("../../build-config");
+  const { calculateNetworth } = await import("../../networth");
+
+  type CompletedBuild = { unitType: string; quantity: number };
+  const completedBuilds: CompletedBuild[] = [];
+
+  // Get all queue entries for this empire, ordered by position
+  const queue = await database.query.buildQueue.findMany({
+    where: eq(buildQueue.empireId, empireId),
+    orderBy: asc(buildQueue.queuePosition),
+  });
+
+  if (queue.length === 0) {
+    return { success: true, completedBuilds };
+  }
+
+  // Fetch empire for unit count updates
+  const empire = await database.query.empires.findFirst({
+    where: eq(empiresTable.id, empireId),
+  });
+
+  if (!empire) {
+    return { success: false, completedBuilds };
+  }
+
+  // Track unit additions
+  const unitAdditions: Record<string, number> = {};
+
+  // Process each queue entry
+  for (const entry of queue) {
+    const newTurnsRemaining = entry.turnsRemaining - 1;
+
+    if (newTurnsRemaining <= 0) {
+      // Build complete - add units
+      const unitType = fromDbUnitType(entry.unitType);
+      unitAdditions[unitType] = (unitAdditions[unitType] || 0) + entry.quantity;
+      completedBuilds.push({ unitType, quantity: entry.quantity });
+
+      // Remove from queue
+      await database.delete(buildQueue).where(eq(buildQueue.id, entry.id));
+    } else {
+      // Still building - decrement turns
+      await database
+        .update(buildQueue)
+        .set({ turnsRemaining: newTurnsRemaining })
+        .where(eq(buildQueue.id, entry.id));
+    }
+  }
+
+  // Update empire with new units if any completed
+  if (Object.keys(unitAdditions).length > 0) {
+    const newSoldiers = empire.soldiers + (unitAdditions.soldiers || 0);
+    const newFighters = empire.fighters + (unitAdditions.fighters || 0);
+    const newStations = empire.stations + (unitAdditions.stations || 0);
+    const newLightCruisers = empire.lightCruisers + (unitAdditions.lightCruisers || 0);
+    const newHeavyCruisers = empire.heavyCruisers + (unitAdditions.heavyCruisers || 0);
+    const newCarriers = empire.carriers + (unitAdditions.carriers || 0);
+    const newCovertAgents = empire.covertAgents + (unitAdditions.covertAgents || 0);
+
+    // Calculate new networth
+    const newNetworth = calculateNetworth({
+      sectorCount: empire.sectorCount,
+      soldiers: newSoldiers,
+      fighters: newFighters,
+      stations: newStations,
+      lightCruisers: newLightCruisers,
+      heavyCruisers: newHeavyCruisers,
+      carriers: newCarriers,
+      covertAgents: newCovertAgents,
+    });
+
+    await database
+      .update(empiresTable)
+      .set({
+        soldiers: newSoldiers,
+        fighters: newFighters,
+        stations: newStations,
+        lightCruisers: newLightCruisers,
+        heavyCruisers: newHeavyCruisers,
+        carriers: newCarriers,
+        covertAgents: newCovertAgents,
+        networth: newNetworth,
+        updatedAt: new Date(),
+      })
+      .where(eq(empiresTable.id, empireId));
+  }
+
+  return { success: true, completedBuilds };
+}
+
+/**
+ * Process covert point generation with transaction support.
+ * Mirrors processCovertPointGeneration but uses the provided database context.
+ */
+async function processCovertPointGenerationWithTx(
+  empireId: string,
+  database: TransactionContext
+): Promise<number> {
+  const { empires: empiresTable } = await import("@/lib/db/schema");
+  const { COVERT_POINTS_PER_TURN, MAX_COVERT_POINTS } = await import("@/lib/covert/constants");
+
+  const empire = await database.query.empires.findFirst({
+    where: eq(empiresTable.id, empireId),
+    columns: { covertPoints: true },
+  });
+
+  if (!empire) return 0;
+
+  const newPoints = Math.min(
+    empire.covertPoints + COVERT_POINTS_PER_TURN,
+    MAX_COVERT_POINTS
+  );
+
+  await database
+    .update(empiresTable)
+    .set({ covertPoints: newPoints })
+    .where(eq(empiresTable.id, empireId));
+
+  return newPoints;
+}
+
+// =============================================================================
 // CRAFTING SYSTEM HELPERS
 // =============================================================================
 
@@ -984,14 +1254,19 @@ export function processPhase3_CivilStatus(
  * - 1 batch insert for new resources
  * - 1 batch update for existing resources
  *
+ * TRANSACTION SUPPORT (P1-11):
+ * Accepts an optional database context for transaction support.
+ *
  * @param empireId - Empire UUID
  * @param gameId - Game UUID
  * @param resources - Resources to add (keyed by resource type)
+ * @param database - Database context (transaction or default)
  */
 async function updateResourceInventory(
   empireId: string,
   gameId: string,
-  resources: Partial<Record<CraftedResource, number>>
+  resources: Partial<Record<CraftedResource, number>>,
+  database: TransactionContext = db
 ): Promise<void> {
   const resourceEntries = Object.entries(resources).filter(([, qty]) => qty > 0);
   if (resourceEntries.length === 0) return;
@@ -999,7 +1274,7 @@ async function updateResourceInventory(
   const resourceTypes = resourceEntries.map(([type]) => type as CraftedResource);
 
   // PERFORMANCE: Fetch all existing inventory in one query
-  const existingInventory = await db.query.resourceInventory.findMany({
+  const existingInventory = await database.query.resourceInventory.findMany({
     where: and(
       eq(resourceInventory.empireId, empireId),
       inArray(resourceInventory.resourceType, resourceTypes)
@@ -1042,7 +1317,7 @@ async function updateResourceInventory(
 
   // Batch insert new resources
   if (toInsert.length > 0) {
-    updates.push(db.insert(resourceInventory).values(toInsert));
+    updates.push(database.insert(resourceInventory).values(toInsert));
   }
 
   // Batch update existing resources with a single SQL query using CASE
@@ -1054,7 +1329,7 @@ async function updateResourceInventory(
       .reduce((acc, curr) => sql`${acc} ${curr}`, sql``);
 
     updates.push(
-      db
+      database
         .update(resourceInventory)
         .set({
           quantity: sql`CASE ${quantityCases} END`,
@@ -1072,18 +1347,23 @@ async function updateResourceInventory(
  *
  * Completes items that are ready and updates the database.
  *
+ * TRANSACTION SUPPORT (P1-11):
+ * Accepts an optional database context for transaction support.
+ *
  * @param empireId - Empire UUID
  * @param gameId - Game UUID
  * @param currentTurn - Current game turn
+ * @param database - Database context (transaction or default)
  * @returns Completed items
  */
 async function processCraftingQueueForEmpire(
   empireId: string,
   gameId: string,
-  currentTurn: number
+  currentTurn: number,
+  database: TransactionContext = db
 ): Promise<{ completed: CompletedCrafting[] }> {
   // Load current queue
-  const queue: CraftingQueue[] = await db.query.craftingQueue.findMany({
+  const queue: CraftingQueue[] = await database.query.craftingQueue.findMany({
     where: and(
       eq(craftingQueue.empireId, empireId),
       eq(craftingQueue.gameId, gameId)
@@ -1123,7 +1403,7 @@ async function processCraftingQueueForEmpire(
 
   // Add inventory update if there are completed items
   if (Object.keys(inventoryUpdates).length > 0) {
-    updates.push(updateResourceInventory(empireId, gameId, inventoryUpdates));
+    updates.push(updateResourceInventory(empireId, gameId, inventoryUpdates, database));
   }
 
   // Collect queue status updates for completed items
@@ -1133,7 +1413,7 @@ async function processCraftingQueueForEmpire(
     );
     if (queueItem) {
       updates.push(
-        db
+        database
           .update(craftingQueue)
           .set({
             status: "completed",
@@ -1150,7 +1430,7 @@ async function processCraftingQueueForEmpire(
       const queueItem = queue.find((q: CraftingQueue) => q.id === item.id);
       if (queueItem && queueItem.status !== "in_progress") {
         updates.push(
-          db
+          database
             .update(craftingQueue)
             .set({
               status: "in_progress",

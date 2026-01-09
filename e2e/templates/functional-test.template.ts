@@ -81,12 +81,12 @@ test.describe("Template: Turn Processing Test Pattern", () => {
     expect(after.turn).toBe(before.turn + 1);
 
     // Resources changed (production happened)
-    // With 2 food planets (100 food/turn each) and 1000 starting food:
+    // With 2 food sectors (100 food/turn each) and 1000 starting food:
     // after.food should be greater (production) or lower (if consumption > production)
     const resourceDelta = after.food - before.food;
     expect(resourceDelta).not.toBe(0); // Something changed
 
-    // Research points should increase (1 research planet = 100 RP/turn)
+    // Research points should increase (1 research sector = 100 RP/turn)
     expect(after.researchPoints).toBeGreaterThan(before.researchPoints);
   });
 });

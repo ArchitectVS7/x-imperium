@@ -143,22 +143,23 @@ describe("Turn Processor - Phase 3: Civil Status", () => {
 
 describe("Turn Processor - Civil Status Income Multipliers", () => {
   // Import constants to verify multipliers
-  it("should have correct income multipliers per PRD", async () => {
+  // Rebalanced: 5x differential (2.5x to 0.5x) instead of 16x (4.0x to 0.25x)
+  it("should have correct income multipliers (rebalanced for game economy)", async () => {
     const { CIVIL_STATUS_INCOME_MULTIPLIERS } = await import("../../constants");
 
-    // PRD 4.4: Civil Status Income Multipliers
-    expect(CIVIL_STATUS_INCOME_MULTIPLIERS.ecstatic).toBe(4.0);
-    expect(CIVIL_STATUS_INCOME_MULTIPLIERS.happy).toBe(3.0);
-    expect(CIVIL_STATUS_INCOME_MULTIPLIERS.content).toBe(2.0);
+    // Rebalanced multipliers - allows recovery from setbacks
+    expect(CIVIL_STATUS_INCOME_MULTIPLIERS.ecstatic).toBe(2.5);
+    expect(CIVIL_STATUS_INCOME_MULTIPLIERS.happy).toBe(2.0);
+    expect(CIVIL_STATUS_INCOME_MULTIPLIERS.content).toBe(1.5);
     expect(CIVIL_STATUS_INCOME_MULTIPLIERS.neutral).toBe(1.0);
-    // Unhappy: "0× (no bonus)" means baseline (1×)
-    expect(CIVIL_STATUS_INCOME_MULTIPLIERS.unhappy).toBe(1.0);
-    // Extrapolated for angry, rioting, revolting
-    expect(CIVIL_STATUS_INCOME_MULTIPLIERS.angry).toBeLessThan(1.0);
+    // Unhappy: now has 15% penalty instead of baseline
+    expect(CIVIL_STATUS_INCOME_MULTIPLIERS.unhappy).toBe(0.85);
+    // Progressive penalties for angry, rioting, revolting
+    expect(CIVIL_STATUS_INCOME_MULTIPLIERS.angry).toBeLessThan(CIVIL_STATUS_INCOME_MULTIPLIERS.unhappy);
     expect(CIVIL_STATUS_INCOME_MULTIPLIERS.rioting).toBeLessThan(CIVIL_STATUS_INCOME_MULTIPLIERS.angry);
     expect(CIVIL_STATUS_INCOME_MULTIPLIERS.revolting).toBeLessThan(CIVIL_STATUS_INCOME_MULTIPLIERS.rioting);
-    // Revolting should be positive but very low
-    expect(CIVIL_STATUS_INCOME_MULTIPLIERS.revolting).toBeGreaterThan(0);
+    // Revolting should be recoverable (0.5x instead of 0.25x)
+    expect(CIVIL_STATUS_INCOME_MULTIPLIERS.revolting).toBe(0.5);
   });
 
   it("should have all 8 civil status levels defined", async () => {

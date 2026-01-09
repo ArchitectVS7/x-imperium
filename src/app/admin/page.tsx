@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Search, AlertTriangle, Radiation } from "lucide-react";
+import { Search, AlertTriangle, Radiation, Key } from "lucide-react";
 import {
   cleanupOldGamesAction,
   getDatabaseStatsAction,
@@ -30,11 +30,16 @@ export default function AdminPage() {
   const [result, setResult] = useState<string | null>(null);
   const [stats, setStats] = useState<Stats | null>(null);
   const [tables, setTables] = useState<string[] | null>(null);
+  const [adminSecret, setAdminSecret] = useState("");
 
   const handleCheckTables = async () => {
+    if (!adminSecret) {
+      setResult("Error: Please enter the admin secret first");
+      return;
+    }
     setLoading(true);
     setResult(null);
-    const res = await checkDatabaseTablesAction();
+    const res = await checkDatabaseTablesAction(adminSecret);
     setLoading(false);
     if (res.success && res.tables) {
       setTables(res.tables);
@@ -45,9 +50,13 @@ export default function AdminPage() {
   };
 
   const handleGetStats = async () => {
+    if (!adminSecret) {
+      setResult("Error: Please enter the admin secret first");
+      return;
+    }
     setLoading(true);
     setResult(null);
-    const res = await getDatabaseStatsAction();
+    const res = await getDatabaseStatsAction(adminSecret);
     setLoading(false);
     if (res.success && res.stats) {
       setStats(res.stats);
@@ -58,9 +67,13 @@ export default function AdminPage() {
   };
 
   const handleCleanup = async () => {
+    if (!adminSecret) {
+      setResult("Error: Please enter the admin secret first");
+      return;
+    }
     setLoading(true);
     setResult(null);
-    const res = await cleanupOldGamesAction();
+    const res = await cleanupOldGamesAction(adminSecret);
     setLoading(false);
     if (res.success) {
       setResult(`Cleanup complete! Deleted ${res.deletedCount} old games.`);
@@ -71,9 +84,13 @@ export default function AdminPage() {
   };
 
   const handlePruneMemories = async () => {
+    if (!adminSecret) {
+      setResult("Error: Please enter the admin secret first");
+      return;
+    }
     setLoading(true);
     setResult(null);
-    const res = await pruneAllMemoriesAction();
+    const res = await pruneAllMemoriesAction(adminSecret);
     setLoading(false);
     if (res.success) {
       setResult(`Pruned ${res.deletedCount.toLocaleString()} bot memories.`);
@@ -84,9 +101,13 @@ export default function AdminPage() {
   };
 
   const handlePruneLogs = async () => {
+    if (!adminSecret) {
+      setResult("Error: Please enter the admin secret first");
+      return;
+    }
     setLoading(true);
     setResult(null);
-    const res = await prunePerformanceLogsAction();
+    const res = await prunePerformanceLogsAction(adminSecret);
     setLoading(false);
     if (res.success) {
       setResult(`Pruned ${res.deletedCount.toLocaleString()} performance logs.`);
@@ -97,6 +118,10 @@ export default function AdminPage() {
   };
 
   const handleDeleteAll = async () => {
+    if (!adminSecret) {
+      setResult("Error: Please enter the admin secret first");
+      return;
+    }
     const confirmed = window.confirm(
       "WARNING: This will delete ALL games and data!\n\nAre you sure you want to proceed?"
     );
@@ -104,7 +129,7 @@ export default function AdminPage() {
 
     setLoading(true);
     setResult(null);
-    const res = await deleteAllGamesAction();
+    const res = await deleteAllGamesAction(adminSecret);
     setLoading(false);
     if (res.success) {
       setResult(`Deleted ${res.deletedCount} games. Database cleared.`);
@@ -115,6 +140,10 @@ export default function AdminPage() {
   };
 
   const handleTruncateAll = async () => {
+    if (!adminSecret) {
+      setResult("Error: Please enter the admin secret first");
+      return;
+    }
     const confirmed = window.confirm(
       "!!! NUCLEAR OPTION !!!\n\nThis will TRUNCATE ALL TABLES individually!\nUse this only if CASCADE delete isn't working.\n\nAre you ABSOLUTELY sure?"
     );
@@ -127,7 +156,7 @@ export default function AdminPage() {
 
     setLoading(true);
     setResult(null);
-    const res = await truncateAllTablesAction();
+    const res = await truncateAllTablesAction(adminSecret);
     setLoading(false);
     if (res.success) {
       setResult(`Truncated ${res.tablesCleared.length} tables: ${res.tablesCleared.join(", ")}`);
@@ -157,8 +186,24 @@ export default function AdminPage() {
             href="/"
             className="text-lcars-lavender hover:text-lcars-amber transition-colors"
           >
-            ← Back to Home
+            Back to Home
           </Link>
+        </div>
+
+        <div className="lcars-panel mb-6">
+          <h2 className="text-lg font-semibold text-lcars-orange mb-4 flex items-center gap-2">
+            <Key className="w-5 h-5" /> Authentication
+          </h2>
+          <p className="text-gray-400 text-sm mb-4">
+            Enter the ADMIN_SECRET to authenticate. This is required for all admin actions.
+          </p>
+          <input
+            type="password"
+            value={adminSecret}
+            onChange={(e) => setAdminSecret(e.target.value)}
+            placeholder="Enter ADMIN_SECRET"
+            className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded text-white placeholder-gray-500 focus:outline-none focus:border-lcars-amber"
+          />
         </div>
 
         <div className="lcars-panel mb-6">
@@ -183,7 +228,7 @@ export default function AdminPage() {
               <div className="grid grid-cols-2 gap-2 text-sm text-gray-400 max-h-40 overflow-y-auto">
                 {tables.map((table) => (
                   <div key={table} className="font-mono">
-                    • {table}
+                    {table}
                   </div>
                 ))}
               </div>

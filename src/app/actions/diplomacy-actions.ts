@@ -14,17 +14,19 @@ import { eq, and, ne } from "drizzle-orm";
 import {
   type TreatyType,
   getActiveTreaties,
+  getActiveTreatyPartners,
   getPendingProposals,
   proposeTreaty,
   acceptTreaty,
   rejectTreaty,
   breakTreaty,
   endTreatyPeacefully,
-  hasActiveTreaty,
   getReputationHistory,
   getReputationLevel,
 } from "@/lib/diplomacy";
 import { isFeatureUnlocked } from "@/lib/constants/unlocks";
+import { checkRateLimit } from "@/lib/security/rate-limiter";
+import { getRateLimitIdentifier } from "@/lib/session";
 
 // =============================================================================
 // VALIDATION SCHEMAS
@@ -136,29 +138,24 @@ export async function getDiplomacyTargetsAction(gameId: string, empireId: string
       ),
     });
 
-    // Get treaty status for each
-    const targets: DiplomacyTarget[] = await Promise.all(
-      allEmpires.map(async (e) => {
-        const hasTreatyFlag = await hasActiveTreaty(parsed.data.empireId, e.id);
-        let treatyType: TreatyType | undefined;
+    // Batch load all active treaty partners ONCE (fixes N+1 query)
+    const treatyPartners = await getActiveTreatyPartners(parsed.data.empireId);
 
-        if (hasTreatyFlag) {
-          const treaties = await getActiveTreaties(parsed.data.empireId);
-          const treaty = treaties.find((t) => t.partnerId === e.id);
-          treatyType = treaty?.type;
-        }
+    // Build targets without N+1 queries - use Map lookup instead
+    const targets: DiplomacyTarget[] = allEmpires.map((e) => {
+      const treatyType = treatyPartners.get(e.id);
+      const hasTreatyFlag = treatyType !== undefined;
 
-        return {
-          id: e.id,
-          name: e.name,
-          networth: e.networth,
-          reputation: e.reputation,
-          reputationLevel: getReputationLevel(e.reputation),
-          hasTreaty: hasTreatyFlag,
-          treatyType,
-        };
-      })
-    );
+      return {
+        id: e.id,
+        name: e.name,
+        networth: e.networth,
+        reputation: e.reputation,
+        reputationLevel: getReputationLevel(e.reputation),
+        hasTreaty: hasTreatyFlag,
+        treatyType: hasTreatyFlag ? treatyType : undefined,
+      };
+    });
 
     return { success: true as const, data: targets };
   } catch (error) {
@@ -178,6 +175,14 @@ export async function proposeTreatyAction(
   treatyType: string
 ) {
   try {
+    // Rate limiting
+    const rateLimitId = await getRateLimitIdentifier();
+    const rateLimit = checkRateLimit(rateLimitId, "DIPLOMACY_ACTION");
+    if (!rateLimit.allowed) {
+      const waitSeconds = Math.ceil((rateLimit.resetAt - Date.now()) / 1000);
+      return { success: false as const, error: `Rate limited. Please wait ${waitSeconds} seconds.` };
+    }
+
     // Validate inputs with Zod
     const parsed = ProposeTreatySchema.safeParse({ gameId, proposerId, recipientId, treatyType });
     if (!parsed.success) {
@@ -228,6 +233,14 @@ export async function acceptTreatyAction(
   recipientId: string
 ) {
   try {
+    // Rate limiting
+    const rateLimitId = await getRateLimitIdentifier();
+    const rateLimit = checkRateLimit(rateLimitId, "DIPLOMACY_ACTION");
+    if (!rateLimit.allowed) {
+      const waitSeconds = Math.ceil((rateLimit.resetAt - Date.now()) / 1000);
+      return { success: false as const, error: `Rate limited. Please wait ${waitSeconds} seconds.` };
+    }
+
     // Validate inputs with Zod
     const parsed = TreatyActionSchema.safeParse({ gameId, treatyId, empireId: recipientId });
     if (!parsed.success) {
@@ -267,6 +280,14 @@ export async function acceptTreatyAction(
 
 export async function rejectTreatyAction(treatyId: string, recipientId: string) {
   try {
+    // Rate limiting
+    const rateLimitId = await getRateLimitIdentifier();
+    const rateLimit = checkRateLimit(rateLimitId, "DIPLOMACY_ACTION");
+    if (!rateLimit.allowed) {
+      const waitSeconds = Math.ceil((rateLimit.resetAt - Date.now()) / 1000);
+      return { success: false as const, error: `Rate limited. Please wait ${waitSeconds} seconds.` };
+    }
+
     // Validate inputs with Zod
     const parsed = RejectTreatySchema.safeParse({ treatyId, recipientId });
     if (!parsed.success) {
@@ -296,6 +317,14 @@ export async function breakTreatyAction(
   breakerId: string
 ) {
   try {
+    // Rate limiting
+    const rateLimitId = await getRateLimitIdentifier();
+    const rateLimit = checkRateLimit(rateLimitId, "DIPLOMACY_ACTION");
+    if (!rateLimit.allowed) {
+      const waitSeconds = Math.ceil((rateLimit.resetAt - Date.now()) / 1000);
+      return { success: false as const, error: `Rate limited. Please wait ${waitSeconds} seconds.` };
+    }
+
     // Validate inputs with Zod
     const parsed = TreatyActionSchema.safeParse({ gameId, treatyId, empireId: breakerId });
     if (!parsed.success) {
@@ -339,6 +368,14 @@ export async function endTreatyAction(
   requesterId: string
 ) {
   try {
+    // Rate limiting
+    const rateLimitId = await getRateLimitIdentifier();
+    const rateLimit = checkRateLimit(rateLimitId, "DIPLOMACY_ACTION");
+    if (!rateLimit.allowed) {
+      const waitSeconds = Math.ceil((rateLimit.resetAt - Date.now()) / 1000);
+      return { success: false as const, error: `Rate limited. Please wait ${waitSeconds} seconds.` };
+    }
+
     // Validate inputs with Zod
     const parsed = TreatyActionSchema.safeParse({ gameId, treatyId, empireId: requesterId });
     if (!parsed.success) {

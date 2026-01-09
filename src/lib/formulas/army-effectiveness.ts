@@ -65,9 +65,20 @@ export function clampEffectiveness(effectiveness: number): number {
 /**
  * Calculate the effectiveness change from a combat outcome.
  *
+ * For reproducible results in deterministic game simulation, pass a value
+ * from a seeded RNG (e.g., createTurnBasedRng or createSeededRandom from
+ * `@/lib/utils/seeded-rng`).
+ *
  * @param outcome - The combat result
- * @param randomValue - Optional random value (0-1) for deterministic testing
+ * @param randomValue - Optional random value (0-1) for deterministic testing.
+ *                      For reproducible results, pass a value from a seeded RNG.
  * @returns Change in effectiveness (positive or negative)
+ *
+ * @example
+ * // Using seeded RNG for reproducible effectiveness changes
+ * import { createTurnBasedRng } from "@/lib/utils/seeded-rng";
+ * const rng = createTurnBasedRng(gameId, turn, "effectiveness");
+ * const change = calculateCombatEffectivenessChange("victory", rng());
  */
 export function calculateCombatEffectivenessChange(
   outcome: CombatOutcome,
@@ -115,10 +126,21 @@ export function applyMaintenancePenalty(currentEffectiveness: number): number {
 /**
  * Update effectiveness based on an event.
  *
+ * For reproducible results in deterministic game simulation, pass a value
+ * from a seeded RNG (e.g., createTurnBasedRng or createSeededRandom from
+ * `@/lib/utils/seeded-rng`).
+ *
  * @param currentEffectiveness - Current effectiveness rating
  * @param event - The event causing the change
- * @param randomValue - Optional random value for deterministic testing
+ * @param randomValue - Optional random value (0-1) for deterministic testing.
+ *                      For reproducible results, pass a value from a seeded RNG.
  * @returns New effectiveness rating
+ *
+ * @example
+ * // Using seeded RNG for reproducible effectiveness updates
+ * import { createTurnBasedRng } from "@/lib/utils/seeded-rng";
+ * const rng = createTurnBasedRng(gameId, turn, "effectiveness");
+ * const newEff = updateEffectiveness(85, { type: "combat", outcome: "victory" }, rng());
  */
 export function updateEffectiveness(
   currentEffectiveness: number,

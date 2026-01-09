@@ -88,9 +88,20 @@ export function calculateLossRate(
  * Generate a variance multiplier for casualty calculations.
  * Adds randomness to combat outcomes.
  *
+ * For reproducible results in deterministic game simulation, pass a value
+ * from a seeded RNG (e.g., createTurnBasedRng or createSeededRandom from
+ * `@/lib/utils/seeded-rng`).
+ *
  * @param randomValue - Optional random value (0-1) for deterministic testing.
  *                      If not provided, uses Math.random().
+ *                      For reproducible combat, pass a value from a seeded RNG.
  * @returns Variance multiplier (0.8 to 1.2)
+ *
+ * @example
+ * // Using seeded RNG for reproducible combat
+ * import { createTurnBasedRng } from "@/lib/utils/seeded-rng";
+ * const rng = createTurnBasedRng(gameId, turn, "combat");
+ * const variance = calculateVariance(rng());
  */
 export function calculateVariance(randomValue?: number): number {
   const random = randomValue ?? Math.random();
@@ -102,7 +113,7 @@ export function calculateVariance(randomValue?: number): number {
  * Calculate the number of casualties for a given unit count.
  *
  * Formula (PRD 6.2):
- * casualties = floor(units × lossRate × variance)
+ * casualties = floor(units * lossRate * variance)
  *
  * @param units - Number of units in combat
  * @param lossRate - Loss rate (typically from calculateLossRate)
@@ -126,11 +137,22 @@ export function calculateCasualties(
  * Calculate casualties for a combat engagement.
  * Combines loss rate calculation and variance for a complete result.
  *
+ * For reproducible results in deterministic game simulation, pass a value
+ * from a seeded RNG (e.g., createTurnBasedRng or createSeededRandom from
+ * `@/lib/utils/seeded-rng`).
+ *
  * @param units - Number of units in combat
  * @param attackPower - Attacking force's combat power
  * @param defensePower - Defending force's combat power
- * @param randomValue - Optional random value for deterministic testing
+ * @param randomValue - Optional random value (0-1) for deterministic testing.
+ *                      For reproducible combat, pass a value from a seeded RNG.
  * @returns Number of units lost
+ *
+ * @example
+ * // Using seeded RNG for reproducible combat
+ * import { createTurnBasedRng } from "@/lib/utils/seeded-rng";
+ * const rng = createTurnBasedRng(gameId, turn, "casualties");
+ * const losses = calculateCombatCasualties(units, attackPower, defPower, rng());
  */
 export function calculateCombatCasualties(
   units: number,

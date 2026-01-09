@@ -9,7 +9,6 @@
  * - Proper error handling and logging
  */
 
-import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 import {
   executeCovertOperation,
@@ -25,29 +24,7 @@ import {
   type OperationType,
   COVERT_OPERATIONS,
 } from "@/lib/covert/constants";
-
-// =============================================================================
-// COOKIE HELPERS
-// =============================================================================
-
-const GAME_ID_COOKIE = "gameId";
-const EMPIRE_ID_COOKIE = "empireId";
-
-async function getGameCookies(): Promise<{
-  gameId: string | undefined;
-  empireId: string | undefined;
-}> {
-  try {
-    const cookieStore = await cookies();
-    return {
-      gameId: cookieStore.get(GAME_ID_COOKIE)?.value,
-      empireId: cookieStore.get(EMPIRE_ID_COOKIE)?.value,
-    };
-  } catch (error) {
-    console.error("Failed to read cookies:", error);
-    return { gameId: undefined, empireId: undefined };
-  }
-}
+import { getGameSession } from "@/lib/session";
 
 // =============================================================================
 // INPUT VALIDATION
@@ -83,7 +60,7 @@ export async function getCovertStatusAction(): Promise<{
   error?: string;
 }> {
   try {
-    const { empireId } = await getGameCookies();
+    const { empireId } = await getGameSession();
 
     if (!empireId) {
       return { success: false, error: "No active game session" };
@@ -118,7 +95,7 @@ export async function getCovertTargetsAction(): Promise<{
   error?: string;
 }> {
   try {
-    const { gameId, empireId } = await getGameCookies();
+    const { gameId, empireId } = await getGameSession();
 
     if (!gameId || !empireId) {
       return { success: false, error: "No active game session" };
@@ -145,7 +122,7 @@ export async function getCovertTargetsWithPreviewsAction(): Promise<{
   error?: string;
 }> {
   try {
-    const { gameId, empireId } = await getGameCookies();
+    const { gameId, empireId } = await getGameSession();
 
     if (!gameId || !empireId) {
       return { success: false, error: "No active game session" };
@@ -179,7 +156,7 @@ export async function executeCovertOpAction(
   error?: string;
 }> {
   try {
-    const { empireId } = await getGameCookies();
+    const { empireId } = await getGameSession();
 
     if (!empireId) {
       return { success: false, error: "No active game session" };
@@ -234,7 +211,7 @@ export async function previewCovertOpAction(
   error?: string;
 }> {
   try {
-    const { empireId } = await getGameCookies();
+    const { empireId } = await getGameSession();
 
     if (!empireId) {
       return { success: false, error: "No active game session" };

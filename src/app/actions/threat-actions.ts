@@ -1,6 +1,5 @@
 "use server";
 
-import { cookies } from "next/headers";
 import { db } from "@/lib/db";
 import { games } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
@@ -8,21 +7,7 @@ import {
   assessThreats,
   type ThreatAssessmentResult,
 } from "@/lib/game/services/military/threat-service";
-
-// =============================================================================
-// COOKIE HELPERS
-// =============================================================================
-
-async function getGameCookies(): Promise<{
-  gameId: string | undefined;
-  empireId: string | undefined;
-}> {
-  const cookieStore = await cookies();
-  return {
-    gameId: cookieStore.get("gameId")?.value,
-    empireId: cookieStore.get("empireId")?.value,
-  };
-}
+import { getGameSession } from "@/lib/session";
 
 // =============================================================================
 // THREAT ASSESSMENT ACTION
@@ -32,7 +17,7 @@ async function getGameCookies(): Promise<{
  * Get threat assessment for the current player.
  */
 export async function getThreatAssessmentAction(): Promise<ThreatAssessmentResult | null> {
-  const { gameId, empireId } = await getGameCookies();
+  const { gameId, empireId } = await getGameSession();
 
   if (!gameId || !empireId) {
     return null;
