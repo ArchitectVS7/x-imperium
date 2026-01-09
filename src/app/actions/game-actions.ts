@@ -17,6 +17,8 @@ import {
   getGameSession,
   clearGameSession,
   getRateLimitIdentifier,
+  addOwnedGame,
+  isGameOwner,
 } from "@/lib/session";
 
 // =============================================================================
@@ -96,6 +98,9 @@ export async function startGameAction(formData: FormData): Promise<StartGameResu
     );
 
     await setGameSession(game.id, empire.id);
+
+    // Record game ownership for authorization on resume
+    await addOwnedGame(game.id);
 
     // Start session tracking for campaign games
     if (gameMode === "campaign") {
@@ -210,7 +215,7 @@ export interface ResumableCampaign {
 
 /**
  * Get resumable campaign games.
- * Returns campaigns that are still active (not completed).
+ * Returns only campaigns that this session owns and are still active.
  */
 export async function getResumableCampaignsAction(): Promise<ResumableCampaign[]> {
   try {
@@ -237,23 +242,33 @@ export async function getResumableCampaignsAction(): Promise<ResumableCampaign[]
       },
     });
 
-    return campaigns.map((game) => {
-      const playerEmpire = game.empires.find((e) => e.type === "player");
-      const activeEmpires = game.empires.filter((e) => e.sectors.length > 0);
+    // Filter to only games owned by this session
+    const ownedCampaigns = await Promise.all(
+      campaigns.map(async (game) => {
+        const isOwned = await isGameOwner(game.id);
+        return isOwned ? game : null;
+      })
+    );
 
-      return {
-        gameId: game.id,
-        gameName: game.name,
-        empireName: playerEmpire?.name ?? "Unknown",
-        empireId: playerEmpire?.id ?? "",
-        currentTurn: game.currentTurn,
-        turnLimit: game.turnLimit,
-        sessionCount: game.sessionCount,
-        lastSessionAt: game.lastSessionAt,
-        empireCount: activeEmpires.length,
-        playerNetworth: playerEmpire?.credits ?? 0,
-      };
-    });
+    return ownedCampaigns
+      .filter((game): game is NonNullable<typeof game> => game !== null)
+      .map((game) => {
+        const playerEmpire = game.empires.find((e) => e.type === "player");
+        const activeEmpires = game.empires.filter((e) => e.sectors.length > 0);
+
+        return {
+          gameId: game.id,
+          gameName: game.name,
+          empireName: playerEmpire?.name ?? "Unknown",
+          empireId: playerEmpire?.id ?? "",
+          currentTurn: game.currentTurn,
+          turnLimit: game.turnLimit,
+          sessionCount: game.sessionCount,
+          lastSessionAt: game.lastSessionAt,
+          empireCount: activeEmpires.length,
+          playerNetworth: playerEmpire?.credits ?? 0,
+        };
+      });
   } catch (error) {
     console.error("Failed to get resumable campaigns:", error);
     return [];
@@ -262,6 +277,7 @@ export async function getResumableCampaignsAction(): Promise<ResumableCampaign[]
 
 /**
  * Resume a campaign game by setting session.
+ * Only allows resuming games that this session owns.
  */
 export async function resumeCampaignAction(gameId: string): Promise<ResumeGameResult> {
   // Rate limit check for auth-like actions
@@ -273,6 +289,12 @@ export async function resumeCampaignAction(gameId: string): Promise<ResumeGameRe
       success: false,
       error: `Too many attempts. Please wait ${waitSeconds} seconds before trying again.`,
     };
+  }
+
+  // Authorization check: verify session owns this game
+  const isOwned = await isGameOwner(gameId);
+  if (!isOwned) {
+    return { success: false, error: "You do not have access to this campaign" };
   }
 
   try {
@@ -346,9 +368,16 @@ export interface ResumeGameResult {
 
 /**
  * Resume a saved game by setting session and returning game info.
+ * Only allows resuming games that this session owns.
  * @deprecated Multi-galaxy feature removed. Single active game per session.
  */
 export async function resumeGameAction(gameId: string): Promise<ResumeGameResult> {
+  // Authorization check: verify session owns this game
+  const isOwned = await isGameOwner(gameId);
+  if (!isOwned) {
+    return { success: false, error: "You do not have access to this game" };
+  }
+
   try {
     // Get the latest save to verify it exists
     const save = await getLatestSave(gameId);

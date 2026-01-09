@@ -22,7 +22,7 @@ import {
   type ContractOffer,
 } from "@/lib/game/services/syndicate-service";
 import { isFeatureUnlocked } from "@/lib/constants/unlocks";
-import { isValidUUID } from "@/lib/security/validation";
+import { isValidUUID, verifyEmpireOwnership } from "@/lib/security/validation";
 import {
   TRUST_LEVELS,
   CONTRACT_CONFIGS,
@@ -131,12 +131,21 @@ export interface ContractDisplay extends ContractOffer {
 
 /**
  * Get available contracts for the player.
+ *
+ * SECURITY: Verifies empire ownership before returning contract data.
  */
 export async function getAvailableContractsAction(): Promise<ContractDisplay[] | null> {
   try {
     const { gameId, empireId } = await getGameSession();
 
     if (!gameId || !empireId) {
+      return null;
+    }
+
+    // SECURITY: Verify empire ownership before proceeding
+    const ownership = await verifyEmpireOwnership(empireId, gameId);
+    if (!ownership.valid) {
+      console.warn(`[SECURITY] getAvailableContractsAction: ${ownership.error}`);
       return null;
     }
 

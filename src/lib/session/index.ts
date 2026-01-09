@@ -58,5 +58,30 @@ export async function getRateLimitIdentifier(): Promise<string> {
   return session.rateLimitId;
 }
 
+/**
+ * Add a game ID to the session's owned games list.
+ * Called when a new game is created to establish ownership.
+ */
+export async function addOwnedGame(gameId: string): Promise<void> {
+  const session = await getSession();
+  const ownedGames = session.ownedGameIds ?? [];
+
+  // Avoid duplicates
+  if (!ownedGames.includes(gameId)) {
+    session.ownedGameIds = [...ownedGames, gameId];
+    await session.save();
+  }
+}
+
+/**
+ * Check if the current session owns the specified game.
+ * Used for authorization before allowing resume operations.
+ */
+export async function isGameOwner(gameId: string): Promise<boolean> {
+  const session = await getSession();
+  const ownedGames = session.ownedGameIds ?? [];
+  return ownedGames.includes(gameId);
+}
+
 // Re-export types
 export type { SessionData } from "./config";

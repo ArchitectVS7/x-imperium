@@ -4,6 +4,8 @@ export interface SessionData {
   gameId?: string;
   empireId?: string;
   rateLimitId?: string;
+  // Track which games this session has created (for authorization)
+  ownedGameIds?: string[];
 }
 
 export const sessionOptions: SessionOptions = {
