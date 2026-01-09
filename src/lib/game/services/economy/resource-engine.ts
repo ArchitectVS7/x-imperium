@@ -49,11 +49,11 @@ export const SECTOR_MAINTENANCE_COST = 168;
  * @example
  * // 2 food sectors, 1 tourism sector
  * calculateProduction([
- *   { type: 'food', productionRate: '160' },
- *   { type: 'food', productionRate: '160' },
+ *   { type: 'food', productionRate: '500' },
+ *   { type: 'food', productionRate: '500' },
  *   { type: 'tourism', productionRate: '8000' }
  * ])
- * // => { credits: 8000, food: 320, ore: 0, petroleum: 0, researchPoints: 0 }
+ * // => { credits: 8000, food: 1000, ore: 0, petroleum: 0, researchPoints: 0 }
  */
 export function calculateProduction(sectors: Sector[]): ResourceDelta {
   const production: ResourceDelta = {
@@ -114,13 +114,13 @@ export function calculateProduction(sectors: Sector[]): ResourceDelta {
  *
  * @example
  * applyIncomeMultiplier(
- *   { credits: 8000, food: 320, ore: 224, petroleum: 92, researchPoints: 100 },
+ *   { credits: 8000, food: 1000, ore: 224, petroleum: 92, researchPoints: 100 },
  *   2.0 // Content status
  * )
  * // => {
- * //   production: { credits: 8000, food: 320, ore: 224, petroleum: 92, researchPoints: 100 },
+ * //   production: { credits: 8000, food: 1000, ore: 224, petroleum: 92, researchPoints: 100 },
  * //   incomeMultiplier: 2.0,
- * //   final: { credits: 16000, food: 320, ore: 224, petroleum: 92, researchPoints: 200 }
+ * //   final: { credits: 16000, food: 1000, ore: 224, petroleum: 92, researchPoints: 200 }
  * // }
  */
 export function applyIncomeMultiplier(
@@ -173,10 +173,10 @@ export function calculateMaintenanceCost(sectorCount: number): MaintenanceCost {
  *
  * @example
  * calculateNetResourceDelta(
- *   { credits: 16000, food: 320, ore: 224, petroleum: 92, researchPoints: 200 },
+ *   { credits: 16000, food: 1000, ore: 224, petroleum: 92, researchPoints: 200 },
  *   { totalCost: 1512, costPerSector: 168, sectorCount: 9 }
  * )
- * // => { credits: 14488, food: 320, ore: 224, petroleum: 92, researchPoints: 200 }
+ * // => { credits: 14488, food: 1000, ore: 224, petroleum: 92, researchPoints: 200 }
  */
 export function calculateNetResourceDelta(
   production: ResourceDelta,
@@ -202,7 +202,7 @@ export function calculateNetResourceDelta(
  *
  * @example
  * processTurnResources(
- *   [{ type: 'food', productionRate: '160' }, ...],
+ *   [{ type: 'food', productionRate: '500' }, ...],
  *   2.0 // Content status
  * )
  * // => ResourceProduction with all calculations applied

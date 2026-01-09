@@ -196,36 +196,37 @@ describe("M3 Integration: Military Unit Validation", () => {
 
 describe("M3 Integration: Research System", () => {
   describe("Research Cost Formula", () => {
-    it("should have exponential cost formula (1000 * 2^level)", () => {
-      // Level 0 -> 1: 1000 * 2^0 = 1000
+    it("should have exponential cost formula (1000 * 1.5^level)", () => {
+      // Research cost uses 1.5x growth rate (BAL-M1 rebalance)
+      // Level 0 -> 1: 1000 * 1.5^0 = 1000
       expect(calculateResearchCost(0)).toBe(1000);
 
-      // Level 1 -> 2: 1000 * 2^1 = 2000
-      expect(calculateResearchCost(1)).toBe(2000);
+      // Level 1 -> 2: 1000 * 1.5^1 = 1500
+      expect(calculateResearchCost(1)).toBe(1500);
 
-      // Level 2 -> 3: 1000 * 2^2 = 4000
-      expect(calculateResearchCost(2)).toBe(4000);
+      // Level 2 -> 3: 1000 * 1.5^2 = 2250
+      expect(calculateResearchCost(2)).toBe(2250);
 
-      // Level 3 -> 4: 1000 * 2^3 = 8000
-      expect(calculateResearchCost(3)).toBe(8000);
+      // Level 3 -> 4: 1000 * 1.5^3 = 3375
+      expect(calculateResearchCost(3)).toBe(3375);
 
-      // Level 4 -> 5: 1000 * 2^4 = 16000
-      expect(calculateResearchCost(4)).toBe(16000);
+      // Level 4 -> 5: 1000 * 1.5^4 = 5062
+      expect(calculateResearchCost(4)).toBe(5062);
 
-      // Level 5 -> 6: 1000 * 2^5 = 32000
-      expect(calculateResearchCost(5)).toBe(32000);
+      // Level 5 -> 6: 1000 * 1.5^5 = 7593
+      expect(calculateResearchCost(5)).toBe(7593);
 
-      // Level 6 -> 7: 1000 * 2^6 = 64000
-      expect(calculateResearchCost(6)).toBe(64000);
+      // Level 6 -> 7: 1000 * 1.5^6 = 11390
+      expect(calculateResearchCost(6)).toBe(11390);
     });
   });
 
   describe("8 Research Levels", () => {
     it("should have exponential cost structure for all levels", () => {
-      // Test each level has correct exponential cost
+      // Test each level has correct exponential cost (1.5x growth rate per BAL-M1)
       for (let level = 0; level < 7; level++) {
         const cost = calculateResearchCost(level);
-        const expectedCost = 1000 * Math.pow(2, level);
+        const expectedCost = Math.floor(1000 * Math.pow(1.5, level));
         expect(cost).toBe(expectedCost);
       }
     });
@@ -438,8 +439,9 @@ describe("M3 PRD Compliance Verification", () => {
     });
 
     it("should use exponential cost formula", () => {
+      // Uses 1.5x growth rate per BAL-M1 rebalance
       for (let level = 0; level < 7; level++) {
-        const expectedCost = 1000 * Math.pow(2, level);
+        const expectedCost = Math.floor(1000 * Math.pow(1.5, level));
         expect(calculateResearchCost(level)).toBe(expectedCost);
       }
     });

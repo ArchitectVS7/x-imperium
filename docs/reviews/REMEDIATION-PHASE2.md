@@ -151,14 +151,14 @@ Update unit test "planet" terminology (6 files)
 
 | # | Issue | Source | File:Line | Severity | Status |
 |---|-------|--------|-----------|----------|--------|
-| BAL-M1 | **Research cost scaling too steep** - RESEARCH_GROWTH_RATE = 2.0 means level 10 costs 1,024,000 RP | game-balance.md | research-costs.ts:17 | Critical | |
+| BAL-M1 | **Research cost scaling too steep** - RESEARCH_GROWTH_RATE = 2.0 means level 10 costs 1,024,000 RP | game-balance.md | research-costs.ts:17 | Critical | [COMPLETED 2026-01-09] |
 | BAL-M2 | **Carrier combat effectiveness is ZERO** - 2500 credit units contribute nothing | game-balance.md | effectiveness.ts:89-95 | Critical | [COMPLETED 2026-01-09] |
 | BAL-M3 | **Civil status "revolting" = instant defeat** - no recovery mechanism | game-balance.md | conditions.ts:318-319 | Critical | [COMPLETED 2026-01-09] |
-| BAL-M4 | **Nuclear weapon cost 500M** vs starting 100K - effectively unobtainable | game-balance.md | nuclear.ts:19 | Critical | |
+| BAL-M4 | **Nuclear weapon cost 500M** vs starting 100K - effectively unobtainable | game-balance.md | nuclear.ts:19 | Critical | [COMPLETED 2026-01-09] |
 | BAL-M5 | Sector cost scaling creates prohibitive late-game costs (3.5x at 50 sectors) | game-balance.md | sector-costs.ts:14 | High | |
-| BAL-M6 | **Food consumption > production at start** - new players begin in deficit | game-balance.md | population.ts:15-18 | High | |
-| BAL-M7 | Military victory threshold 2x ALL empires combined - nearly impossible | game-balance.md | conditions.ts:83 | High | |
-| BAL-M8 | Station power inconsistency (30 vs 50) between systems | game-balance.md | combat-config.json:3-9, 29-36 | High | |
+| BAL-M6 | **Food consumption > production at start** - new players begin in deficit | game-balance.md | population.ts:15-18 | High | [COMPLETED 2026-01-09] |
+| BAL-M7 | Military victory threshold 2x ALL empires combined - nearly impossible | game-balance.md | conditions.ts:83 | High | [COMPLETED 2026-01-09] |
+| BAL-M8 | Station power inconsistency (30 vs 50) between systems | game-balance.md | combat-config.json:3-9, 29-36 | High | [COMPLETED 2026-01-09] |
 | BAL-M9 | Underdog bonus threshold may be too generous | game-balance.md | combat-config.json:10-13 | High | |
 | BAL-M10 | Fundamental research victory requires 10,000 research sectors | game-economy.md | research.ts:57-60 | Medium | |
 
@@ -274,13 +274,13 @@ Original plan mentions UI components but not these 6 test files:
 
 ### New Sprint: Game Balance Sprint (Missing from original)
 
-- [ ] Reduce research cost growth rate (2.0 → 1.5)
+- [x] Reduce research cost growth rate (2.0 → 1.5) [COMPLETED 2026-01-09]
 - [x] Give carriers combat effectiveness (at least 0.5 in space phase) [COMPLETED 2026-01-09]
 - [x] Add civil status recovery mechanism (prevent instant defeat cascade) [COMPLETED 2026-01-09]
-- [ ] Scale nuclear weapon cost to game economy (500M → 50M or progressive unlock)
-- [ ] Fix starting food deficit (add 1 food sector or reduce FOOD_PER_CITIZEN)
-- [ ] Reduce military victory threshold (2.0x → 1.5x)
-- [ ] Unify station power values between combat systems
+- [x] Scale nuclear weapon cost to game economy (500M → 50M or progressive unlock) [COMPLETED 2026-01-09]
+- [x] Fix starting food deficit (add 1 food sector or reduce FOOD_PER_CITIZEN) [COMPLETED 2026-01-09]
+- [x] Reduce military victory threshold (2.0x → 1.5x) [COMPLETED 2026-01-09]
+- [x] Unify station power values between combat systems [COMPLETED 2026-01-09]
 - [ ] Connect loot to defender resources (already in plan - reinforce)
 
 ### New Sprint: Player Onboarding Sprint (Missing from original)

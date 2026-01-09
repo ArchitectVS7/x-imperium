@@ -82,8 +82,10 @@ describe("Victory Constants", () => {
     expect(RESEARCH_MAX_LEVEL).toBe(7);
   });
 
-  it("should have correct military multiplier (2x)", () => {
-    expect(MILITARY_MULTIPLIER).toBe(2.0);
+  it("should have correct military multiplier (1.5x)", () => {
+    // Reduced from 2.0x to 1.5x for game balance (BAL-M7)
+    // Makes military victory achievable without needing to eliminate most opponents first
+    expect(MILITARY_MULTIPLIER).toBe(1.5);
   });
 
   it("should have correct civil collapse threshold (3 turns)", () => {
@@ -268,15 +270,17 @@ describe("checkResearchVictory", () => {
 
 describe("calculateMilitaryPower", () => {
   it("should calculate power correctly", () => {
+    // Unit weights aligned with combat-config.json:
+    // soldiers: 1, fighters: 4, stations: 40, lightCruisers: 10, heavyCruisers: 20, carriers: 50
     const empire = createTestEmpire({
       soldiers: 1000, // 1000 * 1 = 1000
       fighters: 100, // 100 * 4 = 400
-      stations: 10, // 10 * 100 = 1000
+      stations: 10, // 10 * 40 = 400 (aligned with combat-config.json)
       lightCruisers: 50, // 50 * 10 = 500
       heavyCruisers: 25, // 25 * 20 = 500
       carriers: 10, // 10 * 50 = 500
     });
-    expect(calculateMilitaryPower(empire)).toBe(3900);
+    expect(calculateMilitaryPower(empire)).toBe(3300);
   });
 
   it("should return 0 for empire with no military", () => {
@@ -306,24 +310,25 @@ describe("calculateMilitaryPower", () => {
 });
 
 describe("checkMilitaryVictory", () => {
-  it("should return true when empire has 2x military of all others", () => {
-    const empire = createTestEmpire({ id: "e1", soldiers: 10000 });
+  it("should return true when empire has 1.5x military of all others", () => {
+    const empire = createTestEmpire({ id: "e1", soldiers: 7500 });
     const allEmpires = [
       empire,
       createTestEmpire({ id: "e2", soldiers: 2000 }),
       createTestEmpire({ id: "e3", soldiers: 3000 }),
     ];
-    // Empire: 10000, Others: 5000, need 2x = 10000
+    // Empire: 7500, Others: 5000, need 1.5x = 7500
     expect(checkMilitaryVictory(empire, allEmpires)).toBe(true);
   });
 
-  it("should return false when empire has less than 2x", () => {
-    const empire = createTestEmpire({ id: "e1", soldiers: 9999 });
+  it("should return false when empire has less than 1.5x", () => {
+    const empire = createTestEmpire({ id: "e1", soldiers: 7499 });
     const allEmpires = [
       empire,
       createTestEmpire({ id: "e2", soldiers: 2000 }),
       createTestEmpire({ id: "e3", soldiers: 3000 }),
     ];
+    // Empire: 7499, Others: 5000, need 1.5x = 7500
     expect(checkMilitaryVictory(empire, allEmpires)).toBe(false);
   });
 
@@ -337,13 +342,13 @@ describe("checkMilitaryVictory", () => {
   });
 
   it("should exclude eliminated empires from calculation", () => {
-    const empire = createTestEmpire({ id: "e1", soldiers: 6000 });
+    const empire = createTestEmpire({ id: "e1", soldiers: 4500 });
     const allEmpires = [
       empire,
       createTestEmpire({ id: "e2", soldiers: 3000 }),
       createTestEmpire({ id: "e3", soldiers: 10000, isEliminated: true }),
     ];
-    // Others active: 3000, need 2x = 6000
+    // Others active: 3000, need 1.5x = 4500
     expect(checkMilitaryVictory(empire, allEmpires)).toBe(true);
   });
 });

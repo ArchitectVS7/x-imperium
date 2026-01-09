@@ -17,18 +17,18 @@ describe("calculateResearchCost", () => {
     expect(calculateResearchCost(0)).toBe(1_000);
   });
 
-  it("doubles cost each level (exponential growth)", () => {
-    // Level 1: 1,000 * 2^1 = 2,000
-    expect(calculateResearchCost(1)).toBe(2_000);
-    // Level 2: 1,000 * 2^2 = 4,000
-    expect(calculateResearchCost(2)).toBe(4_000);
-    // Level 3: 1,000 * 2^3 = 8,000
-    expect(calculateResearchCost(3)).toBe(8_000);
+  it("applies 1.5x cost multiplier each level (exponential growth)", () => {
+    // Level 1: 1,000 * 1.5^1 = 1,500
+    expect(calculateResearchCost(1)).toBe(1_500);
+    // Level 2: 1,000 * 1.5^2 = 2,250
+    expect(calculateResearchCost(2)).toBe(2_250);
+    // Level 3: 1,000 * 1.5^3 = 3,375
+    expect(calculateResearchCost(3)).toBe(3_375);
   });
 
   it("calculates correct cost for level 10", () => {
-    // Level 10: 1,000 * 2^10 = 1,024,000
-    expect(calculateResearchCost(10)).toBe(1_024_000);
+    // Level 10: 1,000 * 1.5^10 = 57,665 (floor)
+    expect(calculateResearchCost(10)).toBe(57_665);
   });
 
   it("returns 0 for negative levels", () => {
@@ -56,15 +56,15 @@ describe("calculateTotalResearchCost", () => {
 
   it("calculates cumulative cost", () => {
     // Level 0: 1,000
-    // Level 1: 2,000
-    // Level 2: 4,000
-    // Total to reach level 3: 7,000
-    expect(calculateTotalResearchCost(3)).toBe(7_000);
+    // Level 1: 1,500
+    // Level 2: 2,250
+    // Total to reach level 3: 4,750
+    expect(calculateTotalResearchCost(3)).toBe(4_750);
   });
 
   it("calculates correct total for level 5", () => {
-    // Levels 0-4: 1,000 + 2,000 + 4,000 + 8,000 + 16,000 = 31,000
-    expect(calculateTotalResearchCost(5)).toBe(31_000);
+    // Levels 0-4: 1,000 + 1,500 + 2,250 + 3,375 + 5,062 = 13,187
+    expect(calculateTotalResearchCost(5)).toBe(13_187);
   });
 });
 
@@ -80,13 +80,13 @@ describe("calculateResearchUpgradeCost", () => {
   it("calculates cost for single level upgrade", () => {
     // From level 0 to 1: cost of level 0 = 1,000
     expect(calculateResearchUpgradeCost(0, 1)).toBe(1_000);
-    // From level 5 to 6: cost of level 5 = 32,000
-    expect(calculateResearchUpgradeCost(5, 6)).toBe(32_000);
+    // From level 5 to 6: cost of level 5 = 7,593
+    expect(calculateResearchUpgradeCost(5, 6)).toBe(7_593);
   });
 
   it("calculates cost for multiple level upgrade", () => {
-    // From level 2 to 5: levels 2, 3, 4 = 4,000 + 8,000 + 16,000 = 28,000
-    expect(calculateResearchUpgradeCost(2, 5)).toBe(28_000);
+    // From level 2 to 5: levels 2, 3, 4 = 2,250 + 3,375 + 5,062 = 10,687
+    expect(calculateResearchUpgradeCost(2, 5)).toBe(10_687);
   });
 
   it("handles negative from level as 0", () => {
@@ -110,8 +110,8 @@ describe("calculateMaxResearchLevel", () => {
   });
 
   it("calculates correct level for surplus points", () => {
-    // 7,000 points from level 0: can reach level 3
-    expect(calculateMaxResearchLevel(7_000, 0)).toBe(3);
+    // 4,750 points from level 0: can reach level 3 (1,000 + 1,500 + 2,250 = 4,750)
+    expect(calculateMaxResearchLevel(4_750, 0)).toBe(3);
   });
 
   it("does not exceed max level", () => {
@@ -121,8 +121,8 @@ describe("calculateMaxResearchLevel", () => {
   });
 
   it("works from non-zero starting level", () => {
-    // 12,000 points from level 2: can buy level 2 (4,000) and level 3 (8,000)
-    expect(calculateMaxResearchLevel(12_000, 2)).toBe(4);
+    // 5,625 points from level 2: can buy level 2 (2,250) and level 3 (3,375)
+    expect(calculateMaxResearchLevel(5_625, 2)).toBe(4);
   });
 });
 
@@ -172,9 +172,9 @@ describe("calculateTurnsToResearchLevel", () => {
   });
 
   it("calculates turns for multiple levels", () => {
-    // From 0 to 2: 1,000 + 2,000 = 3,000
-    // At 100/turn = 30 turns
-    expect(calculateTurnsToResearchLevel(0, 0, 100, 2)).toBe(30);
+    // From 0 to 2: 1,000 + 1,500 = 2,500
+    // At 100/turn = 25 turns
+    expect(calculateTurnsToResearchLevel(0, 0, 100, 2)).toBe(25);
   });
 
   it("rounds up partial turns", () => {
@@ -186,7 +186,7 @@ describe("calculateTurnsToResearchLevel", () => {
 describe("constants", () => {
   it("has correct PRD values", () => {
     expect(RESEARCH_BASE_COST).toBe(1_000);
-    expect(RESEARCH_GROWTH_RATE).toBe(2.0);
+    expect(RESEARCH_GROWTH_RATE).toBe(1.5);
   });
 
   it("has reasonable max level", () => {

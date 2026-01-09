@@ -159,13 +159,13 @@ describe("calculateFleetPower", () => {
 
   it("calculates station power with base multiplier for attacker", () => {
     const fleet: FleetComposition = { ...emptyFleet, stations: 10 };
-    // 10 stations * 50 = 500
-    expect(calculateFleetPower(fleet, false)).toBe(500);
+    // 10 stations * 40 = 400
+    expect(calculateFleetPower(fleet, false)).toBe(400);
   });
 
   it("applies 2x station multiplier for defender", () => {
     const fleet: FleetComposition = { ...emptyFleet, stations: 10 };
-    // 10 stations * 50 * 2 (defense) * 1.2 (defender advantage) = 1200
+    // 10 stations * 40 * 2 (defense) * 1.2 (defender advantage) = 960
     const expectedPower = 10 * POWER_MULTIPLIERS.stations * STATION_DEFENSE_MULTIPLIER * DEFENDER_ADVANTAGE;
     expect(calculateFleetPower(fleet, true)).toBe(expectedPower);
   });
@@ -187,9 +187,9 @@ describe("calculateFleetPower", () => {
       heavyCruisers: 0,
       carriers: 0,
     };
-    // Base power: (50 * 1) + (10 * 50) + (20 * 4) = 50 + 500 + 80 = 630
-    // With diversity bonus: 630 * 1.15 = 724.5
-    const basePower = 50 * 1 + 10 * 50 + 20 * 4;
+    // Base power: (50 * 1) + (10 * 40) + (20 * 4) = 50 + 400 + 80 = 530
+    // With diversity bonus: 530 * 1.15 = 609.5
+    const basePower = 50 * 1 + 10 * 40 + 20 * 4;
     expect(calculateFleetPower(fleet, false)).toBe(basePower * DIVERSITY_BONUS);
   });
 
@@ -247,7 +247,7 @@ describe("calculatePowerRatio", () => {
 describe("POWER_MULTIPLIERS constants", () => {
   it("has correct values from PRD 6.2", () => {
     expect(POWER_MULTIPLIERS.fighters).toBe(1);
-    expect(POWER_MULTIPLIERS.stations).toBe(50);
+    expect(POWER_MULTIPLIERS.stations).toBe(40);
     expect(POWER_MULTIPLIERS.lightCruisers).toBe(4);
     expect(POWER_MULTIPLIERS.heavyCruisers).toBe(4);
     expect(POWER_MULTIPLIERS.carriers).toBe(12);

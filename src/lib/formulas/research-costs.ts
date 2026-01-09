@@ -3,7 +3,7 @@
  *
  * Calculates the research points required for technology progression.
  * - Exponential cost growth: each level costs more than the last
- * - Base cost doubles with each level (configurable growth rate)
+ * - Base cost grows by 1.5x per level (configurable growth rate)
  */
 
 // =============================================================================
@@ -14,7 +14,7 @@
 export const RESEARCH_BASE_COST = 1_000;
 
 /** Exponential growth rate (cost multiplier per level) */
-export const RESEARCH_GROWTH_RATE = 2.0;
+export const RESEARCH_GROWTH_RATE = 1.5;
 
 /** Maximum research level (prevents overflow) */
 export const RESEARCH_MAX_LEVEL = 50;
@@ -29,12 +29,12 @@ export const RESEARCH_MAX_LEVEL = 50;
  * Formula:
  * Cost = BaseCost × (GrowthRate ^ level)
  *
- * Example with base 1,000 and rate 2.0:
- * - Level 0: 1,000 × 2^0 = 1,000
- * - Level 1: 1,000 × 2^1 = 2,000
- * - Level 2: 1,000 × 2^2 = 4,000
- * - Level 5: 1,000 × 2^5 = 32,000
- * - Level 10: 1,000 × 2^10 = 1,024,000
+ * Example with base 1,000 and rate 1.5:
+ * - Level 0: 1,000 × 1.5^0 = 1,000
+ * - Level 1: 1,000 × 1.5^1 = 1,500
+ * - Level 2: 1,000 × 1.5^2 = 2,250
+ * - Level 5: 1,000 × 1.5^5 = ~7,594
+ * - Level 10: 1,000 × 1.5^10 = ~57,665
  *
  * @param level - The research level to calculate cost for (0-indexed)
  * @returns Research points required (integer)

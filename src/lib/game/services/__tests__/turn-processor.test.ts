@@ -237,7 +237,8 @@ describe("Turn Processor - Resource Production", () => {
     const { SECTOR_PRODUCTION } = await import("../../constants");
 
     // PRD 5.2: Sector Production values (as defined in constants.ts)
-    expect(SECTOR_PRODUCTION.food).toBe(160);
+    // Food production increased to 500 to fix starting food deficit (BAL-M6)
+    expect(SECTOR_PRODUCTION.food).toBe(500);
     expect(SECTOR_PRODUCTION.ore).toBe(112);
     expect(SECTOR_PRODUCTION.petroleum).toBe(92);
     expect(SECTOR_PRODUCTION.tourism).toBe(8000);
@@ -281,7 +282,7 @@ describe("Turn Processor - Integration Scenarios", () => {
 
     // Starting with 10,000 population
     const population = 10_000;
-    const foodProduction = SECTOR_PRODUCTION.food * 5; // 5 food sectors = 800
+    const foodProduction = SECTOR_PRODUCTION.food * 2; // 2 food sectors = 1000 food
     const foodConsumption = population * 0.05; // 500
 
     // Food check

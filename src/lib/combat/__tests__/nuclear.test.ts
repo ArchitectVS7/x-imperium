@@ -28,8 +28,8 @@ import {
 
 describe("Nuclear Warfare System", () => {
   describe("NUCLEAR_CONSTANTS", () => {
-    it("should have correct cost (500M credits)", () => {
-      expect(NUCLEAR_CONSTANTS.COST).toBe(500_000_000);
+    it("should have correct cost (50M credits - expensive but achievable)", () => {
+      expect(NUCLEAR_CONSTANTS.COST).toBe(50_000_000);
     });
 
     it("should have 40% population damage", () => {

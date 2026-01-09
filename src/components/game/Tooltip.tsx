@@ -191,7 +191,7 @@ export function FoodTooltip() {
         your population will starve and civil status will drop!
       </p>
       <p className="mt-1 text-gray-400 text-xs">
-        Food sectors produce 160 food/turn each.
+        Food sectors produce 500 food/turn each (feeds 10,000 population).
       </p>
     </div>
   );

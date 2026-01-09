@@ -16,8 +16,8 @@
  * Nuclear warfare system constants (PRD Turn 100+ unlock).
  */
 export const NUCLEAR_CONSTANTS = {
-  /** Cost to purchase a nuclear weapon (500M credits as per PRD) */
-  COST: 500_000_000,
+  /** Cost to purchase a nuclear weapon (50M credits - expensive but achievable in late game) */
+  COST: 50_000_000,
 
   /** Population damage dealt by a nuclear strike (40%) */
   POPULATION_DAMAGE: 0.40,

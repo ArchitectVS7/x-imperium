@@ -13,7 +13,7 @@ import { db } from "@/lib/db";
 import { games, empires, messages } from "@/lib/db/schema";
 import { eq, and, sql } from "drizzle-orm";
 import type { TurnActionResult, TurnStatus, TurnEvent, ResourceDelta } from "@/lib/game/types/turn-types";
-import { GAME_SETTINGS } from "@/lib/game/constants";
+import { GAME_SETTINGS, SECTOR_PRODUCTION } from "@/lib/game/constants";
 import { verifyEmpireOwnership } from "@/lib/security/validation";
 import { checkRateLimit } from "@/lib/security/rate-limiter";
 import { getGameSession } from "@/lib/session";
@@ -228,7 +228,7 @@ export async function getTurnOrderPanelDataAction(): Promise<TurnOrderPanelData 
 
     // Calculate food status
     const foodSectors = playerEmpire.sectors.filter(p => p.type === "food").length;
-    const foodProduction = foodSectors * 160; // SECTOR_PRODUCTION.food
+    const foodProduction = foodSectors * SECTOR_PRODUCTION.food;
     const foodConsumption = playerEmpire.population * 0.05;
     const foodBalance = foodProduction - foodConsumption;
 
@@ -365,7 +365,7 @@ export async function getGameLayoutDataAction(): Promise<GameLayoutData | null> 
 
     // Calculate food status
     const foodSectors = playerEmpire.sectors.filter(p => p.type === "food").length;
-    const foodProduction = foodSectors * 160;
+    const foodProduction = foodSectors * SECTOR_PRODUCTION.food;
     const foodConsumption = playerEmpire.population * 0.05;
     const foodBalance = foodProduction - foodConsumption;
 

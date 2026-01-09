@@ -9,6 +9,7 @@ import {
   calculateResearchCost,
   calculateResearchProgress,
   RESEARCH_BASE_COST,
+  RESEARCH_GROWTH_RATE,
 } from "@/lib/formulas/research-costs";
 import {
   RESEARCH_POINTS_PER_SECTOR,
@@ -41,23 +42,23 @@ describe("Research Constants", () => {
 
 describe("Research Cost Calculations", () => {
   it("should calculate correct cost for level 0", () => {
-    expect(calculateResearchCost(0)).toBe(1_000); // 1000 * 2^0
+    expect(calculateResearchCost(0)).toBe(1_000); // 1000 * 1.5^0
   });
 
   it("should calculate correct cost for level 1", () => {
-    expect(calculateResearchCost(1)).toBe(2_000); // 1000 * 2^1
+    expect(calculateResearchCost(1)).toBe(1_500); // 1000 * 1.5^1
   });
 
   it("should calculate correct cost for level 2", () => {
-    expect(calculateResearchCost(2)).toBe(4_000); // 1000 * 2^2
+    expect(calculateResearchCost(2)).toBe(2_250); // 1000 * 1.5^2
   });
 
   it("should calculate correct cost for level 3", () => {
-    expect(calculateResearchCost(3)).toBe(8_000); // 1000 * 2^3
+    expect(calculateResearchCost(3)).toBe(3_375); // 1000 * 1.5^3
   });
 
   it("should calculate correct cost for level 7 (max)", () => {
-    expect(calculateResearchCost(7)).toBe(128_000); // 1000 * 2^7
+    expect(calculateResearchCost(7)).toBe(17_085); // 1000 * 1.5^7 (floor)
   });
 
   it("should follow exponential growth pattern", () => {
@@ -65,8 +66,8 @@ describe("Research Cost Calculations", () => {
     const level1 = calculateResearchCost(1);
     const level2 = calculateResearchCost(2);
 
-    expect(level1).toBe(level0 * 2);
-    expect(level2).toBe(level1 * 2);
+    expect(level1).toBe(Math.floor(level0 * RESEARCH_GROWTH_RATE));
+    expect(level2).toBe(Math.floor(level1 * RESEARCH_GROWTH_RATE));
   });
 });
 
@@ -93,11 +94,11 @@ describe("Research Progress Calculations", () => {
   });
 
   it("should handle different levels correctly", () => {
-    // Level 1 costs 2000, so 1000 points = 50%
-    expect(calculateResearchProgress(1000, 1)).toBe(50);
+    // Level 1 costs 1500, so 750 points = 50%
+    expect(calculateResearchProgress(750, 1)).toBe(50);
 
-    // Level 2 costs 4000, so 2000 points = 50%
-    expect(calculateResearchProgress(2000, 2)).toBe(50);
+    // Level 2 costs 2250, so 1125 points = 50%
+    expect(calculateResearchProgress(1125, 2)).toBe(50);
   });
 });
 
@@ -137,17 +138,17 @@ describe("Level-Up Calculations", () => {
     expect(cost).toBe(1_000);
   });
 
-  it("should require 3000 total points to reach level 2", () => {
+  it("should require 2500 total points to reach level 2", () => {
     const totalCost = calculateResearchCost(0) + calculateResearchCost(1);
-    expect(totalCost).toBe(3_000); // 1000 + 2000
+    expect(totalCost).toBe(2_500); // 1000 + 1500
   });
 
-  it("should require 7000 total points to reach level 3", () => {
+  it("should require 4750 total points to reach level 3", () => {
     const totalCost =
       calculateResearchCost(0) +
       calculateResearchCost(1) +
       calculateResearchCost(2);
-    expect(totalCost).toBe(7_000); // 1000 + 2000 + 4000
+    expect(totalCost).toBe(4_750); // 1000 + 1500 + 2250
   });
 
   it("should calculate turns to level with overflow", () => {
@@ -167,25 +168,25 @@ describe("Level-Up Calculations", () => {
   });
 
   it("should handle overflow to next level", () => {
-    // 1500 points at level 0:
-    // - Costs 1000 for level 1, leaves 500 overflow
-    // - Level 1 costs 2000, so 500/2000 = 25% progress
-    const startPoints = 1500;
+    // 1250 points at level 0:
+    // - Costs 1000 for level 1, leaves 250 overflow
+    // - Level 1 costs 1500, so 250/1500 = 16.67% progress
+    const startPoints = 1250;
     const level0Cost = calculateResearchCost(0);
     const overflow = startPoints - level0Cost;
     const level1Cost = calculateResearchCost(1);
     const progressToLevel2 = (overflow / level1Cost) * 100;
 
-    expect(overflow).toBe(500);
-    expect(progressToLevel2).toBe(25);
+    expect(overflow).toBe(250);
+    expect(progressToLevel2).toBeCloseTo(16.67, 1);
   });
 
   it("should handle multiple level-ups from single investment", () => {
-    // 3000 points at level 0:
-    // - Level 0→1: costs 1000, leaves 2000
-    // - Level 1→2: costs 2000, leaves 0
+    // 2500 points at level 0:
+    // - Level 0->1: costs 1000, leaves 1500
+    // - Level 1->2: costs 1500, leaves 0
     // Result: level 2, 0 overflow
-    const startPoints = 3000;
+    const startPoints = 2500;
     let remainingPoints = startPoints;
     let level = 0;
 
@@ -273,8 +274,8 @@ describe("Turns to Level Calculations", () => {
 
   it("should calculate turns for multiple levels", () => {
     // From level 0, 0 progress, to level 2 with 10 research sectors
-    // Need: 1000 (level 0→1) + 2000 (level 1→2) = 3000 points
-    // Generating 1000/turn = 3 turns
+    // Need: 1000 (level 0->1) + 1500 (level 1->2) = 2500 points
+    // Generating 1000/turn = 3 turns (ceil of 2.5)
     const pointsNeeded = calculateResearchCost(0) + calculateResearchCost(1);
     const pointsPerTurn = 10 * RESEARCH_POINTS_PER_SECTOR; // 1000
     const turns = Math.ceil(pointsNeeded / pointsPerTurn);
@@ -311,10 +312,9 @@ describe("Research Edge Cases", () => {
 
   it("should handle very large point investments", () => {
     // 100,000 points at level 0
-    // Level costs: 1000, 2000, 4000, 8000, 16000, 32000 = 63000 for levels 0-5
-    // 64000 for level 6
-    // Total to level 6: 63000, remaining: 37000
-    // Level 6 costs 64000, so stays at level 6 with 37000 progress
+    // Level costs with 1.5x growth: 1000, 1500, 2250, 3375, 5062, 7593, 11390, 17085
+    // Total to level 7: ~49,255, which is less than 100,000
+    // Since MAX_RESEARCH_LEVEL is 7, we cap there
     let remainingPoints = 100_000;
     let level = 0;
 
@@ -328,8 +328,9 @@ describe("Research Edge Cases", () => {
       }
     }
 
-    expect(level).toBe(6); // 1000+2000+4000+8000+16000+32000 = 63000
-    expect(remainingPoints).toBe(37_000);
+    expect(level).toBe(7); // Capped at max level
+    // Total cost to reach level 7: 1000+1500+2250+3375+5062+7593+11390 = 32,170
+    expect(remainingPoints).toBe(100_000 - 32_170);
   });
 
   it("should handle zero research sectors correctly", () => {
@@ -348,9 +349,9 @@ describe("PRD 9.1 Compliance", () => {
     // Valid levels: 0, 1, 2, 3, 4, 5, 6, 7 = 8 levels
   });
 
-  it("should follow exponential cost formula: 1000 × 2^level", () => {
+  it("should follow exponential cost formula: 1000 * 1.5^level", () => {
     for (let level = 0; level <= MAX_RESEARCH_LEVEL; level++) {
-      const expectedCost = 1000 * Math.pow(2, level);
+      const expectedCost = Math.floor(1000 * Math.pow(1.5, level));
       expect(calculateResearchCost(level)).toBe(expectedCost);
     }
   });

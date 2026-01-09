@@ -47,8 +47,20 @@ export const STARTING_POPULATION = {
 // SECTOR PRODUCTION RATES (PRD 5.2)
 // =============================================================================
 
+/**
+ * Food sector production was increased from 160 to 500 to fix the starting
+ * food deficit issue (BAL-M6).
+ *
+ * Problem: New players start with 10,000 population consuming 500 food/turn,
+ * but only 1 food sector producing 160 food/turn = 340 food/turn deficit.
+ * Players would starve within 3 turns.
+ *
+ * Solution: One food sector now produces exactly enough food (500) to feed
+ * the starting population of 10,000. This makes food sectors more valuable
+ * and gives players a stable starting position.
+ */
 export const SECTOR_PRODUCTION = {
-  food: 160, // food units per turn
+  food: 500, // food units per turn (feeds 10,000 population)
   ore: 112, // ore units per turn
   petroleum: 92, // petroleum units per turn
   tourism: 8_000, // credits per turn

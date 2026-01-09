@@ -4,7 +4,7 @@
     "powerMultipliers": {
       "soldiers": 1,
       "fighters": 3,
-      "stations": 30,
+      "stations": 40,
       "lightCruisers": 5,
       "heavyCruisers": 8,
       "carriers": 2
@@ -29,7 +29,7 @@
     "powerMultipliers": {
       "soldiers": 1,
       "fighters": 1,
-      "stations": 50,
+      "stations": 40,
       "lightCruisers": 4,
       "heavyCruisers": 4,
       "carriers": 12

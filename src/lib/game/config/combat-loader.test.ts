@@ -38,7 +38,7 @@ describe("Combat Configuration Loader", () => {
     it("should load power multipliers", () => {
       expect(getUnifiedPowerMultiplier('soldiers')).toBe(1);
       expect(getUnifiedPowerMultiplier('fighters')).toBe(3);
-      expect(getUnifiedPowerMultiplier('stations')).toBe(30);
+      expect(getUnifiedPowerMultiplier('stations')).toBe(40);
       expect(getUnifiedPowerMultiplier('lightCruisers')).toBe(5);
       expect(getUnifiedPowerMultiplier('heavyCruisers')).toBe(8);
       expect(getUnifiedPowerMultiplier('carriers')).toBe(2);
@@ -58,7 +58,7 @@ describe("Combat Configuration Loader", () => {
     it("should load power multipliers", () => {
       expect(getLegacyPowerMultiplier('soldiers')).toBe(1);
       expect(getLegacyPowerMultiplier('fighters')).toBe(1);
-      expect(getLegacyPowerMultiplier('stations')).toBe(50);
+      expect(getLegacyPowerMultiplier('stations')).toBe(40);
       expect(getLegacyPowerMultiplier('lightCruisers')).toBe(4);
       expect(getLegacyPowerMultiplier('heavyCruisers')).toBe(4);
       expect(getLegacyPowerMultiplier('carriers')).toBe(12);
@@ -80,6 +80,16 @@ describe("Combat Configuration Loader", () => {
       expect(getBaseCasualtyRate()).toBe(0.25);
       expect(getMinCasualtyRate()).toBe(0.15);
       expect(getMaxCasualtyRate()).toBe(0.35);
+    });
+  });
+
+  describe("Station Power Consistency", () => {
+    it("should have consistent station power between unified and legacy systems", () => {
+      // Both systems should use the same station power value (40)
+      // to avoid confusion and potential bugs when systems interact
+      expect(getUnifiedPowerMultiplier('stations')).toBe(40);
+      expect(getLegacyPowerMultiplier('stations')).toBe(40);
+      expect(getUnifiedPowerMultiplier('stations')).toBe(getLegacyPowerMultiplier('stations'));
     });
   });
 });

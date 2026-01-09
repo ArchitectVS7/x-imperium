@@ -79,8 +79,18 @@ export const DIPLOMATIC_THRESHOLD = 0.5;
 /** Research victory: Complete all 8 fundamental research levels */
 export const RESEARCH_MAX_LEVEL = 7; // 0-indexed, so level 7 = completed all 8
 
-/** Military victory: 2× military power of all others combined */
-export const MILITARY_MULTIPLIER = 2.0;
+/**
+ * Military victory: 1.5× military power of all others combined
+ *
+ * Reduced from 2.0× to 1.5× for game balance (BAL-M7):
+ * - With 2.0×, in a 50-bot game where average empire has 10,000 military power,
+ *   you would need 980,000 power (2× of 490,000), requiring ~100× a single empire's power.
+ *   This made military victory nearly impossible without first eliminating most opponents,
+ *   rendering it redundant with conquest victory.
+ * - With 1.5×, victory requires 735,000 power (1.5× of 490,000), which is still very
+ *   challenging but achievable through focused military strategy and research upgrades.
+ */
+export const MILITARY_MULTIPLIER = 1.5;
 
 /** Default turn limit for survival victory */
 export const DEFAULT_TURN_LIMIT = 200;
@@ -115,11 +125,15 @@ export const VICTORY_PRIORITY: VictoryType[] = [
 /**
  * Unit weights for military power calculation.
  * Based on unit costs and combat effectiveness.
+ *
+ * Note: These weights are aligned with combat-config.json powerMultipliers
+ * to ensure consistency between combat calculations and victory conditions.
+ * See data/combat-config.json for the canonical combat power values.
  */
 export const MILITARY_UNIT_WEIGHTS = {
   soldiers: 1,
   fighters: 4,
-  stations: 100,
+  stations: 40, // Aligned with combat-config.json unified.powerMultipliers.stations
   lightCruisers: 10,
   heavyCruisers: 20,
   carriers: 50,
@@ -217,7 +231,7 @@ export function checkResearchVictory(empire: Empire): boolean {
 
 /**
  * Check if an empire has achieved Military Victory.
- * Requires 2× the military power of all other empires combined.
+ * Requires 1.5× the military power of all other empires combined.
  *
  * @param empire - The empire to check
  * @param allEmpires - All empires in the game
