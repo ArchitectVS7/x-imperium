@@ -211,8 +211,9 @@ export function SyndicateCatalog({ refreshTrigger, onPurchase }: SyndicateCatalo
             <div className="flex items-center gap-3">
               {!selectedItem.singleUse && (
                 <div className="flex items-center gap-2">
-                  <label className="text-xs text-gray-400">Qty:</label>
+                  <label htmlFor="syndicate-quantity" className="text-xs text-gray-400">Qty:</label>
                   <input
+                    id="syndicate-quantity"
                     type="number"
                     min={1}
                     max={100}

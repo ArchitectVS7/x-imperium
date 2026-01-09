@@ -112,6 +112,14 @@ export function BuildUnitsPanel({
     return Math.min(byCredits, byPopulation);
   };
 
+  // Generate aria-describedby value based on current state
+  const getAriaDescribedBy = (): string | undefined => {
+    const ids: string[] = [];
+    if (error) ids.push("build-units-error");
+    if (success) ids.push("build-units-success");
+    return ids.length > 0 ? ids.join(" ") : undefined;
+  };
+
   return (
     <div className="lcars-panel" data-testid="build-units-panel">
       <h2 className="text-lg font-semibold text-lcars-lavender mb-4">
@@ -119,13 +127,23 @@ export function BuildUnitsPanel({
       </h2>
 
       {error && (
-        <div className="mb-4 p-2 bg-red-900/50 border border-red-500 text-red-300 text-sm rounded">
+        <div
+          id="build-units-error"
+          role="alert"
+          aria-live="assertive"
+          className="mb-4 p-2 bg-red-900/50 border border-red-500 text-red-300 text-sm rounded"
+        >
           {error}
         </div>
       )}
 
       {success && (
-        <div className="mb-4 p-2 bg-green-900/50 border border-green-500 text-green-300 text-sm rounded">
+        <div
+          id="build-units-success"
+          role="status"
+          aria-live="polite"
+          className="mb-4 p-2 bg-green-900/50 border border-green-500 text-green-300 text-sm rounded"
+        >
           {success}
         </div>
       )}
@@ -231,13 +249,15 @@ export function BuildUnitsPanel({
       {selectedUnit && (
         <div className="border-t border-gray-700 pt-4">
           <div className="flex items-center gap-4 mb-4">
-            <label className="text-gray-400 text-sm">Quantity:</label>
+            <label htmlFor="build-units-quantity" className="text-gray-400 text-sm">Quantity:</label>
             <input
+              id="build-units-quantity"
               type="number"
               min={1}
               max={getMaxAffordable(selectedUnit)}
               value={quantity}
               onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
+              aria-describedby={getAriaDescribedBy()}
               className="w-24 px-2 py-1 bg-black border border-gray-600 rounded text-white font-mono text-center focus:border-lcars-amber focus:outline-none"
             />
             <button
@@ -272,6 +292,7 @@ export function BuildUnitsPanel({
           <button
             onClick={handleBuild}
             disabled={isPending || !canAfford(selectedUnit, quantity) || quantity <= 0}
+            aria-describedby={getAriaDescribedBy()}
             className={`w-full py-2 rounded font-semibold transition-colors ${
               canAfford(selectedUnit, quantity) && quantity > 0
                 ? "bg-lcars-amber text-black hover:bg-lcars-amber/80"

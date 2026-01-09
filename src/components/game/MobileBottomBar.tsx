@@ -9,11 +9,24 @@
  * - Button to open full action sheet
  *
  * Visible only on mobile (< lg breakpoint)
+ *
+ * Accessibility: Status indicators use both color AND icons to support
+ * colorblind users. Each status also has an aria-label for screen readers.
  */
 
 import { UI_LABELS } from "@/lib/theme/names";
 import { ResourceIcons, ActionIcons } from "@/lib/theme/icons";
-import { Menu } from "lucide-react";
+import {
+  Menu,
+  TrendingUp,
+  TrendingDown,
+  Minus,
+  AlertTriangle,
+  CheckCircle2,
+  Shield,
+  ShieldAlert,
+  type LucideIcon,
+} from "lucide-react";
 
 interface MobileBottomBarProps {
   currentTurn: number;
@@ -27,18 +40,26 @@ interface MobileBottomBarProps {
   isProcessing?: boolean;
 }
 
-const FOOD_COLORS = {
-  surplus: "text-green-400",
-  stable: "text-blue-400",
-  deficit: "text-yellow-400",
-  critical: "text-red-400",
+// Food status indicators with color, icon, and accessible label
+const FOOD_INDICATORS: Record<
+  MobileBottomBarProps["foodStatus"],
+  { color: string; icon: LucideIcon; label: string }
+> = {
+  surplus: { color: "text-green-400", icon: TrendingUp, label: "Food surplus - production exceeds consumption" },
+  stable: { color: "text-blue-400", icon: Minus, label: "Food stable - production matches consumption" },
+  deficit: { color: "text-yellow-400", icon: TrendingDown, label: "Food deficit - consumption exceeds production" },
+  critical: { color: "text-red-400", icon: AlertTriangle, label: "Food critical - severe shortage" },
 };
 
-const ARMY_COLORS = {
-  strong: "text-green-400",
-  moderate: "text-blue-400",
-  weak: "text-yellow-400",
-  critical: "text-red-400",
+// Army strength indicators with color, icon, and accessible label
+const ARMY_INDICATORS: Record<
+  MobileBottomBarProps["armyStrength"],
+  { color: string; icon: LucideIcon; label: string }
+> = {
+  strong: { color: "text-green-400", icon: Shield, label: "Army strong - well defended" },
+  moderate: { color: "text-blue-400", icon: CheckCircle2, label: "Army moderate - adequate defense" },
+  weak: { color: "text-yellow-400", icon: ShieldAlert, label: "Army weak - vulnerable to attack" },
+  critical: { color: "text-red-400", icon: AlertTriangle, label: "Army critical - severely under-defended" },
 };
 
 export function MobileBottomBar({
@@ -57,6 +78,11 @@ export function MobileBottomBar({
     if (num >= 1000) return `${(num / 1000).toFixed(0)}K`;
     return num.toString();
   };
+
+  const foodIndicator = FOOD_INDICATORS[foodStatus];
+  const armyIndicator = ARMY_INDICATORS[armyStrength];
+  const FoodStatusIcon = foodIndicator.icon;
+  const ArmyStatusIcon = armyIndicator.icon;
 
   return (
     <div
@@ -78,18 +104,34 @@ export function MobileBottomBar({
           <span className="text-sm font-mono text-lcars-amber">{formatCompact(credits)}</span>
         </div>
 
-        {/* Food status indicator */}
-        <div className="flex items-center gap-1">
-          <ResourceIcons.food className="w-4 h-4 text-green-400" />
-          <span className={`text-xs ${FOOD_COLORS[foodStatus]}`}>
+        {/* Food status indicator - uses icon + color for accessibility */}
+        <div
+          className="flex items-center gap-1"
+          role="status"
+          aria-label={foodIndicator.label}
+        >
+          <ResourceIcons.food className="w-4 h-4 text-green-400" aria-hidden="true" />
+          <FoodStatusIcon
+            className={`w-3 h-3 ${foodIndicator.color}`}
+            aria-hidden="true"
+          />
+          <span className={`text-xs ${foodIndicator.color}`}>
             {foodStatus.charAt(0).toUpperCase() + foodStatus.slice(1)}
           </span>
         </div>
 
-        {/* Army status indicator */}
-        <div className="flex items-center gap-1">
-          <ActionIcons.military className="w-4 h-4 text-red-400" />
-          <span className={`text-xs ${ARMY_COLORS[armyStrength]}`}>
+        {/* Army status indicator - uses icon + color for accessibility */}
+        <div
+          className="flex items-center gap-1"
+          role="status"
+          aria-label={armyIndicator.label}
+        >
+          <ActionIcons.military className="w-4 h-4 text-red-400" aria-hidden="true" />
+          <ArmyStatusIcon
+            className={`w-3 h-3 ${armyIndicator.color}`}
+            aria-hidden="true"
+          />
+          <span className={`text-xs ${armyIndicator.color}`}>
             {armyStrength.charAt(0).toUpperCase() + armyStrength.slice(1)}
           </span>
         </div>

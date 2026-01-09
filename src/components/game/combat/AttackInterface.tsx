@@ -280,6 +280,8 @@ export function AttackInterface({
             const isDisabled = attackType === "guerilla" && !forGuerilla && key !== "soldiers";
             const available = availableForces[key];
             const selected = selectedForces[key];
+            const sliderId = `attack-slider-${key}`;
+            const inputId = `attack-input-${key}`;
 
             return (
               <div
@@ -289,7 +291,7 @@ export function AttackInterface({
                 <div className="flex items-center justify-between mb-2">
                   <span className="flex items-center gap-2">
                     <IconComponent className={`w-4 h-4 ${color}`} />
-                    <span className={color}>{label}</span>
+                    <span id={`attack-label-${key}`} className={color}>{label}</span>
                   </span>
                   <span className="text-xs text-gray-500">
                     Available: {formatNumber(available)}
@@ -298,6 +300,7 @@ export function AttackInterface({
 
                 <div className="flex items-center gap-3">
                   <input
+                    id={sliderId}
                     type="range"
                     min={0}
                     max={available}
@@ -305,8 +308,10 @@ export function AttackInterface({
                     onChange={(e) => handleForceChange(key, parseInt(e.target.value, 10))}
                     disabled={isDisabled}
                     className="flex-1 accent-lcars-amber"
+                    aria-label={`${label} slider`}
                   />
                   <input
+                    id={inputId}
                     type="number"
                     min={0}
                     max={available}
@@ -314,6 +319,7 @@ export function AttackInterface({
                     onChange={(e) => handleForceChange(key, parseInt(e.target.value, 10) || 0)}
                     disabled={isDisabled}
                     className="w-20 px-2 py-1 bg-gray-800 border border-gray-700 rounded text-right font-mono text-sm"
+                    aria-label={`${label} quantity`}
                   />
                 </div>
               </div>

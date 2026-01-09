@@ -112,6 +112,14 @@ export function MarketPanel({ gameId, empireId, onTradeComplete }: MarketPanelPr
     setTrading(false);
   };
 
+  // Generate aria-describedby value based on current state
+  const getAriaDescribedBy = (): string | undefined => {
+    const ids: string[] = [];
+    if (error) ids.push("market-trade-error");
+    if (validation && !validation.valid) ids.push("market-validation-error-msg");
+    return ids.length > 0 ? ids.join(" ") : undefined;
+  };
+
   if (loading) {
     return (
       <div className="lcars-panel animate-pulse" data-testid="market-panel-loading">
@@ -123,7 +131,14 @@ export function MarketPanel({ gameId, empireId, onTradeComplete }: MarketPanelPr
   if (!status) {
     return (
       <div className="lcars-panel" data-testid="market-panel-error">
-        <p className="text-red-400">{error || "Failed to load market"}</p>
+        <p
+          id="market-load-error"
+          role="alert"
+          aria-live="assertive"
+          className="text-red-400"
+        >
+          {error || "Failed to load market"}
+        </p>
       </div>
     );
   }
@@ -161,16 +176,25 @@ export function MarketPanel({ gameId, empireId, onTradeComplete }: MarketPanelPr
           {/* Market Prices */}
           <div className="flex-1 overflow-y-auto pr-2">
             <h3 className="text-sm text-gray-400 mb-3 sticky top-0 bg-gray-900 py-1">Current Prices</h3>
-            <div className="space-y-2">
+            <div className="space-y-2" role="listbox" aria-label="Select resource to trade">
               {status.prices.map((price) => (
                 <div
                   key={price.resourceType}
+                  role="option"
+                  aria-selected={selectedResource === price.resourceType}
+                  tabIndex={0}
                   className={`flex items-center justify-between p-3 rounded cursor-pointer transition-colors ${
                     selectedResource === price.resourceType
                       ? "bg-lcars-amber/20 border border-lcars-amber"
                       : "bg-gray-800/50 hover:bg-gray-800"
                   }`}
                   onClick={() => setSelectedResource(price.resourceType)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      setSelectedResource(price.resourceType);
+                    }
+                  }}
                   data-testid={`market-price-${price.resourceType}`}
                 >
                   <span className="capitalize font-medium">{price.resourceType}</span>
@@ -204,8 +228,10 @@ export function MarketPanel({ gameId, empireId, onTradeComplete }: MarketPanelPr
           </h3>
 
           {/* Buy/Sell Toggle */}
-          <div className="flex gap-2 mb-4">
+          <div className="flex gap-2 mb-4" role="radiogroup" aria-label="Trade type selection">
             <button
+              role="radio"
+              aria-checked={tradeType === "buy"}
               className={`flex-1 py-2 rounded transition-colors font-medium ${
                 tradeType === "buy"
                   ? "bg-lcars-blue text-black"
@@ -217,6 +243,8 @@ export function MarketPanel({ gameId, empireId, onTradeComplete }: MarketPanelPr
               Buy
             </button>
             <button
+              role="radio"
+              aria-checked={tradeType === "sell"}
               className={`flex-1 py-2 rounded transition-colors font-medium ${
                 tradeType === "sell"
                   ? "bg-lcars-orange text-black"
@@ -231,14 +259,17 @@ export function MarketPanel({ gameId, empireId, onTradeComplete }: MarketPanelPr
 
           {/* Quantity Input */}
           <div className="mb-4">
-            <label className="block text-sm text-gray-400 mb-2">
+            <label htmlFor="market-quantity-input" className="block text-sm text-gray-400 mb-2">
               Quantity
             </label>
             <input
+              id="market-quantity-input"
               type="number"
               min="1"
               value={quantity}
               onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 0))}
+              aria-describedby={getAriaDescribedBy()}
+              aria-invalid={validation && !validation.valid ? "true" : undefined}
               className="w-full bg-gray-800 border border-gray-700 rounded px-4 py-3 text-white text-lg font-mono focus:border-lcars-amber focus:outline-none"
               data-testid="market-quantity-input"
             />
@@ -249,7 +280,7 @@ export function MarketPanel({ gameId, empireId, onTradeComplete }: MarketPanelPr
             {validation && (
               <div className={`p-4 rounded ${validation.valid ? "bg-gray-800" : "bg-red-900/30"}`}>
                 {validation.valid ? (
-                  <div className="space-y-2" data-testid="market-validation-success">
+                  <div className="space-y-2" data-testid="market-validation-success" role="status" aria-live="polite">
                     <div className="flex justify-between text-sm">
                       <span className="text-gray-400">Price per unit:</span>
                       <span className="font-mono">{validation.pricePerUnit.toFixed(2)} cr</span>
@@ -264,14 +295,26 @@ export function MarketPanel({ gameId, empireId, onTradeComplete }: MarketPanelPr
                     </div>
                   </div>
                 ) : (
-                  <p className="text-red-400" data-testid="market-validation-error">
+                  <p
+                    id="market-validation-error-msg"
+                    role="alert"
+                    aria-live="assertive"
+                    className="text-red-400"
+                    data-testid="market-validation-error"
+                  >
                     {validation.error}
                   </p>
                 )}
               </div>
             )}
             {error && (
-              <p className="text-red-400 text-sm mt-2" data-testid="market-error">
+              <p
+                id="market-trade-error"
+                role="alert"
+                aria-live="assertive"
+                className="text-red-400 text-sm mt-2"
+                data-testid="market-error"
+              >
                 {error}
               </p>
             )}
@@ -281,6 +324,7 @@ export function MarketPanel({ gameId, empireId, onTradeComplete }: MarketPanelPr
           <button
             onClick={handleTrade}
             disabled={!validation?.valid || trading}
+            aria-describedby={getAriaDescribedBy()}
             className={`w-full py-4 rounded-lg font-display text-lg transition-all ${
               validation?.valid && !trading
                 ? tradeType === "buy"

@@ -25,6 +25,18 @@ export type TutorialStep =
 export type TutorialStepWithVictory = TutorialStep | "victory";
 
 /**
+ * Navigation link for tutorial action guide.
+ */
+export interface TutorialActionLink {
+  /** Label for the navigation button */
+  label: string;
+  /** URL path to navigate to */
+  href?: string;
+  /** Panel type to open (for slide-out panels) */
+  panel?: string;
+}
+
+/**
  * Tutorial step metadata.
  */
 export interface TutorialStepInfo {
@@ -38,6 +50,8 @@ export interface TutorialStepInfo {
   highlightSelector?: string;
   /** Action guidance text - tells player what to do */
   actionGuide?: string;
+  /** Optional navigation link for direct action */
+  actionLink?: TutorialActionLink;
 }
 
 /**
@@ -49,19 +63,26 @@ export const TUTORIAL_STEPS: TutorialStepInfo[] = [
     title: "Welcome to Nexus Dominion",
     description:
       "You are the ruler of a fledgling space empire. Your goal is to expand, " +
-      "build your military, and achieve one of six victory conditions.",
+      "build your military, and achieve one of six victory conditions.\n\n" +
+      "This quick tutorial will show you the basics. Let's get started!",
     nextStep: "neighbors",
-    // No action guide for welcome - just read and continue
+    actionGuide: "Click 'Let's Go!' below to begin the tutorial",
+    // No action link for welcome - just proceed with the tutorial
   },
   {
     id: "neighbors",
     title: "Your Neighbors",
     description:
       "Your empire starts in a sector with 7-9 other empires. These are your " +
-      "immediate neighbors. You can attack them directly at 1.0x force cost.",
+      "immediate neighbors. You can attack them directly at 1.0x force cost.\n\n" +
+      "The Sectors page shows your territory and nearby empires.",
     targetElement: "[data-testid='sector-box-current']",
     highlightSelector: "[data-testid='nav-sectors'], [data-testid='sectors-nav-button']",
-    actionGuide: "Click 'Sectors' in the menu to see your territory",
+    actionGuide: "Click 'View Sectors' below to see your territory",
+    actionLink: {
+      label: "View Sectors",
+      href: "/game/sectors",
+    },
     nextStep: "galaxy",
   },
   {
@@ -70,33 +91,46 @@ export const TUTORIAL_STEPS: TutorialStepInfo[] = [
     description:
       "The galaxy has 10 sectors connected by borders and wormholes. " +
       "Adjacent sectors cost 1.2x forces to attack. Wormholes cost 1.5x but " +
-      "let you reach distant sectors.",
+      "let you reach distant sectors.\n\n" +
+      "The Starmap shows the entire galaxy and all empires.",
     targetElement: "[data-testid='galaxy-view']",
     highlightSelector: "[data-testid='nav-starmap'], [data-testid='starmap-nav-button']",
-    actionGuide: "Click 'Starmap' to view the galaxy",
+    actionGuide: "Click 'View Starmap' below to explore the galaxy",
+    actionLink: {
+      label: "View Starmap",
+      href: "/game/starmap",
+    },
     nextStep: "interface",
   },
   {
     id: "interface",
-    title: "Your Empire Dashboard",
+    title: "Build Your Military",
     description:
-      "This is your command center. Monitor resources, build units, " +
-      "research technology, and manage diplomacy from here.",
+      "A strong military is essential for both defense and expansion. " +
+      "Start by building soldiers - they're cheap and effective early game.\n\n" +
+      "The Military panel lets you queue units for production.",
     targetElement: "[data-testid='empire-status-bar']",
-    highlightSelector: "[data-testid='turn-order-panel']",
-    actionGuide: "The Turn Order Panel on the right shows your status",
+    highlightSelector: "[data-testid='turn-order-panel'], [data-testid='military-panel-button']",
+    actionGuide: "Click 'Open Military' below to view your forces and build queue",
+    actionLink: {
+      label: "Open Military",
+      panel: "military",
+    },
     nextStep: "first_turn",
   },
   {
     id: "first_turn",
     title: "Your First Turn",
     description:
-      "Click 'End Turn' when you're ready. Each turn, your sectors produce " +
-      "resources, your population grows, and the galaxy evolves. You have " +
-      "20 turns of protection before others can attack you.",
+      "When you're ready, click 'End Turn' to advance the game. Each turn:\n" +
+      "- Your sectors produce resources\n" +
+      "- Your population grows (if fed)\n" +
+      "- Queued units are built\n" +
+      "- Other empires take their actions\n\n" +
+      "You have 20 turns of protection before others can attack you.",
     targetElement: "[data-testid='end-turn-button']",
     highlightSelector: "[data-testid='end-turn-button']",
-    actionGuide: "Click the 'End Turn' button to complete your first turn",
+    actionGuide: "Click the 'End Turn' button in the sidebar to complete your first turn",
     action: "end_turn",
     nextStep: "victory",
   },
@@ -117,7 +151,8 @@ export const VICTORY_STEP: TutorialStepInfo = {
     "- Technological: Reach Research Level 10\n" +
     "- Domination: Eliminate all opponents",
   nextStep: null,
-  // No action guide for victory - tutorial complete after this
+  actionGuide: "Click 'Start Playing!' to begin your conquest of the galaxy",
+  // No action link for victory - tutorial complete after this
 };
 
 // =============================================================================

@@ -5,14 +5,21 @@
  *
  * Displays the 5-step tutorial with modal overlays, step indicators,
  * and interactive element highlighting.
+ *
+ * Enhanced with:
+ * - Navigation buttons for direct action (PJ-M3)
+ * - Prominent action guides for each step
+ * - Panel opening support for slide-out panels
  */
 
 import { useState, useCallback, useEffect } from "react";
-import { Circle, ArrowRight } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { Circle, ArrowRight, ExternalLink } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   type TutorialState,
   type TutorialStepInfo,
+  type TutorialActionLink,
 } from "@/lib/tutorial/types";
 import {
   getStepInfo,
@@ -26,6 +33,8 @@ import {
   initializeTutorialState,
   hasSkippedTutorial,
 } from "@/lib/tutorial/tutorial-service";
+import { usePanelContextSafe } from "@/contexts/PanelContext";
+import type { PanelType } from "@/components/game/EmpireStatusBar";
 
 // =============================================================================
 // PROPS
@@ -139,7 +148,13 @@ function StepContent({ step }: { step: TutorialStepInfo }) {
   );
 }
 
-function ActionGuide({ guide }: { guide: string }) {
+interface ActionGuideProps {
+  guide: string;
+  actionLink?: TutorialActionLink;
+  onNavigate?: () => void;
+}
+
+function ActionGuide({ guide, actionLink, onNavigate }: ActionGuideProps) {
   return (
     <div className="mt-4 p-3 bg-lcars-amber/10 border border-lcars-amber/30 rounded-lg">
       <div className="flex items-center gap-2 text-lcars-amber">
@@ -147,6 +162,23 @@ function ActionGuide({ guide }: { guide: string }) {
         <span className="text-sm font-medium">Do This:</span>
       </div>
       <p className="text-sm text-gray-200 mt-1 ml-6">{guide}</p>
+
+      {/* Navigation button for direct action */}
+      {actionLink && (
+        <button
+          onClick={onNavigate}
+          className={cn(
+            "mt-3 ml-6 inline-flex items-center gap-2 px-4 py-2 rounded",
+            "bg-lcars-amber/20 hover:bg-lcars-amber/30 text-lcars-amber",
+            "border border-lcars-amber/40 hover:border-lcars-amber/60",
+            "transition-all duration-200 text-sm font-medium"
+          )}
+          data-testid="tutorial-action-button"
+        >
+          <ExternalLink className="w-4 h-4" />
+          {actionLink.label}
+        </button>
+      )}
     </div>
   );
 }
@@ -160,8 +192,12 @@ export function TutorialOverlay({
   onComplete,
   forceShow,
 }: TutorialOverlayProps) {
+  const router = useRouter();
   const [state, setState] = useState<TutorialState | null>(null);
   const [isVisible, setIsVisible] = useState(false);
+
+  // Get panel context for opening slide-out panels (safely - may be null)
+  const panelContext = usePanelContextSafe();
 
   // Initialize state on mount
   useEffect(() => {
@@ -244,6 +280,27 @@ export function TutorialOverlay({
     onComplete?.(false);
   }, [state, onComplete]);
 
+  // Handle navigation action (for steps with actionLink)
+  const handleNavigate = useCallback((actionLink: TutorialActionLink) => {
+    let actionTaken = false;
+
+    // If it's a panel, try to open it
+    if (actionLink.panel && panelContext) {
+      panelContext.openPanel(actionLink.panel as PanelType);
+      actionTaken = true;
+    }
+    // If it's a URL, navigate to it
+    else if (actionLink.href) {
+      router.push(actionLink.href);
+      actionTaken = true;
+    }
+
+    // Only advance to next step if navigation action was successful
+    if (actionTaken) {
+      handleNext();
+    }
+  }, [panelContext, router, handleNext]);
+
   // Don't render if not visible or no state
   if (!isVisible || !state || !state.currentStep) {
     return null;
@@ -287,7 +344,11 @@ export function TutorialOverlay({
 
         {/* Action Guide - shows "Do This:" guidance for interactive steps */}
         {currentStep.actionGuide && (
-          <ActionGuide guide={currentStep.actionGuide} />
+          <ActionGuide
+            guide={currentStep.actionGuide}
+            actionLink={currentStep.actionLink}
+            onNavigate={currentStep.actionLink ? () => handleNavigate(currentStep.actionLink!) : undefined}
+          />
         )}
 
         {/* Highlight hint (fallback if no action guide) */}

@@ -69,18 +69,20 @@ export function CompactCommandBar({
             </div>
           </div>
 
-          {/* Expand/Collapse Toggle */}
+          {/* Expand/Collapse Toggle - WCAG 2.1 compliant 44px touch target */}
           <button
             onClick={() => setIsExpanded(!isExpanded)}
-            className="flex items-center gap-1 px-2 py-1 rounded hover:bg-gray-800 transition-colors text-gray-400 hover:text-white"
+            className="flex items-center gap-1 px-3 py-2 min-w-[44px] min-h-[44px] rounded hover:bg-gray-800 transition-colors text-gray-400 hover:text-white"
+            aria-expanded={isExpanded}
+            aria-label={isExpanded ? "Show less details" : "Show more details"}
           >
             <span className="text-xs uppercase tracking-wider">
               {isExpanded ? "Less" : "More"}
             </span>
             {isExpanded ? (
-              <ChevronUp className="w-3 h-3" />
+              <ChevronUp className="w-4 h-4" />
             ) : (
-              <ChevronDown className="w-3 h-3" />
+              <ChevronDown className="w-4 h-4" />
             )}
           </button>
         </div>

@@ -232,33 +232,37 @@ export function CombatPanelContent({
         <div>
           <h3 className="text-sm font-semibold text-lcars-lavender mb-2">Forces to Send</h3>
           <div className="space-y-2">
-            {(Object.keys(myForces) as Array<keyof Forces>).map((unit) => (
-              <div key={unit} className="flex items-center justify-between text-sm">
-                <label className="capitalize text-gray-300">{unit}</label>
-                <div className="flex items-center gap-2">
-                  <span className="text-gray-500 text-xs">
-                    /{myForces[unit]}
-                  </span>
-                  <input
-                    type="number"
-                    min={0}
-                    max={myForces[unit]}
-                    value={selectedForces[unit]}
-                    onChange={(e) =>
-                      setSelectedForces((prev) => ({
-                        ...prev,
-                        [unit]: Math.min(
-                          Math.max(0, parseInt(e.target.value) || 0),
-                          myForces[unit]
-                        ),
-                      }))
-                    }
-                    className="w-20 px-2 py-1 bg-gray-800 border border-gray-600 rounded text-right text-sm"
-                    disabled={attackType === "guerilla" && unit !== "soldiers"}
-                  />
+            {(Object.keys(myForces) as Array<keyof Forces>).map((unit) => {
+              const inputId = `combat-panel-force-${unit}`;
+              return (
+                <div key={unit} className="flex items-center justify-between text-sm">
+                  <label htmlFor={inputId} className="capitalize text-gray-300">{unit}</label>
+                  <div className="flex items-center gap-2">
+                    <span className="text-gray-500 text-xs">
+                      /{myForces[unit]}
+                    </span>
+                    <input
+                      id={inputId}
+                      type="number"
+                      min={0}
+                      max={myForces[unit]}
+                      value={selectedForces[unit]}
+                      onChange={(e) =>
+                        setSelectedForces((prev) => ({
+                          ...prev,
+                          [unit]: Math.min(
+                            Math.max(0, parseInt(e.target.value) || 0),
+                            myForces[unit]
+                          ),
+                        }))
+                      }
+                      className="w-20 px-2 py-1 bg-gray-800 border border-gray-600 rounded text-right text-sm"
+                      disabled={attackType === "guerilla" && unit !== "soldiers"}
+                    />
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       )}

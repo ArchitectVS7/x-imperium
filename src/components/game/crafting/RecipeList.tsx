@@ -156,6 +156,7 @@ export function RecipeList({ refreshTrigger, onCraftQueued }: RecipeListProps) {
             checked={showLocked}
             onChange={(e) => setShowLocked(e.target.checked)}
             className="rounded bg-gray-700 border-gray-600"
+            aria-label="Show locked recipes"
           />
           <span className="text-gray-400">Show locked</span>
         </label>
@@ -249,8 +250,9 @@ export function RecipeList({ refreshTrigger, onCraftQueued }: RecipeListProps) {
           </div>
 
           <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mb-3">
-            <label className="text-gray-400 text-sm font-semibold">Quantity:</label>
+            <label htmlFor="crafting-quantity" className="text-gray-400 text-sm font-semibold">Quantity:</label>
             <input
+              id="crafting-quantity"
               type="number"
               min={1}
               max={100}

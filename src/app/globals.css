@@ -43,6 +43,26 @@ body {
   }
 }
 
+/* =============================================================================
+ * WCAG 2.1 TOUCH TARGET UTILITIES
+ * Ensures interactive elements meet 44x44px minimum touch target size
+ * ============================================================================= */
+
+.touch-target {
+  min-width: 44px;
+  min-height: 44px;
+}
+
+/* For small visual elements that need larger hit areas */
+.touch-target-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+}
+
 /* Animation keyframes */
 @keyframes fade-out {
   0% {

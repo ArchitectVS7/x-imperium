@@ -125,11 +125,18 @@ export default function CombatPage() {
     );
   }
 
-  if (error) {
+  if (error && !myForces) {
     return (
       <div className="p-6" data-testid="combat-page">
         <h1 className="text-2xl font-display text-lcars-amber mb-6">Combat</h1>
-        <div className="text-red-400">Error: {error}</div>
+        <div
+          id="combat-page-error"
+          role="alert"
+          aria-live="assertive"
+          className="text-red-400"
+        >
+          Error: {error}
+        </div>
       </div>
     );
   }
@@ -137,6 +144,18 @@ export default function CombatPage() {
   return (
     <div className="p-6" data-testid="combat-page">
       <h1 className="text-2xl font-display text-lcars-amber mb-6">Combat</h1>
+
+      {/* Error display for non-fatal errors */}
+      {error && myForces && (
+        <div
+          id="combat-error"
+          role="alert"
+          aria-live="assertive"
+          className="mb-4 p-3 bg-red-900/50 border border-red-500 text-red-300 text-sm rounded"
+        >
+          {error}
+        </div>
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Left Column: Attack Interface */}
@@ -151,11 +170,13 @@ export default function CombatPage() {
                 No targets available. Start a game with bots to have enemies to attack.
               </div>
             ) : (
-              <div className="space-y-2">
+              <div className="space-y-2" role="listbox" aria-label="Available targets">
                 {targets.map((target) => (
                   <button
                     key={target.id}
                     onClick={() => setSelectedTarget(target)}
+                    role="option"
+                    aria-selected={selectedTarget?.id === target.id}
                     className={`w-full p-3 rounded text-left transition-colors ${
                       selectedTarget?.id === target.id
                         ? "bg-lcars-amber/20 border border-lcars-amber"
@@ -178,9 +199,11 @@ export default function CombatPage() {
             <h2 className="text-lg font-semibold text-lcars-lavender mb-4">
               Attack Type
             </h2>
-            <div className="flex gap-4">
+            <div className="flex gap-4" role="radiogroup" aria-label="Attack type selection">
               <button
                 onClick={() => setAttackType("invasion")}
+                role="radio"
+                aria-checked={attackType === "invasion"}
                 className={`flex-1 p-3 rounded transition-colors ${
                   attackType === "invasion"
                     ? "bg-red-600 text-white"
@@ -193,6 +216,8 @@ export default function CombatPage() {
               </button>
               <button
                 onClick={() => setAttackType("guerilla")}
+                role="radio"
+                aria-checked={attackType === "guerilla"}
                 className={`flex-1 p-3 rounded transition-colors ${
                   attackType === "guerilla"
                     ? "bg-orange-600 text-white"
@@ -215,12 +240,13 @@ export default function CombatPage() {
               <div className="space-y-3">
                 {(Object.keys(myForces) as Array<keyof Forces>).map((unit) => (
                   <div key={unit} className="flex items-center justify-between">
-                    <label className="text-sm capitalize">{unit}</label>
+                    <label htmlFor={`force-input-${unit}`} className="text-sm capitalize">{unit}</label>
                     <div className="flex items-center gap-2">
                       <span className="text-gray-400 text-xs">
                         Available: {myForces[unit]}
                       </span>
                       <input
+                        id={`force-input-${unit}`}
                         type="number"
                         min={0}
                         max={myForces[unit]}
@@ -234,6 +260,7 @@ export default function CombatPage() {
                             ),
                           }))
                         }
+                        aria-describedby={error && myForces ? "combat-error" : undefined}
                         className="w-24 px-2 py-1 bg-gray-800 border border-gray-600 rounded text-right"
                         disabled={attackType === "guerilla" && unit !== "soldiers"}
                         data-testid={`force-${unit}`}
@@ -249,7 +276,11 @@ export default function CombatPage() {
           {selectedTarget && myForces && (
             <div className={isPending ? "opacity-50 pointer-events-none" : ""}>
               {isPending && (
-                <div className="text-center text-lcars-amber mb-4 animate-pulse font-semibold">
+                <div
+                  role="status"
+                  aria-live="polite"
+                  className="text-center text-lcars-amber mb-4 animate-pulse font-semibold"
+                >
                   ATTACKING...
                 </div>
               )}

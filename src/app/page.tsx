@@ -54,42 +54,45 @@ Your Command Center (dashboard) shows your current resources, population, and mi
   {
     title: "Resources & Economy",
     content: `There are 5 key resources:
-• Credits - Your currency for buying units and sectors
-• Food - Feeds your population (shortage causes starvation!)
-• Raw Materials (Ore) - Used for construction and crafting
-• Plasma (Petroleum) - Powers advanced units and operations
-• Research Points - Invest these to unlock new technologies
+- Credits - Your currency for buying units and sectors
+- Food - Feeds your population (shortage causes starvation!)
+- Raw Materials (Ore) - Used for construction and crafting
+- Plasma (Petroleum) - Powers advanced units and operations
+- Research Points - Invest these to unlock new technologies
 
 Buy different sector types to produce the resources you need. Balance is key!`,
   },
   {
     title: "Military & Combat",
     content: `Build a diverse military force:
-• Marines (soldiers) - Ground troops, cheap but essential
-• Drones (fighters) - Fast attack craft
-• Frigates & Cruisers - Main battle fleet
-• Carriers - Heavy assault ships
-• Covert Agents - Spies for intel and sabotage
+- Marines (soldiers) - Ground troops, cheap but essential
+- Drones (fighters) - Fast attack craft
+- Frigates & Cruisers - Main battle fleet
+- Carriers - Heavy assault ships
+- Covert Agents - Spies for intel and sabotage
 
-Combat happens in 3 phases: Space Battle → Orbital Bombardment → Ground Assault. A diverse army gets bonuses!`,
+Combat happens in 3 phases: Space Battle -> Orbital Bombardment -> Ground Assault. A diverse army gets bonuses!`,
   },
   {
     title: "Diplomacy & Intelligence",
     content: `You don't have to fight alone:
-• Non-Aggression Pacts - Prevent attacks between empires
-• Alliances - Mutual defense agreements
-• Messages - Communicate with rival empires
+- Non-Aggression Pacts - Prevent attacks between empires
+- Alliances - Mutual defense agreements
+- Messages - Communicate with rival empires
 
 Use Intel Ops to spy on enemies, steal technology, or sabotage their operations. Knowledge is power - you can't see enemy strength without intelligence!`,
   },
   {
     title: "Victory Conditions",
-    content: `There are 3 ways to win:
-• Conquest Victory - Control 60% of all sectors in the galaxy
-• Economic Victory - Achieve 1.5x the networth of all other empires combined
-• Survival Victory - Be the strongest empire when turn 200 ends
+    content: `There are 6 ways to win:
+- Conquest - Control 60% of all sectors
+- Economic - Have 1.5x the networth of 2nd place
+- Survival - Highest score at turn 200
+- Coalition - Lead a victorious alliance
+- Technological - Reach Research Level 10
+- Domination - Eliminate all opponents
 
-Plan your strategy accordingly - will you conquer, trade, or simply outlast?`,
+Plan your strategy accordingly - will you conquer, research, ally, or simply outlast?`,
   },
 ];
 
@@ -142,11 +145,11 @@ function HowToPlayAccordion() {
         >
           <button
             onClick={() => setOpenIndex(openIndex === index ? null : index)}
-            className="w-full px-4 py-3 flex justify-between items-center text-left hover:bg-gray-800/50 transition-colors"
+            className="w-full px-4 py-3 flex justify-between items-center text-left hover:bg-gray-800/50 transition-colors min-h-[44px]"
           >
             <span className="font-display text-lcars-amber">{section.title}</span>
-            <span className="text-gray-400 text-xl">
-              {openIndex === index ? "−" : "+"}
+            <span className="text-gray-400 text-xl min-w-[44px] min-h-[44px] flex items-center justify-center">
+              {openIndex === index ? "-" : "+"}
             </span>
           </button>
           {openIndex === index && (
@@ -194,30 +197,39 @@ function ScreenshotCarousel() {
         </div>
       </div>
 
-      {/* Navigation arrows */}
+      {/* Navigation arrows - WCAG 2.1 compliant 44px touch targets */}
       <button
         onClick={prevSlide}
-        className="absolute left-2 top-1/2 -translate-y-1/2 w-10 h-10 bg-gray-900/80 hover:bg-gray-800 rounded-full flex items-center justify-center text-lcars-amber transition-colors"
+        className="absolute left-2 top-1/2 -translate-y-1/2 min-w-[44px] min-h-[44px] w-11 h-11 bg-gray-900/80 hover:bg-gray-800 rounded-full flex items-center justify-center text-lcars-amber transition-colors"
+        aria-label="Previous screenshot"
       >
-        ‹
+        <span className="text-xl" aria-hidden="true">&#8249;</span>
       </button>
       <button
         onClick={nextSlide}
-        className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 bg-gray-900/80 hover:bg-gray-800 rounded-full flex items-center justify-center text-lcars-amber transition-colors"
+        className="absolute right-2 top-1/2 -translate-y-1/2 min-w-[44px] min-h-[44px] w-11 h-11 bg-gray-900/80 hover:bg-gray-800 rounded-full flex items-center justify-center text-lcars-amber transition-colors"
+        aria-label="Next screenshot"
       >
-        ›
+        <span className="text-xl" aria-hidden="true">&#8250;</span>
       </button>
 
-      {/* Dots indicator */}
-      <div className="flex justify-center gap-2 mt-4">
-        {screenshots.map((_, index) => (
+      {/* Dots indicator - WCAG 2.1 compliant 44px touch targets */}
+      <div className="flex justify-center gap-1 mt-4">
+        {screenshots.map((screenshot, index) => (
           <button
             key={index}
             onClick={() => setCurrentSlide(index)}
-            className={`w-2 h-2 rounded-full transition-colors ${
-              index === currentSlide ? "bg-lcars-amber" : "bg-gray-600"
-            }`}
-          />
+            className="min-w-[44px] min-h-[44px] flex items-center justify-center touch-target"
+            aria-label={`Go to ${screenshot.title} screenshot`}
+            aria-current={index === currentSlide ? "true" : undefined}
+          >
+            <span
+              className={`w-3 h-3 rounded-full transition-colors ${
+                index === currentSlide ? "bg-lcars-amber" : "bg-gray-600"
+              }`}
+              aria-hidden="true"
+            />
+          </button>
         ))}
       </div>
     </div>
@@ -264,7 +276,7 @@ export default function HomePage() {
 
           {/* Scroll indicator */}
           <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
-            <span className="text-gray-500 text-2xl">↓</span>
+            <span className="text-gray-500 text-2xl">&#8595;</span>
           </div>
         </div>
       </section>
@@ -346,7 +358,7 @@ export default function HomePage() {
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-gray-500">
           <div className="flex gap-4">
             <span>Nexus Dominion v0.6-Prototype</span>
-            <span>•</span>
+            <span>*</span>
             <span>M11 Complete</span>
           </div>
           <div className="flex gap-6">
