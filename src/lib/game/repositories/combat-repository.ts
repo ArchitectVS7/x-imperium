@@ -51,12 +51,14 @@ export interface AttackWithLogs extends Attack {
 // INPUT VALIDATION
 // =============================================================================
 
+/** Pre-compiled UUID regex for performance (avoid recompiling on each call) */
+const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
 /**
  * Validate UUID format to prevent injection attacks.
  */
 function isValidUUID(id: string): boolean {
-  const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-  return uuidRegex.test(id);
+  return UUID_REGEX.test(id);
 }
 
 /**

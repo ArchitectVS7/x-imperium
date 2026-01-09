@@ -20,7 +20,7 @@ import { eq, lt, and, or, sql } from "drizzle-orm";
  *
  * Set ADMIN_SECRET in your .env.local file to enable admin functions.
  */
-function verifyAdminAccess(): { authorized: boolean; error?: string } {
+function verifyAdminAccess(providedSecret?: string): { authorized: boolean; error?: string } {
   const adminSecret = process.env.ADMIN_SECRET;
 
   if (!adminSecret) {
@@ -30,7 +30,15 @@ function verifyAdminAccess(): { authorized: boolean; error?: string } {
     };
   }
 
-  // In production, this should verify:
+  // SECURITY FIX: Verify caller provides correct secret
+  if (!providedSecret || providedSecret !== adminSecret) {
+    return {
+      authorized: false,
+      error: "Invalid admin secret provided.",
+    };
+  }
+
+  // In production, this should also verify:
   // 1. User session/authentication
   // 2. User has admin role in database
   // 3. Optional: Require re-authentication for destructive operations
@@ -64,12 +72,12 @@ type DbQueryResult<T = unknown> = T[] | { rows: T[] };
  * Check which tables actually exist in the database.
  * Useful for diagnosing migration issues.
  */
-export async function checkDatabaseTablesAction(): Promise<{
+export async function checkDatabaseTablesAction(adminSecret: string): Promise<{
   success: boolean;
   tables?: string[];
   error?: string;
 }> {
-  const authCheck = verifyAdminAccess();
+  const authCheck = verifyAdminAccess(adminSecret);
   if (!authCheck.authorized) {
     return { success: false, error: authCheck.error };
   }
@@ -119,12 +127,12 @@ export async function checkDatabaseTablesAction(): Promise<{
  * - messages, treaties, bot memories
  * - market orders, research progress, etc.
  */
-export async function cleanupOldGamesAction(): Promise<{
+export async function cleanupOldGamesAction(adminSecret: string): Promise<{
   success: boolean;
   deletedCount: number;
   error?: string;
 }> {
-  const authCheck = verifyAdminAccess();
+  const authCheck = verifyAdminAccess(adminSecret);
   if (!authCheck.authorized) {
     return { success: false, deletedCount: 0, error: authCheck.error };
   }
@@ -173,7 +181,7 @@ export async function cleanupOldGamesAction(): Promise<{
 /**
  * Get detailed database storage statistics.
  */
-export async function getDatabaseStatsAction(): Promise<{
+export async function getDatabaseStatsAction(adminSecret: string): Promise<{
   success: boolean;
   stats?: {
     gameCount: number;
@@ -188,7 +196,7 @@ export async function getDatabaseStatsAction(): Promise<{
   };
   error?: string;
 }> {
-  const authCheck = verifyAdminAccess();
+  const authCheck = verifyAdminAccess(adminSecret);
   if (!authCheck.authorized) {
     return { success: false, error: authCheck.error };
   }
@@ -263,12 +271,12 @@ export async function getDatabaseStatsAction(): Promise<{
  * Delete ALL games using TRUNCATE CASCADE for efficiency.
  * WARNING: This deletes everything instantly!
  */
-export async function deleteAllGamesAction(): Promise<{
+export async function deleteAllGamesAction(adminSecret: string): Promise<{
   success: boolean;
   deletedCount: number;
   error?: string;
 }> {
-  const authCheck = verifyAdminAccess();
+  const authCheck = verifyAdminAccess(adminSecret);
   if (!authCheck.authorized) {
     return { success: false, deletedCount: 0, error: authCheck.error };
   }
@@ -331,12 +339,12 @@ export async function deleteAllGamesAction(): Promise<{
  *
  * Do NOT modify this pattern to accept dynamic table names from user input.
  */
-export async function truncateAllTablesAction(): Promise<{
+export async function truncateAllTablesAction(adminSecret: string): Promise<{
   success: boolean;
   tablesCleared: string[];
   error?: string;
 }> {
-  const authCheck = verifyAdminAccess();
+  const authCheck = verifyAdminAccess(adminSecret);
   if (!authCheck.authorized) {
     return { success: false, tablesCleared: [], error: authCheck.error };
   }
@@ -436,12 +444,12 @@ export async function truncateAllTablesAction(): Promise<{
  * Prune bot memories to free up space without deleting games.
  * Useful when the memory table is the main bloat.
  */
-export async function pruneAllMemoriesAction(): Promise<{
+export async function pruneAllMemoriesAction(adminSecret: string): Promise<{
   success: boolean;
   deletedCount: number;
   error?: string;
 }> {
-  const authCheck = verifyAdminAccess();
+  const authCheck = verifyAdminAccess(adminSecret);
   if (!authCheck.authorized) {
     return { success: false, deletedCount: 0, error: authCheck.error };
   }
@@ -481,12 +489,12 @@ export async function pruneAllMemoriesAction(): Promise<{
 /**
  * Prune performance logs older than 24 hours.
  */
-export async function prunePerformanceLogsAction(): Promise<{
+export async function prunePerformanceLogsAction(adminSecret: string): Promise<{
   success: boolean;
   deletedCount: number;
   error?: string;
 }> {
-  const authCheck = verifyAdminAccess();
+  const authCheck = verifyAdminAccess(adminSecret);
   if (!authCheck.authorized) {
     return { success: false, deletedCount: 0, error: authCheck.error };
   }

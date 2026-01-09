@@ -1504,6 +1504,8 @@ export const messages = pgTable(
     index("messages_is_read_idx").on(table.isRead),
     // Composite index for filtering messages by game and channel
     index("messages_game_channel_idx").on(table.gameId, table.channel),
+    // Composite index for querying unread messages for a recipient in a game
+    index("messages_game_recipient_read_idx").on(table.gameId, table.recipientId, table.isRead),
   ]
 );
 
