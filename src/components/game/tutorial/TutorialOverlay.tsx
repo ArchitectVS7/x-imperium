@@ -192,6 +192,8 @@ export function TutorialOverlay({
   onComplete,
   forceShow,
 }: TutorialOverlayProps) {
+  // ALL HOOKS MUST BE CALLED UNCONDITIONALLY AT THE TOP LEVEL
+  // (React Rules of Hooks - no early returns before hooks)
   const router = useRouter();
   const [state, setState] = useState<TutorialState | null>(null);
   const [isVisible, setIsVisible] = useState(false);
@@ -199,13 +201,22 @@ export function TutorialOverlay({
   // Get panel context for opening slide-out panels (safely - may be null)
   const panelContext = usePanelContextSafe();
 
+  // Check if tutorial was already skipped (for early exit in render)
+  const wasSkippedOnMount = typeof window !== 'undefined' && hasSkippedTutorial();
+
   // Initialize state on mount
   useEffect(() => {
+    // Never show tutorial if it's been skipped
+    if (hasSkippedTutorial()) {
+      setIsVisible(false);
+      return;
+    }
+
     const savedState = loadTutorialState();
     if (savedState) {
       setState(savedState);
-      setIsVisible(savedState.isActive);
-    } else if (!hasSkippedTutorial()) {
+      setIsVisible(savedState.isActive && !hasSkippedTutorial());
+    } else {
       const newState = initializeTutorialState();
       setState(newState);
       saveTutorialState(newState);
@@ -301,11 +312,17 @@ export function TutorialOverlay({
     }
   }, [panelContext, router, handleNext]);
 
-  // Don't render if not visible or no state
-  if (!isVisible || !state || !state.currentStep) {
+  // Don't render if not visible, no state, or tutorial was skipped (unless forceShow)
+  // Check hasSkippedTutorial() synchronously to prevent flash of tutorial on mount
+  // forceShow overrides skip state (for testing or replay functionality)
+  const shouldHide = !forceShow && (!isVisible || !state || !state.currentStep || wasSkippedOnMount || hasSkippedTutorial());
+  const forceShowButNoState = forceShow && (!state || !state.currentStep);
+
+  if (shouldHide || forceShowButNoState || !state || !state.currentStep) {
     return null;
   }
 
+  // TypeScript now knows state and state.currentStep are not null
   const currentStep = getStepInfo(state.currentStep);
   if (!currentStep) return null;
 
