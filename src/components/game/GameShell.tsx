@@ -35,10 +35,11 @@ import { QuickReferenceModal } from "./QuickReferenceModal";
 import { DefeatAnalysisModal } from "./DefeatAnalysisModal";
 import {
   getGameLayoutDataAction,
-  endTurnEnhancedAction,
   type GameLayoutData,
 } from "@/app/actions/turn-actions";
 import type { TurnEvent, ResourceDelta, DefeatAnalysis } from "@/lib/game/types/turn-types";
+import { useToast } from "@/hooks/useToast";
+import { useTurnProcessing, type TurnProcessingResult } from "@/hooks/useTurnProcessing";
 import type { CivilStatusKey } from "@/lib/theme/names";
 import { ResourcePanel } from "./ResourcePanel";
 import {
@@ -70,26 +71,11 @@ export function GameShell({ children, initialLayoutData }: GameShellProps) {
     initialLayoutData ?? null
   );
 
-  // Turn processing state
-  const [isProcessing, setIsProcessing] = useState(false);
-
   // Modal state
   const [showModal, setShowModal] = useState(false);
-  const [turnResult, setTurnResult] = useState<{
-    turn: number;
-    processingMs: number;
-    resourceChanges: ResourceDelta;
-    populationBefore: number;
-    populationAfter: number;
-    events: TurnEvent[];
-    messagesReceived: number;
-    botBattles: number;
-    empiresEliminated: string[];
-    victoryResult?: { type: string; message: string };
-  } | null>(null);
+  const [turnResult, setTurnResult] = useState<TurnProcessingResult | null>(null);
 
   // Tutorial completion tracking (P2-16 fix)
-  // This tracks whether the tutorial has been completed/skipped so we can sequence modals properly
   const [tutorialCompleted, setTutorialCompleted] = useState(false);
 
   // Slide-out panel state (desktop)
@@ -105,28 +91,23 @@ export function GameShell({ children, initialLayoutData }: GameShellProps) {
   // Defeat analysis modal state
   const [defeatAnalysis, setDefeatAnalysis] = useState<DefeatAnalysis | null>(null);
 
-  // Toast notification state for errors
-  const [toast, setToast] = useState<{ message: string; type: "error" | "success" } | null>(null);
-  const toastTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // Toast notifications (extracted hook)
+  const { toast, showToast, dismissToast } = useToast({ duration: 5000 });
 
-  // Show toast notification with auto-dismiss
-  const showToast = useCallback((message: string, type: "error" | "success" = "error") => {
-    if (toastTimeoutRef.current) {
-      clearTimeout(toastTimeoutRef.current);
-    }
-    setToast({ message, type });
-    toastTimeoutRef.current = setTimeout(() => {
-      setToast(null);
-    }, 5000); // Auto-dismiss after 5 seconds
-  }, []);
-
-  // Refresh layout data (used for initial load and SSE fallback)
-  const refreshLayoutData = useCallback(async () => {
-    const data = await getGameLayoutDataAction();
-    if (data) {
-      setLayoutData(data);
-    }
-  }, []);
+  // Turn processing (extracted hook)
+  const { isProcessing, processTurn, refreshLayoutData } = useTurnProcessing({
+    onSuccess: useCallback((result: TurnProcessingResult) => {
+      setTurnResult(result);
+      setShowModal(true);
+    }, []),
+    onError: useCallback((error: string) => {
+      showToast(error, "error");
+    }, [showToast]),
+    onDefeat: useCallback((analysis: DefeatAnalysis) => {
+      setDefeatAnalysis(analysis);
+    }, []),
+    setLayoutData,
+  });
 
   // SSE connection for real-time game state updates
   const { isConnected: sseConnected, error: sseError } = useGameStateStream({
@@ -244,62 +225,11 @@ export function GameShell({ children, initialLayoutData }: GameShellProps) {
     setTutorialCompleted(true);
   }, []);
 
-  // Handle end turn
+  // Handle end turn (delegates to hook, closes mobile sheet)
   const handleEndTurn = useCallback(async () => {
-    if (isProcessing) return;
-
-    setIsProcessing(true);
-    // Close mobile sheet if open
     setMobileSheetOpen(false);
-
-    try {
-      const result = await endTurnEnhancedAction();
-
-      if (result.success) {
-        setTurnResult({
-          turn: result.turn,
-          processingMs: result.processingMs,
-          resourceChanges: result.resourceChanges,
-          populationBefore: result.populationBefore,
-          populationAfter: result.populationAfter,
-          events: result.events,
-          messagesReceived: result.messagesReceived,
-          botBattles: result.botBattles,
-          empiresEliminated: result.empiresEliminated,
-          victoryResult: result.victoryResult,
-        });
-        setShowModal(true);
-
-        // Show defeat analysis modal if player was defeated
-        if (result.defeatAnalysis) {
-          setDefeatAnalysis({
-            cause: result.defeatAnalysis.cause as DefeatAnalysis["cause"],
-            finalTurn: result.defeatAnalysis.finalTurn,
-            turnsPlayed: result.defeatAnalysis.turnsPlayed,
-            finalCredits: result.defeatAnalysis.finalCredits,
-            finalSectors: result.defeatAnalysis.finalSectors,
-            finalPopulation: result.defeatAnalysis.finalPopulation,
-            factors: result.defeatAnalysis.factors.map(f => ({
-              type: f.type as DefeatAnalysis["factors"][0]["type"],
-              description: f.description,
-              severity: f.severity as DefeatAnalysis["factors"][0]["severity"],
-            })),
-          });
-        }
-
-        // Refresh layout data after turn
-        await refreshLayoutData();
-      } else {
-        showToast(result.error ?? "Turn processing failed", "error");
-        console.error("Turn failed:", result.error);
-      }
-    } catch (error) {
-      showToast("An unexpected error occurred while processing turn", "error");
-      console.error("End turn error:", error);
-    } finally {
-      setIsProcessing(false);
-    }
-  }, [isProcessing, refreshLayoutData, showToast]);
+    await processTurn();
+  }, [processTurn]);
 
   // Handle modal close
   const handleCloseModal = useCallback(() => {
@@ -628,7 +558,7 @@ export function GameShell({ children, initialLayoutData }: GameShellProps) {
             </span>
             <span className="text-sm font-medium">{toast.message}</span>
             <button
-              onClick={() => setToast(null)}
+              onClick={dismissToast}
               className="ml-auto text-white/80 hover:text-white"
               aria-label="Dismiss notification"
             >

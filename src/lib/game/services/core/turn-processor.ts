@@ -539,18 +539,202 @@ export async function processTurn(gameId: string): Promise<TurnResult> {
 }
 
 // =============================================================================
+// EMPIRE TURN HELPER FUNCTIONS
+// =============================================================================
+
+/** Result of income and maintenance calculation */
+interface IncomeResult {
+  resourceProduction: ReturnType<typeof processTurnResources>;
+  unitMaintenance: ReturnType<typeof calculateUnitMaintenance>;
+  sectorMaintenance: ReturnType<typeof calculateMaintenanceCost>;
+  totalMaintenance: number;
+  newCredits: number;
+  newFood: number;
+  newOre: number;
+  newPetroleum: number;
+  newResearchPoints: number;
+  incomeMultiplier: number;
+}
+
+/**
+ * Calculate income, production, and maintenance for an empire.
+ * Pure function that computes resource deltas without side effects.
+ */
+function calculateIncomeAndMaintenance(
+  empire: Empire,
+  sectors: Sector[],
+  difficulty: Difficulty
+): IncomeResult {
+  const incomeMultiplier = getIncomeMultiplier(empire.civilStatus as CivilStatusLevel);
+  let resourceProduction = processTurnResources(sectors, incomeMultiplier);
+
+  // Apply nightmare difficulty bonus for bot empires (+25% credits)
+  if (empire.type === "bot" && difficulty === "nightmare") {
+    const bonusCredits = applyBotNightmareBonus(
+      resourceProduction.final.credits,
+      difficulty
+    );
+    resourceProduction = {
+      ...resourceProduction,
+      final: { ...resourceProduction.final, credits: bonusCredits },
+    };
+  }
+
+  // Calculate unit maintenance
+  const unitCounts: UnitCounts = {
+    soldiers: empire.soldiers,
+    fighters: empire.fighters,
+    stations: empire.stations,
+    lightCruisers: empire.lightCruisers,
+    heavyCruisers: empire.heavyCruisers,
+    carriers: empire.carriers,
+    covertAgents: empire.covertAgents,
+  };
+  const unitMaintenance = calculateUnitMaintenance(unitCounts);
+  const sectorMaintenance = calculateMaintenanceCost(sectors.length);
+  const totalMaintenance = sectorMaintenance.totalCost + unitMaintenance.totalCost;
+
+  // Calculate new resource totals
+  const creditsAfterMaintenance = resourceProduction.final.credits - unitMaintenance.totalCost;
+  const newCredits = Math.max(0, empire.credits + creditsAfterMaintenance);
+  const newFood = empire.food + resourceProduction.final.food;
+  const newOre = empire.ore + resourceProduction.final.ore;
+  const newPetroleum = empire.petroleum + resourceProduction.final.petroleum;
+  const newResearchPoints = empire.researchPoints + resourceProduction.final.researchPoints;
+
+  return {
+    resourceProduction,
+    unitMaintenance,
+    sectorMaintenance,
+    totalMaintenance,
+    newCredits,
+    newFood,
+    newOre,
+    newPetroleum,
+    newResearchPoints,
+    incomeMultiplier,
+  };
+}
+
+/**
+ * Build civil status events from turn outcomes.
+ * Pure function that determines what events affect civil status.
+ */
+function buildCivilStatusEvents(
+  populationStatus: "growth" | "starvation" | "stable",
+  finalFood: number,
+  foodConsumed: number,
+  maintenanceRatio: number,
+  sectors: Sector[]
+): CivilStatusEvent[] {
+  const civilEvents: CivilStatusEvent[] = [];
+
+  // Check food status
+  if (populationStatus === "starvation") {
+    civilEvents.push({ type: "starvation", severity: 1.0 });
+  } else if (populationStatus === "growth") {
+    if (finalFood > foodConsumed * 0.5) {
+      civilEvents.push({ type: "food_surplus", consecutiveTurns: 1 });
+    }
+  }
+
+  // Check maintenance burden
+  if (maintenanceRatio > 0.8) {
+    civilEvents.push({ type: "high_maintenance", severity: maintenanceRatio });
+  } else if (maintenanceRatio < 0.3) {
+    civilEvents.push({ type: "low_maintenance", severity: maintenanceRatio });
+  }
+
+  // Check for education sectors
+  if (sectors.some(p => p.type === "education")) {
+    civilEvents.push({ type: "education" });
+  }
+
+  return civilEvents;
+}
+
+/** Result of revolt/defeat check */
+interface DefeatCheckResult {
+  isBankrupt: boolean;
+  isRevolting: boolean;
+  isCivilCollapse: boolean;
+  isAlive: boolean;
+  revoltUnitLosses: {
+    soldierLoss: number;
+    fighterLoss: number;
+    stationLoss: number;
+    lightCruiserLoss: number;
+    heavyCruiserLoss: number;
+    carrierLoss: number;
+    covertAgentLoss: number;
+  };
+  revoltMessage?: string;
+}
+
+/**
+ * Check for defeat conditions (bankruptcy, revolt, civil collapse).
+ */
+async function checkDefeatConditions(
+  empire: Empire,
+  sectors: Sector[],
+  newCredits: number,
+  resourceCredits: number,
+  statusUpdate: CivilStatusUpdate | { newStatus: CivilStatusLevel; changed: boolean },
+  populationResult: { newPopulation: number },
+  gameId: string
+): Promise<DefeatCheckResult> {
+  const isBankrupt = newCredits <= 0 && resourceCredits < 0;
+  const isRevolting = statusUpdate.newStatus === "revolting";
+
+  let revoltUnitLosses = {
+    soldierLoss: 0,
+    fighterLoss: 0,
+    stationLoss: 0,
+    lightCruiserLoss: 0,
+    heavyCruiserLoss: 0,
+    carrierLoss: 0,
+    covertAgentLoss: 0,
+  };
+  let isCivilCollapse = false;
+  let revoltMessage: string | undefined;
+
+  if (isRevolting) {
+    const consecutiveRevoltingTurns = await getConsecutiveRevoltingTurns(empire.id, gameId);
+    const revoltConsequence = calculateRevoltConsequences(empire, sectors.length, consecutiveRevoltingTurns);
+    revoltMessage = revoltConsequence.message;
+
+    if (revoltConsequence.isDefeated) {
+      isCivilCollapse = true;
+    } else if (revoltConsequence.unitsLost > 0) {
+      revoltUnitLosses = applyRevoltConsequences(empire, revoltConsequence);
+    }
+  }
+
+  const isAlive = !isBankrupt && !isCivilCollapse && populationResult.newPopulation > 0 && sectors.length > 0;
+
+  return {
+    isBankrupt,
+    isRevolting,
+    isCivilCollapse,
+    isAlive,
+    revoltUnitLosses,
+    revoltMessage,
+  };
+}
+
+// =============================================================================
 // EMPIRE TURN PROCESSING
 // =============================================================================
 
 /**
  * Process a single turn for one empire
  *
- * Executes all phases for a single empire:
+ * Orchestrates all phases by calling helper functions:
  * 1. Calculate income with civil status multiplier
  * 2. Update population (growth/starvation)
  * 3. Evaluate civil status changes
- * 4-6. Stubs for future phases
- * 7. Apply maintenance (already in resource calculation)
+ * 4-6. Queue processing (research, build, covert, crafting)
+ * 7. Apply maintenance (included in phase 1)
  * 8. Check for defeat conditions
  *
  * TRANSACTION SUPPORT (P1-11):
@@ -581,48 +765,11 @@ async function processEmpireTurn(
   // PHASE 1: INCOME COLLECTION
   // ==========================================================================
 
-  // Get current civil status multiplier
-  const incomeMultiplier = getIncomeMultiplier(empire.civilStatus as CivilStatusLevel);
-
-  // Calculate resource production with sector maintenance already deducted
-  let resourceProduction = processTurnResources(sectors, incomeMultiplier);
-
-  // Apply nightmare difficulty bonus for bot empires (+25% credits)
-  if (empire.type === "bot" && difficulty === "nightmare") {
-    const bonusCredits = applyBotNightmareBonus(
-      resourceProduction.final.credits,
-      difficulty
-    );
-    resourceProduction = {
-      ...resourceProduction,
-      final: {
-        ...resourceProduction.final,
-        credits: bonusCredits,
-      },
-    };
-  }
-
-  // Calculate unit maintenance (M3)
-  const unitCounts: UnitCounts = {
-    soldiers: empire.soldiers,
-    fighters: empire.fighters,
-    stations: empire.stations,
-    lightCruisers: empire.lightCruisers,
-    heavyCruisers: empire.heavyCruisers,
-    carriers: empire.carriers,
-    covertAgents: empire.covertAgents,
-  };
-  const unitMaintenance = calculateUnitMaintenance(unitCounts);
-  const sectorMaintenance = calculateMaintenanceCost(sectors.length);
-  const totalMaintenance = sectorMaintenance.totalCost + unitMaintenance.totalCost;
-
-  // Calculate new resource totals (deduct unit maintenance from credits)
-  const creditsAfterMaintenance = resourceProduction.final.credits - unitMaintenance.totalCost;
-  const newCredits = Math.max(0, empire.credits + creditsAfterMaintenance);
-  const newFood = empire.food + resourceProduction.final.food;
-  const newOre = empire.ore + resourceProduction.final.ore;
-  const newPetroleum = empire.petroleum + resourceProduction.final.petroleum;
-  const newResearchPoints = empire.researchPoints + resourceProduction.final.researchPoints;
+  const income = calculateIncomeAndMaintenance(empire, sectors, difficulty);
+  const {
+    resourceProduction, totalMaintenance, sectorMaintenance, unitMaintenance,
+    newCredits, newFood, newOre, newPetroleum, newResearchPoints, incomeMultiplier
+  } = income;
 
   // Add production event
   events.push({
@@ -632,7 +779,7 @@ async function processEmpireTurn(
     empireId: empire.id,
   });
 
-  // Add maintenance event (combined sector + unit)
+  // Add maintenance event
   events.push({
     type: "maintenance",
     message: `Paid ${totalMaintenance.toLocaleString()} credits in maintenance (${sectorMaintenance.totalCost.toLocaleString()} sectors, ${unitMaintenance.totalCost.toLocaleString()} units)`,
@@ -710,32 +857,15 @@ async function processEmpireTurn(
   // PHASE 3: CIVIL STATUS EVALUATION
   // ==========================================================================
 
-  // Build civil status events based on this turn's outcomes
-  const civilEvents: CivilStatusEvent[] = [];
-
-  // Check food status
-  if (populationUpdate.status === "starvation") {
-    civilEvents.push({ type: "starvation", severity: 1.0 });
-  } else if (populationUpdate.status === "growth") {
-    // Only count as surplus if we have significant leftover food
-    if (finalFood > populationUpdate.foodConsumed * 0.5) {
-      civilEvents.push({ type: "food_surplus", consecutiveTurns: 1 });
-    }
-  }
-
-  // Check maintenance burden (if credits went negative before clamping)
+  // Build civil status events using helper function
   const maintenanceRatio = totalMaintenance / Math.max(1, resourceProduction.production.credits);
-  if (maintenanceRatio > 0.8) {
-    civilEvents.push({ type: "high_maintenance", severity: maintenanceRatio });
-  } else if (maintenanceRatio < 0.3) {
-    civilEvents.push({ type: "low_maintenance", severity: maintenanceRatio });
-  }
-
-  // Check for education sectors (provide bonus)
-  const hasEducation = sectors.some(p => p.type === "education");
-  if (hasEducation) {
-    civilEvents.push({ type: "education" });
-  }
+  const civilEvents = buildCivilStatusEvents(
+    populationUpdate.status,
+    finalFood,
+    populationUpdate.foodConsumed,
+    maintenanceRatio,
+    sectors
+  );
 
   // Evaluate civil status
   const statusUpdate = evaluateCivilStatus(
@@ -830,8 +960,19 @@ async function processEmpireTurn(
   // PHASE 8: DEFEAT CHECK (M6)
   // ==========================================================================
 
-  // Check for bankruptcy (can't pay maintenance)
-  const isBankrupt = newCredits <= 0 && resourceProduction.final.credits < 0;
+  const defeatCheck = await checkDefeatConditions(
+    empire,
+    sectors,
+    newCredits,
+    resourceProduction.final.credits,
+    statusUpdate,
+    populationUpdate,
+    gameId
+  );
+
+  const { isBankrupt, isRevolting, isCivilCollapse, isAlive, revoltUnitLosses, revoltMessage } = defeatCheck;
+
+  // Add defeat-related events
   if (isBankrupt) {
     events.push({
       type: "bankruptcy",
@@ -841,56 +982,23 @@ async function processEmpireTurn(
     });
   }
 
-  // Check for revolting status with ramping consequences
-  const isRevolting = statusUpdate.newStatus === "revolting";
-  let revoltUnitLosses = {
-    soldierLoss: 0,
-    fighterLoss: 0,
-    stationLoss: 0,
-    lightCruiserLoss: 0,
-    heavyCruiserLoss: 0,
-    carrierLoss: 0,
-    covertAgentLoss: 0,
-  };
-  let isCivilCollapse = false;
-
-  if (isRevolting) {
-    // Get consecutive revolting turns from history
-    const consecutiveRevoltingTurns = await getConsecutiveRevoltingTurns(
-      empire.id,
-      gameId
-    );
-
-    // Calculate ramping consequences
-    const revoltConsequence = calculateRevoltConsequences(
-      empire,
-      sectors.length,
-      consecutiveRevoltingTurns
-    );
-
+  if (isRevolting && revoltMessage) {
     events.push({
       type: "revolt_consequences",
-      message: revoltConsequence.message,
-      severity: revoltConsequence.isDefeated ? "error" : "warning",
+      message: revoltMessage,
+      severity: isCivilCollapse ? "error" : "warning",
       empireId: empire.id,
     });
 
-    if (revoltConsequence.isDefeated) {
-      isCivilCollapse = true;
+    if (isCivilCollapse) {
       events.push({
         type: "defeat",
         message: "CIVIL WAR! Your empire has collapsed!",
         severity: "error",
         empireId: empire.id,
       });
-    } else if (revoltConsequence.unitsLost > 0) {
-      // Apply military desertion
-      revoltUnitLosses = applyRevoltConsequences(empire, revoltConsequence);
     }
   }
-
-  // Empire is alive if not bankrupt, not collapsed, has population, and has sectors
-  const isAlive = !isBankrupt && !isCivilCollapse && populationUpdate.newPopulation > 0 && sectors.length > 0;
 
   // ==========================================================================
   // UPDATE DATABASE
