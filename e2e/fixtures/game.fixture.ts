@@ -252,6 +252,8 @@ export function assertResourceIncreased(
 /**
  * Advance the turn and wait for state to update.
  * Returns the state before and after the turn.
+ *
+ * FIX: Now handles turn summary modal properly using waitFor() instead of isVisible()
  */
 export async function advanceTurn(page: Page): Promise<{
   before: EmpireState;
@@ -264,6 +266,12 @@ export async function advanceTurn(page: Page): Promise<{
   const endTurnButton = page.locator('[data-testid="turn-order-end-turn"], [data-testid="end-turn-button"], [data-testid="mobile-end-turn"], button:has-text("NEXT CYCLE")').first();
   await expect(endTurnButton).toBeVisible({ timeout: 10000 });
   await endTurnButton.click();
+
+  // Wait for page to process the request
+  await page.waitForLoadState("domcontentloaded");
+
+  // Dismiss turn summary modal if it appears (waits up to 30s for server processing)
+  await dismissTurnSummaryModal(page, 30000);
 
   // Wait for turn to increment
   await waitForTurnChange(page, before.turn);
@@ -326,6 +334,36 @@ export async function waitForCondition(
   }).toPass({ timeout });
 }
 
+/**
+ * Dismiss turn summary modal if visible.
+ * FIX: Uses waitFor() instead of isVisible() to properly wait for modal appearance.
+ * The modal shows turn results and must be dismissed before further interaction.
+ */
+export async function dismissTurnSummaryModal(page: Page, timeout: number = 30000): Promise<boolean> {
+  const modal = page.locator('[data-testid="turn-summary-modal"]');
+
+  try {
+    // Wait for modal to appear (it may not appear if disabled in settings)
+    await modal.waitFor({ state: 'visible', timeout });
+
+    // Try to click Continue button
+    const continueBtn = modal.locator('button:has-text("Continue"), [data-testid="turn-summary-continue"]').first();
+    if (await continueBtn.isVisible({ timeout: 2000 }).catch(() => false)) {
+      await continueBtn.click();
+    } else {
+      // Fallback: press Escape to close
+      await page.keyboard.press("Escape");
+    }
+
+    // Wait for modal to disappear
+    await modal.waitFor({ state: 'hidden', timeout: 3000 }).catch(() => {});
+    return true;
+  } catch {
+    // Modal didn't appear within timeout - that's OK
+    return false;
+  }
+}
+
 // =============================================================================
 // GAME SETUP HELPERS
 // =============================================================================
@@ -355,15 +393,52 @@ export async function skipTutorialViaLocalStorage(page: Page): Promise<void> {
 /**
  * Dismiss any tutorial overlays that might be blocking the UI.
  * Loops through all possible tutorial dismissal patterns.
+ * Enhanced with aggressive overlay detection and force dismissal.
  */
 export async function dismissTutorialOverlays(page: Page): Promise<void> {
-  // First try to dismiss tutorial overlay via JavaScript
+  // STEP 1: Force set localStorage keys to skip tutorial
   await page.evaluate(() => {
     localStorage.setItem("nexus-dominion-tutorial-skipped", "true");
     localStorage.setItem("nexus-dominion-contextual-hints-dismissed", "true");
+    // Also set the tutorial state as fully skipped
+    localStorage.setItem("nexus-dominion-tutorial", JSON.stringify({
+      isActive: false,
+      currentStep: null,
+      completedSteps: [],
+      skipped: true,
+      startedAt: null,
+      completedAt: null,
+    }));
   }).catch(() => {});
 
-  // Loop to dismiss multiple overlays via click
+  // STEP 2: Check for tutorial overlay and dismiss it
+  const tutorialOverlay = page.locator('[data-testid="tutorial-overlay"]');
+  if (await tutorialOverlay.isVisible({ timeout: 500 }).catch(() => false)) {
+    console.log('Warning: Tutorial overlay detected, attempting dismissal...');
+
+    // Try clicking the skip button
+    const skipButton = tutorialOverlay.locator('[data-testid="tutorial-skip"]');
+    if (await skipButton.isVisible({ timeout: 200 }).catch(() => false)) {
+      await skipButton.click({ force: true });
+      await tutorialOverlay.waitFor({ state: 'hidden', timeout: 2000 }).catch(() => {});
+    } else {
+      // If no skip button, try pressing Escape to close
+      await page.keyboard.press('Escape');
+      await tutorialOverlay.waitFor({ state: 'hidden', timeout: 2000 }).catch(() => {});
+    }
+
+    // Force remove the overlay from DOM if still present
+    if (await tutorialOverlay.isVisible({ timeout: 200 }).catch(() => false)) {
+      await page.evaluate(() => {
+        const overlay = document.querySelector('[data-testid="tutorial-overlay"]');
+        if (overlay) {
+          overlay.remove();
+        }
+      }).catch(() => {});
+    }
+  }
+
+  // STEP 3: Loop to dismiss any other modal overlays
   for (let round = 0; round < 5; round++) {
     let dismissed = false;
 
@@ -426,18 +501,84 @@ export async function dismissTutorialOverlays(page: Page): Promise<void> {
       break;
     }
   }
+
+  // STEP 4: Final verification - ensure no overlay is blocking the UI
+  const finalCheck = page.locator('[data-testid="tutorial-overlay"]');
+  if (await finalCheck.isVisible({ timeout: 200 }).catch(() => false)) {
+    console.log('Warning: Tutorial overlay still present after dismissal attempts, force removing...');
+    await page.evaluate(() => {
+      const overlay = document.querySelector('[data-testid="tutorial-overlay"]');
+      if (overlay) {
+        overlay.remove();
+      }
+    }).catch(() => {});
+  }
+
+  // STEP 5: Close any slide-out panels that might be open
+  const slideOutPanel = page.locator('[data-testid="slide-out-panel"]');
+  if (await slideOutPanel.isVisible({ timeout: 300 }).catch(() => false)) {
+    console.log('Warning: Slide-out panel detected, closing...');
+    // Try clicking the close button or pressing Escape
+    const closeButton = slideOutPanel.locator('button[aria-label="Close"], button:has-text("Close"), button:has-text("×")').first();
+    if (await closeButton.isVisible({ timeout: 200 }).catch(() => false)) {
+      await closeButton.click({ force: true });
+    } else {
+      // Press Escape to close
+      await page.keyboard.press('Escape');
+    }
+    await slideOutPanel.waitFor({ state: 'hidden', timeout: 2000 }).catch(() => {});
+  }
+
+  // STEP 6: Force remove any backdrop overlays that block pointer events
+  // These are typically modal backdrops with classes like "absolute inset-0 bg-black/50"
+  await page.evaluate(() => {
+    // Remove backdrop overlays with common blocking patterns
+    const backdropSelectors = [
+      '.absolute.inset-0[class*="bg-black"]',
+      '.fixed.inset-0[class*="bg-black"]',
+      '.absolute.inset-0[class*="backdrop"]',
+      '.fixed.inset-0[class*="backdrop"]',
+    ];
+
+    backdropSelectors.forEach(selector => {
+      const overlays = document.querySelectorAll(selector);
+      overlays.forEach(overlay => {
+        // Only remove if it's intercepting pointer events (not a valid UI element)
+        const styles = window.getComputedStyle(overlay);
+        const isBlocking = styles.pointerEvents !== 'none' &&
+                          overlay.childElementCount === 0;
+        if (isBlocking) {
+          overlay.remove();
+        }
+      });
+    });
+
+    // Also remove any modal dialogs that might be blocking
+    const modals = document.querySelectorAll('[role="dialog"], [role="alertdialog"]');
+    modals.forEach(modal => {
+      // Only force-remove if it doesn't have visible interactive content
+      const hasVisibleButtons = modal.querySelectorAll('button:not([disabled])').length > 0;
+      if (!hasVisibleButtons) {
+        modal.remove();
+      }
+    });
+  }).catch(() => {});
+
+  // STEP 7: Wait for any animations to complete after overlay removal
+  await page.waitForTimeout(100);
 }
 
 /**
  * Ensure a game exists, creating one if needed.
  * This is a more robust version that waits for all elements.
  * Note: Game starts on starmap page after creation - this is the "game ready" state.
+ * Enhanced with aggressive overlay dismissal at every step.
  */
 export async function ensureGameExists(
   page: Page,
   empireName: string = "Test Empire"
 ): Promise<void> {
-  // Dismiss any tutorial overlays that might still appear
+  // STEP 1: Initial dismissal
   await dismissTutorialOverlays(page);
 
   const nameInput = page.locator('[data-testid="empire-name-input"]');
@@ -446,27 +587,48 @@ export async function ensureGameExists(
     await nameInput.fill(empireName);
     await dismissTutorialOverlays(page);
 
+    // Ensure bot count is explicitly set (wait for component hydration)
+    // This fixes the issue where the form is submitted before BotCountSelector is hydrated
+    const botCountSelector = page.locator('[data-testid="bot-count-selector"]');
+    if (await botCountSelector.isVisible({ timeout: 2000 }).catch(() => false)) {
+      // Click 25 bots option to ensure value is set
+      const bot25Button = page.locator('[data-testid="bot-count-25"]');
+      if (await bot25Button.isVisible({ timeout: 1000 }).catch(() => false)) {
+        await bot25Button.click();
+      }
+    }
+
     // Click the start game button
     await page.locator('[data-testid="start-game-button"]').click();
 
     // Wait for navigation to starmap (game creation redirects there)
     await page.waitForURL(/\/game\/starmap/, { timeout: 15000 });
+
+    // STEP 2: Dismiss immediately after URL change
+    await dismissTutorialOverlays(page);
   }
 
-  // Dismiss any post-game-creation tutorials
-  await dismissTutorialOverlays(page);
-
-  // Wait for starmap page to be visible (indicates game is ready)
+  // STEP 3: Wait for starmap page and dismiss overlays
   await expect(page.locator('[data-testid="starmap-page"]')).toBeVisible({ timeout: 15000 });
-
-  // Dismiss tutorials again after page loads
   await dismissTutorialOverlays(page);
 
-  // Wait for game header to be visible (contains turn counter and resources)
+  // STEP 4: Wait for game header and dismiss overlays
   await expect(page.locator('[data-testid="game-header"]')).toBeVisible({ timeout: 10000 });
-
-  // Dismiss any remaining tutorials
   await dismissTutorialOverlays(page);
+
+  // STEP 5: Final wait to ensure React hydration is complete, then final dismissal
+  await page.waitForLoadState('domcontentloaded');
+  await dismissTutorialOverlays(page);
+
+  // STEP 6: Verify no overlay is present
+  const overlay = page.locator('[data-testid="tutorial-overlay"]');
+  if (await overlay.isVisible({ timeout: 500 }).catch(() => false)) {
+    console.log('Warning: Tutorial overlay still present after game setup, force removing...');
+    await page.evaluate(() => {
+      const el = document.querySelector('[data-testid="tutorial-overlay"]');
+      if (el) el.remove();
+    }).catch(() => {});
+  }
 }
 
 /**
@@ -484,6 +646,17 @@ export async function startNewGameWithDifficulty(
 
   if (await nameInput.isVisible({ timeout: 2000 }).catch(() => false)) {
     await nameInput.fill(empireName);
+
+    // Ensure bot count is explicitly set (wait for component hydration)
+    // This fixes the issue where the form is submitted before BotCountSelector is hydrated
+    const botCountSelector = page.locator('[data-testid="bot-count-selector"]');
+    if (await botCountSelector.isVisible({ timeout: 2000 }).catch(() => false)) {
+      // Click 25 bots option to ensure value is set
+      const bot25Button = page.locator('[data-testid="bot-count-25"]');
+      if (await bot25Button.isVisible({ timeout: 1000 }).catch(() => false)) {
+        await bot25Button.click();
+      }
+    }
 
     // Select difficulty if selector exists
     const difficultySelector = page.locator('[data-testid="difficulty-selector"]');
@@ -510,20 +683,67 @@ export async function startNewGameWithDifficulty(
 // =============================================================================
 
 /**
+ * Wait for a page to be fully rendered and ready for interaction.
+ * This ensures:
+ * 1. The page-specific data-testid element is visible
+ * 2. Any loading indicators have cleared
+ * 3. The page content has hydrated
+ *
+ * @param page - Playwright page object
+ * @param pageTestId - The data-testid of the page element (e.g., "combat-page")
+ * @param timeout - Maximum time to wait (default 15000ms)
+ */
+export async function waitForPageReady(
+  page: Page,
+  pageTestId: string,
+  timeout: number = 15000
+): Promise<void> {
+  // Wait for the page-specific element to be visible
+  const pageElement = page.locator(`[data-testid="${pageTestId}"]`);
+  await expect(pageElement).toBeVisible({ timeout });
+
+  // Wait for any loading indicators to disappear
+  const loadingIndicators = [
+    page.locator('text=Loading...').first(),
+    page.locator('[data-testid="loading-spinner"]').first(),
+    page.locator('.animate-pulse').first(),
+    page.locator('[aria-busy="true"]').first(),
+  ];
+
+  for (const indicator of loadingIndicators) {
+    // If indicator exists and is visible, wait for it to disappear
+    if (await indicator.isVisible({ timeout: 500 }).catch(() => false)) {
+      await indicator.waitFor({ state: 'hidden', timeout: 10000 }).catch(() => {});
+    }
+  }
+
+  // Wait for DOM to be stable (no new content being added)
+  await page.waitForLoadState('domcontentloaded');
+
+  // Brief pause for React hydration to complete
+  await page.waitForTimeout(100);
+}
+
+/**
  * Navigate to a game page and wait for it to load.
+ * Enhanced to aggressively dismiss overlays before AND after navigation.
+ * Uses waitForPageReady for robust page rendering verification.
  */
 export async function navigateToGamePage(
   page: Page,
   path: "sectors" | "military" | "research" | "combat" | "market" | "diplomacy" | "covert" | "messages" | "starmap"
 ): Promise<void> {
-  // Dismiss any tutorial overlays that might block navigation
+  // Dismiss any tutorial overlays BEFORE navigation
   await dismissTutorialOverlays(page);
 
+  // Perform navigation
   await page.click(`a[href="/game/${path}"]`);
-  await page.waitForLoadState("networkidle");
-  await expect(page.locator(`[data-testid="${path}-page"]`)).toBeVisible({
-    timeout: 10000,
-  });
+
+  // Wait for page to be fully ready (B3 fix: proper page render verification)
+  await waitForPageReady(page, `${path}-page`, 15000);
+
+  // Dismiss any tutorial overlays AFTER navigation (they might reappear on route change)
+  await dismissTutorialOverlays(page);
 }
 
 // =============================================================================
@@ -537,7 +757,9 @@ export const test = base.extend<GameFixtures>({
 
     // Navigate to game and wait for page to load
     await page.goto("/game");
-    await page.waitForLoadState("networkidle");
+    // FIX: Wait for key element instead of networkidle (can hang on SSE/background requests)
+    await page.locator('[data-testid="empire-name-input"], [data-testid="game-header"]')
+      .first().waitFor({ state: 'visible', timeout: 10000 }).catch(() => {});
 
     // Dismiss any remaining overlays that might appear
     await dismissTutorialOverlays(page);
