@@ -20,11 +20,11 @@
  * - OnboardingManager only shows hints AFTER tutorial is done
  */
 
-import { useState, useCallback, useEffect, useRef } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { TurnOrderPanel } from "./TurnOrderPanel";
 import { TurnSummaryModal } from "./TurnSummaryModal";
-import { EmpireStatusBar, type PanelType } from "./EmpireStatusBar";
+import { EmpireStatusBar } from "./EmpireStatusBar";
 import { SlideOutPanel } from "./SlideOutPanel";
 import { MobileBottomBar } from "./MobileBottomBar";
 import { MobileActionSheet } from "./MobileActionSheet";
@@ -33,11 +33,8 @@ import { TutorialOverlay } from "./tutorial";
 import { PhaseIndicator } from "./PhaseIndicator";
 import { QuickReferenceModal } from "./QuickReferenceModal";
 import { DefeatAnalysisModal } from "./DefeatAnalysisModal";
-import {
-  getGameLayoutDataAction,
-  type GameLayoutData,
-} from "@/app/actions/turn-actions";
-import type { TurnEvent, ResourceDelta, DefeatAnalysis } from "@/lib/game/types/turn-types";
+import type { GameLayoutData } from "@/app/actions/turn-actions";
+import type { DefeatAnalysis } from "@/lib/game/types/turn-types";
 import { useToast } from "@/hooks/useToast";
 import { useTurnProcessing, type TurnProcessingResult } from "@/hooks/useTurnProcessing";
 import type { CivilStatusKey } from "@/lib/theme/names";
@@ -54,9 +51,14 @@ import {
 } from "./panels";
 import { useGameKeyboardShortcuts } from "@/hooks/useGameKeyboardShortcuts";
 import { useProgressiveDisclosure } from "@/hooks/useProgressiveDisclosure";
-import { PanelProvider, type PanelContextData } from "@/contexts/PanelContext";
+import { PanelProvider } from "@/contexts/PanelContext";
 import { useGameStateStream, type GameStateUpdate } from "@/hooks/useGameStateStream";
-import { isTutorialActive } from "@/lib/tutorial/tutorial-service";
+import {
+  useTutorialState,
+  usePanelState,
+  useMobileSheet,
+  useWelcomeModal,
+} from "./hooks";
 
 interface GameShellProps {
   children: React.ReactNode;
@@ -75,15 +77,11 @@ export function GameShell({ children, initialLayoutData }: GameShellProps) {
   const [showModal, setShowModal] = useState(false);
   const [turnResult, setTurnResult] = useState<TurnProcessingResult | null>(null);
 
-  // Tutorial completion tracking (P2-16 fix)
-  const [tutorialCompleted, setTutorialCompleted] = useState(false);
+  // Tutorial completion tracking (P2-16 fix) - extracted hook
+  const { tutorialCompleted, handleTutorialComplete } = useTutorialState();
 
-  // Slide-out panel state (desktop)
-  const [activePanel, setActivePanel] = useState<PanelType>(null);
-  const [panelContext, setPanelContext] = useState<PanelContextData | null>(null);
-
-  // Mobile action sheet state
-  const [mobileSheetOpen, setMobileSheetOpen] = useState(false);
+  // Mobile action sheet state - extracted hook
+  const { mobileSheetOpen, setMobileSheetOpen } = useMobileSheet();
 
   // Quick reference modal state
   const [showQuickReference, setShowQuickReference] = useState(false);
@@ -165,71 +163,19 @@ export function GameShell({ children, initialLayoutData }: GameShellProps) {
     }
   }, [sseConnected, sseError]);
 
-  // Check if tutorial is active on mount (P2-16 fix)
-  useEffect(() => {
-    // Check initial tutorial state
-    const tutorialIsActive = isTutorialActive();
-    setTutorialCompleted(!tutorialIsActive);
-  }, []);
-
-  // Track if we've shown the initial welcome modal (using ref to persist across re-renders)
-  const hasShownWelcomeModal = useRef(false);
-
-  // Show initial turn summary on turn 1 (game start) - ONLY AFTER tutorial is done (P2-16 fix)
-  useEffect(() => {
-    // Only show welcome modal once per component mount, for turn 1, AND after tutorial is completed
-    if (
-      layoutData &&
-      layoutData.currentTurn === 1 &&
-      !hasShownWelcomeModal.current &&
-      tutorialCompleted // P2-16: Wait for tutorial to complete
-    ) {
-      hasShownWelcomeModal.current = true;
-
-      // Show immediately - no delay needed
-      setTurnResult({
-        turn: 1,
-        processingMs: 0,
-        resourceChanges: {
-          credits: layoutData.credits,
-          food: layoutData.food,
-          ore: layoutData.ore,
-          petroleum: layoutData.petroleum,
-          researchPoints: layoutData.researchPoints,
-        },
-        populationBefore: 0,
-        populationAfter: layoutData.population,
-        events: [
-          {
-            type: "other" as const,
-            severity: "info" as const,
-            message: "Welcome to Nexus Dominion! Your empire begins with starting resources and population.",
-          },
-          {
-            type: "other" as const,
-            severity: "info" as const,
-            message: `You have ${layoutData.protectionTurnsLeft} turns of protection from attacks.`,
-          },
-        ],
-        messagesReceived: 0,
-        botBattles: 0,
-        empiresEliminated: [],
-      });
-      setShowModal(true);
-    }
-  }, [layoutData, tutorialCompleted]); // P2-16: Added tutorialCompleted dependency
-
-  // Handle tutorial completion callback (P2-16 fix)
-  const handleTutorialComplete = useCallback((completed: boolean) => {
-    console.log(completed ? "Tutorial completed!" : "Tutorial skipped");
-    setTutorialCompleted(true);
-  }, []);
+  // Welcome modal logic - extracted hook (P2-14)
+  useWelcomeModal({
+    layoutData,
+    tutorialCompleted,
+    setTurnResult,
+    setShowModal,
+  });
 
   // Handle end turn (delegates to hook, closes mobile sheet)
   const handleEndTurn = useCallback(async () => {
     setMobileSheetOpen(false);
     await processTurn();
-  }, [processTurn]);
+  }, [setMobileSheetOpen, processTurn]);
 
   // Handle modal close
   const handleCloseModal = useCallback(() => {
@@ -238,29 +184,6 @@ export function GameShell({ children, initialLayoutData }: GameShellProps) {
     // Refresh the page to show updated data
     router.refresh();
   }, [router]);
-
-  // Handle panel toggle with optional context
-  const handlePanelToggle = useCallback((panel: PanelType, context?: PanelContextData) => {
-    setActivePanel(panel);
-    setPanelContext(context ?? null);
-  }, []);
-
-  // Handle panel close
-  const handlePanelClose = useCallback(() => {
-    setActivePanel(null);
-    setPanelContext(null);
-  }, []);
-
-  // Keyboard shortcuts for panel navigation
-  useGameKeyboardShortcuts({
-    onOpenPanel: handlePanelToggle,
-    onClosePanel: handlePanelClose,
-    activePanel,
-    onEndTurn: handleEndTurn,
-    onQuickReference: useCallback(() => setShowQuickReference(true), []),
-    isProcessing,
-    enabled: true,
-  });
 
   // Progressive UI disclosure - unlock features gradually
   const { isPanelLocked, getUnlockTurn } = useProgressiveDisclosure({
@@ -273,15 +196,29 @@ export function GameShell({ children, initialLayoutData }: GameShellProps) {
     enabled: true,
   });
 
-  // Wrap panel toggle to check if panel is locked
-  const handlePanelToggleWithLock = useCallback((panel: PanelType, context?: PanelContextData) => {
-    if (panel && isPanelLocked(panel)) {
-      const unlockTurn = getUnlockTurn(panel);
-      showToast(`This feature unlocks at turn ${unlockTurn}`, "error");
-      return;
-    }
-    handlePanelToggle(panel, context);
-  }, [handlePanelToggle, isPanelLocked, getUnlockTurn, showToast]);
+  // Panel state management - extracted hook (P2-14)
+  const {
+    activePanel,
+    panelContext,
+    handlePanelToggle,
+    handlePanelClose,
+    handlePanelToggleWithLock,
+  } = usePanelState({
+    isPanelLocked,
+    getUnlockTurn,
+    showToast,
+  });
+
+  // Keyboard shortcuts for panel navigation
+  useGameKeyboardShortcuts({
+    onOpenPanel: handlePanelToggle,
+    onClosePanel: handlePanelClose,
+    activePanel,
+    onEndTurn: handleEndTurn,
+    onQuickReference: useCallback(() => setShowQuickReference(true), []),
+    isProcessing,
+    enabled: true,
+  });
 
   // Default layout data if not loaded
   const data = layoutData ?? {
@@ -396,7 +333,7 @@ export function GameShell({ children, initialLayoutData }: GameShellProps) {
       {/* Slide-out Panels */}
       <SlideOutPanel
         isOpen={activePanel === "resources"}
-        onClose={() => setActivePanel(null)}
+        onClose={handlePanelClose}
         title="Resources"
       >
         <ResourcePanel
@@ -410,25 +347,25 @@ export function GameShell({ children, initialLayoutData }: GameShellProps) {
 
       <SlideOutPanel
         isOpen={activePanel === "military"}
-        onClose={() => setActivePanel(null)}
+        onClose={handlePanelClose}
         title="Military Forces"
         width="lg"
       >
-        <MilitaryPanelContent onClose={() => setActivePanel(null)} />
+        <MilitaryPanelContent onClose={handlePanelClose} />
       </SlideOutPanel>
 
       <SlideOutPanel
         isOpen={activePanel === "sectors"}
-        onClose={() => setActivePanel(null)}
+        onClose={handlePanelClose}
         title="Sectors"
         width="lg"
       >
-        <SectorsPanelContent onClose={() => setActivePanel(null)} />
+        <SectorsPanelContent onClose={handlePanelClose} />
       </SlideOutPanel>
 
       <SlideOutPanel
         isOpen={activePanel === "population"}
-        onClose={() => setActivePanel(null)}
+        onClose={handlePanelClose}
         title="Population"
       >
         <div className="text-gray-300">
@@ -454,29 +391,29 @@ export function GameShell({ children, initialLayoutData }: GameShellProps) {
 
       <SlideOutPanel
         isOpen={activePanel === "market"}
-        onClose={() => setActivePanel(null)}
+        onClose={handlePanelClose}
         title="Market"
         width="lg"
       >
-        <MarketPanelContent onClose={() => setActivePanel(null)} />
+        <MarketPanelContent onClose={handlePanelClose} />
       </SlideOutPanel>
 
       <SlideOutPanel
         isOpen={activePanel === "research"}
-        onClose={() => setActivePanel(null)}
+        onClose={handlePanelClose}
         title="Research"
         width="lg"
       >
-        <ResearchPanelContent onClose={() => setActivePanel(null)} />
+        <ResearchPanelContent onClose={handlePanelClose} />
       </SlideOutPanel>
 
       <SlideOutPanel
         isOpen={activePanel === "diplomacy"}
-        onClose={() => setActivePanel(null)}
+        onClose={handlePanelClose}
         title="Diplomacy"
         width="lg"
       >
-        <DiplomacyPanelContent onClose={() => setActivePanel(null)} />
+        <DiplomacyPanelContent onClose={handlePanelClose} />
       </SlideOutPanel>
 
       <SlideOutPanel
@@ -493,11 +430,11 @@ export function GameShell({ children, initialLayoutData }: GameShellProps) {
 
       <SlideOutPanel
         isOpen={activePanel === "messages"}
-        onClose={() => setActivePanel(null)}
+        onClose={handlePanelClose}
         title="Messages"
         width="lg"
       >
-        <MessagesPanelContent onClose={() => setActivePanel(null)} />
+        <MessagesPanelContent onClose={handlePanelClose} />
       </SlideOutPanel>
 
       {/* Turn Summary Modal */}
