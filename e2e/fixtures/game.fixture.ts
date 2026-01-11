@@ -529,6 +529,21 @@ export async function dismissTutorialOverlays(page: Page): Promise<void> {
     await slideOutPanel.waitFor({ state: 'hidden', timeout: 2000 }).catch(() => {});
   }
 
+  // STEP 5.5: Dismiss turn summary modal if present (blocks interaction after turn processing)
+  const turnSummaryModal = page.locator('[data-testid="turn-summary-modal"]');
+  if (await turnSummaryModal.isVisible({ timeout: 300 }).catch(() => false)) {
+    console.log('Warning: Turn summary modal detected, dismissing...');
+    // Try clicking Continue button
+    const continueBtn = turnSummaryModal.locator('button:has-text("Continue"), button:has-text("CONTINUE")').first();
+    if (await continueBtn.isVisible({ timeout: 200 }).catch(() => false)) {
+      await continueBtn.click({ force: true });
+    } else {
+      // Press Escape to close
+      await page.keyboard.press('Escape');
+    }
+    await turnSummaryModal.waitFor({ state: 'hidden', timeout: 3000 }).catch(() => {});
+  }
+
   // STEP 6: Force remove any backdrop overlays that block pointer events
   // These are typically modal backdrops with classes like "absolute inset-0 bg-black/50"
   await page.evaluate(() => {
@@ -726,7 +741,8 @@ export async function waitForPageReady(
 
 /**
  * Navigate to a game page and wait for it to load.
- * Enhanced to aggressively dismiss overlays before AND after navigation.
+ * Uses direct navigation (goto) instead of clicking nav links to avoid
+ * issues with progressive disclosure locking certain pages.
  * Uses waitForPageReady for robust page rendering verification.
  */
 export async function navigateToGamePage(
@@ -736,8 +752,9 @@ export async function navigateToGamePage(
   // Dismiss any tutorial overlays BEFORE navigation
   await dismissTutorialOverlays(page);
 
-  // Perform navigation
-  await page.click(`a[href="/game/${path}"]`);
+  // Use direct navigation - more reliable than clicking nav links
+  // (some links may not exist at certain turns due to progressive disclosure)
+  await page.goto(`/game/${path}`);
 
   // Wait for page to be fully ready (B3 fix: proper page render verification)
   await waitForPageReady(page, `${path}-page`, 15000);
